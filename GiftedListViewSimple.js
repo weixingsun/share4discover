@@ -13,6 +13,7 @@ var Example = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
+    console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
     setTimeout(() => {
       var rows = ['row '+((page - 1) * 3 + 1), 'row '+((page - 1) * 3 + 2), 'row '+((page - 1) * 3 + 3)];
       if (page === 3) {
@@ -33,7 +34,9 @@ var Example = React.createClass({
   _onPress(rowData) {
     console.log(rowData+' pressed');
   },
-  
+  _forceRefresh(){
+    this.refs.list._refresh(null, {external: true});
+  },
   /**
    * Render a row
    * @param {object} rowData Row data
@@ -53,8 +56,15 @@ var Example = React.createClass({
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.navBar} />
+        <TouchableHighlight
+	  style={styles.navBar}
+	  underlayColor='#c8c7cc'
+	  onPress={this._forceRefresh}
+	>
+	  <Text>Press to Refresh</Text>
+	</TouchableHighlight>
         <GiftedListView
+	  ref='list'
           rowView={this._renderRowView}
           onFetch={this._onFetch}
           firstLoader={true} // display a loader for the first fetching
@@ -73,7 +83,8 @@ var styles = {
     backgroundColor: '#FFF',
   },
   navBar: {
-    height: 64,
+    height: 50,
+    padding: 10,
     backgroundColor: '#CCC'
   },
   row: {
