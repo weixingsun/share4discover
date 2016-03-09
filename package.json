@@ -6,7 +6,7 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react-native": "^0.20.1",
+    "react-native": "^0.21.0",
     "react-native-gifted-listview": "0.0.12",
     "react-native-google-places-autocomplete": "^1.1.6",
     "react-native-maps": "^0.3.0",
