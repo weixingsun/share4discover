@@ -1,0 +1,18 @@
+{
+  "name": "Share",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh"
+  },
+  "dependencies": {
+    "@remobile/react-native-refresh-infinite-listview": "^1.0.3",
+    "react-native": "^0.20.1",
+    "react-native-gifted-listview": "0.0.12",
+    "react-native-google-places-autocomplete": "^1.1.6",
+    "react-native-maps": "^0.3.0",
+    "react-native-refresher": "^0.1.1",
+    "react-native-scrollable-tab-view": "../..",
+    "react-native-vector-icons": "^1.2.0"
+  }
+}
