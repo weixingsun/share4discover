@@ -4,13 +4,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MapView from 'react-native-maps';
 import PriceMarker from './modules/PriceMarker';
 import Rest from "./modules/Rest"
+import Store from "./modules/Store"
 
 import TabBar from './TabBar';
 import Style from "./Style"
-import Store from "./Store"
 import GooglePlace from "./GooglePlace"
-//import GiftedListView from './GiftedListViewSimple';
-import GiftedListView from './GiftedListViewAdvanced';
+import GiftedListView from './GiftedListViewSimple';
+//import GiftedListView from './GiftedListViewAdvanced';
 var mkid = 0,ccid = 0;
 
 const FacebookTabsExample = React.createClass({
@@ -43,10 +43,10 @@ const FacebookTabsExample = React.createClass({
     return {
       isLoading:true,
       region: {
-        latitude: -43,
-        longitude: 172,
-        latitudeDelta: 1,
-        longitudeDelta: 1,
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 10,
+        longitudeDelta: 10,
       },
       markers: [],
       circles: [],
@@ -99,7 +99,6 @@ const FacebookTabsExample = React.createClass({
 		    //title={marker.title}
 		    //description={marker.description}
 		    //onSelect={(e) => console.log('onSelect', e)}
-                    //onPress=
                     >
 			<PriceMarker amount={99} color={marker.s} />
 		    </MapView.Marker>
