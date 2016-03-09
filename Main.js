@@ -13,7 +13,7 @@ import GiftedListView from './GiftedListViewSimple';
 //import GiftedListView from './GiftedListViewAdvanced';
 var mkid = 0,ccid = 0;
 
-const FacebookTabsExample = React.createClass({
+const Main = React.createClass({
   onRegionChange(region) {
     this.setState({ region });
     Store.save('region', region);
@@ -188,4 +188,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = FacebookTabsExample;
+module.exports = Main;
