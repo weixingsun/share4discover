@@ -1,15 +1,20 @@
-import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid,} from 'react-native';
-import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view';
-import Icon from 'react-native-vector-icons/Ionicons';
-import MapView from 'react-native-maps';
-import PriceMarker from './modules/PriceMarker';
-import Rest from "./modules/Rest"
-import Store from "./modules/Store"
+import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid,} from 'react-native'
+import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view'
+import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
+import Icon from 'react-native-vector-icons/Ionicons'
+import MapView from 'react-native-maps'
+import EventEmitter from 'EventEmitter'
+import Rest from "./io/Rest"
+import Store from "./io/Store"
 
-import TabBar from './TabBar';
-import Style from "./Style"
+import PriceMarker from './ui/PriceMarker'
+import TabBarFrame from './ui/TabBar'
+import Style from "./ui/Style"
+import Signup from "./ui/Signup"
+import Launch from "./ui/Launch"
+import SettingsDefault from "./ui/SettingsDefault"
 import GooglePlace from "./GooglePlace"
-import GiftedListView from './GiftedListViewSimple';
+import GiftedListView from './ui/GiftedListViewSimple'
 //import GiftedListView from './GiftedListViewAdvanced';
 var mkid = 0,ccid = 0;
 
@@ -66,7 +71,7 @@ const Main = React.createClass({
     if(this.state.isLoading) return <View><Text>Loading...</Text></View>;
     //console.log('rendering '+JSON.stringify(this.state.region));
     return <View style={styles.container}>
-      <ScrollableTabView initialPage={0} renderTabBar={() => <TabBar />}>
+      <ScrollableTabView initialPage={0} renderTabBar={() => <TabBarFrame />}>
         <ScrollView tabLabel="ios-paper" style={styles.tabView}>
             <GiftedListView />
         </ScrollView>
@@ -108,30 +113,15 @@ const Main = React.createClass({
           </View>
         </ScrollView>
         <ScrollView tabLabel="navicon-round" style={styles.tabView}>
-          <View style={styles.card}>
-            <Text>Login</Text>
-          </View>
-          <View style={styles.card}>
-            <Text>Favorites</Text>
-          </View>
-          <View style={styles.card}>
-            <Text>What's Hot</Text>
-          </View>
-          <View style={styles.card}>
-            <Text>Settings</Text>
-          </View>
-          <View style={styles.card}>
-            <Text>Help</Text>
-          </View>
-          <View style={styles.card}>
-            <Text>About</Text>
-          </View>
+	  <Router>
+	    <Route name="default" component={Launch} initial={true} />
+	  </Router>
         </ScrollView>
       </ScrollableTabView>
     </View>;
   },
 });
-
+//<Route name="signup"  component={Signup} title="Signup" />
 // Using tabBarPosition='overlayTop' or 'overlayBottom' lets the content show through a
 // semitransparent tab bar. Note that if you build a custom tab bar component, its outer container
 // must consume a 'style' prop (e.g. <View style={this.props.style}) to support this feature.

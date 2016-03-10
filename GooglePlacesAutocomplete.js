@@ -1,7 +1,7 @@
 const React = require('react-native');
 const {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicatorIOS, ProgressBarAndroid, PixelRatio} = React;
 const Qs = require('qs');
-import Style from "./Style";
+//import Style from "./Style";
 
 const defaultStyles = {
   container: {
