@@ -14,24 +14,6 @@ class Register extends React.Component {
                 <Button onPress={Actions.home}>Replace screen</Button>
                 <Button onPress={Actions.pop}>Back</Button>
             </View>
-	<View style={styles.card}>
-	  <Text>Login</Text>
-	</View>
-	<View style={styles.card}>
-	  <Text>Favorites</Text>
-	</View>
-	<View style={styles.card}>
-	  <Text>What is Hot</Text>
-	</View>
-	<View style={styles.card}>
-	  <Text>Settings</Text>
-	</View>
-	<View style={styles.card}>
-	  <Text>Help</Text>
-	</View>
-	<View style={styles.card}>
-	  <Text>About</Text>
-	</View>
 	</View>
         );
     }
