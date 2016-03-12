@@ -4,6 +4,9 @@ import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-nativ
 import {Actions} from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/Ionicons'
 import MapView from 'react-native-maps'
+//import MapGL from 'react-native-mapbox-gl'
+import FBLogin from 'react-native-facebook-login'
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import EventEmitter from 'EventEmitter'
 import Button from 'react-native-button'
 import Rest from "../io/Rest"
@@ -12,6 +15,7 @@ import Store from "../io/Store"
 import PriceMarker from './PriceMarker'
 import TabBarFrame from './TabBar'
 import Style from "./Style"
+import Loading from "./Loading"
 import Launch from "./Launch"
 import SettingsList from "./SettingsList"
 import GooglePlace from "./GooglePlace"
@@ -20,6 +24,11 @@ import GiftedListView from './GiftedListViewSimple'
 var mkid = 0,ccid = 0;
 
 const Main = React.createClass({
+  renderUser() {
+    //this.setState({ username: name });
+    if(this.state.username !== '')
+    return (<View key='user'><Text style={styles.username}>{this.state.username}</Text></View>);
+  },
   onRegionChange(region) {
     this.setState({ region });
     Store.save('region', region);
@@ -48,6 +57,7 @@ const Main = React.createClass({
   getInitialState() {
     return {
       isLoading:true,
+      username:'',
       region: {
         latitude: 0,
         longitude: 0,
@@ -56,8 +66,23 @@ const Main = React.createClass({
       },
       markers: [],
       circles: [],
+      user: null,
     };
   }, 
+  _googleSignIn() {
+    GoogleSignin.signIn().then((user) => {
+      console.log(user);
+      this.setState({user: user});
+    }).catch((err) => {
+      console.log('WRONG SIGNIN', err);
+    }).done();
+  },
+
+  _googleSignOut() {
+    GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
+      this.setState({user: null});
+    }).done();
+  },
   componentWillMount(){
     Store.get('region').then((value) => {
       this.setState({
@@ -67,15 +92,28 @@ const Main = React.createClass({
       //console.log('isLoading:'+this.state.isLoading+'\n'+JSON.stringify(value));
     });
   },
+  componentDidMount() {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/calendar'],
+      //webClientId: '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com',  //oauth_client:1
+      webClientId: '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com',  //oauth_client:1
+      offlineAccess: true
+    });
 
+    GoogleSignin.currentUserAsync().then((user) => {
+      console.log('USER', user);
+      this.setState({user: user});
+    }).done();
+  },
   render() {
-    if(this.state.isLoading) return <View><Text>Loading...</Text></View>;
+    if(this.state.isLoading) return <Loading />
+    var _this = this;
     //console.log('rendering '+JSON.stringify(this.state.region));
     return <View style={styles.container}>
       <ScrollableTabView initialPage={0} renderTabBar={() => <TabBarFrame />}>
-        <ScrollView tabLabel="ios-paper" style={styles.tabView}>
+        <View tabLabel="ios-paper" style={styles.tabView}>
             <GiftedListView />
-        </ScrollView>
+        </View>
         <ScrollView tabLabel="person-stalker" style={styles.tabView}>
           <View style={styles.card}>
             <Text>Friends</Text>
@@ -115,7 +153,32 @@ const Main = React.createClass({
         </ScrollView>
         <ScrollView tabLabel="navicon-round" style={styles.tabView}>
 	  <View style={styles.card}>
-            <Button onPress={()=>Actions.login({data:"Custom data", title:'Custom title' })}>Login</Button>
+	    <View style={styles.flex_box}>
+		{ this.renderUser() }
+		<GoogleSigninButton
+		  style={{width: 230, height: 48}}
+		  size={GoogleSigninButton.Size.Standard}
+		  color={GoogleSigninButton.Color.Dark}
+		  onPress={_this._googleSignIn}/>
+	    </View>
+	    <View style={styles.flex_box}>
+              <FBLogin
+		onLogin={function(data){
+		  //console.log(data.profile.name); 
+		  _this.setState({username: data.profile.name });
+		}}
+		onLoginFound={function(data){
+		  console.log('FB:onLoginFound:'+data.profile.name);
+		  //_this.setState({username: data.profile.name });
+		}}
+		onLogout={function(data){
+		  console.log('FB:onLogout:');
+		  _this.setState({username: '' });
+		}}
+		onCancel={function(e){console.log(e)}}
+		onPermissionsMissing={function(e){console.log(e)}}
+	      />
+	    </View>
           </View>
           <View style={styles.card}>
 	    <Button onPress={Actions.register}>Register</Button>
@@ -134,10 +197,10 @@ const Main = React.createClass({
           </View>
         </ScrollView>
       </ScrollableTabView>
-    </View>;
+    </View>
   },
-});
-//<Route name="signup"  component={Signup} title="Signup" />
+})
+//<Button onPress={()=>Actions.login({data:"Custom data", title:'Custom title' })}>Login</Button>
 // Using tabBarPosition='overlayTop' or 'overlayBottom' lets the content show through a
 // semitransparent tab bar. Note that if you build a custom tab bar component, its outer container
 // must consume a 'style' prop (e.g. <View style={this.props.style}) to support this feature.
@@ -152,19 +215,33 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(0,0,0,0.01)',
   },
+  user:{
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  username:{
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: 20, 
+    fontWeight: 'bold', 
+  },
   card: {
     flex: 1,
     borderWidth: 1,
+    flexDirection:'row',
     //backgroundColor: '#fff',
     borderColor: 'rgba(0,0,0,0.1)',
     margin: 5,
-    //height: 150,
-    //height: 600,
     padding: 15,
+    paddingTop:15,
+    paddingBottom:15,
     shadowColor: '#ccc',
     shadowOffset: { width: 2, height: 2, },
     shadowOpacity: 0.5,
     shadowRadius: 3,
+  },
+  flex_box: {
+    flex: 1,
   },
   icon: {
     width: 300,
@@ -173,7 +250,6 @@ const styles = StyleSheet.create({
   },
   card_map:{
     flex: 1,
-    flexDirection:'column',
     //width: Style.CARD_WIDTH,
     height: Style.CARD_HEIGHT,
     padding: Style.CARD_PADDING_X,

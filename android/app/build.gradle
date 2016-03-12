@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+//apply plugin: "com.google.gms.google-services"
+//apply plugin: "com.google.android.gms"
 
 import com.android.build.OutputFile
 
@@ -83,7 +85,7 @@ android {
     defaultConfig {
         applicationId "com.share"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk {
@@ -129,10 +131,15 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-signin')
+    compile project(':react-native-wechat')
     compile project(':react-native-facebook-login')
     compile project(':react-native-vector-icons')
     compile project(':react-native-maps')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
+    compile 'com.google.android.gms:play-services-measurement:8.4.0'
 }
+apply plugin: "com.google.gms.google-services"
