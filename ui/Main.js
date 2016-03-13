@@ -1,4 +1,4 @@
-import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator } from 'react-native'
+import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator, TouchableOpacity, } from 'react-native'
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view'
 //import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 import {Actions} from 'react-native-router-flux'
@@ -24,10 +24,57 @@ import GiftedListView from './GiftedListViewSimple'
 var mkid = 0,ccid = 0;
 
 const Main = React.createClass({
-  renderUser() {
-    console.log('renderUser:'+this.state.user)
-    if(this.state.user !== null)
-    return (<View key='user'><Text style={styles.username}>{this.state.user.name}</Text></View>);
+  renderLoginGoogle() {
+    console.log('renderGoogle:'+JSON.stringify(this.state.user));
+    if(this.state.user !== null){
+      if(this.state.user.type ==='fb'){
+        return (<View key='fbuser'>
+	          <Text style={styles.username}>{this.state.user.name}</Text>
+                </View>);
+      }else{
+        return (<View key='gguser'>
+                  <Button onPress={this._googleSignOut} style={{fontSize: 20, color: '#AAAAAA'}} containerStyle={{borderRadius:20, backgroundColor: '#AA5555'}}>
+                    Log out
+                  </Button>
+	        </View>);
+      }
+    }else{
+      return (
+              <GoogleSigninButton
+                  style={{width: 150, height: 48}}
+                  size={GoogleSigninButton.Size.Standard}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={this._googleSignIn}/>
+      );
+    }
+  },
+  renderLoginFacebook() {
+    console.log('renderFacebook:'+JSON.stringify(this.state.user));
+    var _this = this;
+    if(this.state.user !== null && this.state.user.type !== 'fb')
+      return (<View key='user'><Text style={styles.username}>{this.state.user.name}</Text></View>);
+    else
+      return (
+              <FBLogin
+                onLogin={function(data){
+                  console.log('FBLogin.onLogin:');
+                  _this._facebookSignIn(data);
+                }}
+                onLoginFound={function(data){
+                  console.log('FB:onLoginFound:'+data);
+                  //_this.setState({user: null });
+                }}
+                onLogout={function(data){
+                  console.log('FB:onLogout:');
+                  _this.setState({user: null });
+                }}
+                onCancel={function(e){console.log(e)}}
+                onPermissionsMissing={function(e){
+                  console.log("onPermissionsMissing:")
+                  console.log(e)
+                }}
+              />
+      );
   },
   onRegionChange(region) {
     this.setState({ region });
@@ -57,7 +104,6 @@ const Main = React.createClass({
   getInitialState() {
     return {
       isLoading:true,
-      //username:'',
       region: {
         latitude: 0,
         longitude: 0,
@@ -70,7 +116,7 @@ const Main = React.createClass({
     };
   }, 
   _facebookSignIn(data) {
-    console.log(data)
+    //console.log(data)
     if(data.hasOwnProperty('profile')){	//Android get all info in 1 time
         this.setState({
 	  user: {
@@ -78,6 +124,8 @@ const Main = React.createClass({
 	    name: data.profile.name,
 	    email: data.profile.email,
 	    gender: data.profile.gender,
+	    type: 'fb',
+            token: data.token,
 	  }
 	});
     }else{	//iOS need fetch manually
@@ -93,15 +141,17 @@ const Main = React.createClass({
               name : responseData.name,
               email: responseData.email,
               gender: responseData.gender,
+              type: 'fb',
+              token: data.credentials.token,
             },
           });
         }).done();
     }
   },
   _googleSignIn() {
-    GoogleSignin.signIn().then((user) => {
-      console.log(user);
-      this.setState({user: user});
+    GoogleSignin.signIn().then((data) => {
+      console.log(data);
+      this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
     }).catch((err) => {
       console.log('WRONG SIGNIN', err);
     }).done();
@@ -184,34 +234,10 @@ const Main = React.createClass({
         <ScrollView tabLabel="navicon-round" style={styles.tabView}>
 	  <View style={styles.card}>
 	    <View style={styles.flex_box}>
-		{ this.renderUser() }
-		<GoogleSigninButton
-		  style={{width: 230, height: 48}}
-		  size={GoogleSigninButton.Size.Standard}
-		  color={GoogleSigninButton.Color.Dark}
-		  onPress={_this._googleSignIn}/>
+		{ this.renderLoginGoogle() }
 	    </View>
 	    <View style={styles.flex_box}>
-              <FBLogin
-		onLogin={function(data){
-		  console.log('FBLogin.onLogin:'); 
-		  //_this.setState({username: data });  //data.profile.name
-		  _this._facebookSignIn(data);
-		}}
-		onLoginFound={function(data){
-		  console.log('FB:onLoginFound:'+data);  //data.profile.name
-		  //_this.setState({username: data.profile.name });
-		}}
-		onLogout={function(data){
-		  console.log('FB:onLogout:');
-		  _this.setState({username: '' });
-		}}
-		onCancel={function(e){console.log(e)}}
-		onPermissionsMissing={function(e){
-		  console.log("onPermissionsMissing:")
-		  console.log(e)
-		}}
-	      />
+		{ this.renderLoginFacebook() }
 	    </View>
           </View>
           <View style={styles.card}>
@@ -249,14 +275,10 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(0,0,0,0.01)',
   },
-  user:{
-    alignItems: 'center', 
-    justifyContent: 'center',
-  },
   username:{
     textAlign: 'center',
     justifyContent: 'center',
-    fontSize: 20, 
+    fontSize: 18, 
     fontWeight: 'bold', 
   },
   card: {

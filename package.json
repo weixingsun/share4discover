@@ -8,9 +8,10 @@
   "dependencies": {
     "react-native": "^0.21.0",
     "react-native-facebook-login": "^1.0.3",
-    "react-native-gifted-listview": "0.0.12",
+    "react-native-gifted-listview": "^0.0.12",
     "react-native-google-places-autocomplete": "^1.1.6",
     "react-native-google-signin": "^0.4.3",
+    "react-native-localization": "^0.1.12",
     "react-native-maps": "^0.3.0",
     "react-native-router-flux": "^2.3.12",
     "react-native-scrollable-tab-view": "../..",

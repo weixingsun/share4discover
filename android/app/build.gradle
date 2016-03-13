@@ -131,6 +131,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-localization')
     compile project(':react-native-google-signin')
     compile project(':react-native-wechat')
     compile project(':react-native-facebook-login')

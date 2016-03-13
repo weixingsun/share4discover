@@ -4,6 +4,7 @@ import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.AirMaps.AirPackage;
 import com.facebook.react.ReactActivity;
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,6 +30,7 @@ public class MainActivity extends ReactActivity {
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
+        new ReactNativeLocalizationPackage(),
       new RNGoogleSigninPackage(this),
       new WeChatPackage(),
       new AirPackage(),
