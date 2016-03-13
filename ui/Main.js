@@ -25,9 +25,9 @@ var mkid = 0,ccid = 0;
 
 const Main = React.createClass({
   renderUser() {
-    //this.setState({ username: name });
-    if(this.state.username !== '')
-    return (<View key='user'><Text style={styles.username}>{this.state.username}</Text></View>);
+    console.log('renderUser:'+this.state.user)
+    if(this.state.user !== null)
+    return (<View key='user'><Text style={styles.username}>{this.state.user.name}</Text></View>);
   },
   onRegionChange(region) {
     this.setState({ region });
@@ -57,7 +57,7 @@ const Main = React.createClass({
   getInitialState() {
     return {
       isLoading:true,
-      username:'',
+      //username:'',
       region: {
         latitude: 0,
         longitude: 0,
@@ -69,6 +69,35 @@ const Main = React.createClass({
       user: null,
     };
   }, 
+  _facebookSignIn(data) {
+    console.log(data)
+    if(data.hasOwnProperty('profile')){	//Android get all info in 1 time
+        this.setState({
+	  user: {
+	    id: data.profile.id,
+	    name: data.profile.name,
+	    email: data.profile.email,
+	    gender: data.profile.gender,
+	  }
+	});
+    }else{	//iOS need fetch manually
+      var _this = this;
+      var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
+      fetch(api)
+        .then((response) => response.json())
+        .then((responseData) => {
+	  console.log(responseData)
+          _this.setState({
+            user : {
+              id : responseData.id,
+              name : responseData.name,
+              email: responseData.email,
+              gender: responseData.gender,
+            },
+          });
+        }).done();
+    }
+  },
   _googleSignIn() {
     GoogleSignin.signIn().then((user) => {
       console.log(user);
@@ -96,7 +125,8 @@ const Main = React.createClass({
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/calendar'],
       //webClientId: '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com',  //oauth_client:1
-      webClientId: '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com',  //oauth_client:1
+      iosClientId: '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com',  //oauth_client:1
+      webClientId: '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com',  //oauth_client:3
       offlineAccess: true
     });
 
@@ -164,11 +194,12 @@ const Main = React.createClass({
 	    <View style={styles.flex_box}>
               <FBLogin
 		onLogin={function(data){
-		  //console.log(data.profile.name); 
-		  _this.setState({username: data.profile.name });
+		  console.log('FBLogin.onLogin:'); 
+		  //_this.setState({username: data });  //data.profile.name
+		  _this._facebookSignIn(data);
 		}}
 		onLoginFound={function(data){
-		  console.log('FB:onLoginFound:'+data.profile.name);
+		  console.log('FB:onLoginFound:'+data);  //data.profile.name
 		  //_this.setState({username: data.profile.name });
 		}}
 		onLogout={function(data){
@@ -176,7 +207,10 @@ const Main = React.createClass({
 		  _this.setState({username: '' });
 		}}
 		onCancel={function(e){console.log(e)}}
-		onPermissionsMissing={function(e){console.log(e)}}
+		onPermissionsMissing={function(e){
+		  console.log("onPermissionsMissing:")
+		  console.log(e)
+		}}
 	      />
 	    </View>
           </View>
