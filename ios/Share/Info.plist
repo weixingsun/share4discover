@@ -24,7 +24,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>weixin</string>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.share</string>
+			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -40,10 +44,18 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com</string>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com</string>
+				<string>840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.840928054415-qc4abj1mu0l2k6e86n30of3gktig10id</string>
 			</array>
 		</dict>
 	</array>
