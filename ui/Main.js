@@ -25,21 +25,21 @@ var mkid = 0,ccid = 0;
 
 const Main = React.createClass({
   renderLoginGoogle() {
-    console.log('renderGoogle:'+JSON.stringify(this.state.user));
-    if(this.state.user !== null){
-      if(this.state.user.type ==='fb'){
+    if(this.state.user !== null && this.state.user.type ==='fb'){
+        //console.log('renderGoogle:fb:'+JSON.stringify(this.state.user));
         return (<View key='fbuser'>
 	          <Text style={styles.username}>{this.state.user.name}</Text>
                 </View>);
-      }else{
+    }else if(this.state.user !== null && this.state.user.type ==='gg'){
+        //console.log('renderGoogle:gg:'+JSON.stringify(this.state.user));
         return (<View key='gguser'>
-                  <Button onPress={this._googleSignOut} style={{fontSize: 20, color: '#AAAAAA'}} containerStyle={{borderRadius:20, backgroundColor: '#AA5555'}}>
-                    Log out
+                  <Button onPress={this._googleSignOut} style={{fontSize: 18, }} containerStyle={{borderRadius:5, backgroundColor: '#AA5555'}}>
+                    Logout from Google
                   </Button>
 	        </View>);
-      }
     }else{
-      return (
+        //console.log('renderGoogle:else:'+JSON.stringify(this.state.user));
+        return (
               <GoogleSigninButton
                   style={{width: 150, height: 48}}
                   size={GoogleSigninButton.Size.Standard}
@@ -49,15 +49,16 @@ const Main = React.createClass({
     }
   },
   renderLoginFacebook() {
-    console.log('renderFacebook:'+JSON.stringify(this.state.user));
     var _this = this;
-    if(this.state.user !== null && this.state.user.type !== 'fb')
+    if(this.state.user !== null && this.state.user.type !== 'fb'){
+      //console.log('renderFacebook:name:'+JSON.stringify(this.state.user));
       return (<View key='user'><Text style={styles.username}>{this.state.user.name}</Text></View>);
-    else
+    }else{
+      //console.log('renderFacebook:button:'+JSON.stringify(this.state.user));
       return (
               <FBLogin
                 onLogin={function(data){
-                  console.log('FBLogin.onLogin:');
+                  //console.log('FBLogin.onLogin:');
                   _this._facebookSignIn(data);
                 }}
                 onLoginFound={function(data){
@@ -65,8 +66,8 @@ const Main = React.createClass({
                   //_this.setState({user: null });
                 }}
                 onLogout={function(data){
-                  console.log('FB:onLogout:');
-                  _this.setState({user: null });
+                  //console.log('FB:onLogout:');
+                  _this.deleteUserDB();
                 }}
                 onCancel={function(e){console.log(e)}}
                 onPermissionsMissing={function(e){
@@ -75,6 +76,69 @@ const Main = React.createClass({
                 }}
               />
       );
+    }
+  },
+  getUserDB() {
+    Store.get('user').then((value) => {
+      this.setState({ user:value });
+      //console.log('getUserDB:'+JSON.stringify(value));
+    });
+  },
+  saveUserDB(data) {
+    //console.log('saveUserDB:'+JSON.stringify(data));
+    Store.save('user', data);
+  },
+  deleteUserDB() {
+    Store.delete('user');
+    this.setState({ user:null });
+  },
+  _facebookSignIn(data) {
+    //console.log(data)
+    if(data.hasOwnProperty('profile')){	//Android get all info in 1 time
+        var _user={
+            id: data.profile.id,
+            name: data.profile.name,
+            email: data.profile.email,
+            gender: data.profile.gender,
+            type: 'fb',
+            token: data.token,
+        };
+        this.setState({ user: _user, });
+        this.saveUserDB(_user);
+    }else{	//iOS need fetch manually
+      var _this = this;
+      var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
+      fetch(api)
+        .then((response) => response.json())
+        .then((responseData) => {
+	  //console.log(responseData)
+            var _user={
+              id : responseData.id,
+              name : responseData.name,
+              email: responseData.email,
+              gender: responseData.gender,
+              type: 'fb',
+              token: data.credentials.token,
+            };
+            _this.setState({ user : _user });
+            _this.saveUserDB(_user);
+        }).done();
+    }
+  },
+  _googleSignIn() {
+    GoogleSignin.signIn().then((data) => {
+      //console.log(data);
+      this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
+      this.saveUserDB(this.state.user);
+    }).catch((err) => {
+      console.log('WRONG SIGNIN', err);
+    }).done();
+  },
+
+  _googleSignOut() {
+    GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
+      this.deleteUserDB();
+    }).done();
   },
   onRegionChange(region) {
     this.setState({ region });
@@ -104,70 +168,25 @@ const Main = React.createClass({
   getInitialState() {
     return {
       isLoading:true,
-      region: {
+      region: {    //check on start up
         latitude: 0,
         longitude: 0,
         latitudeDelta: 10,
         longitudeDelta: 10,
       },
+      user: null,  //check on start up
       markers: [],
       circles: [],
-      user: null,
     };
-  }, 
-  _facebookSignIn(data) {
-    //console.log(data)
-    if(data.hasOwnProperty('profile')){	//Android get all info in 1 time
-        this.setState({
-	  user: {
-	    id: data.profile.id,
-	    name: data.profile.name,
-	    email: data.profile.email,
-	    gender: data.profile.gender,
-	    type: 'fb',
-            token: data.token,
-	  }
-	});
-    }else{	//iOS need fetch manually
-      var _this = this;
-      var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
-      fetch(api)
-        .then((response) => response.json())
-        .then((responseData) => {
-	  console.log(responseData)
-          _this.setState({
-            user : {
-              id : responseData.id,
-              name : responseData.name,
-              email: responseData.email,
-              gender: responseData.gender,
-              type: 'fb',
-              token: data.credentials.token,
-            },
-          });
-        }).done();
-    }
-  },
-  _googleSignIn() {
-    GoogleSignin.signIn().then((data) => {
-      console.log(data);
-      this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
-    }).catch((err) => {
-      console.log('WRONG SIGNIN', err);
-    }).done();
-  },
-
-  _googleSignOut() {
-    GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
-      this.setState({user: null});
-    }).done();
   },
   componentWillMount(){
-    Store.get('region').then((value) => {
-      this.setState({
-        isLoading:false,
+    var _this = this;
+    Store.get('region').then((region_value) => {
+      _this.setState({ region:region_value });
+      Store.get('user').then((user_value) => {
+        _this.setState({ user:user_value });
+        _this.setState({ isLoading:false, });
       });
-      this.setState({ region:value });
       //console.log('isLoading:'+this.state.isLoading+'\n'+JSON.stringify(value));
     });
   },
@@ -180,9 +199,9 @@ const Main = React.createClass({
       offlineAccess: true
     });
 
-    GoogleSignin.currentUserAsync().then((user) => {
-      console.log('USER', user);
-      this.setState({user: user});
+    GoogleSignin.currentUserAsync().then((data) => {
+      //console.log('componentDidMount():Check Google Login:', data);
+      if(this.state.user === null) this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode} });
     }).done();
   },
   render() {
