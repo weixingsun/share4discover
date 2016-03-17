@@ -1,11 +1,12 @@
 'use strict';
-
 var React = require('react-native');
 //var GiftedListView = require('react-native-gifted-listview');
 import GiftedListView from './GiftedListView';
 var { StyleSheet, Text, View, TouchableHighlight } = React;
-var Example = React.createClass({
-  
+import RestAPI from "../io/RestAPI"
+var NetAPI = new RestAPI();
+
+var List = React.createClass({
   /**
    * refreshing
    * @param {number} page Requested page to fetch
@@ -14,6 +15,11 @@ var Example = React.createClass({
    */
   _onFetch(page = 1, callback, options) {
     //console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
+    NetAPI.rangeMsg('car','-43.52,172.62',5000).then((rows)=> {
+      //console.log('remote redis rows:'+JSON.stringify(rows));
+      callback(rows, {allLoaded: true} );
+    });
+    /*
     setTimeout(() => {
       var rows = ['row '+((page - 1) * 3 + 1), 'row '+((page - 1) * 3 + 2), 'row '+((page - 1) * 3 + 3)];
       if (page === 10) {
@@ -23,9 +29,8 @@ var Example = React.createClass({
       } else {
         callback(rows);
       }
-    }, 1000); // simulating network fetching
+    }, 1000);*/
   },
-  
   
   /**
    * When a row is touched
@@ -38,7 +43,7 @@ var Example = React.createClass({
     this.refs.list._refresh(null, {external: true});
   },
   /**
-   * Render a row
+   * Render a row  // customize this function for prettier view for each row.
    * @param {object} rowData Row data
    */
   _renderRowView(rowData) {
@@ -48,7 +53,7 @@ var Example = React.createClass({
         underlayColor='#c8c7cc'
         onPress={() => this._onPress(rowData)}
       >  
-        <Text>{rowData}</Text>
+        <Text>{JSON.stringify(rowData)}</Text>
       </TouchableHighlight>
     );
   },
@@ -93,4 +98,4 @@ var styles = {
   },
 };
 
-module.exports = Example;
+module.exports = List;

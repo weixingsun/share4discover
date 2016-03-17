@@ -9,7 +9,7 @@ import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import EventEmitter from 'EventEmitter'
 import Button from 'react-native-button'
-import Rest from "../io/Rest"
+//import Rest from "../io/Rest"
 import Store from "../io/Store"
 
 import PriceMarker from './PriceMarker'

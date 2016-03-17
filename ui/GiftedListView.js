@@ -1,17 +1,9 @@
 'use strict'
-
 var React = require('react-native');
-
-var {
-  ListView,
-  Platform,
-  TouchableHighlight,
-  View,
-  Text,
-  PullToRefreshViewAndroid
-} = React;
 const Icon = require('react-native-vector-icons/Ionicons');
 //<Icon name={'ion-chevron-down'} size={30} color='#ccc'
+
+var { ListView, Platform, TouchableHighlight, View, Text, PullToRefreshViewAndroid, } = React;
 
 // small helper function which merged two objects into one
 function MergeRecursive(obj1, obj2) {
