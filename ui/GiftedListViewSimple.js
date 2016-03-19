@@ -1,8 +1,8 @@
 'use strict';
 var React = require('react-native');
-//var GiftedListView = require('react-native-gifted-listview');
+var ListPopover = require('react-native-list-popover');
 import GiftedListView from './GiftedListView';
-var { StyleSheet, Text, View, TouchableHighlight } = React;
+var { StyleSheet, Text, View, TouchableHighlight, Image } = React;
 import RestAPI from "../io/RestAPI"
 var NetAPI = new RestAPI();
 
@@ -47,13 +47,18 @@ var List = React.createClass({
    * @param {object} rowData Row data
    */
   _renderRowView(rowData) {
+    //var URL = 'http://nzmessengers.co.nz/nz/thumbnail/'+rowData.type+'_'+rowData.thumbnail+'_64_64.png';
+    var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.jpg';
+    console.log(URL);
     return (
       <TouchableHighlight 
         style={styles.row} 
         underlayColor='#c8c7cc'
-        onPress={() => this._onPress(rowData)}
-      >  
-        <Text>{JSON.stringify(rowData)}</Text>
+        onPress={() => this._onPress(rowData)} >
+          <View style={{flexDirection: 'row'}}>
+            <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
+            <Text>{rowData.title}</Text>
+          </View>
       </TouchableHighlight>
     );
   },
@@ -61,13 +66,13 @@ var List = React.createClass({
   render() {
     return (
       <View style={styles.container}>
-        <TouchableHighlight
+        <View
 	  style={styles.navBar}
 	  underlayColor='#c8c7cc'
 	  onPress={this._forceRefresh}
 	>
 	  <Text>Press to Refresh</Text>
-	</TouchableHighlight>
+	</View>
         <GiftedListView
 	  ref='list'
           rowView={this._renderRowView}
@@ -88,13 +93,17 @@ var styles = {
     backgroundColor: '#FFF',
   },
   navBar: {
-    height: 50,
-    padding: 10,
+    height: 60,
+    padding: 6,
     backgroundColor: '#CCC'
   },
   row: {
-    padding: 10,
-    height: 44,
+    padding: 2,
+    height: 68,
+  },
+  thumbnail: {
+    width: 64,
+    height: 64, 
   },
 };
 

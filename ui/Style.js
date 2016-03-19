@@ -32,6 +32,10 @@ export default Style = {
   CARD_PADDING_Y: em(1.25),
 
   SEARCH_WIDTH: x-100,
+
+  //Login Button
+  LOGIN_BUTTON_WIDTH: x-40,
+  LOGIN_BUTTON_HEIGHT: 40,
   
   //Font
   FONT_SIZE: em(1),

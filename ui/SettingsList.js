@@ -1,20 +1,34 @@
 'use strict';
 
 var React = require('react-native');
-var {View, Text, StyleSheet} = React;
+var {View, Text, StyleSheet, ScrollView} = React;
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
+var Login = require('./Login');
 
-class Register extends React.Component {
+class Settings extends React.Component {
     render(){
         return (
-	<View>
-            <View style={styles.container}>
-                <Text>Register page</Text>
-                <Button onPress={Actions.home}>Replace screen</Button>
-                <Button onPress={Actions.pop}>Back</Button>
+          <ScrollView>
+            <View style={styles.card}>
+              <Login />
             </View>
-	</View>
+            <View style={styles.card}>
+              <Button onPress={Actions.register}>Register</Button>
+            </View>
+            <View style={styles.card}>
+              <Text>What is Hot</Text>
+            </View>
+            <View style={styles.card}>
+              <Text>Settings</Text>
+            </View>
+            <View style={styles.card}>
+              <Text>Help</Text>
+            </View>
+            <View style={styles.card}>
+              <Text>About</Text>
+            </View>
+          </ScrollView>
         );
     }
 }
@@ -52,4 +66,4 @@ var styles = StyleSheet.create({
     },
 });
 
-module.exports = Register;
+module.exports = Settings;
