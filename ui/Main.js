@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
 
-import PriceMarker from './PriceMarker'
 import TabBarFrame from './TabBar'
 import Style       from "./Style"
 import Loading     from "./Loading"
@@ -13,7 +12,6 @@ import GoogleMap   from "./GoogleMap"
 import GooglePlace from "./GooglePlace"
 import SettingsList   from "./SettingsList"
 import GiftedListView from './GiftedListViewSimple'
-var mkid = 0,ccid = 0;
 
 const Main = React.createClass({
   getInitialState() {

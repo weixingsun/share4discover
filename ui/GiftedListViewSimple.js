@@ -1,10 +1,16 @@
 'use strict';
 var React = require('react-native');
-var ListPopover = require('react-native-list-popover');
 import GiftedListView from './GiftedListView';
-var { StyleSheet, Text, View, TouchableHighlight, Image } = React;
+var { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions } = React;
 import RestAPI from "../io/RestAPI"
 var NetAPI = new RestAPI();
+import Picker from 'react-native-picker';
+const Icon = require('react-native-vector-icons/FontAwesome');
+//var { Option, Select } = require('react-native-selectit');
+var {Actions} = require('react-native-router-flux');
+//import Selectme from "./Selectme"
+//const height = Dimensions.get('window').height;
+import Style from "./Style"
 
 var List = React.createClass({
   /**
@@ -15,7 +21,7 @@ var List = React.createClass({
    */
   _onFetch(page = 1, callback, options) {
     //console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
-    NetAPI.rangeMsg('car','-43.52,172.62',5000).then((rows)=> {
+    NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //console.log('remote redis rows:'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
@@ -57,21 +63,72 @@ var List = React.createClass({
         onPress={() => this._onPress(rowData)} >
           <View style={{flexDirection: 'row'}}>
             <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
-            <Text>{rowData.title}</Text>
+            <View style={styles.rowTitleView}>
+                 <Text style={styles.rowTitle}>{rowData.title}</Text>
+            </View>
           </View>
       </TouchableHighlight>
     );
   },
-  
+  getInitialState: function() {
+    return {
+      items: ['car','girl'],
+      type: "car",
+      typeHeaderHeight: 50,
+      typeHeaderWidth: Style.DEVICE_WIDTH,
+      typeIconStyle: styles.normal,
+    };
+  },
+    _onTypeChange(_type){
+        this.setState({type: _type })
+        this.setHeaderViewStyle();
+        this._forceRefresh();
+    },
+    openFilter(){
+        console.log('openFilter');
+        //Actions.selectType();
+        this.setHeaderViewStyle();
+    },
+    setHeaderViewStyle(){
+        if(this.state.typeHeaderHeight===50 ) {
+            this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
+            this.refs.picker.toggle()
+        }else{
+            if(this.refs.picker.isPickerShow) this.refs.picker.hide();
+            this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
+            //this.refs.picker.toggle()
+        }
+    },
+    getDynamicStyle(){
+      return {
+        height: this.state.typeHeaderHeight,
+        width: this.state.typeHeaderWidth,
+        backgroundColor: '#CCC',
+      };
+    },
   render() {
     return (
       <View style={styles.container}>
-        <View
-	  style={styles.navBar}
-	  underlayColor='#c8c7cc'
-	  onPress={this._forceRefresh}
-	>
-	  <Text>Press to Refresh</Text>
+        <View style={this.getDynamicStyle()} >
+          <View style={{flexDirection:'row', padding: 10}}>
+            <Icon name={'filter'} size={40} color='#444' onPress={this.openFilter} style={this.state.typeIconStyle} />
+            <View style={styles.rowTitleView}>
+                <Text style={styles.rowTitle}>{this.state.type}</Text>
+            </View>
+          </View>
+          <Picker
+            ref="picker"
+            style={{ height: 300 }}
+            showDuration={300}
+            showMask={false}
+            pickerData={['car','girl']}//picker`s value List
+            selectedValue={this.state.type}//default to be selected value
+            pickerElevation={99}
+            pickerBtnText={'Choose'}
+            //pickerTitleStyle={{height:44,}}
+            onPickerCancel={this.setHeaderViewStyle}//default to be selected value
+            onPickerDone={this._onTypeChange}//when confirm your choice
+          />
 	</View>
         <GiftedListView
 	  ref='list'
@@ -91,19 +148,56 @@ var styles = {
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
   navBar: {
-    height: 60,
+    height: 50,
     padding: 6,
-    backgroundColor: '#CCC'
+    backgroundColor: '#CCC',
+    //flex:1,
+    //flexDirection:'row',
   },
   row: {
     padding: 2,
     height: 68,
+    flex: 1,
+    justifyContent: 'center',
+    //alignItems: 'center'
   },
   thumbnail: {
     width: 64,
     height: 64, 
+  },
+  rowTitleView:{
+    marginLeft: 10,
+    height: 66,
+    //marginBottom: 10,
+    justifyContent: 'center',
+    flex:1,
+  },
+  selectTypeView:{
+    position: 'absolute',
+    width: 20,
+    height: Style.CARD_HEIGHT,
+    flex : 1,
+    justifyContent : "center",
+    alignItems : "center",
+    //backgroundColor : "#ffffff"
+  },
+  rowTitle:{
+    fontSize:20,
+    justifyContent: 'center',
+    //fontWeight:'bold',
+    height: 60,
+    //marginBottom:10,
+    //marginLeft:10,
+  },
+  rotate270: {
+    transform: [{ rotate: '270deg' }]
+  },
+  normal:{
+
   },
 };
 

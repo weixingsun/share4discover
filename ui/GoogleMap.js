@@ -6,6 +6,7 @@ var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
+import PriceMarker from './PriceMarker'
 
 var GoogleMap = React.createClass({
   onRegionChange(region) {
@@ -15,7 +16,7 @@ var GoogleMap = React.createClass({
   onLongPress(event) {
     console.log(event.nativeEvent);
     //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-    this.addMarker({id: mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+    this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
   },
   addMarker(marker){
     var {markers} = this.state;
@@ -41,7 +42,9 @@ var GoogleMap = React.createClass({
         latitudeDelta: 10,
         longitudeDelta: 10,
       },
+      mkid:0,
       markers: [],
+      ccid:0,
       circles: [],
     };
   },
