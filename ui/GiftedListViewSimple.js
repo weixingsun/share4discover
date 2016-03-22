@@ -25,6 +25,9 @@ var List = React.createClass({
       //console.log('remote redis rows:'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
+    NetAPI.getMsgTypes().then((rows)=> {
+      this.setState({types:rows});
+    });
     /*
     setTimeout(() => {
       var rows = ['row '+((page - 1) * 3 + 1), 'row '+((page - 1) * 3 + 2), 'row '+((page - 1) * 3 + 3)];
@@ -57,14 +60,11 @@ var List = React.createClass({
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.jpg';
     console.log(URL);
     return (
-      <TouchableHighlight 
-        style={styles.row} 
-        underlayColor='#c8c7cc'
-        onPress={() => this._onPress(rowData)} >
-          <View style={{flexDirection: 'row'}}>
+      <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' onPress={() => this._onPress(rowData)} >
+          <View style={{flexDirection: 'row', height: 66}}>
             <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
             <View style={styles.rowTitleView}>
-                 <Text style={styles.rowTitle}>{rowData.title}</Text>
+                <Text style={styles.rowTitleText}>{rowData.title}</Text>
             </View>
           </View>
       </TouchableHighlight>
@@ -72,7 +72,7 @@ var List = React.createClass({
   },
   getInitialState: function() {
     return {
-      items: ['car','girl'],
+      types: ['car'],
       type: "car",
       typeHeaderHeight: 50,
       typeHeaderWidth: Style.DEVICE_WIDTH,
@@ -103,17 +103,17 @@ var List = React.createClass({
       return {
         height: this.state.typeHeaderHeight,
         width: this.state.typeHeaderWidth,
-        backgroundColor: '#CCC',
+        backgroundColor: 'rgba(200, 200, 200, 0.8)',
       };
     },
   render() {
     return (
       <View style={styles.container}>
         <View style={this.getDynamicStyle()} >
-          <View style={{flexDirection:'row', padding: 10}}>
+          <View style={{flexDirection:'row', padding: 6}}>
             <Icon name={'filter'} size={40} color='#444' onPress={this.openFilter} style={this.state.typeIconStyle} />
-            <View style={styles.rowTitleView}>
-                <Text style={styles.rowTitle}>{this.state.type}</Text>
+            <View style={styles.typeTitleView}>
+                <Text style={styles.rowTitleText}>{this.state.type}</Text>
             </View>
           </View>
           <Picker
@@ -121,9 +121,9 @@ var List = React.createClass({
             style={{ height: 300 }}
             showDuration={300}
             showMask={false}
-            pickerData={['car','girl']}//picker`s value List
+            pickerData={this.state.types}
             selectedValue={this.state.type}//default to be selected value
-            pickerElevation={99}
+            //pickerElevation={99}
             pickerBtnText={'Choose'}
             //pickerTitleStyle={{height:44,}}
             onPickerCancel={this.setHeaderViewStyle}//default to be selected value
@@ -147,51 +147,43 @@ var List = React.createClass({
 var styles = {
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: 'rgba(255, 255, 255, 1.0)',
     //alignItems: 'center',
     //justifyContent: 'center',
   },
   navBar: {
-    height: 50,
-    padding: 6,
-    backgroundColor: '#CCC',
+    height: 66,
+    padding: 2,
+    backgroundColor: 'rgba(255, 255, 255, 1.0)',
     //flex:1,
     //flexDirection:'row',
   },
   row: {
     padding: 2,
     height: 68,
-    flex: 1,
+    //flex: 1,
     justifyContent: 'center',
     //alignItems: 'center'
   },
   thumbnail: {
-    width: 64,
-    height: 64, 
+    width: 66,
+    height: 66, 
   },
   rowTitleView:{
-    marginLeft: 10,
     height: 66,
     //marginBottom: 10,
     justifyContent: 'center',
-    flex:1,
+    //flex:1,
   },
-  selectTypeView:{
-    position: 'absolute',
-    width: 20,
-    height: Style.CARD_HEIGHT,
-    flex : 1,
-    justifyContent : "center",
-    alignItems : "center",
-    //backgroundColor : "#ffffff"
-  },
-  rowTitle:{
-    fontSize:20,
+  typeTitleView:{
+    height: 50,
     justifyContent: 'center',
+  },
+  rowTitleText:{
+    fontSize:20,
+    marginLeft:10,
     //fontWeight:'bold',
-    height: 60,
     //marginBottom:10,
-    //marginLeft:10,
   },
   rotate270: {
     transform: [{ rotate: '270deg' }]

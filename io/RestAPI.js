@@ -38,6 +38,10 @@ class RestAPI extends React.Component {
       var url = 'http://45.32.83.93/api/msg/'+key;
       return this._get(url);
     }
+    getMsgTypes(){
+      var url = 'http://45.32.83.93/api/msg_types';
+      return this._get(url);
+    }
     setMsg(json){
       var url = 'http://45.32.83.93/api/msg/';
       return this._post(url, json);
