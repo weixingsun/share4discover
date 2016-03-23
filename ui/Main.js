@@ -1,5 +1,6 @@
 import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator, TouchableOpacity, } from 'react-native'
-import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view'
+//import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view'
+var Tabs = require('react-native-tabs');
 import {Actions} from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/Ionicons'
 import EventEmitter from 'EventEmitter'
@@ -19,6 +20,7 @@ const Main = React.createClass({
   //},
   getInitialState() {
     return {
+      page:'ios-chatboxes',
       isLoading:true,
       region: {    //check on start up
         latitude: 0,
@@ -33,6 +35,7 @@ const Main = React.createClass({
   },
   componentWillMount(){
     var _this = this;
+    //_this.setState({ page:'ios-people' });
     Store.get('region').then((region_value) => {
       _this.setState({ region:region_value });
       Store.get('user').then((user_value) => {
@@ -41,37 +44,47 @@ const Main = React.createClass({
       });
     });
   },
+  pages(){
+    if(this.state.page ==='ios-chatboxes'){
+      return <GiftedListView navigator={this.props.navigator}/>
+    } else if(this.state.page ==='ios-people'){
+      return <Text>Friends</Text>
+    } else if(this.state.page ==='email'){
+      return <Text>Messengers</Text>
+    } else if(this.state.page ==='ios-world'){
+      return <GoogleMap region={this.state.region} />
+    } else if(this.state.page ==='navicon-round'){
+      return <SettingsList />
+    }
+  },
+  gotoPage(name){
+    this.setState({ page: name });
+  },
+//ios-chatboxes
+//email / email-unread
+//ios-world
+//navicon-round
+
+//selectedIconStyle={{borderTopWidth:2,borderTopColor:'red'}}
+//selectedStyle={{color:'green'}}
   render() {
     if(this.state.isLoading) return <Loading />
     var _this = this;
     //console.log('main.navigator:'+this.props.navigator);
     return <View style={styles.container}>
-      <ScrollableTabView initialPage={0} renderTabBar={() => <TabBarFrame />}>
-        <View tabLabel="ios-paper" style={styles.tabView}>
-            <GiftedListView navigator={this.props.navigator}/>
-        </View>
-        <ScrollView tabLabel="person-stalker" style={styles.tabView}>
-          <View style={styles.card}>
-            <Text>Friends</Text>
-          </View>
-        </ScrollView>
-        <ScrollView tabLabel="ios-chatboxes" style={styles.tabView}>
-          <View style={styles.card}>
-            <Text>Messenger</Text>
-          </View>
-        </ScrollView>
-        <View tabLabel="ios-world" style={styles.tabView}>
-          <View style={styles.card_map}>
-	    <GoogleMap region={this.state.region}/>
-	    <GooglePlace style={styles.search} />
-          </View>
-        </View>
-        <SettingsList tabLabel="navicon-round" style={styles.tabView} />
-      </ScrollableTabView>
+        <Tabs selected={this.state.page} style={{backgroundColor:'white'}}
+              selectedStyle={{color:'red'}} onSelect={el=>this.setState({page:el.props.name})}>
+            <Icon name="ios-chatboxes" size={40} />
+            <Icon name="ios-people" size={40} />
+            <Icon name="email" size={40} />
+            <Icon name="ios-world" size={40} />
+            <Icon name="navicon-round" size={40} />
+        </Tabs>
+        {this.pages()}
     </View>
   },
 })
-
+//<GooglePlace style={styles.search} />
 const styles = StyleSheet.create({
   container: {
     flex: 1,

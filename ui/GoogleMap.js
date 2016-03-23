@@ -6,6 +6,7 @@ var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
+import Style from "./Style"
 import PriceMarker from './PriceMarker'
 
 var GoogleMap = React.createClass({
@@ -51,7 +52,7 @@ var GoogleMap = React.createClass({
     render(){
         return (
             <MapView
-              style={styles.map}
+              style={Style.absoluteContainer}
               showsUserLocation={true}
               onRegionChangeComplete={this.onRegionChange}
               initialRegion={this.props.region}
@@ -112,7 +113,7 @@ var styles = {
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: 50,
     },
 };
 

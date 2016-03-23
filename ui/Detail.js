@@ -44,21 +44,27 @@ var Detail = React.createClass( {
         var arr = [];
         //var p = this.props.data;
         for (var key in data) {
-          if (data.hasOwnProperty(key)) {
+          if (data.hasOwnProperty(key) && this.filterKeys(key, data)) {
              arr.push(key + ":" + data[key]);
           }
         }
         return arr;
     },
+    filterKeys(key,json){
+        var b1 = (json[key]+"").length>0;
+        var b2 = key !== 'thumbnail'
+        var b3 = key !== 'lat'
+        var b4 = key !== 'lng'
+        var b5 = key !== 'title'
+        return b1 && b2 && b3 && b4 && b5;
+    },
     handleClick(data){
       console.log(data)
     },
     renderRow(rowData) {
-      var separatorStyle = styles.separator;
-      var rowTextStyle = styles.rowText;
-      var separator = <View style={separatorStyle}/>;
+      var separator = <View style={styles.separator}/>;
       if (rowData === this.state.msgList[0]) separator = null;
-      var row = <Text style={rowTextStyle}>{rowData}</Text>
+      var row = <Text style={styles.rowText}>{rowData}</Text>
 
       return (
         <View>
@@ -70,7 +76,6 @@ var Detail = React.createClass( {
       );
     },
     renderList() {
-      var styles = styles ;
       var maxHeight = {};
       if (this.state.msgList.length > 12) {
         maxHeight = {height: SCREEN_HEIGHT * 3/4};
@@ -145,7 +150,7 @@ var styles = StyleSheet.create({
     },
     navbar: {
         backgroundColor: Style.NavBarColor,
-        paddingTop:30,
+        paddingTop:20,
         paddingBottom:10,
         flexDirection:'row'
     },
@@ -163,14 +168,14 @@ var styles = StyleSheet.create({
         fontWeight:'bold',
         flex:1,
         alignItems: 'center',
-        fontSize:20,
+        fontSize:30,
     },
     card: {
       flex: 1,
       //borderWidth: 1,
       //backgroundColor: '#fff',
       //borderColor: 'rgba(0,0,0,0.5)',
-      //margin: 5,
+      margin: 20,
       //padding: 50,
       shadowColor: '#ccc',
       //shadowOffset: { width: 2, height: 2, },
@@ -181,16 +186,19 @@ var styles = StyleSheet.create({
       flexDirection: 'row',
       height: 50,
     },
+    rowText:{
+      fontSize: 24,
+    },
     map:{
-      flex: 1,
+      flex: 2,
       //borderWidth: 1,
       borderColor: 'rgba(0,0,0,0.5)',
-      //margin: 5,
+      margin: 10,
       shadowColor: '#ccc',
       //shadowOffset: { width: 2, height: 2, },
       //shadowOpacity: 0.5,
       //shadowRadius: 3,
-      width: w-40,
+      //width: w-40,
     },
     
 });

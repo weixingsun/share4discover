@@ -18,6 +18,8 @@
     "react-native-picker": "^2.0.4",
     "react-native-router-flux": "latest",
     "react-native-scrollable-tab-view": "latest",
+    "react-native-tableview": "^1.4.7",
+    "react-native-tabs": "^1.0.5",
     "react-native-vector-icons": "^1.2.0",
     "react-native-wechat": "^1.3.1"
   }

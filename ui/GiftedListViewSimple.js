@@ -120,7 +120,7 @@ var List = React.createClass({
   },
   render() {
     return (
-      <View style={styles.container}>
+      <View style={Style.absoluteContainer}>
         <View style={this.getDynamicStyle()} >
           <View style={{flexDirection:'row', padding: 6}}>
             <TouchableOpacity style={styles.button} onPress={this.showPopover}>

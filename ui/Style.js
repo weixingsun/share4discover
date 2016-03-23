@@ -46,5 +46,13 @@ module.exports = {
   FONT_SIZE_TITLE: em(1.25),
   
   //NavBar
-  NavBarColor: '#0088ff'
+  NavBarColor: '#0088ff',
+  absoluteContainer:{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 50,
+  },
+
 };

@@ -5,11 +5,12 @@ var {View, Text, StyleSheet, ScrollView} = React;
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 var Login = require('./Login');
+var Style = require('./Style');
 
 class Settings extends React.Component {
     render(){
         return (
-          <ScrollView>
+          <View style={Style.absoluteContainer}>
             <View style={styles.card}>
               <Login />
             </View>
@@ -28,7 +29,7 @@ class Settings extends React.Component {
             <View style={styles.card}>
               <Text>About</Text>
             </View>
-          </ScrollView>
+          </View>
         );
     }
 }
