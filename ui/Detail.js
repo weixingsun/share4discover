@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var {View, ListView, Text, StyleSheet, Dimensions, TouchableHighlight} = React;
+var {View, ListView, Text, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity} = React;
 import Button from 'react-native-button';
 //var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps';
@@ -9,7 +9,7 @@ var Style = require('./Style');
 const h = Dimensions.get('window').height;
 const w = Dimensions.get('window').width;
 const Icon = require('react-native-vector-icons/Ionicons');
-
+var ds = new ListView.DataSource({rowHasChanged: (r1,r2)=>(r1!==r2)});
 var Detail = React.createClass( {
     
     goBack() {
@@ -22,8 +22,11 @@ var Detail = React.createClass( {
         lat=parseFloat(msg.lat);
         lng = parseFloat(msg.lng);
       }
+      var list = this.getMsgArray(this.props.data);
       return {
           msg: this.props.data,
+          msgList: list,
+          dataSource: ds.cloneWithRows(list),
           region: {    //check on start up
             latitude: lat,
             longitude: lng,
@@ -32,13 +35,49 @@ var Detail = React.createClass( {
           },
       };
     },
-    renderMsgBody(){
-        var p = this.props.data;
-        for (var key in p) {
-          if (p.hasOwnProperty(key)) {
-             //(key + " -> " + p[key]);
+    getMsgArray(data){
+        var arr = [];
+        //var p = this.props.data;
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+             arr.push(key + ":" + data[key]);
           }
         }
+        return arr;
+    },
+    handleClick(data){
+      console.log(data)
+    },
+    renderRow(rowData) {
+      var separatorStyle = styles.separator;
+      var rowTextStyle = styles.rowText;
+      var separator = <View style={separatorStyle}/>;
+      if (rowData === this.state.msgList[0]) separator = null;
+      var row = <Text style={rowTextStyle}>{rowData}</Text>
+
+      return (
+        <View>
+          {separator}
+          <TouchableOpacity onPress={() => this.handleClick(rowData)}>
+          {row}
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    renderList() {
+      var styles = styles ;
+      var maxHeight = {};
+      if (this.state.msgList.length > 12) {
+        maxHeight = {height: SCREEN_HEIGHT * 3/4};
+      }
+      return (
+        <ListView
+        style={maxHeight}
+        dataSource={this.state.dataSource}
+        renderRow={(rowData) => this.renderRow(rowData)}
+        automaticallyAdjustContentInsets={false}
+        />
+      );
     },
     render(){
         return (
@@ -58,7 +97,7 @@ var Detail = React.createClass( {
                     <Text style={styles.toolbarTitleText} >{this.state.content}</Text>
                   </View>
                   <View style={{flex:5}}>
-                    <Text>Message content: {JSON.stringify(this.props.data)}</Text>
+                    {this.renderList()}
                   </View>
                </View>
                <View style={styles.map}>
@@ -85,20 +124,21 @@ var styles = StyleSheet.create({
         padding: 30,
     },
     mainContainer:{
-        flex:1                  //Step 1
+        flex:1 
     },
     content:{
         backgroundColor:'#ebeef0',
-        flex:1                //Step 2
+        flex:1
     },
     navbar: {
         backgroundColor: Style.NavBarColor,
         paddingTop:30,
         paddingBottom:10,
-        flexDirection:'row'    //Step 1
+        flexDirection:'row'
     },
     navButton:{
-        width: 50,            //Step 2
+        width: 50,
+        alignItems: 'center',
     },
     //toolbarTitleView:{
     //    flex:1,
