@@ -18,7 +18,9 @@ function em(value){
 module.exports = {
   //General
   DEVICE_WIDTH:x,
+  QUARTER_DEVICE_WIDTH:x/4,
   DEVICE_HEIGHT:y,
+  QUARTER_DEVICE_HEIGHT:y/4,
   RATIO_X:ratioX,
   RATIO_Y:ratioY,
   UNIT:em(1),

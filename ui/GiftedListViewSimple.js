@@ -8,6 +8,8 @@ import Picker from 'react-native-picker';
 const Icon = require('react-native-vector-icons/FontAwesome');
 //var { Option, Select } = require('react-native-selectit');
 //var {Actions} = require('react-native-router-flux');
+//var ListPopover = require('react-native-list-popover');
+var ListPopover = require('./ListPopover')
 //import Selectme from "./Selectme"
 //const height = Dimensions.get('window').height;
 import Style from "./Style"
@@ -23,7 +25,7 @@ var List = React.createClass({
   _onFetch(page = 1, callback, options) {
     //console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
     NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
-      console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
+      //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
     NetAPI.getMsgTypes().then((rows)=> {
@@ -47,7 +49,7 @@ var List = React.createClass({
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
-    console.log('list.navigator:'+this.state.navigator);
+    //console.log('list.navigator:'+this.state.navigator);
     //Actions.detail({data:rowData, title:rowData.title });
     this.props.navigator.push({
         component: Detail,
@@ -87,29 +89,33 @@ var List = React.createClass({
       navigator: this.props.navigator,
       types: ['car'],
       type: "car",
+      isVisible: false,
       typeHeaderHeight: 50,
       typeHeaderWidth: Style.DEVICE_WIDTH,
       typeIconStyle: styles.normal,
     };
   },
-    _onTypeChange(_type){
-        this.setState({type: _type })
-        this.setHeaderViewStyle();
-        this._forceRefresh();
-    },
-    openFilter(){
-        //console.log('openFilter');
-        //Actions.selectType();
-        this.setHeaderViewStyle();
-    },
+  showPopover: function() {
+    this.setState({isVisible: true});
+    this.setHeaderViewStyle();
+  },
+  closePopover: function() {
+    this.setState({isVisible: false});
+    //this._forceRefresh();
+  },
+  setItem: function(item) {
+    this.setHeaderViewStyle();
+    this.setState({type: item});
+    this._forceRefresh();
+  },
     setHeaderViewStyle(){
         if(this.state.typeHeaderHeight===50 ) {
             this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
-            this.refs.picker.show()
+            //this.refs.picker.show()
         }else{
             //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
             this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
-            this.refs.picker.hide()
+            //this.refs.picker.hide()
         }
     },
     getDynamicStyle(){
@@ -124,25 +130,20 @@ var List = React.createClass({
       <View style={styles.container}>
         <View style={this.getDynamicStyle()} >
           <View style={{flexDirection:'row', padding: 6}}>
-            <Icon name={'filter'} size={40} color='#444' onPress={this.openFilter} style={this.state.typeIconStyle} />
-            <View style={styles.typeTitleView}>
-                <Text style={styles.rowTitleText}>{this.state.type}</Text>
-            </View>
+            <TouchableOpacity style={styles.button} onPress={this.showPopover}>
+               <View style={styles.typeButton}>
+                <Icon name={'filter'} size={20} color='#444' style={this.state.typeIconStyle} />
+                <Text>  {this.state.type}</Text>
+               </View>
+            </TouchableOpacity>
           </View>
-          <Picker
-            ref="picker"
-            style={{ height: 300 }}
-            showDuration={300}
-            showMask={true}
-            pickerData={this.state.types}
-            selectedValue={this.state.type}//default to be selected value
-            pickerElevation={1}
-            pickerBtnText={'Choose'}
-            //pickerTitleStyle={{height:44,}}
-            pickerToolBarStyle={{height:40, backgroundColor:'rgba(200, 200, 200, 0.8)'}}
-            onPickerCancel={this.setHeaderViewStyle}//default to be selected value
-            onPickerDone={this._onTypeChange}//when confirm your choice
-          />
+
+          <ListPopover
+            list={this.state.types}
+            //renderRow={}
+            isVisible={this.state.isVisible}
+            onClick={this.setItem}
+            onClose={this.closePopover}/>
 	</View>
         <GiftedListView
 	  ref='list'
@@ -205,6 +206,18 @@ var styles = {
   },
   normal:{
 
+  },
+  button: {
+    backgroundColor: "#B8C",
+    borderRadius: 4,
+    padding: 10,
+    //marginLeft: 10,
+    //marginRight: 10,
+    width:Style.QUARTER_DEVICE_WIDTH,
+  },
+  typeButton:{
+    width:Style.QUARTER_DEVICE_WIDTH,
+    flexDirection:'row',
   },
 };
 
