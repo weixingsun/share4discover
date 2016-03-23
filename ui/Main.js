@@ -14,6 +14,9 @@ import SettingsList   from "./SettingsList"
 import GiftedListView from './GiftedListViewSimple'
 
 const Main = React.createClass({
+  //_handleDetail() {
+  //  this.props.navigator.push({id: 2,});
+  //},
   getInitialState() {
     return {
       isLoading:true,
@@ -41,10 +44,11 @@ const Main = React.createClass({
   render() {
     if(this.state.isLoading) return <Loading />
     var _this = this;
+    console.log('main.navigator:'+this.props.navigator);
     return <View style={styles.container}>
       <ScrollableTabView initialPage={0} renderTabBar={() => <TabBarFrame />}>
         <View tabLabel="ios-paper" style={styles.tabView}>
-            <GiftedListView />
+            <GiftedListView navigator={this.props.navigator}/>
         </View>
         <ScrollView tabLabel="person-stalker" style={styles.tabView}>
           <View style={styles.card}>

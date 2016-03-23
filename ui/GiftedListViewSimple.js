@@ -1,16 +1,17 @@
 'use strict';
 var React = require('react-native');
-import GiftedListView from './GiftedListView';
+import GiftedListView from 'react-native-gifted-listview';
 var { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions } = React;
 import RestAPI from "../io/RestAPI"
 var NetAPI = new RestAPI();
 import Picker from 'react-native-picker';
 const Icon = require('react-native-vector-icons/FontAwesome');
 //var { Option, Select } = require('react-native-selectit');
-var {Actions} = require('react-native-router-flux');
+//var {Actions} = require('react-native-router-flux');
 //import Selectme from "./Selectme"
 //const height = Dimensions.get('window').height;
 import Style from "./Style"
+import Detail from "./Detail"
 
 var List = React.createClass({
   /**
@@ -22,7 +23,7 @@ var List = React.createClass({
   _onFetch(page = 1, callback, options) {
     //console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
     NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
-      //console.log('remote redis rows:'+JSON.stringify(rows));
+      console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
     NetAPI.getMsgTypes().then((rows)=> {
@@ -46,7 +47,14 @@ var List = React.createClass({
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
-    console.log(rowData+' pressed');
+    console.log('list.navigator:'+this.state.navigator);
+    //Actions.detail({data:rowData, title:rowData.title });
+    this.props.navigator.push({
+        component: Detail,
+        passProps: {
+            data: rowData,
+        }
+    });
   },
   _forceRefresh(){
     this.refs.list._refresh(null, {external: true});
@@ -58,9 +66,13 @@ var List = React.createClass({
   _renderRowView(rowData) {
     //var URL = 'http://nzmessengers.co.nz/nz/thumbnail/'+rowData.type+'_'+rowData.thumbnail+'_64_64.png';
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.jpg';
-    console.log(URL);
+    //console.log('navigator in List:');
+    //console.log(this.state.navigator);
     return (
-      <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' onPress={() => this._onPress(rowData)} >
+      <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' 
+          //onPress={()=>{this.state.navigator.push({
+          //                component: Detail, passProps: { data: rowData}       }) }} >
+            onPress={()=>{this._onPress(rowData)}} >
           <View style={{flexDirection: 'row', height: 66}}>
             <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
             <View style={styles.rowTitleView}>
@@ -72,6 +84,7 @@ var List = React.createClass({
   },
   getInitialState: function() {
     return {
+      navigator: this.props.navigator,
       types: ['car'],
       type: "car",
       typeHeaderHeight: 50,
@@ -85,18 +98,18 @@ var List = React.createClass({
         this._forceRefresh();
     },
     openFilter(){
-        console.log('openFilter');
+        //console.log('openFilter');
         //Actions.selectType();
         this.setHeaderViewStyle();
     },
     setHeaderViewStyle(){
         if(this.state.typeHeaderHeight===50 ) {
             this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
-            this.refs.picker.toggle()
+            this.refs.picker.show()
         }else{
-            if(this.refs.picker.isPickerShow) this.refs.picker.hide();
+            //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
             this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
-            //this.refs.picker.toggle()
+            this.refs.picker.hide()
         }
     },
     getDynamicStyle(){
@@ -120,12 +133,13 @@ var List = React.createClass({
             ref="picker"
             style={{ height: 300 }}
             showDuration={300}
-            showMask={false}
+            showMask={true}
             pickerData={this.state.types}
             selectedValue={this.state.type}//default to be selected value
-            //pickerElevation={99}
+            pickerElevation={1}
             pickerBtnText={'Choose'}
             //pickerTitleStyle={{height:44,}}
+            pickerToolBarStyle={{height:40, backgroundColor:'rgba(200, 200, 200, 0.8)'}}
             onPickerCancel={this.setHeaderViewStyle}//default to be selected value
             onPickerDone={this._onTypeChange}//when confirm your choice
           />
@@ -134,10 +148,10 @@ var List = React.createClass({
 	  ref='list'
           rowView={this._renderRowView}
           onFetch={this._onFetch}
-          firstLoader={true} // display a loader for the first fetching
-          pagination={true} // enable infinite scrolling using touch to load more
-          refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-          withSections={false} // enable sections
+          firstLoader={true}
+          pagination={true}
+          refreshable={true}
+          withSections={false}
         />
       </View>
     );
@@ -146,8 +160,9 @@ var List = React.createClass({
 
 var styles = {
   container: {
-    flex: 1,
+    //flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 1.0)',
+    height: Style.CARD_HEIGHT,
     //alignItems: 'center',
     //justifyContent: 'center',
   },

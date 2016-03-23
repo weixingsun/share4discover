@@ -1,4 +1,5 @@
 var React = require('react-native');
 var { AppRegistry,  } = React;
-var Main = require('./ui/Main');
-AppRegistry.registerComponent('Share', () => Main);
+//var Main = require('./Main');
+var Nav = require('./Nav');
+AppRegistry.registerComponent('Share', () => Nav);

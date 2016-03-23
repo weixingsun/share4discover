@@ -15,7 +15,7 @@ function em(value){
   return unit * value;
 }
 
-export default Style = {
+module.exports = {
   //General
   DEVICE_WIDTH:x,
   DEVICE_HEIGHT:y,
@@ -43,4 +43,6 @@ export default Style = {
   FONT_SIZE_SMALL: em(0.875),
   FONT_SIZE_TITLE: em(1.25),
   
+  //NavBar
+  NavBarColor: '#0088ff'
 };
