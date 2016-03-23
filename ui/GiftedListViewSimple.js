@@ -23,7 +23,7 @@ var List = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    //console.log('page='+page+',callback='+JSON.stringify(callback)+',options='+JSON.stringify(options));
+    console.log('_onFetch')
     NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
@@ -49,8 +49,6 @@ var List = React.createClass({
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
-    //console.log('list.navigator:'+this.state.navigator);
-    //Actions.detail({data:rowData, title:rowData.title });
     this.props.navigator.push({
         component: Detail,
         passProps: {
@@ -66,14 +64,9 @@ var List = React.createClass({
    * @param {object} rowData Row data
    */
   _renderRowView(rowData) {
-    //var URL = 'http://nzmessengers.co.nz/nz/thumbnail/'+rowData.type+'_'+rowData.thumbnail+'_64_64.png';
-    var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.jpg';
-    //console.log('navigator in List:');
-    //console.log(this.state.navigator);
+    var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.png';
     return (
       <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' 
-          //onPress={()=>{this.state.navigator.push({
-          //                component: Detail, passProps: { data: rowData}       }) }} >
             onPress={()=>{this._onPress(rowData)}} >
           <View style={{flexDirection: 'row', height: 66}}>
             <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
@@ -108,23 +101,23 @@ var List = React.createClass({
     this.setState({type: item});
     this._forceRefresh();
   },
-    setHeaderViewStyle(){
-        if(this.state.typeHeaderHeight===50 ) {
-            this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
-            //this.refs.picker.show()
-        }else{
-            //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
-            this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
-            //this.refs.picker.hide()
-        }
-    },
-    getDynamicStyle(){
-      return {
-        height: this.state.typeHeaderHeight,
-        width: this.state.typeHeaderWidth,
-        backgroundColor: 'rgba(200, 200, 200, 0.8)',
-      };
-    },
+  setHeaderViewStyle(){
+    if(this.state.typeHeaderHeight===50 ) {
+        this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
+        //this.refs.picker.show()
+    }else{
+        //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
+        this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
+        //this.refs.picker.hide()
+    }
+  },
+  getDynamicStyle(){
+    return {
+      height: this.state.typeHeaderHeight,
+      width: this.state.typeHeaderWidth,
+      backgroundColor: 'rgba(200, 200, 200, 0.8)',
+    };
+  },
   render() {
     return (
       <View style={styles.container}>

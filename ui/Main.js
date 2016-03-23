@@ -44,7 +44,7 @@ const Main = React.createClass({
   render() {
     if(this.state.isLoading) return <Loading />
     var _this = this;
-    console.log('main.navigator:'+this.props.navigator);
+    //console.log('main.navigator:'+this.props.navigator);
     return <View style={styles.container}>
       <ScrollableTabView initialPage={0} renderTabBar={() => <TabBarFrame />}>
         <View tabLabel="ios-paper" style={styles.tabView}>

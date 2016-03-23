@@ -22,9 +22,14 @@ var Detail = React.createClass( {
         lat=parseFloat(msg.lat);
         lng = parseFloat(msg.lng);
       }
-      var list = this.getMsgArray(this.props.data);
+      var list = this.getMsgArray(msg);
+      //waypoints=[{latlng:{lat:-43.52, lng:172.62}, title:'' }]
+      var waypoints=[{id:0,latlng:{latitude:lat, longitude:lng}, title:msg.title}]
+      if(msg.hasOwnProperty('waypoints')) waypoints=msg.waypoints;
       return {
-          msg: this.props.data,
+          mkid:0,
+          markers:waypoints,
+          msg: msg,
           msgList: list,
           dataSource: ds.cloneWithRows(list),
           region: {    //check on start up
@@ -106,7 +111,15 @@ var Detail = React.createClass( {
                     //initialRegion={this.state.region}
                     region={this.state.region}
                     //mapType=standard,satellite,hybrid
-                  />
+                  >
+                     {this.state.markers.map(marker => (
+                        <MapView.Marker key={marker.id}
+                          coordinate={marker.latlng}
+                          title={marker.title}
+                          description={marker.description}
+                        />
+                     ))}
+                  </MapView>
                </View>
             </View>
         </View>
