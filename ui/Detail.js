@@ -5,16 +5,14 @@ var {View, ListView, Text, StyleSheet, Dimensions, TouchableHighlight, Touchable
 import Button from 'react-native-button';
 //var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps';
-var Style = require('./Style');
+import Style from './Style'
+import NavBar from './NavBar'
 const h = Dimensions.get('window').height;
 const w = Dimensions.get('window').width;
 const Icon = require('react-native-vector-icons/Ionicons');
 var ds = new ListView.DataSource({rowHasChanged: (r1,r2)=>(r1!==r2)});
 var Detail = React.createClass( {
     
-    goBack() {
-        this.props.navigator.pop();
-    },
     getInitialState() {
       var msg = this.props.data;
       var lat,lng = 0;
@@ -58,7 +56,7 @@ var Detail = React.createClass( {
         var b5 = key !== 'title'
         return b1 && b2 && b3 && b4 && b5;
     },
-    handleClick(data){
+    handleContentClick(data){
       console.log(data)
     },
     renderRow(rowData) {
@@ -69,7 +67,7 @@ var Detail = React.createClass( {
       return (
         <View>
           {separator}
-          <TouchableOpacity onPress={() => this.handleClick(rowData)}>
+          <TouchableOpacity onPress={() => this.handleContentClick(rowData)}>
           {row}
           </TouchableOpacity>
         </View>
@@ -92,15 +90,7 @@ var Detail = React.createClass( {
     render(){
         return (
         <View style={styles.mainContainer}>
-            <View style={styles.navbar}>
-                 <TouchableHighlight style={styles.navButton} onPress={this.goBack}>
-                     <Icon name="ios-arrow-thin-left" color='#3B3938' size={40}/>
-                 </TouchableHighlight>
-                 <Text style={styles.toolbarTitleText}>{this.state.msg.title}</Text>
-                 <TouchableHighlight style={styles.navButton} onPress={this.goBack}>
-                     <Icon name="ios-upload-outline" color='#3B3938' size={40}/>
-                 </TouchableHighlight>
-            </View>
+            <NavBar navigator={this.props.navigator} title={this.state.msg.title} left={'back'}/>
             <View style={styles.content}>
                <View style={styles.card}>
                   <View style={{flex:1,}}>
@@ -147,28 +137,6 @@ var styles = StyleSheet.create({
     content:{
         backgroundColor:'#ebeef0',
         flex:1
-    },
-    navbar: {
-        backgroundColor: Style.NavBarColor,
-        paddingTop:20,
-        paddingBottom:10,
-        flexDirection:'row'
-    },
-    navButton:{
-        width: 50,
-        alignItems: 'center',
-    },
-    //toolbarTitleView:{
-    //    flex:1,
-    //    alignItems: 'center',
-    //},
-    toolbarTitleText:{
-        color:'#fff',
-        textAlign:'center',
-        fontWeight:'bold',
-        flex:1,
-        alignItems: 'center',
-        fontSize:30,
     },
     card: {
       flex: 1,

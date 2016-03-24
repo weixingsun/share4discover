@@ -46,7 +46,6 @@ module.exports = {
   FONT_SIZE_TITLE: em(1.25),
   
   //NavBar
-  NavBarColor: '#0088ff',
   absoluteContainer:{
       position: 'absolute',
       top: 0,
@@ -54,5 +53,28 @@ module.exports = {
       right: 0,
       bottom: 50,
   },
-
+  navbar: {
+      backgroundColor: '#ebeef0',
+      paddingTop:20,
+      paddingBottom:10,
+      flexDirection:'row'
+  },
+  mainbar:{
+      backgroundColor: '#ebeef0',
+      paddingBottom:10,
+      paddingTop:10,
+      flexDirection:'row'
+  },
+  navButton:{
+      width: 50,
+      alignItems: 'center',
+  },
+  navTitle:{
+      color:'#000000',
+      textAlign:'center',
+      //fontWeight:'bold',
+      flex:1,
+      alignItems: 'center',
+      fontSize:30,
+  },
 };

@@ -9,8 +9,8 @@ const Icon = require('react-native-vector-icons/FontAwesome');
 //var { Option, Select } = require('react-native-selectit');
 //var {Actions} = require('react-native-router-flux');
 //var ListPopover = require('react-native-list-popover');
-var ListPopover = require('./ListPopover')
-//import Selectme from "./Selectme"
+import ListPopover from './ListPopover'
+import NavBar from "./NavBar"
 //const height = Dimensions.get('window').height;
 import Style from "./Style"
 import Detail from "./Detail"
@@ -121,23 +121,7 @@ var List = React.createClass({
   render() {
     return (
       <View style={Style.absoluteContainer}>
-        <View style={this.getDynamicStyle()} >
-          <View style={{flexDirection:'row', padding: 6}}>
-            <TouchableOpacity style={styles.button} onPress={this.showPopover}>
-               <View style={styles.typeButton}>
-                <Icon name={'filter'} size={20} color='#444' style={this.state.typeIconStyle} />
-                <Text>  {this.state.type}</Text>
-               </View>
-            </TouchableOpacity>
-          </View>
-
-          <ListPopover
-            list={this.state.types}
-            //renderRow={}
-            isVisible={this.state.isVisible}
-            onClick={this.setItem}
-            onClose={this.closePopover}/>
-	</View>
+        <NavBar navigator={this.props.navigator} left={'filter'} title={''} />
         <GiftedListView
 	  ref='list'
           rowView={this._renderRowView}

@@ -72,7 +72,7 @@ const Main = React.createClass({
     var _this = this;
     //console.log('main.navigator:'+this.props.navigator);
     return <View style={styles.container}>
-        <Tabs selected={this.state.page} style={{backgroundColor:'white'}}
+        <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'red'}} onSelect={el=>this.setState({page:el.props.name})}>
             <Icon name="ios-chatboxes" size={40} />
             <Icon name="ios-people" size={40} />
@@ -88,7 +88,7 @@ const Main = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
+    //marginTop: 30,
   },
   tabView: {
     flex: 1,
