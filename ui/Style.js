@@ -54,10 +54,15 @@ module.exports = {
       bottom: 50,
   },
   navbar: {
+      flex:1,
       backgroundColor: '#ebeef0',
-      paddingTop:20,
-      paddingBottom:10,
-      flexDirection:'row'
+      paddingLeft:12,
+      paddingRight:12,
+      paddingTop:8,
+      paddingBottom:6,
+      flexDirection:'row',
+      alignItems: 'center',
+      height: 66,
   },
   mainbar:{
       backgroundColor: '#ebeef0',

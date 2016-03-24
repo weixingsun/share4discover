@@ -3,7 +3,6 @@
 var React = require('react-native');
 var {View, Text, StyleSheet, ScrollView} = React;
 var Button = require('react-native-button');
-var Actions = require('react-native-router-flux').Actions;
 var Login = require('./Login');
 var Style = require('./Style');
 
@@ -15,7 +14,7 @@ class Settings extends React.Component {
               <Login />
             </View>
             <View style={styles.card}>
-              <Button onPress={Actions.register}>Register</Button>
+              <Button >Register</Button>
             </View>
             <View style={styles.card}>
               <Text>What is Hot</Text>

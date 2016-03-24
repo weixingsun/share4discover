@@ -1,6 +1,3 @@
-var React = require('react-native');
-var { AppRegistry,  } = React;
-var Nav = require('./Nav');
+import React,{AppRegistry} from 'react-native'
+import Nav from './Nav'
 AppRegistry.registerComponent('Share', () => Nav);
-//var Main = require('./ui/Main');
-//AppRegistry.registerComponent('Share', () => Main);

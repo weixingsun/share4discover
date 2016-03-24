@@ -3,7 +3,6 @@
 var React = require('react-native');
 var {View, Text, StyleSheet, Animated, Dimensions} = React;
 var Button = require('react-native-button');
-var Actions = require('react-native-router-flux').Actions;
 
 var {
   height: deviceHeight

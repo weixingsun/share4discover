@@ -1,21 +1,23 @@
 'use strict';
-var React = require('react-native');
 import GiftedListView from 'react-native-gifted-listview';
-var { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions } = React;
+import NavigationBar from 'react-native-navbar';
+import React, { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
 import RestAPI from "../io/RestAPI"
 var NetAPI = new RestAPI();
-import Picker from 'react-native-picker';
-const Icon = require('react-native-vector-icons/FontAwesome');
-//var { Option, Select } = require('react-native-selectit');
-//var {Actions} = require('react-native-router-flux');
-//var ListPopover = require('react-native-list-popover');
-import ListPopover from './ListPopover'
-import NavBar from "./NavBar"
-//const height = Dimensions.get('window').height;
+const IIcon = require('react-native-vector-icons/Ionicons');
+const FIcon = require('react-native-vector-icons/FontAwesome');
+//import ListPopover from './ListPopover'
+import Filter from "./Filter"
 import Style from "./Style"
 import Detail from "./Detail"
 
-var List = React.createClass({
+export default class List extends Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+          type: "car",
+      };
+  }
   /**
    * refreshing
    * @param {number} page Requested page to fetch
@@ -23,7 +25,6 @@ var List = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    console.log('_onFetch')
     NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
@@ -42,7 +43,7 @@ var List = React.createClass({
         callback(rows);
       }
     }, 1000);*/
-  },
+  }
   
   /**
    * When a row is touched
@@ -51,14 +52,15 @@ var List = React.createClass({
   _onPress(rowData) {
     this.props.navigator.push({
         component: Detail,
+        //type:'Normal',
         passProps: {
             data: rowData,
         }
     });
-  },
+  }
   _forceRefresh(){
     this.refs.list._refresh(null, {external: true});
-  },
+  }
   /**
    * Render a row  // customize this function for prettier view for each row.
    * @param {object} rowData Row data
@@ -76,8 +78,8 @@ var List = React.createClass({
           </View>
       </TouchableHighlight>
     );
-  },
-  getInitialState: function() {
+  }
+  /*getInitialState() {
     return {
       navigator: this.props.navigator,
       types: ['car'],
@@ -87,20 +89,20 @@ var List = React.createClass({
       typeHeaderWidth: Style.DEVICE_WIDTH,
       typeIconStyle: styles.normal,
     };
-  },
-  showPopover: function() {
+  }*/
+  showPopover() {
     this.setState({isVisible: true});
     this.setHeaderViewStyle();
-  },
-  closePopover: function() {
+  }
+  closePopover() {
     this.setState({isVisible: false});
     //this._forceRefresh();
-  },
-  setItem: function(item) {
+  }
+  setItem(item) {
     this.setHeaderViewStyle();
     this.setState({type: item});
     this._forceRefresh();
-  },
+  }
   setHeaderViewStyle(){
     if(this.state.typeHeaderHeight===50 ) {
         this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
@@ -110,22 +112,35 @@ var List = React.createClass({
         this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
         //this.refs.picker.hide()
     }
-  },
+  }
   getDynamicStyle(){
     return {
       height: this.state.typeHeaderHeight,
       width: this.state.typeHeaderWidth,
       backgroundColor: 'rgba(200, 200, 200, 0.8)',
     };
-  },
+  }
   render() {
+    const rightButtonConfig = {
+      title: 'Forward',
+      handler: () => this.props.navigator.push({
+        component: Filter,
+      }),
+    };
+    // //onPress={() => alert('Charmandeeeer!')}/>}
     return (
       <View style={Style.absoluteContainer}>
-        <NavBar navigator={this.props.navigator} left={'filter'} title={''} />
+        <NavigationBar style={Style.navbar} title={{title:'',}} 
+            leftButton={
+                <FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter, }) }/>
+            }
+            rightButton={
+                <IIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
+            } />
         <GiftedListView
 	  ref='list'
-          rowView={this._renderRowView}
-          onFetch={this._onFetch}
+          rowView={this._renderRowView.bind(this)}
+          onFetch={this._onFetch.bind(this)}
           firstLoader={true}
           pagination={true}
           refreshable={true}
@@ -134,7 +149,7 @@ var List = React.createClass({
       </View>
     );
   }
-});
+}
 
 var styles = {
   container: {
@@ -183,18 +198,6 @@ var styles = {
   },
   normal:{
 
-  },
-  button: {
-    backgroundColor: "#B8C",
-    borderRadius: 4,
-    padding: 10,
-    //marginLeft: 10,
-    //marginRight: 10,
-    width:Style.QUARTER_DEVICE_WIDTH,
-  },
-  typeButton:{
-    width:Style.QUARTER_DEVICE_WIDTH,
-    flexDirection:'row',
   },
 };
 

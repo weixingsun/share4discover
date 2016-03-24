@@ -2,7 +2,6 @@
 
 var React = require('react-native');
 var {View, Text, StyleSheet, ScrollView} = React;
-var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"

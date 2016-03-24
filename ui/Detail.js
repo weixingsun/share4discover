@@ -3,7 +3,6 @@
 var React = require('react-native');
 var {View, ListView, Text, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity} = React;
 import Button from 'react-native-button';
-//var Actions = require('react-native-router-flux').Actions;
 import MapView from 'react-native-maps';
 import Style from './Style'
 import NavBar from './NavBar'

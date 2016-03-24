@@ -2,6 +2,7 @@
 
 import React, {Component,View,Text,TouchableHighlight,} from 'react-native';
 import Style from './Style'
+import Filter from './Filter'
 const IIcon = require('react-native-vector-icons/Ionicons');
 const FIcon = require('react-native-vector-icons/FontAwesome');
 
@@ -10,11 +11,18 @@ var NavBar = React.createClass ({
 
     getInitialState() {
         return ({
-            
+            types:['car'],
         });
     },
     goFilter(){
-        //this.props.navigator.push('filter');
+          //component: Filter,
+        this.props.navigator.push({
+          id: 3,
+          type: "Normal",
+          passProps: {
+            list: 'car',
+          },
+        }); 
     },
     goBack() {
         this.props.navigator.pop();

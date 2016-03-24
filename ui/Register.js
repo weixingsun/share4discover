@@ -3,7 +3,6 @@
 var React = require('react-native');
 var {View, Text, StyleSheet} = React;
 var Button = require('react-native-button');
-var Actions = require('react-native-router-flux').Actions;
 
 class Register extends React.Component {
     render(){
