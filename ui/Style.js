@@ -62,6 +62,7 @@ module.exports = {
       paddingBottom:6,
       flexDirection:'row',
       alignItems: 'center',
+      //justifyContent: 'center',
       height: 66,
   },
   mainbar:{

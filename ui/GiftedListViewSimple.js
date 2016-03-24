@@ -61,6 +61,13 @@ export default class List extends Component {
   _forceRefresh(){
     this.refs.list._refresh(null, {external: true});
   }
+  changeType(type){
+    this.setState({
+      type: type,
+    });
+    //console.log('type changed to:'+type);
+    this._forceRefresh();
+  }
   /**
    * Render a row  // customize this function for prettier view for each row.
    * @param {object} rowData Row data
@@ -79,17 +86,6 @@ export default class List extends Component {
       </TouchableHighlight>
     );
   }
-  /*getInitialState() {
-    return {
-      navigator: this.props.navigator,
-      types: ['car'],
-      type: "car",
-      isVisible: false,
-      typeHeaderHeight: 50,
-      typeHeaderWidth: Style.DEVICE_WIDTH,
-      typeIconStyle: styles.normal,
-    };
-  }*/
   showPopover() {
     this.setState({isVisible: true});
     this.setHeaderViewStyle();
@@ -132,7 +128,7 @@ export default class List extends Component {
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                <FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter, }) }/>
+                <FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter,passProps: {types:this.state.types,selectedType:this.state.type}, callback:(type)=>{this.state.type=type;this.changeType(type); } }) }/>
             }
             rightButton={
                 <IIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
