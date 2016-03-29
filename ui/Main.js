@@ -16,8 +16,9 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      page:'ios-chatboxes',
+      page:this.props.page!=null?this.props.page:'ios-chatboxes',
       isLoading:true,
+      selectedMsg:this.props.msg,
       user: null,
       markers: [],
       circles: [],
@@ -47,12 +48,12 @@ export default class Main extends Component {
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
-      return <GoogleMap region={this.state.region} />
+      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} />
     } else if(this.state.page ==='navicon-round'){
       return <SettingsList />
     }
   }
-  gotoPage(name){
+  gotoPage(name){ //ios-world
     this.setState({ page: name });
   }
   render() {

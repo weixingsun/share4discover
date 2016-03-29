@@ -25,12 +25,9 @@ export default class Nav extends Component {
         //return CustomSceneConfig;
     },*/
     render(){
-        const initialRoute = {
-            component: Main
-        };
         return (
             <Navigator 
-              initialRoute={initialRoute} 
+              initialRoute={{component: Main}} 
               renderScene={this._renderScene} 
               //configureScene={this._configureScene}
             />

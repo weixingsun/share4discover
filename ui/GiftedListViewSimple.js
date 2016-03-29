@@ -9,7 +9,8 @@ const FIcon = require('react-native-vector-icons/FontAwesome');
 //import ListPopover from './ListPopover'
 import Filter from "./Filter"
 import Style from "./Style"
-import Detail from "./Detail"
+//import Detail from "./Detail"
+import Main from "./Main"
 
 export default class List extends Component {
   constructor(props) {
@@ -50,11 +51,16 @@ export default class List extends Component {
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
+    //alert('rowData='+rowData);
     this.props.navigator.push({
-        component: Detail,
-        //type:'Normal',
-        passProps: {
-            data: rowData,
+        //component: Detail,
+        //passProps: {
+        //    data: rowData,
+        //}
+        component: Main,
+        passProps: { 
+            page:'ios-world', 
+            msg:rowData,
         }
     });
   }
@@ -76,7 +82,7 @@ export default class List extends Component {
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.png';
     return (
       <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' 
-            onPress={()=>{this._onPress(rowData)}} >
+            onPress={()=>this._onPress(rowData)} >
           <View style={{flexDirection: 'row', height: 66}}>
             <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
             <View style={styles.rowTitleView}>

@@ -1,23 +1,62 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet, ScrollView} = React;
+import React,{View, Text, StyleSheet, ScrollView, Component, } from 'react-native'
+import NavigationBar from 'react-native-navbar'
 import MapView from 'react-native-maps'
+import IIcon from 'react-native-vector-icons/Ionicons'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
 
-var GoogleMap = React.createClass({
+export default class GoogleMap extends Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        region: {    //check on start up
+          latitude: 0,
+          longitude: 0,
+          latitudeDelta: 10,
+          longitudeDelta: 10,
+        },
+        mkid:0,
+        markers: [], //this.props.markers!=null?this.props.markers:[],
+        ccid:0,
+        circles: [],
+      };
+      this.msg = this.props.msg;
+      this.renderNavBar   = this.renderNavBar.bind(this);
+      this.onRegionChange = this.onRegionChange.bind(this);
+      this.back = this.back.bind(this);
+  }
+  componentWillMount(){
+    var _this = this;
+    if(this.msg!=null){
+      this.addMarker({id: this.state.mkid++, pos: {latitude:parseFloat(this.msg.lat), longitude:parseFloat(this.msg.lng)}, s:'#0000ff' });
+    }
+  }
+  back(){
+    this.props.navigator.pop();
+  }
+  renderNavBar() {
+      if(this.msg!=null){
+        return (
+          <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
+            leftButton={
+                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back} />
+            }
+          />);
+      }
+  }
   onRegionChange(region) {
-    this.setState({ region });
+    this.setState({ region:region });
     Store.save('region', region);
-  },
+  }
   onLongPress(event) {
     console.log(event.nativeEvent);
     //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
     this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
-  },
+  }
   addMarker(marker){
     var {markers} = this.state;
     this.setState({
@@ -25,7 +64,7 @@ var GoogleMap = React.createClass({
         ...markers,
         marker]
     });
-  },
+  }
   addCircle(circle){
     var {circles} = this.state;
     this.setState({
@@ -33,23 +72,10 @@ var GoogleMap = React.createClass({
         ...circles,
         circle]
     });
-  },
-  getInitialState() {
-    return {
-      region: {    //check on start up
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 10,
-        longitudeDelta: 10,
-      },
-      mkid:0,
-      markers: [],
-      ccid:0,
-      circles: [],
-    };
-  },
+  } 
     render(){
         return (
+          <View style={{flex:1}}>
             <MapView
               style={Style.absoluteContainer}
               showsUserLocation={true}
@@ -57,7 +83,8 @@ var GoogleMap = React.createClass({
               initialRegion={this.props.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid
-              onLongPress={this.onLongPress} >
+              //onLongPress={this.onLongPress} 
+              >
                  {this.state.markers.map(
                   marker => (
                     <MapView.Marker
@@ -67,14 +94,16 @@ var GoogleMap = React.createClass({
                     //title={marker.title}
                     //description={marker.description}
                     //onSelect={(e) => console.log('onSelect', e)}
+                    //    <PriceMarker amount={99} color={marker.s} />
                     >
-                        <PriceMarker amount={99} color={marker.s} />
                     </MapView.Marker>
                   ))}
             </MapView>
+            { this.renderNavBar() }
+          </View>
         );
     }
-});
+};
 
 var styles = {
     container: {
@@ -115,5 +144,3 @@ var styles = {
       bottom: 50,
     },
 };
-
-module.exports = GoogleMap;
