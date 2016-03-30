@@ -18,6 +18,7 @@ export default class Main extends Component {
     this.state = {
       page:this.props.page!=null?this.props.page:'ios-chatboxes',
       isLoading:true,
+      isDoing:true,
       selectedMsg:this.props.msg,
       user: null,
       markers: [],
@@ -30,10 +31,15 @@ export default class Main extends Component {
       },
     }; 
   }
+  componentDidMount() {
+    this.setState({isDoing:false})
+  }
   componentWillMount(){
     var _this = this;
     Store.get('region').then((region_value) => {
-      _this.setState({ region:region_value });
+      if(region_value !=null){
+        _this.setState({ region:region_value });
+      }
       Store.get('user').then((user_value) => {
         _this.setState({ user:user_value });
         _this.setState({ isLoading:false, });
@@ -60,7 +66,7 @@ export default class Main extends Component {
     if(this.state.isLoading) return <Loading />
     return <View style={styles.container}>
         <Tabs selected={this.state.page} style={Style.mainbar}
-              selectedStyle={{color:'blue'}} onSelect={el=>this.setState({page:el.props.name})}>
+              selectedStyle={{color:'blue'}} onSelect={(e)=>{ if(!this.state.isDoing) this.setState({page:e.props.name})}}>
             <Icon name="ios-chatboxes" size={40} />
             <Icon name="ios-people" size={40} />
             <Icon name="email" size={40} />

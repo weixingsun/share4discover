@@ -8,37 +8,76 @@ import IIcon from 'react-native-vector-icons/Ionicons'
 import Store from "../io/Store"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
+import Overlay from './Overlay'
+import SearchAddr from './SearchAddr'
 
 export default class GoogleMap extends Component {
-  constructor(props) {
+    constructor(props) {
       super(props);
       this.state = {
-        region: {    //check on start up
-          latitude: 0,
-          longitude: 0,
-          latitudeDelta: 10,
-          longitudeDelta: 10,
-        },
+        center: {lat:0,lng:0},
+        region: this.props.region,
         mkid:0,
-        markers: [], //this.props.markers!=null?this.props.markers:[],
+        markers: [],
         ccid:0,
         circles: [],
+        initialPosition: 'unknown',
+        lastPosition: 'unknown',
       };
       this.msg = this.props.msg;
       this.renderNavBar   = this.renderNavBar.bind(this);
       this.onRegionChange = this.onRegionChange.bind(this);
       this.back = this.back.bind(this);
-  }
-  componentWillMount(){
-    var _this = this;
-    if(this.msg!=null){
-      this.addMarker({id: this.state.mkid++, pos: {latitude:parseFloat(this.msg.lat), longitude:parseFloat(this.msg.lng)}, s:'#0000ff' });
+      this.search = this.search.bind(this);
+      this.watchID = (null: ?number);
     }
-  }
-  back(){
-    this.props.navigator.pop();
-  }
-  renderNavBar() {
+    componentWillMount(){
+      var _this = this;
+      if(this.msg!=null){
+        var lat=parseFloat(this.msg.lat);
+        var lng=parseFloat(this.msg.lng);
+        var id=this.state.mkid+1;
+        this.setState({mkid:id,});
+        this.addMarker({id: id, pos: {latitude:lat, longitude:lng}, s:'#0000ff' });
+        this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
+        //autofit to multiple waypoints
+      }
+    }
+    componentDidMount() {
+      navigator.geolocation.getCurrentPosition( 
+        (position) => {
+          var initialPosition = JSON.stringify(position); 
+          this.setState({initialPosition}); 
+          alert('initialPosition:'+initialPosition)
+        }, 
+        (error) => alert(error.message), 
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000} 
+      ); 
+      this.watchID = navigator.geolocation.watchPosition((position) => {
+        var lastPosition = JSON.stringify(position); 
+        this.setState({lastPosition}); 
+      }); 
+      //alert('GpsWatchID:'+this.watchID);
+    }
+    componentWillUnmount() { 
+      navigator.geolocation.clearWatch(this.watchID);
+    }
+    back(){
+      this.props.navigator.pop();
+    }
+    search(){
+      this.props.navigator.push({
+        component: SearchAddr,
+        callback:(place)=>{
+          //this.state.center=place;
+          this.move(place); 
+        }
+      });
+    }
+    move(p){
+      this.refs.map.animateToRegion(p);
+    }
+    renderNavBar() {
       if(this.msg!=null){
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
@@ -46,41 +85,57 @@ export default class GoogleMap extends Component {
                 <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back} />
             }
           />);
+      }else{
+        return (
+          <NavigationBar style={Style.navbar}
+            leftButton={
+                <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
+            }
+          />
+        );
       }
-  }
-  onRegionChange(region) {
-    this.setState({ region:region });
-    Store.save('region', region);
-  }
-  onLongPress(event) {
-    console.log(event.nativeEvent);
-    //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-    this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
-  }
-  addMarker(marker){
-    var {markers} = this.state;
-    this.setState({
-      markers:[
-        ...markers,
-        marker]
-    });
-  }
-  addCircle(circle){
-    var {circles} = this.state;
-    this.setState({
-      circles:[
-        ...circles,
-        circle]
-    });
-  } 
+    }
+    renderDetailOverlay() {
+      if(this.msg!=null){
+        return ( <Overlay style={Style.detail} msg={this.msg}/>  );
+      }
+    }
+    onRegionChange(region) {
+      this.setState({ region:region });
+      Store.save('region', region);
+    }
+    onLongPress(event) {
+      console.log(event.nativeEvent);
+      //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
+      this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+    }
+    addMarker(marker){
+      var {markers} = this.state;
+      this.setState({
+        markers:[
+          ...markers,
+          marker]
+      });
+    }
+    addCircle(circle){
+      var {circles} = this.state;
+      this.setState({
+        circles:[
+          ...circles,
+          circle]
+      });
+    } 
     render(){
         return (
           <View style={{flex:1}}>
+            { this.renderNavBar() }
             <MapView
-              style={Style.absoluteContainer}
+              ref='map'
+              style={Style.map}
               showsUserLocation={true}
+              rotateEnabled={false}
               onRegionChangeComplete={this.onRegionChange}
-              initialRegion={this.props.region}
+              initialRegion={this.state.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid
               //onLongPress={this.onLongPress} 
@@ -99,48 +154,8 @@ export default class GoogleMap extends Component {
                     </MapView.Marker>
                   ))}
             </MapView>
-            { this.renderNavBar() }
+            { this.renderDetailOverlay() }
           </View>
         );
     }
-};
-
-var styles = {
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-    card: {
-      flex: 1,
-      borderWidth: 1,
-      //backgroundColor: '#fff',
-      borderColor: 'rgba(0,0,0,0.1)',
-      margin: 5,
-      //height: 150,
-      //height: 600,
-      padding: 15,
-      shadowColor: '#ccc',
-      shadowOffset: { width: 2, height: 2, },
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-    },
-    map: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 50,
-    },
 };

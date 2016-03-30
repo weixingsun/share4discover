@@ -45,10 +45,9 @@ module.exports = {
   FONT_SIZE_SMALL: em(0.875),
   FONT_SIZE_TITLE: em(1.25),
   
-  //NavBar
-  absoluteContainer:{
+  map:{
       position: 'absolute',
-      top: 0,
+      top: 66,
       left: 0,
       right: 0,
       bottom: 50,
@@ -82,5 +81,16 @@ module.exports = {
       flex:1,
       alignItems: 'center',
       fontSize:30,
+  },
+  detail:{
+      position: 'absolute',
+      backgroundColor: '#ebeee0',
+      //height: 100,
+      paddingLeft:12,
+      paddingRight:12,
+      top: 66,
+      left: 0,
+      right: 0,
+      bottom: y/4*3-66,
   },
 };

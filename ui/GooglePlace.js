@@ -1,21 +1,28 @@
 'use strict';
-import React, {ToastAndroid,} from 'react-native';
-import {GooglePlacesAutocomplete} from "./GooglePlacesAutocomplete";
-const homePlace = {description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
-const workPlace = {description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
+import React, {ToastAndroid,Component,} from 'react-native'
+import {GooglePlacesAutocomplete} from "./GooglePlacesAutocomplete"
 
-var Example = React.createClass({
+export default class GooglePlaces extends Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+          selectedType: this.props.selectedType,
+      };
+      this.homePlace = {description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
+      this.workPlace = {description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
+  } 
   render() {
     return (
       <GooglePlacesAutocomplete
         placeholder='Search'
-        minLength={4} // minimum length of text to search
-        autoFocus={false}
+        minLength={3} // minimum length of text to search
+        //autoFocus={false}
+        autoFocus={true}
         fetchDetails={true}
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
           // data = details 
 	  var latlng = details.geometry.location;
-	  console.log(JSON.stringify(data));
+          this.props.onSelect({latitude:latlng.lat, longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02 });
 	  //ToastAndroid.show('details.geometry.location='+JSON.stringify(latlng), ToastAndroid.LONG); //SHORT
         }}
         getDefaultValue={() => {
@@ -46,16 +53,11 @@ var Example = React.createClass({
           rankby: 'distance',
           types: 'food',
         }}
-        
         filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} 
 	// filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-        
-        predefinedPlaces={[homePlace, workPlace]}
-        
+        predefinedPlaces={[this.homePlace, this.workPlace]}
         predefinedPlacesAlwaysVisible={true}
       />
     );
   }
-});
-
-module.exports = Example;
+};
