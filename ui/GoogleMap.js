@@ -23,11 +23,13 @@ export default class GoogleMap extends Component {
         circles: [],
         initialPosition: 'unknown',
         lastPosition: 'unknown',
+        gps: true,
       };
       this.msg = this.props.msg;
       this.renderNavBar   = this.renderNavBar.bind(this);
       this.onRegionChange = this.onRegionChange.bind(this);
       this.back = this.back.bind(this);
+      this.switchGps = this.switchGps.bind(this);
       this.search = this.search.bind(this);
       this.watchID = (null: ?number);
     }
@@ -36,9 +38,7 @@ export default class GoogleMap extends Component {
       if(this.msg!=null){
         var lat=parseFloat(this.msg.lat);
         var lng=parseFloat(this.msg.lng);
-        var id=this.state.mkid+1;
-        this.setState({mkid:id,});
-        this.addMarker({id: id, pos: {latitude:lat, longitude:lng}, s:'#0000ff' });
+        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, s:'#0000ff' });
         this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
@@ -53,14 +53,30 @@ export default class GoogleMap extends Component {
         (error) => alert(error.message), 
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000} 
       ); 
-      this.watchID = navigator.geolocation.watchPosition((position) => {
-        var lastPosition = JSON.stringify(position); 
-        this.setState({lastPosition}); 
-      }); 
+      this.turnOnGps();
       //alert('GpsWatchID:'+this.watchID);
     }
     componentWillUnmount() { 
       navigator.geolocation.clearWatch(this.watchID);
+    }
+    turnOnGps(){
+      this.watchID = navigator.geolocation.watchPosition((position) => {
+        var lastPosition = JSON.stringify(position);
+        this.setState({lastPosition});
+      });
+      this.setState({gps:true});
+    }
+    turnOffGps(){
+      navigator.geolocation.clearWatch(this.watchID);
+      this.setState({gps:false});
+    }
+    switchGps(){
+      if(this.state.gps) {
+          this.turnOffGps();
+          alert('Gps Off');
+      }else{ 
+          this.turnOnGps();
+      }
     }
     back(){
       this.props.navigator.pop();
@@ -71,6 +87,7 @@ export default class GoogleMap extends Component {
         callback:(place)=>{
           //this.state.center=place;
           this.move(place); 
+          this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
         }
       });
     }
@@ -100,9 +117,15 @@ export default class GoogleMap extends Component {
         return ( <Overlay style={Style.detail} msg={this.msg}/>  );
       }
     }
-    onRegionChange(region) {
-      this.setState({ region:region });
-      Store.save('region', region);
+    renderGpsIcon(){
+      if(this.state.gps) 
+          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps} />);
+      else 
+          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps} />);
+    }
+    onRegionChange(r) {
+      this.setState({ region: r, });
+      Store.save('region', r);
     }
     onLongPress(event) {
       console.log(event.nativeEvent);
@@ -116,6 +139,10 @@ export default class GoogleMap extends Component {
           ...markers,
           marker]
       });
+    }
+    incMarkerId(){
+      this.setState({mkid:this.state.mkid+1});
+      return this.state.mkid;
     }
     addCircle(circle){
       var {circles} = this.state;
@@ -154,6 +181,7 @@ export default class GoogleMap extends Component {
                     </MapView.Marker>
                   ))}
             </MapView>
+            { this.renderGpsIcon() }
             { this.renderDetailOverlay() }
           </View>
         );

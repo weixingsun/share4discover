@@ -2,9 +2,9 @@
 import GiftedListView from 'react-native-gifted-listview';
 import NavigationBar from 'react-native-navbar';
 import React, { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
-import RestAPI from "../io/RestAPI"
-var NetAPI = new RestAPI();
-const IIcon = require('react-native-vector-icons/Ionicons');
+import Rest from "../io/RestAPI"
+var RestAPI = new Rest();
+//const IIcon = require('react-native-vector-icons/Ionicons');
 const FIcon = require('react-native-vector-icons/FontAwesome');
 //import ListPopover from './ListPopover'
 import Filter from "./Filter"
@@ -26,11 +26,11 @@ export default class List extends Component {
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    NetAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
+    RestAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
-    NetAPI.getMsgTypes().then((rows)=> {
+    RestAPI.getMsgTypes().then((rows)=> {
       this.setState({types:rows});
     });
     /*
@@ -83,11 +83,14 @@ export default class List extends Component {
     return (
       <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
-          <View style={{flexDirection: 'row', height: 66}}>
-            <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
-            <View style={styles.rowTitleView}>
-                <Text style={styles.rowTitleText}>{rowData.title}</Text>
-            </View>
+          <View style={{height: 66}}>
+              <View style={{flexDirection: 'row', height: 66}}>
+                <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
+                <View style={styles.rowTitleView}>
+                    <Text style={styles.rowTitleText}>{rowData.title}</Text>
+                </View>
+              </View>
+              <View style={Style.listseparator} />
           </View>
       </TouchableHighlight>
     );
@@ -137,7 +140,7 @@ export default class List extends Component {
                 <FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter,passProps: {types:this.state.types,selectedType:this.state.type}, callback:(type)=>{this.state.type=type;this.changeType(type); } }) }/>
             }
             rightButton={
-                <IIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
+                <FIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
             } />
         <GiftedListView
 	  ref='list'
@@ -154,21 +157,8 @@ export default class List extends Component {
 }
 
 var styles = {
-  container: {
-    //flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 1.0)',
-    height: Style.CARD_HEIGHT,
-    //alignItems: 'center',
-    //justifyContent: 'center',
-  },
-  navBar: {
-    height: 66,
-    padding: 2,
-    backgroundColor: 'rgba(255, 255, 255, 1.0)',
-    //flex:1,
-    //flexDirection:'row',
-  },
   row: {
+    backgroundColor: 'rgba(255, 255, 255, 1.0)',
     padding: 2,
     height: 68,
     //flex: 1,
@@ -185,10 +175,6 @@ var styles = {
     justifyContent: 'center',
     //flex:1,
   },
-  typeTitleView:{
-    height: 50,
-    justifyContent: 'center',
-  },
   rowTitleText:{
     fontSize:20,
     marginLeft:10,
@@ -202,5 +188,3 @@ var styles = {
 
   },
 };
-
-module.exports = List;

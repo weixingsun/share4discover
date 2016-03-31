@@ -1,6 +1,12 @@
 import React from "react-native"
 
-class RestAPI extends React.Component {
+export default class RestAPI extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = { };
+      this.header = {};
+      this.host = 'http://45.32.83.93';
+    }
     //token=null;
     async netCmd(url, data) {
       try { 
@@ -51,5 +57,3 @@ class RestAPI extends React.Component {
       return this._del(url);
     }
 }
-
-module.exports = RestAPI; //new RestAPI();

@@ -1,46 +1,54 @@
 'use strict';
-var React = require('react-native');
-var { StyleSheet, Text, View, TouchableHighlight, Image } = React;
+import React, { StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import Button from 'react-native-button'
+//import FIcon from 'react-native-vector-icons/FontAwesome'
+import IIcon from 'react-native-vector-icons/Ionicons'
 import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
+import FBLoginView from "./FBLoginView"
 
 var Login = React.createClass({
   renderLoginGoogle() {
     if(this.state.user !== null && this.state.user.type ==='fb'){
         //console.log('renderGoogle:fb:'+JSON.stringify(this.state.user));
-        return (<View key='fbuser'>
-                  <Text style={styles.username}>{this.state.user.name}</Text>
+        return (<View style={{justifyContent: 'center',}} key='fbuser'>
+                  <Text>{this.state.user.name}</Text>
                 </View>);
     }else if(this.state.user !== null && this.state.user.type ==='gg'){
         //console.log('renderGoogle:gg:'+JSON.stringify(this.state.user));
         return (<View key='gguser'>
-                  <Button onPress={this._googleSignOut} style={{fontSize: 18, }} containerStyle={{borderRadius:5, backgroundColor: '#AA5555'}}>
-                    Logout from Google
-                  </Button>
+                  <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
                 </View>);
     }else{
-        //console.log('renderGoogle:else:'+JSON.stringify(this.state.user));
-        return (
+        //console.log('renderGoogle:size='+GoogleSigninButton.Size.Icon +', color='+GoogleSigninButton.Color.Dark);
+        /*return (
               <GoogleSigninButton
-                  style={styles.login_button}
-                  size={GoogleSigninButton.Size.Standard}
-                  color={GoogleSigninButton.Color.Light}
+                  //style={Style.loginButton}
+                  style={{width: 44, height: 44}}
+                  size={GoogleSigninButton.Size.Icon}
+                  color={GoogleSigninButton.Color.Dark}
                   onPress={this._googleSignIn}/>
-      );
+      );*/
+          return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
     }
   },
   renderLoginFacebook() {
     var _this = this;
     if(this.state.user !== null && this.state.user.type !== 'fb'){
       //console.log('renderFacebook:name:'+JSON.stringify(this.state.user));
-      return (<View key='user'><Text style={styles.username}>{this.state.user.name}</Text></View>);
+      return (<View key='user'><Text>{this.state.user.name}</Text></View>);
     }else{
       //console.log('renderFacebook:button:'+JSON.stringify(this.state.user));
+      // loginBehavior={FBLoginManager.LoginBehaviors.Web}
       return (
               <FBLogin
+                //style={Style.loginButton}
+                buttonView={<FBLoginView />}
+                permissions={["email","user_friends"]}
+                loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Native}
+                //loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Web}
                 onLogin={function(data){
                   //console.log('FBLogin.onLogin:');
                   _this._facebookSignIn(data);
@@ -153,41 +161,13 @@ var Login = React.createClass({
 
   render(){
     return (
-        <View style={styles.card}>
-            <View style={styles.flex_box}>
+            <View style={{flexDirection:'row',justifyContent: 'center',}}>
                 { this.renderLoginGoogle() }
-            </View>
-            <View style={styles.flex_box}>
+                <View style={{width:80}} />
                 { this.renderLoginFacebook() }
             </View>
-        </View>
     );
   }
 });
-
-var styles = {
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  navBar: {
-    height: 60,
-    padding: 6,
-    backgroundColor: '#CCC'
-  },
-  row: {
-    padding: 2,
-    height: 68,
-  },
-  thumbnail: {
-    width: 64,
-    height: 64,
-  },
-  login_button: {
-    alignItems: 'center',
-    width: Style.LOGIN_BUTTON_WIDTH,
-    height: Style.LOGIN_BUTTON_HEIGHT,
-  },
-};
 
 module.exports = Login;
