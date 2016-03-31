@@ -1,5 +1,5 @@
 'use strict';
-import React, { StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import React, {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import Button from 'react-native-button'
 //import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
@@ -11,6 +11,7 @@ import FBLoginView from "./FBLoginView"
 
 var Login = React.createClass({
   renderLoginGoogle() {
+    //console.log('renderLoginGoogle:user='+JSON.stringify(this.state.user));
     if(this.state.user !== null && this.state.user.type ==='fb'){
         //console.log('renderGoogle:fb:'+JSON.stringify(this.state.user));
         return (<View style={{justifyContent: 'center',}} key='fbuser'>
@@ -22,7 +23,6 @@ var Login = React.createClass({
                   <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
                 </View>);
     }else{
-        //console.log('renderGoogle:size='+GoogleSigninButton.Size.Icon +', color='+GoogleSigninButton.Color.Dark);
         /*return (
               <GoogleSigninButton
                   //style={Style.loginButton}
@@ -35,30 +35,27 @@ var Login = React.createClass({
     }
   },
   renderLoginFacebook() {
+    //console.log('renderFacebook:button:'+JSON.stringify(this.state.user));
     var _this = this;
     if(this.state.user !== null && this.state.user.type !== 'fb'){
       //console.log('renderFacebook:name:'+JSON.stringify(this.state.user));
       return (<View key='user'><Text>{this.state.user.name}</Text></View>);
     }else{
-      //console.log('renderFacebook:button:'+JSON.stringify(this.state.user));
-      // loginBehavior={FBLoginManager.LoginBehaviors.Web}
       return (
               <FBLogin
-                //style={Style.loginButton}
                 buttonView={<FBLoginView />}
                 permissions={["email","user_friends"]}
                 loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Native}
                 //loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Web}
                 onLogin={function(data){
-                  //console.log('FBLogin.onLogin:');
                   _this._facebookSignIn(data);
                 }}
-                onLoginFound={function(data){
-                  console.log('FB:onLoginFound:'+data);
+                //onLoginFound={function(data){
+                  //console.log('FB:onLoginFound:');
+                  //console.log(data);
                   //_this.setState({user: null });
-                }}
+                //}}
                 onLogout={function(data){
-                  //console.log('FB:onLogout:');
                   _this.deleteUserDB();
                 }}
                 onCancel={function(e){console.log(e)}}
@@ -98,7 +95,8 @@ var Login = React.createClass({
             token: data.token,
         };
         this.setState({ user: _user, });
-        this.saveUserDB(_user);
+        this.saveUserDB(this.state.user);
+        //console.log('facebook_user:'+JSON.stringify(this.state.user));
     }else{      //iOS need fetch manually
       var _this = this;
       var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
@@ -122,7 +120,7 @@ var Login = React.createClass({
 
   _googleSignIn() {
     GoogleSignin.signIn().then((data) => {
-      //console.log(data);
+      console.log(data);
       this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
       this.saveUserDB(this.state.user);
     }).catch((err) => {
@@ -131,9 +129,18 @@ var Login = React.createClass({
   },
 
   _googleSignOut() {
-    GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
-      this.deleteUserDB();
-    }).done();
+    Alert.alert(
+        "Logout",
+        "Do you want to logout from Google?",
+        [
+          {text:"Cancel", onPress:()=>console.log("")},
+          {text:"OK", onPress:()=>{
+              GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
+                this.deleteUserDB();
+              }).done();
+          }},
+        ]
+    );
   },
 
   componentDidMount() {
@@ -145,13 +152,13 @@ var Login = React.createClass({
       offlineAccess: true
     });
 
-    GoogleSignin.currentUserAsync().then((data) => {
-      //console.log('componentDidMount():Check Google Login:', data);
+    /*GoogleSignin.currentUserAsync().then((data) => {
       if(data !== null){
         if(this.state.user === null)
           this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode} });
       }
-    }).done();
+    }).done();*/
+    this.getUserDB();
   },
   getInitialState() {
     return {
@@ -163,7 +170,7 @@ var Login = React.createClass({
     return (
             <View style={{flexDirection:'row',justifyContent: 'center',}}>
                 { this.renderLoginGoogle() }
-                <View style={{width:80}} />
+                <View style={{width:60}} />
                 { this.renderLoginFacebook() }
             </View>
     );

@@ -1,14 +1,7 @@
-var React = require('react-native');
-var {View, Text, StyleSheet} = React;
-var Icon = require('react-native-vector-icons/Ionicons');
+import React, {Alert, View, Text, StyleSheet} from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
 
-/**
-  Example FBLoginView class
-  Please note:
-  - this is not meant to be a full example but highlights what you have access to
-  - If you use a touchable component, you will need to set the onPress event like below
-**/
-class FBLoginView extends React.Component {
+export default class FBLoginView extends React.Component {
   static contextTypes = {
     isLoggedIn: React.PropTypes.bool,
     login: React.PropTypes.func,
@@ -26,7 +19,15 @@ class FBLoginView extends React.Component {
                 if(!this.context.isLoggedIn){
                   this.context.login()
                 }else{
-                  this.context.logout()
+                  Alert.alert(
+                      'Logout', 
+                      'Do you want to logout from Facebook?',
+                      [
+                         {text: 'Cancel', onPress: () => console.log('Cancelled')},
+                         {text: 'OK', onPress: () => this.context.logout() },
+                      ]
+                  );
+                  //this.context.logout()
                 }
               }}
               //color={"#000000"}
@@ -38,4 +39,3 @@ class FBLoginView extends React.Component {
       )
     }
 }
-module.exports = FBLoginView;
