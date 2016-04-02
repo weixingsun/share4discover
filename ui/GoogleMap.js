@@ -94,6 +94,9 @@ export default class GoogleMap extends Component {
     move(p){
       this.refs.map.animateToRegion(p);
     }
+    fetch(){
+      
+    }
     renderNavBar() {
       if(this.msg!=null){
         return (
@@ -107,6 +110,9 @@ export default class GoogleMap extends Component {
           <NavigationBar style={Style.navbar}
             leftButton={
                 <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
+            }
+            rightButton={
+                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.fetch} />
             }
           />
         );

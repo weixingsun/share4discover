@@ -115,7 +115,7 @@ module.exports = {
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 1,
-      //backgroundColor: '#fff',
+      backgroundColor: '#fff',
       borderColor: 'rgba(0,0,0,0.1)',
       margin: 5,
       //padding: 15,

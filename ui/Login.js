@@ -30,8 +30,8 @@ var Login = React.createClass({
                   size={GoogleSigninButton.Size.Icon}
                   color={GoogleSigninButton.Color.Dark}
                   onPress={this._googleSignIn}/>
-      );*/
-          return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
+        );*/
+        return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
     }
   },
   renderLoginFacebook() {
@@ -120,7 +120,7 @@ var Login = React.createClass({
 
   _googleSignIn() {
     GoogleSignin.signIn().then((data) => {
-      console.log(data);
+      //console.log(data);
       this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
       this.saveUserDB(this.state.user);
     }).catch((err) => {
@@ -146,15 +146,15 @@ var Login = React.createClass({
   componentDidMount() {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/calendar'],
-      //webClientId: '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com',  //oauth_client:1
       iosClientId: '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com',  //oauth_client:1
       webClientId: '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com',  //oauth_client:3
-      offlineAccess: true
+      offlineAccess: false,
     });
 
     /*GoogleSignin.currentUserAsync().then((data) => {
+      console.log('gg user:'+data);
       if(data !== null){
-        if(this.state.user === null)
+        //if(this.state.user === null)
           this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode} });
       }
     }).done();*/

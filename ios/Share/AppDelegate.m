@@ -74,12 +74,13 @@
                 sourceApplication:sourceApplication annotation:annotation];
     }
     // GoogleSignin
-    else if ([[url scheme] isEqualToString:@"google_url_schema"])
+    else if ([[url scheme] isEqualToString:@"com.googleusercontent.apps.840928054415-qc4abj1mu0l2k6e86n30of3gktig10id"])
     {
         return [RNGoogleSignin
                 application:application                openURL:url
                 sourceApplication:sourceApplication annotation:annotation];
     }
+    //NSLog([url scheme]);
   return YES;
 }
 
