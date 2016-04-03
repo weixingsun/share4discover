@@ -66,7 +66,7 @@
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     // FacebookSignin
-    if ([[url scheme] isEqualToString:@"fb1682496612023647"])
+    if ([[url scheme] hasPrefix:@"fb"])
     {
       NSLog(@"facebook url: %@", [url scheme]);
       return [[FBSDKApplicationDelegate sharedInstance]
@@ -74,9 +74,10 @@
                 sourceApplication:sourceApplication annotation:annotation];
     }
     // GoogleSignin
-    else if ([[url scheme] isEqualToString:@"com.googleusercontent.apps.840928054415-qc4abj1mu0l2k6e86n30of3gktig10id"])
+    else if ([[url scheme] hasPrefix:@"com.googleusercontent.apps"])
     {
-        return [RNGoogleSignin
+      NSLog(@"google url: %@", [url scheme]);
+      return [RNGoogleSignin
                 application:application                openURL:url
                 sourceApplication:sourceApplication annotation:annotation];
     }

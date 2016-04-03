@@ -4,9 +4,7 @@ var React = require('react-native');
 var {View, Text, StyleSheet, Animated, Dimensions} = React;
 var Button = require('react-native-button');
 
-var {
-  height: deviceHeight
-} = Dimensions.get('window');
+var { height: deviceHeight } = Dimensions.get('window');
 
 
 class Error extends React.Component {

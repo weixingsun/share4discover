@@ -56,7 +56,7 @@ export default class Main extends Component {
     } else if(this.state.page ==='ios-world'){
       return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} />
     } else if(this.state.page ==='navicon-round'){
-      return <SettingsList />
+      return <SettingsList navigator={this.props.navigator}/>
     }
   }
   gotoPage(name){ //ios-world
