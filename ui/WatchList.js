@@ -1,6 +1,7 @@
 'use strict'
-import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableHighlight, View, ListView,} from 'react-native';
+import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, ListView,} from 'react-native';
 import Style from './Style'
+import Web from './Web'
 import Button from 'react-native-button'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
@@ -59,23 +60,23 @@ var reply = ({
       ]]
   });
 
-export default class SampleApp extends React.Component{
+export default class WatchList extends React.Component{
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,
         });
         this.foods = [
-          {id:1, key: 'coke 1', details:'', isCollapsed: true},
-          {id:2, key: 'coke 2', details:''},
-          {id:3, key: 'coke 3', details:'', isCollapsed: true},
-          {id:4, key: 'coke 4', details:''},
-          {id:5, key: 'coke 5', details:''},
-          {id:6, key: 'coke 6', details:''},
-          {id:7, key: 'coke 7', details:''},
-          {id:8, key: 'coke 8', details:''},
-          {id:9, key: 'coke 9', details:''},
-          {id:10,key: 'coke10', details:''},
+          {key: 'Baidu', url:'news.baidu.com', type:'web' },
+          {key: '163',   url:'news.163.com',   type:'web' },
+          {key: 'iFeng', url:'news.ifeng.com', type:'web'},
+          {key: 'Sina',  url:'news.sina.com.cn', type:'web'},
+          {key: 'Sohu',  url:'news.sohu.com',  type:'web'},
+          {key: 'QQ',    url:'news.qq.com',    type:'web'},
+          {key: 'HuanQiu',url:'www.huanqiu.com', type:'web'},
+          {key: 'CanKao', url:'www.cankaoxiaoxi.com', type:'web'},
+          {key: 'People', url:'www.people.com.cn', type:'web'},
+          {key: 'CNTV',   url:'news.cntv.cn', type:'web'},
         ];
         this.state = {
             editable: false,
@@ -139,13 +140,24 @@ export default class SampleApp extends React.Component{
         else return null;
 //containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
     }
+    openURL(_url){
+        this.props.navigator.push({
+            component: Web,
+            passProps: {url:'http://'+_url},
+        });
+    }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
 	return (
           <View style={Style.card}>
-            <TouchableHighlight style={{flex:1}}>
+            <TouchableOpacity style={{flex:1}} onPress={()=>{
+                                                 this.props.navigator.push({
+                                                     component: Web,
+                                                     passProps: {url:'http://'+data.url},
+                                                 });
+                                               }}>
                 <Text>{data.key}</Text>
-            </TouchableHighlight>
+            </TouchableOpacity>
             {this._renderDeleteButton(this.seq-1,data.key)}
           </View>
         );

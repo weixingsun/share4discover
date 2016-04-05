@@ -28,7 +28,7 @@ export default class Settings extends React.Component {
         this.props.navigator.push({
             component: WatchList,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
-            //passProps: {url:'http://bbs.skykiwi.com',},
+            passProps: {navigator:this.props.navigator,},
         });
     }
 //<ScrollView style={{flex:1}}>
