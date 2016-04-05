@@ -16,7 +16,8 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      page:this.props.page!=null?this.props.page:'ios-chatboxes',
+      //page:this.props.page!=null?this.props.page:'ios-chatboxes',
+      page:this.props.page!=null?this.props.page:'navicon-round',
       isLoading:true,
       isDoing:true,
       selectedMsg:this.props.msg,
@@ -59,6 +60,7 @@ export default class Main extends Component {
       return <SettingsList navigator={this.props.navigator}/>
     }
   }
+//FontAwesome: cubes  th  th-large  
   gotoPage(name){ //ios-world
     this.setState({ page: name });
   }

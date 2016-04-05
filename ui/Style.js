@@ -123,5 +123,6 @@ module.exports = {
       shadowOffset: { width: 2, height: 2, },
       shadowOpacity: 0.5,
       shadowRadius: 3,
+      flexDirection:'row',
   },
 };

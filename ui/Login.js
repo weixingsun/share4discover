@@ -13,24 +13,16 @@ var Login = React.createClass({
   renderLoginGoogle() {
     //console.log('renderLoginGoogle:user='+JSON.stringify(this.state.user));
     if(this.state.user !== null && this.state.user.type ==='fb'){
-        //console.log('renderGoogle:fb:'+JSON.stringify(this.state.user));
-        return (<View style={{justifyContent: 'center',}} key='fbuser'>
+        /*return (<View style={{justifyContent: 'center',}} key='fbuser'>
                   <Text>{this.state.user.name}</Text>
-                </View>);
+                </View>);*/
+        return <Text>{this.state.user.name}</Text>
     }else if(this.state.user !== null && this.state.user.type ==='gg'){
         //console.log('renderGoogle:gg:'+JSON.stringify(this.state.user));
-        return (<View key='gguser'>
-                  <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
-                </View>);
+        return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
+        //return <FIcon name={'google-plus-square'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
     }else{
-        /*return (
-              <GoogleSigninButton
-                  //style={Style.loginButton}
-                  style={{width: 44, height: 44}}
-                  size={GoogleSigninButton.Size.Icon}
-                  color={GoogleSigninButton.Color.Dark}
-                  onPress={this._googleSignIn}/>
-        );*/
+        /*return ( <GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );*/
         return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
     }
   },
@@ -38,7 +30,6 @@ var Login = React.createClass({
     //console.log('renderFacebook:button:'+JSON.stringify(this.state.user));
     var _this = this;
     if(this.state.user !== null && this.state.user.type !== 'fb'){
-      //console.log('renderFacebook:name:'+JSON.stringify(this.state.user));
       return (<View key='user'><Text>{this.state.user.name}</Text></View>);
     }else{
       return (
