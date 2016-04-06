@@ -31,17 +31,8 @@ var styles = StyleSheet.create({
         flex: 0,
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: 10,
+        padding: 6,
         backgroundColor: "#387ef5",
-    },
-    deleteButton: {
-        fontSize: 12, 
-        color: 'black',
-        margin:5,
-    },
-    deleteButtonContainerStyle:{
-        borderRadius:4,
-        backgroundColor:'red',
     },
 });
 ////////////////
@@ -77,6 +68,16 @@ export default class WatchList extends React.Component{
           {key: 'CanKao', url:'www.cankaoxiaoxi.com', type:'web'},
           {key: 'People', url:'www.people.com.cn', type:'web'},
           {key: 'CNTV',   url:'news.cntv.cn', type:'web'},
+          {key: 'Github', url:'news.qq.com',    type:'web'},
+          {key: 'Dropbox',url:'www.huanqiu.com', type:'web'},
+          {key: 'Google', url:'www.cankaoxiaoxi.com', type:'web'},
+          {key: 'Facebook',url:'www.people.com.cn', type:'web'},
+          {key: 'Pinterest',url:'news.cntv.cn', type:'web'},
+          {key: 'Twitter',  url:'news.qq.com',    type:'web'},
+          {key: 'Monster',url:'www.huanqiu.com', type:'web'},
+          {key: 'Zhaopin', url:'www.cankaoxiaoxi.com', type:'web'},
+          {key: 'Youtube', url:'www.people.com.cn', type:'web'},
+          {key: 'LeTV',   url:'news.cntv.cn', type:'web'},
         ];
         this.state = {
             editable: false,
@@ -136,15 +137,10 @@ export default class WatchList extends React.Component{
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-          return <Button containerStyle={styles.deleteButtonContainerStyle} style={styles.deleteButton} onPress={()=>this.deleteItem(id,name)}>Delete</Button>
+          //return <Button containerStyle={styles.deleteButtonContainerStyle} style={styles.deleteButton} onPress={()=>this.deleteItem(id,name)}>Delete</Button>
+            return <IIcon name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
 //containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
-    }
-    openURL(_url){
-        this.props.navigator.push({
-            component: Web,
-            passProps: {url:'http://'+_url},
-        });
     }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
@@ -163,7 +159,12 @@ export default class WatchList extends React.Component{
         );
     }
     _renderHeader() {
-	return (<Text>This is some text. This is some text. This is some text. This is some text.</Text>);
+	return (
+            <View
+                style={styles.header}>
+                <Text>Websites</Text>
+            </View>
+        );
     }
     //_onFetch(page = 1, callback, options) {
       //RestAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
@@ -179,14 +180,10 @@ export default class WatchList extends React.Component{
                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
              }
              rightButton={
-               <Text size={24} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
+               <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
              }
           />
           <View style={styles.container}>
-            <View
-                style={styles.header}>
-                <Text>Exchange Rates</Text>
-            </View>
             <ListView
                 style={styles.listViewContainer}
                 dataSource={this.state.dataSource}
@@ -208,13 +205,5 @@ export default class WatchList extends React.Component{
               firstLoader={true}
               refreshable={false}
               //withSections={false}
-            />
-            <ListView
-                style={styles.listViewContainer}
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow.bind(this)}
-                renderHeader={this._renderHeader.bind(this)}
-                automaticallyAdjustContentInsets={false}
-                initialListSize={11}
             />
 */

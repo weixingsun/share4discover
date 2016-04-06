@@ -1,5 +1,5 @@
 'use strict';
-import React, {View, Text, StyleSheet, ScrollView} from 'react-native'
+import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import Button from 'react-native-button'
 import Login from './Login'
 import Style from './Style'
@@ -12,19 +12,33 @@ export default class Settings extends React.Component {
       super(props);
       this.state = {
       };
-      this.openURL = this.openURL.bind(this);
-      this.openList = this.openList.bind(this);
+      this.openWebList = this.openWebList.bind(this);
+      this.openRssList = this.openRssList.bind(this);
+      this.openJsonList = this.openJsonList.bind(this);
+      this.openStockList = this.openStockList.bind(this);
     }
-    openURL(_url){
+    openWebList(){
         this.props.navigator.push({
-            component: Web,
+            component: WatchList,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
-            //passProps: {url:'http://forex.wiapi.hexun.com/gb/forex/quotelist?&code=FOREXUSDCNY,FOREXNZDCNY,&column=priceweight,code,name,price,updownrate,updown,open,lastclose,high,low,buyprice,sellprice,datetime',},
-            //passProps: {url:'http://news.163.com'},
-            passProps: {url:'http://news.163.com'},
+            passProps: {navigator:this.props.navigator,},
         });
     }
-    openList(){
+    openRssList(){
+        this.props.navigator.push({
+            component: WatchList,
+            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
+            passProps: {navigator:this.props.navigator,},
+        });
+    }
+    openJsonList(){
+        this.props.navigator.push({
+            component: WatchList,
+            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
+            passProps: {navigator:this.props.navigator,},
+        });
+    }
+    openStockList(){
         this.props.navigator.push({
             component: WatchList,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
@@ -46,12 +60,18 @@ export default class Settings extends React.Component {
                   <View style={Style.card}>
                     <Login />
                   </View>
-                  <View style={Style.card}>
-                    <Button onPress={this.openURL}>163 News</Button>
-                  </View>
-                  <View style={Style.card}>
-                    <Button onPress={this.openList}>My Watch List</Button>
-                  </View>
+                  <TouchableOpacity style={Style.card} onPress={this.openWebList} >
+                    <Text style={{fontWeight: 'bold'}}>My Web List</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={this.openRssList} >
+                    <Text style={{fontWeight: 'bold'}}>My RSS List</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={this.openJsonList} >
+                    <Text style={{fontWeight: 'bold'}}>My Json List: Oil/Exchange</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={this.openStockList} >
+                    <Text style={{fontWeight: 'bold'}}>My Stock List </Text>
+                  </TouchableOpacity>
           </View>
         </View>
         );

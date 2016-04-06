@@ -104,12 +104,12 @@ requestAnimationFrame <> cancelAnimationFrame
             //style={Style.web} 
             ref={this.WEB}
             source={{uri:this.props.url}}
-            scalesPageToFit={true}
+            //scalesPageToFit={true}
             //automaticallyAdjustContentInsets={false}
             //decelerationRate="normal"
             //st5artInLoadingState={true}
             domStorageEnabled={true}
-            javaScriptEnabled={true}
+            javaScriptEnabled={false}
             onNavigationStateChange={this.onNavigationStateChange}
             onShouldStartLoadWithRequest={true}
             >
