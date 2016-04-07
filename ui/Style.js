@@ -29,6 +29,8 @@ module.exports = {
   //Card
   CARD_WIDTH: x-em(1.25)*2,
   CARD_HEIGHT: (y-em(1.25)*2-HEADER_HEIGHT),
+  CARD_ITEM_HEIGHT: 50,
+  LIST_HEADER_HEIGHT: 40,
   CARD_PADDING_TOP: em(1.875)+30,
   CARD_PADDING_X: em(1.875),
   CARD_PADDING_Y: em(1.25),

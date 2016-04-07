@@ -36,15 +36,11 @@ var styles = StyleSheet.create({
     },
 });
 
-//title:'My Exchange Rates Watch List'
 //items:[ 'USDCNY','USDNZD','USDAUD' ]
 //sql:  'select * from yahoo.finance.xchange where pair in (' + items + ')'
-//weather: 'select * from weather.forecast where (location = 94089)'
-//stock:'select * from yahoo.finance.quote where symbol in (' + items + ')'
 //path: '$.query.results.rate[*]'
 //field:'Name,Rate,Date,Time,Ask,Bid'
 //timer: 3
-//weather, stock, exchange
 export default class ListJson extends React.Component{
     constructor(props){
         super(props);
@@ -52,8 +48,6 @@ export default class ListJson extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
         });
         this.foods = [ 'USDCNY','USDNZD','USDAUD' ];
-        this.fields = 'Name,Rate,Date,Time,Ask,Bid';
-        this.column_width = Style.CARD_WIDTH / this.fields.split(',').length;
         this.state = {
             editable: false,
             timerEnabled: false,
@@ -61,7 +55,14 @@ export default class ListJson extends React.Component{
         };
         this.seq=0,
         this.reload=this.reload.bind(this);
+        //this._onFetch=this._onFetch.bind(this);
         this._renderRow=this._renderRow.bind(this);
+        //this.yahoo_exchange = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22USDEUR%22,%20%22USDJPY%22,%20%22USDGBP%22,%20%22USDAUD%22,%20%22USDCAD%22,%20%22USDCNY%22,%20%22USDHKD%22,%20%22USDNZD%22)&format=json&env=store://datatables.org/alltableswithkeys';
+        //this.yahoo_exchange_ = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(';
+        //this._yahoo_exchange = ')&format=json&env=store://datatables.org/alltableswithkeys';
+        this.YQLweather = null; //new YQL('select * from weather.forecast where (location = 94089)');
+        this.YQLexchange = null; //new YQL('select * from yahoo.finance.xchange where pair in ("USDCNY", "USDNZD")');
+        this.YQLstock = null;
     }
     componentDidMount() {
         this.reload();
@@ -108,6 +109,20 @@ export default class ListJson extends React.Component{
         }
         return str_items.slice(0, -1);
     }
+    getYQLexchange(array){
+        var items = this.arrayToStr(array);
+        var sql = 'select * from yahoo.finance.xchange where pair in (' + items + ')';
+        var prefixUrl = 'http://query.yahooapis.com/v1/public/yql?q=';
+        var suffixUrl = '&format=json&env=store://datatables.org/alltableswithkeys';
+        var URL = prefixUrl+encodeURI(sql)+suffixUrl;
+        //console.log(URL)
+        fetch(URL).then((response) => response.json()).then((responseData) => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.query.results.rate),
+            });
+        }).done();
+        //  if(response.error){console.log(response.error.description)}
+    }
     getYQLjsonpath(array){
         var items = this.arrayToStr(array);
         var sql = 'select * from yahoo.finance.xchange where pair in (' + items + ')';
@@ -115,11 +130,24 @@ export default class ListJson extends React.Component{
         var suffixUrl = '&format=json&env=store://datatables.org/alltableswithkeys';
         var URL = prefixUrl+encodeURI(sql)+suffixUrl;
         fetch(URL).then((response) => response.json()).then((responseData) => {
-            var rates = JSONPath({json: responseData, path: '$.query.results.rate[*]'});//responseData.query.results.rate
+            var rates = JSONPath({json: responseData, path: '$.query.results.rate[*]'});
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(rates),
             });
         }).done();
+    }
+    getYQLstock(array){
+        var items = this.arrayToStr(array);
+        var sql = 'select * from yahoo.finance.quote where symbol in (' + items + ')';
+        var _this = this;
+        new YQL.exec(sql,function(response){
+          if(response.error){console.log(response.error.description)}
+          else{
+            _this.setState({
+              dataSource: _this.ds.cloneWithRows(response.query.results.quote),
+            });
+          }
+        }) //.query.results.rate;
     }
     //shouldComponentUpdate(nextProps,nextState){
     //    return (nextState.count !==this.state.editable);
@@ -160,15 +188,6 @@ export default class ListJson extends React.Component{
         //this.getYQLexchange(this.foods);
         this.getYQLjsonpath(this.foods);
     }
-    getValueArrayByKeys(fields,json){
-        fields.split(',').map( (k,n)=> {
-            console.log('#'+n+', k:'+k+', v:'+JSONPath({path: '$.'+k, json: json}))
-        } )
-        return fields.split(',').map( (k,n)=> {
-                <Text>{JSONPath({path: '$.'+k, json: json})}</Text>
-        } )
-        
-    }
     _renderDeleteButton(id,name){
         if(this.state.editable)
           //return <Button containerStyle={styles.deleteButtonContainerStyle} style={styles.deleteButton} onPress={()=>this.deleteItem(id,name)}>Delete</Button>
@@ -178,12 +197,6 @@ export default class ListJson extends React.Component{
     }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
-        let Arr = this.fields.split(',').map((k, n) => {
-            return <View key={n} style={{ height:Style.CARD_ITEM_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
-                     <Text>{ JSONPath({path: '$.'+k, json: data}) }</Text>
-                   </View>
-        })
-        //this.valueArr = this.getValueArrayByKeys(fieldsArr);
 	return (
           <View style={Style.card}>
             <TouchableOpacity style={{flex:1}} /*onPress={()=>{
@@ -193,25 +206,17 @@ export default class ListJson extends React.Component{
                                                  });
                                                }}*/
             >
-              <View style={{flexDirection:'row'}}>
-                { Arr }
-              </View>
+                <Text>{data.Name + ': ' + data.Rate}</Text>
             </TouchableOpacity>
             {this._renderDeleteButton(this.seq-1,data.Name)}
           </View>
         );
     }
     _renderHeader() {
-        let Arr = this.fields.split(',').map((k, n) => {
-            return <View key={n} style={{ height:Style.LIST_HEADER_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
-                     <Text>{ k }</Text>
-                   </View>
-        })
 	return (
-            <View style={styles.header}>
-              <View style={{flexDirection:'row'}}>
-                { Arr }
-              </View>
+            <View
+                style={styles.header}>
+                <Text>Exchange Rates</Text>
             </View>
         );
     }
