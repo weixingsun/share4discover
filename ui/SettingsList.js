@@ -4,7 +4,8 @@ import Button from 'react-native-button'
 import Login from './Login'
 import Style from './Style'
 import Web from './Web'
-import WatchList from './WatchList'
+import ListWeb from './ListWeb'
+import ListJson from './ListJson'
 import NavigationBar from 'react-native-navbar'
 
 export default class Settings extends React.Component {
@@ -19,28 +20,28 @@ export default class Settings extends React.Component {
     }
     openWebList(){
         this.props.navigator.push({
-            component: WatchList,
+            component: ListWeb,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
     }
     openRssList(){
         this.props.navigator.push({
-            component: WatchList,
+            component: ListJson,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
     }
     openJsonList(){
         this.props.navigator.push({
-            component: WatchList,
+            component: ListJson,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
     }
     openStockList(){
         this.props.navigator.push({
-            component: WatchList,
+            component: ListJson,
             //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
