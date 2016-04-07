@@ -8,16 +8,13 @@ var deviceStorage = {
 			return JSON.parse(value);
 		});
 	},
-
 	save: function(key, value) {
-		return AsyncStorage.setItem(key, JSON.stringify(value));
+		AsyncStorage.setItem(key, JSON.stringify(value));
 	},
 
 	update: function(key, value) {
-		return deviceStorage.get(key).then((item) => {
-			value = typeof value === 'string' ? value : Object.assign({}, item, value);
-			return AsyncStorage.setItem(key, JSON.stringify(value));
-		});
+		AsyncStorage.removeItem(key);
+		AsyncStorage.setItem(key, JSON.stringify(value));
 	},
 
 	delete: function(key) {

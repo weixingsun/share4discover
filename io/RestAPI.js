@@ -1,5 +1,4 @@
 import React from "react-native"
-
 export default class RestAPI extends React.Component {
     constructor(props){
       super(props);

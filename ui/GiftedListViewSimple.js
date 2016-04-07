@@ -2,8 +2,7 @@
 import GiftedListView from 'react-native-gifted-listview';
 import NavigationBar from 'react-native-navbar';
 import React, { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
-import Rest from "../io/RestAPI"
-var RestAPI = new Rest();
+import JsonAPI from "../io/Net"
 //const IIcon = require('react-native-vector-icons/Ionicons');
 const FIcon = require('react-native-vector-icons/FontAwesome');
 //import ListPopover from './ListPopover'
@@ -26,11 +25,11 @@ export default class List extends Component {
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    RestAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
+    JsonAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
-    RestAPI.getMsgTypes().then((rows)=> {
+    JsonAPI.getMsgTypes().then((rows)=> {
       this.setState({types:rows});
     });
     /*

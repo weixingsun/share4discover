@@ -6,6 +6,7 @@ import MapView from 'react-native-maps'
 import IIcon from 'react-native-vector-icons/Ionicons'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
+import Tool from "../io/Tool"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
@@ -23,7 +24,7 @@ export default class GoogleMap extends Component {
         circles: [],
         initialPosition: null,
         lastPosition: null,
-        gps: true,
+        gps: false,
       };
       this.myPosMarker = null;
       this.msg = this.props.msg;
@@ -43,16 +44,20 @@ export default class GoogleMap extends Component {
         this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
+      Store.get('gps_position').then(function(value) {
+          if(value!=null){
+              _this.setState({initialPosition: value});
+          }
+      });
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
           this.setState({lastPosition: position.coords}); 
-          //alert('initialPosition:'+initialPosition)
         }, 
         (error) => alert(error.message), 
         {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
       );*/ 
-      this.turnOnGps();
+      //this.turnOnGps();
     }
     componentWillUnmount() { 
       this.turnOffGps();
@@ -60,11 +65,10 @@ export default class GoogleMap extends Component {
     turnOnGps(){
       this.watchID = navigator.geolocation.watchPosition(
         (position) => {
-          this.setState({lastPosition: position.coords});
           this.updateMyPos(position.coords);
         },
         (error) => console.log(error.message),
-        {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000},
+        {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
       );
       this.setState({gps:true});
     }
@@ -79,9 +83,14 @@ export default class GoogleMap extends Component {
           this.turnOnGps();
       }
     }
+    getRegion(lat,lng){
+        return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
+    }
     updateMyPos(position){
         this.myPosMarker = {id: 0, pos: position, s:'#0000ff' };
-        this.setState({gps: true}); // this will do the trick for re-rendering
+        Store.save('gps_position', position);
+        this.moveOrNot(position);
+        this.setState({lastPosition: position});
     }
     renderMyPosMarker(){
       if(this.myPosMarker===null) return null;
@@ -130,6 +139,15 @@ export default class GoogleMap extends Component {
     move(p){
       this.refs.map.animateToRegion(p);
     }
+    moveOrNot(position){
+        //if(this.state.lastPosition!=null || this.state.initialPosition!=null) {
+          //var oldpos = this.state.lastPosition==null?this.state.initialPosition:this.state.lastPosition;
+          //if(Tool.distance(oldpos, position) > 5) {
+          //this.move(this.getRegion(position.latitude,position.longitude));
+          //}
+        //}
+        this.move(this.getRegion(position.latitude,position.longitude));
+    }
     fetch(){
       
     }
@@ -142,9 +160,8 @@ export default class GoogleMap extends Component {
             }
           />);
       }else{
-        var latlng = this.state.lastPosition==null?"":this.state.lastPosition.latitude+','+this.state.lastPosition.longitude
         return (
-          <NavigationBar style={Style.navbar} title={{title:latlng}}
+          <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
                 <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
             }

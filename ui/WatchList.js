@@ -167,7 +167,7 @@ export default class WatchList extends React.Component{
         );
     }
     //_onFetch(page = 1, callback, options) {
-      //RestAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
+      //Net.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
       //  callback(rows, {allLoaded: true} );
       //});
       //callback(this.foods, {allLoaded: true} );
