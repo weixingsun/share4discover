@@ -1,6 +1,5 @@
 'use strict';
 import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
-import Button from 'react-native-button'
 import Login from './Login'
 import Style from './Style'
 import Web from './Web'

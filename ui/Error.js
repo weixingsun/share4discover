@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 var {View, Text, StyleSheet, Animated, Dimensions} = React;
-var Button = require('react-native-button');
+//var Button = require('react-native-button');
 
 var { height: deviceHeight } = Dimensions.get('window');
 

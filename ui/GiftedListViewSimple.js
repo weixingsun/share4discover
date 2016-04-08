@@ -149,6 +149,7 @@ export default class List extends Component {
           pagination={true}
           refreshable={true}
           withSections={false}
+          enableEmptySections={true}      //annoying warnings
         />
       </View>
     );

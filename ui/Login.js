@@ -1,6 +1,5 @@
 'use strict';
 import React, {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
-import Button from 'react-native-button'
 //import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FBLogin from 'react-native-facebook-login'

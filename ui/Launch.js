@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 var {View, Text, StyleSheet, TouchableHighlight} = React;
-var Button = require('react-native-button');
+//var Button = require('react-native-button');
 
 class Launch extends React.Component {
     render(){

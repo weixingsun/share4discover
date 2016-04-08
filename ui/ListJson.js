@@ -3,7 +3,6 @@ import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, Vie
 import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Style from './Style'
-import Button from 'react-native-button'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 //import YQL from 'yql' //sorry, react native is not nodejs
@@ -146,7 +145,11 @@ export default class ListJson extends React.Component{
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(list),
             });
-        }).done();
+        })
+        .catch((error) => {
+          alert('Network Error: '+error.description)
+        })
+        .done();
     }
     //shouldComponentUpdate(nextProps,nextState){
     //    return (nextState.count !==this.state.editable);
@@ -248,6 +251,7 @@ export default class ListJson extends React.Component{
           />
           <View style={styles.container}>
             <ListView
+                enableEmptySections={true}      //annoying warning
                 style={styles.listViewContainer}
                 dataSource={this.state.dataSource}
                 renderRow={this._renderRow.bind(this)}

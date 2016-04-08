@@ -2,7 +2,6 @@
 import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, ListView,} from 'react-native';
 import Style from './Style'
 import Web from './Web'
-import Button from 'react-native-button'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import GiftedListView from 'react-native-gifted-listview';
@@ -137,7 +136,6 @@ export default class WatchList extends React.Component{
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-          //return <Button containerStyle={styles.deleteButtonContainerStyle} style={styles.deleteButton} onPress={()=>this.deleteItem(id,name)}>Delete</Button>
             return <IIcon name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
 //containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
