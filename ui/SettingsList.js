@@ -28,21 +28,21 @@ export default class Settings extends React.Component {
     openRssList(){
         this.props.navigator.push({
             component: ListJson,
-            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
     }
     openJsonList(){
         this.props.navigator.push({
             component: ListJson,
-            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
-            passProps: {navigator:this.props.navigator,},
+            passProps: {
+                navigator:this.props.navigator,
+                API_NAME:'exchange',
+            },
         });
     }
     openStockList(){
         this.props.navigator.push({
             component: ListJson,
-            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
             passProps: {navigator:this.props.navigator,},
         });
     }

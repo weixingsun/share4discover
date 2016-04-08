@@ -1,6 +1,4 @@
-var React = require('react-native');
-
-var { AsyncStorage } = React;
+import React, { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
 	get: function(key) {
@@ -19,7 +17,15 @@ var deviceStorage = {
 
 	delete: function(key) {
 		return AsyncStorage.removeItem(key);
-	}
+	},
+	save_string: function(key, value) {
+		AsyncStorage.setItem(key, value);
+	},
+	get_string: function(key) {
+		return AsyncStorage.getItem(key).then(function(value) {
+			return value;
+		});
+	},
 };
 
 module.exports = deviceStorage;

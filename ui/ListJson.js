@@ -1,6 +1,7 @@
 'use strict'
 import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, ListView,} from 'react-native';
 import jsonpath from '../io/jsonpath'
+import Store from '../io/Store'
 import Style from './Style'
 import Button from 'react-native-button'
 import NavigationBar from 'react-native-navbar'
@@ -37,23 +38,28 @@ var styles = StyleSheet.create({
 });
 
 //title:'My Exchange Rates Watch List'
-//items:[ 'USDCNY','USDNZD','USDAUD' ]
-//sql:  'select * from yahoo.finance.xchange where pair in (' + items + ')'
+//xchange: 'select * from yahoo.finance.xchange where pair in (' + items + ')'
 //weather: 'select * from weather.forecast where (location = 94089)'
-//stock:'select * from yahoo.finance.quote where symbol in (' + items + ')'
-//path: '$.query.results.rate[*]'
-//field:'Name,Rate,Date,Time,Ask,Bid'
-//timer: 3
-//weather, stock, exchange
+//stock:   'select * from yahoo.finance.quote where symbol in (' + items + ')'
+//path:    '$.query.results.rate[*]'   //'$.query.results.rate'
+//field:   'Name,Rate,Date,Time,Ask,Bid'   //default all
+//timer:   3
+
+//API_NAME: exchange
+//value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
 export default class ListJson extends React.Component{
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,
         });
-        this.foods = [ 'USDCNY','USDNZD','USDAUD' ];
-        this.fields = 'Name,Rate,Date,Time,Ask,Bid';
-        this.column_width = Style.CARD_WIDTH / this.fields.split(',').length;
+        //this.foods = [ 'USDCNY','USDNZD','USDAUD' ];
+        this.foods = [];
+        this.fields = []; // 'Name,Rate,Date,Time,Ask,Bid'
+        this.yql = '';
+        this.path = '';
+        this.title = '';
+        this.column_width = 0;
         this.state = {
             editable: false,
             timerEnabled: false,
@@ -62,6 +68,19 @@ export default class ListJson extends React.Component{
         this.seq=0,
         this.reload=this.reload.bind(this);
         this._renderRow=this._renderRow.bind(this);
+    }
+    componentWillMount() {
+        var _this=this;
+        //Store.save('exchange', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
+        Store.get(this.props.API_NAME).then((value) => {
+          if(value !=null){
+              _this.foods= value.list.split(',')
+              _this.yql= value.yql
+              _this.path= value.path
+              _this.title= value.title
+              _this.reload();
+          }
+        });
     }
     componentDidMount() {
         this.reload();
@@ -110,14 +129,22 @@ export default class ListJson extends React.Component{
     }
     getYQLjsonpath(array){
         var items = this.arrayToStr(array);
-        var sql = 'select * from yahoo.finance.xchange where pair in (' + items + ')';
+        var sql = this.yql+' (' + items + ')';
+        //alert(JSON.stringify())
         var prefixUrl = 'http://query.yahooapis.com/v1/public/yql?q=';
         var suffixUrl = '&format=json&env=store://datatables.org/alltableswithkeys';
         var URL = prefixUrl+encodeURI(sql)+suffixUrl;
         fetch(URL).then((response) => response.json()).then((responseData) => {
-            var rates = JSONPath({json: responseData, path: '$.query.results.rate[*]'});//responseData.query.results.rate
+            var rates = JSONPath({json: responseData, path: this.path});//responseData.query.results.rate
+            var list = rates[0];
+            if(typeof list[0] == 'undefined'){   //check if it is a leaf, caused by some APIs drop [] with a single record
+              list = rates;
+            }
+            //alert(JSON.stringify(list));
+            this.fields =Object.keys(list[0]);
+            this.column_width = Style.CARD_WIDTH / this.fields.length;
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(rates),
+                dataSource: this.state.dataSource.cloneWithRows(list),
             });
         }).done();
     }
@@ -157,33 +184,22 @@ export default class ListJson extends React.Component{
         else return 'Edit'
     }
     reload(){
-        //this.getYQLexchange(this.foods);
-        this.getYQLjsonpath(this.foods);
-    }
-    getValueArrayByKeys(fields,json){
-        fields.split(',').map( (k,n)=> {
-            console.log('#'+n+', k:'+k+', v:'+JSONPath({path: '$.'+k, json: json}))
-        } )
-        return fields.split(',').map( (k,n)=> {
-                <Text>{JSONPath({path: '$.'+k, json: json})}</Text>
-        } )
-        
+        if(this.foods.length>0){
+          this.getYQLjsonpath(this.foods);
+        }
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-          //return <Button containerStyle={styles.deleteButtonContainerStyle} style={styles.deleteButton} onPress={()=>this.deleteItem(id,name)}>Delete</Button>
             return <IIcon name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
-//containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
     }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
-        let Arr = this.fields.split(',').map((k, n) => {
+        let Arr = this.fields.map((k, n) => {
             return <View key={n} style={{ height:Style.CARD_ITEM_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
                      <Text>{ JSONPath({path: '$.'+k, json: data}) }</Text>
                    </View>
         })
-        //this.valueArr = this.getValueArrayByKeys(fieldsArr);
 	return (
           <View style={Style.card}>
             <TouchableOpacity style={{flex:1}} /*onPress={()=>{
@@ -202,7 +218,7 @@ export default class ListJson extends React.Component{
         );
     }
     _renderHeader() {
-        let Arr = this.fields.split(',').map((k, n) => {
+        let Arr = this.fields.map((k, n) => {
             return <View key={n} style={{ height:Style.LIST_HEADER_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
                      <Text>{ k }</Text>
                    </View>
@@ -218,7 +234,7 @@ export default class ListJson extends React.Component{
     render() {
         return(
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title:'My Exchange Rates Watch List',}}
+          <NavigationBar style={Style.navbar} title={{title: this.title,}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
                   <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
