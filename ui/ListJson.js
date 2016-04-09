@@ -3,6 +3,7 @@ import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, Vie
 import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Style from './Style'
+import AddJson from './AddJson'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 //import YQL from 'yql' //sorry, react native is not nodejs
@@ -46,17 +47,22 @@ var styles = StyleSheet.create({
 
 //API_NAME: exchange
 //value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
+
+//http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json
+//http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic&callback=
 export default class ListJson extends React.Component{
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,
+            sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
         //this.foods = [ 'USDCNY','USDNZD','USDAUD' ];
         this.foods = [];
         this.fields = []; // 'Name,Rate,Date,Time,Ask,Bid'
         this.yql = '';
         this.path = '';
+        this.subpath = '';
         this.title = '';
         this.column_width = 0;
         this.state = {
@@ -67,15 +73,26 @@ export default class ListJson extends React.Component{
         this.seq=0,
         this.reload=this.reload.bind(this);
         this._renderRow=this._renderRow.bind(this);
+        this.parser=this.getYQLjsonpath.bind(this);
+        this.switchEdit=this.switchEdit.bind(this);
+        this.getEditText=this.getEditText.bind(this);
     }
     componentWillMount() {
         var _this=this;
         //Store.save('exchange', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
+        //Store.save('exchange2', {"list":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates Watch List"});
         Store.get(this.props.API_NAME).then((value) => {
           if(value !=null){
               _this.foods= value.list.split(',')
-              _this.yql= value.yql
+              if(value.yql != null){
+                 _this.yql= value.yql
+                 _this.parser=_this.getYQLjsonpath.bind(_this);
+              }else{
+                 _this.url= value.url
+                 _this.parser=_this.getURLjsonpath.bind(_this);
+              }
               _this.path= value.path
+              _this.subpath= value.subpath
               _this.title= value.title
               _this.reload();
           }
@@ -100,23 +117,16 @@ export default class ListJson extends React.Component{
       if(this.state.timerEnabled){
           clearInterval(this.timer);
           this.setState({timerEnabled:false});
-          this.setTimer(2000,this.dummy);
+          this.setTimer(5000,this.dummy);
       }else{
           clearInterval(this.timer);
           this.setState({timerEnabled:true});
-          this.setTimer(2000,this.reload);
+          this.setTimer(5000,this.reload);
       }
     }
     getColor(enable){
         if(enable) return '#3B3938';
         else return '#D3D3D3';
-    }
-    pullData(){
-        fetch(requestURL).then((response) => response.json()).then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData),
-            });
-        }).done();
     }
     //['USDCNY','USDNZD']
     arrayToStr(array){
@@ -127,9 +137,9 @@ export default class ListJson extends React.Component{
         return str_items.slice(0, -1);
     }
     getYQLjsonpath(array){
+        if(this.yql==null) return;
         var items = this.arrayToStr(array);
         var sql = this.yql+' (' + items + ')';
-        //alert(JSON.stringify())
         var prefixUrl = 'http://query.yahooapis.com/v1/public/yql?q=';
         var suffixUrl = '&format=json&env=store://datatables.org/alltableswithkeys';
         var URL = prefixUrl+encodeURI(sql)+suffixUrl;
@@ -139,7 +149,6 @@ export default class ListJson extends React.Component{
             if(typeof list[0] == 'undefined'){   //check if it is a leaf, caused by some APIs drop [] with a single record
               list = rates;
             }
-            //alert(JSON.stringify(list));
             this.fields =Object.keys(list[0]);
             this.column_width = Style.CARD_WIDTH / this.fields.length;
             this.setState({
@@ -147,7 +156,33 @@ export default class ListJson extends React.Component{
             });
         })
         .catch((error) => {
-          alert('Network Error: '+error.description)
+          //alert('Network Error: '+error.description)
+        })
+        .done();
+    }
+    filterLoop(list, selectedList){
+        var selects = selectedList.split(',')
+    }
+    getURLjsonpath(array){
+        if(this.url==null) return;
+        var items = this.arrayToStr(array);
+        fetch(this.url).then((response) => response.json()).then((responseData) => {
+            var rates = JSONPath({json: responseData, path: this.path});//$.list.results.rate
+            var list = rates[0];
+            var item;
+            if(this.subpath==='') item=list[0]
+            else if(typeof list[0] == 'undefined') list = rates; //check if it is a leaf, caused by some APIs drop [] with a single record
+            else item = JSONPath({json: list[0], path: this.subpath})[0];
+            //alert('item:'+JSON.stringify(item));
+            this.fields =Object.keys(item);
+            this.column_width = Style.CARD_WIDTH / this.fields.length;
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(list),
+                //dataSource: this.state.dataSource.cloneWithRowsAndSections(list),
+            });
+        })
+        .catch((error) => {
+        //  alert('Network Error: '+error.description)
         })
         .done();
     }
@@ -188,7 +223,7 @@ export default class ListJson extends React.Component{
     }
     reload(){
         if(this.foods.length>0){
-          this.getYQLjsonpath(this.foods);
+          this.parser(this.foods);
         }
     }
     _renderDeleteButton(id,name){
@@ -198,9 +233,17 @@ export default class ListJson extends React.Component{
     }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
+        var item=null;
+        if(this.subpath != null){
+          item = JSONPath({json: data, path: this.subpath})[0];
+          //if(typeof temp[0][0] == 'undefined') item = temp[0]
+        }else{
+          item = data;
+        }
+        //alert('data:'+JSON.stringify(data)+', item:'+JSON.stringify(item))
         let Arr = this.fields.map((k, n) => {
             return <View key={n} style={{ height:Style.CARD_ITEM_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
-                     <Text>{ JSONPath({path: '$.'+k, json: data}) }</Text>
+                     <Text>{ JSONPath({path: '$.'+k, json: item}) }</Text>
                    </View>
         })
 	return (
@@ -234,6 +277,13 @@ export default class ListJson extends React.Component{
             </View>
         );
     }
+    _renderSectionHeader(sectionData, sectionID) {
+      return (
+        <View style={styles.header}>
+          <Text style={styles.sectionText}>{sectionID}</Text>
+        </View>
+      )
+    }
     render() {
         return(
         <View style={{flex:1}}>
@@ -246,7 +296,11 @@ export default class ListJson extends React.Component{
                 </View>
              }
              rightButton={
-               <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
+               <View style={{flexDirection:'row',}}>
+                  <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: AddJson, }) } />
+                  <View style={{width:50}} />
+                  <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
+                </View>
              }
           />
           <View style={styles.container}>
@@ -256,8 +310,9 @@ export default class ListJson extends React.Component{
                 dataSource={this.state.dataSource}
                 renderRow={this._renderRow.bind(this)}
                 renderHeader={this._renderHeader.bind(this)}
-                //automaticallyAdjustContentInsets={false}
-                initialListSize={11}
+                //renderSectionHeader = {this._renderSectionHeader.bind(this)}
+                automaticallyAdjustContentInsets={false}
+                initialListSize={9}
             />
           </View>
         </View>

@@ -15,6 +15,7 @@ export default class Settings extends React.Component {
       this.openWebList = this.openWebList.bind(this);
       this.openRssList = this.openRssList.bind(this);
       this.openJsonList = this.openJsonList.bind(this);
+      this.openJsonList2 = this.openJsonList2.bind(this);
       this.openStockList = this.openStockList.bind(this);
     }
     openWebList(){
@@ -36,6 +37,15 @@ export default class Settings extends React.Component {
             passProps: {
                 navigator:this.props.navigator,
                 API_NAME:'exchange',
+            },
+        });
+    }
+    openJsonList2(){
+        this.props.navigator.push({
+            component: ListJson,
+            passProps: {
+                navigator:this.props.navigator,
+                API_NAME:'exchange2',
             },
         });
     }
@@ -67,7 +77,10 @@ export default class Settings extends React.Component {
                     <Text style={{fontWeight: 'bold'}}>My RSS List</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={this.openJsonList} >
-                    <Text style={{fontWeight: 'bold'}}>My Json List: Oil/Exchange</Text>
+                    <Text style={{fontWeight: 'bold'}}>My Exchange Simple List</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={this.openJsonList2} >
+                    <Text style={{fontWeight: 'bold'}}>My Exchange Full List</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={this.openStockList} >
                     <Text style={{fontWeight: 'bold'}}>My Stock List </Text>
