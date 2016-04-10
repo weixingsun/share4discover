@@ -47,9 +47,6 @@ var styles = StyleSheet.create({
 
 //API_NAME: exchange
 //value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
-
-//http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json
-//http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic&callback=
 export default class ListJson extends React.Component{
     constructor(props){
         super(props);
@@ -61,10 +58,11 @@ export default class ListJson extends React.Component{
         this.foods = [];
         this.fields = []; // 'Name,Rate,Date,Time,Ask,Bid'
         this.yql = '';
-        this.path = '';
-        this.subpath = '';
+        this.path = null;
+        this.subpath = null;
         this.title = '';
         this.column_width = 0;
+        this.filter = null;
         this.state = {
             editable: false,
             timerEnabled: false,
@@ -93,6 +91,7 @@ export default class ListJson extends React.Component{
               }
               _this.path= value.path
               _this.subpath= value.subpath
+              _this.filter= value.list
               _this.title= value.title
               _this.reload();
           }
@@ -162,6 +161,16 @@ export default class ListJson extends React.Component{
     }
     filterLoop(list, selectedList){
         var selects = selectedList.split(',')
+        var filterList = []
+        //Object.keys(obj).forEach(function(key) {
+        for (var i = 0; i < list.length; i++) {
+            var item = JSONPath({json: list[i], path: this.subpath})[0];
+            for (var j = 0; j < selects.length; j++) {
+                if(JSON.stringify(item).indexOf( selects[j]) >-1)  filterList.push(item);
+            }
+        }
+        //alert(" filterList:"+ JSON.stringify(filterList));
+        return filterList;
     }
     getURLjsonpath(array){
         if(this.url==null) return;
@@ -170,14 +179,15 @@ export default class ListJson extends React.Component{
             var rates = JSONPath({json: responseData, path: this.path});//$.list.results.rate
             var list = rates[0];
             var item;
-            if(this.subpath==='') item=list[0]
+            if(this.subpath==null) item=list[0]
             else if(typeof list[0] == 'undefined') list = rates; //check if it is a leaf, caused by some APIs drop [] with a single record
             else item = JSONPath({json: list[0], path: this.subpath})[0];
             //alert('item:'+JSON.stringify(item));
             this.fields =Object.keys(item);
             this.column_width = Style.CARD_WIDTH / this.fields.length;
+            var list2 = this.filterLoop(list, this.filter)
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(list),
+                dataSource: this.state.dataSource.cloneWithRows(list2),
                 //dataSource: this.state.dataSource.cloneWithRowsAndSections(list),
             });
         })
@@ -233,14 +243,9 @@ export default class ListJson extends React.Component{
     }
     _renderRow(data, sectionID, rowID) {
         this.incSeq();
-        var item=null;
-        if(this.subpath != null){
-          item = JSONPath({json: data, path: this.subpath})[0];
-          //if(typeof temp[0][0] == 'undefined') item = temp[0]
-        }else{
-          item = data;
-        }
-        //alert('data:'+JSON.stringify(data)+', item:'+JSON.stringify(item))
+        var item; 
+        if(this.filter != null) item= data
+        else item= JSONPath({json: data, path: this.subpath})[0];
         let Arr = this.fields.map((k, n) => {
             return <View key={n} style={{ height:Style.CARD_ITEM_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
                      <Text>{ JSONPath({path: '$.'+k, json: item}) }</Text>

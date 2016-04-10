@@ -27,7 +27,7 @@ export default class Settings extends React.Component {
     }
     openRssList(){
         this.props.navigator.push({
-            component: ListJson,
+            component: ListWeb,
             passProps: {navigator:this.props.navigator,},
         });
     }
@@ -52,7 +52,10 @@ export default class Settings extends React.Component {
     openStockList(){
         this.props.navigator.push({
             component: ListJson,
-            passProps: {navigator:this.props.navigator,},
+            passProps: {
+                navigator:this.props.navigator,
+                API_NAME:'exchange',
+            },
         });
     }
 //<ScrollView style={{flex:1}}>
