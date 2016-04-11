@@ -13,17 +13,24 @@ export default class PDF extends Component {
     constructor(props) {
         super(props);
         this.state={ 
-            api_type: 'url',
+            api_list:["-- Add Another API --"],
+            selected_api:"-- Add Another API --",
             disabled: false,
+            name:'',
+            title:'',
+            yql:'',
+            path:'',
+            subpath:'',
+            filter:'',
         }
-        //this.save=this.save.bind(this)
     }
-    
-    onButtonPress(){
+    componentWillMount(){
+        this.load();
+    }
+    onSubmit(){
         var _this=this;
         var form = this.loginForm.getValue();
         Store.get(form.name).then(function(value){
-          //alert(' overwrite: ' + JSON.stringify(form))
           if(value!=null){
             Alert.alert(
               "Overwrite",
@@ -31,24 +38,61 @@ export default class PDF extends Component {
               [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    //alert(' overwrite: ' + JSON.stringify(form))
                     _this.save();
                 }},
               ]
             );
           }else{
               _this.save(form);
+              //
+              _this.props.navigator.pop();
           }
         })
     }
     save(){
         var form = this.loginForm.getValue();
-        console.log(form)
         Store.save(form.name,form);
+        if (this.state.api_list.indexOf(form.name) == -1) {
+            this.state.api_list.push(form.name);
+            Store.save(Store.API_LIST_NAME,this.state.api_list)
+        }
     }
-    getEditText(){
-        if(this.state.disabled) return "Disabled"
-        else return "Edit"
+    load(){
+        var _this=this;
+        Store.get(Store.API_LIST_NAME).then(function(list){
+            if(list==null) return;
+            _this.setState({api_list:list});
+            console.log('load:'+JSON.stringify(list));
+        })
+    }
+    loadApi(name){
+        var _this=this;
+        //console.log('loadApi:'+name);
+        Store.get(name).then(function(value){
+            if(value!=null)
+            _this.setState({
+               selected_api:name,
+               name:value.name,
+               title:value.title,
+               yql:value.yql,
+               path:value.path,
+               subpath:value.subpath,
+               filter:value.filter,
+            });
+            else
+            _this.setState({
+               selected_api:name,
+               name:'',
+               title:'',
+               yql:'',
+               path:'',
+               subpath:'',
+               filter:'',
+            });
+            //console.log('loadApi:'+name+',data:'+JSON.stringify(value))
+            _this.setModel();
+            //_this.loginForm.forceRender();
+        })
     }
     getLockIcon(){
         if(this.state.disabled) return 'ios-locked-outline'
@@ -58,38 +102,36 @@ export default class PDF extends Component {
         if(this.state.disabled) this.setState({disabled:false})
         else this.setState({disabled:true})
     }
-    render(){
+    setModel(){
       let model = {
             title: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Title",
-                value: "My Exchange Rates Watch List Simple",
+                value: this.state.title,
             },
             name: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Name",
-                value: "exchange1",
+                value: this.state.name,
             },
             filter: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Filter",
                 multiline: true,
-                value: "USD/CNY,USD/NZD",
-                onFieldChange: (value, ref)=>{
-                    //console.log(value);
-                    //console.log(ref);
-                }
+                value: this.state.filter,
+                ///onFieldChange: (value, ref)=>{
+                    //new value, ref to element
+                //}
             },
             /*url: {
                 type: Form.fieldType.String,
                 label: "Url",
                 value: "",
                 onFieldChange: (value, ref)=>{
-                    console.log(value);
-                    //console.log(ref);
+                    //new value, ref to element
                 }
             },*/
             yql: {
@@ -97,21 +139,19 @@ export default class PDF extends Component {
                 type: Form.fieldType.String,
                 label: "YQL",
                 multiline: true,
-                value: 'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")',
-                onFieldChange: (value, ref)=>{
-                    //console.log(value);
-                    //console.log(ref);
-                }
+                value: this.state.yql,
+                //onFieldChange: (value, ref)=>{
+                    //new value, ref to element
+                //}
             },
             path: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Path",
-                value: '$.query.results.rate',
-                onFieldChange: (value, ref)=>{
-                    //console.log(value);
-                    //console.log(ref);
-                }
+                value: this.state.path,
+                //onFieldChange: (value, ref)=>{
+                    //new value, ref to element
+                //}
             },
             //RN 0.23.1  Picker cannot inside form, many issues
             /*api_type: {
@@ -126,10 +166,13 @@ export default class PDF extends Component {
                 }
             },*/
         };
- 
+        this.setState({model:model})
+    }
+    render(){
+        //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: 'Add a Json API',}}
+                  <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
@@ -137,25 +180,22 @@ export default class PDF extends Component {
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <Text size={28} onPress={() => this.switchEditMode()}>{this.getEditText()}</Text>
+                        <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
                      </View>
                    }
                   />
                 <View style={styles.container}>
-                    <View style={styles.qrContainer}>
-                        <IIcon name={this.getLockIcon()} size={60}/>
-                    </View>
-                    <Picker selectedValue={this.state.api_type} onValueChange={(value)=> this.setState({api_type:value}) }>
-                        {[{id:"0",label:"Yahoo",value:"yql"},{id:"1",label:"Url",value:"url"}].map(function(item){
-                            return <Picker.Item key={item.id} label={item.label} value={item.value} />;
+                    <Picker selectedValue={this.state.selected_api} onValueChange={(value)=> { this.loadApi(value)}}>
+                        {this.state.api_list.map(function(item,n){
+                            return <Picker.Item key={item} label={item} value={item} />;
                         })}
                     </Picker>
                     <Form
                         style={{flex:1}}
                         ref={(frm)=> this.loginForm = frm}
-                        model={model}
+                        model={this.state.model}
                     />
-                    <Button onPress={this.onButtonPress.bind(this)}>
+                    <Button onPress={this.onSubmit.bind(this)}>
                        Save
                     </Button>
                 </View>
@@ -163,37 +203,11 @@ export default class PDF extends Component {
         );
     }
 }
-/*
-                   rightButton={
-                     <View style={{flexDirection:'row',}}>
-                        <Text size={28} onPress={() => this.save()}>Apply</Text>
-                     </View>
-                   }
-                        <Picker
-                            //ref={this.componentId}
-                            //name={name}
-                            style={model.valueStyle}
-                            //type={model.type}
-                            //values={model.value}
-                            selectedValue={model.selected}
-                            //disabled={model.disabled}
-                            onValueChange={model.onChange}
-                        >
-                            {
-                              model.values.map(function(item){
-                                 return <Picker.Item key={item.id} label={item.label} value={item.value} />;
-                              })
-                            }
-                        </Picker>
-                    <Picker selectedValue={this.state.language} onValueChange={(lang) => this.setState({language: lang})}>
-                      <Picker.Item label="Java" value="java" />
-                      <Picker.Item label="JavaScript" value="js" />
-                    </Picker>
-*/
 var styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         flex: 1,
+        marginTop: 50,
         margin: 15,
     },
     pwdContainer:{

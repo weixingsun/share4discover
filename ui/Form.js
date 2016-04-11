@@ -130,7 +130,6 @@ class Form extends Component {
         let models = this.state.model;
         let rows = [];
         let noRefId = 0;
-
         for(let name in models){
             let model = models[name];
             let content = null;
@@ -189,6 +188,7 @@ class Form extends Component {
                 case "number":
                 case "string":
                 case "password":
+                    //console.log("Form.text:"+model.value)
                     content = (
                         <Input
                             ref={this.componentId}
@@ -217,7 +217,7 @@ class Form extends Component {
                     );
                     break;
                 case "select":
-                    console.log('select drawing....')
+                    //console.log('select drawing....')
                     content = (
                         <Picker
                             //ref={this.componentId}
@@ -361,7 +361,9 @@ class Form extends Component {
         }
         return values
     }
-
+    forceRender(){
+        this.forceUpdate();
+    }
     render() {
         this.componentsRef = [];
         this.componentId = 0;

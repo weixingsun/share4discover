@@ -1,6 +1,8 @@
 import React, { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
+        API_LIST_NAME:"api_list",
+        
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {
 			return JSON.parse(value);

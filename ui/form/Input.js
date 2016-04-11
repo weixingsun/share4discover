@@ -24,8 +24,10 @@ class Input extends Component {
     }
 
     render() {
+        //console.log("Input:"+this.state.value)
+        //console.log("Input:"+this.props.value)  //refresh value need this 
         return (
-            <TextInput value={String(this.state.value)}
+            <TextInput value={String(this.props.value)}
                        style={[this.props.style, (this.props.editable ? null : styles.disabled)]}
                        onChangeText={(value) => this._onChangeText(value)}
                        editable={this.props.editable}
