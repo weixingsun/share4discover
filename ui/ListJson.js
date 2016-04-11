@@ -74,7 +74,7 @@ export default class ListJson extends React.Component{
         this._renderRow=this._renderRow.bind(this);
         this.parser=this.getYQLjsonpath.bind(this);
         this.switchEdit=this.switchEdit.bind(this);
-        this.getEditText=this.getEditText.bind(this);
+        this.getLockIcon=this.getLockIcon.bind(this);
     }
     componentWillMount() {
         var _this=this;
@@ -229,9 +229,9 @@ export default class ListJson extends React.Component{
           ]
         );
     }
-    getEditText(){
-        if(this.state.editable) return 'Apply'
-        else return 'Edit'
+    getLockIcon(){
+        if(!this.state.editable) return 'ios-locked-outline'
+        return 'ios-unlocked-outline'
     }
     reload(){
         if(this.foods.length>0){
@@ -306,7 +306,7 @@ export default class ListJson extends React.Component{
                <View style={{flexDirection:'row',}}>
                   <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
                   <View style={{width:50}} />
-                  <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
+                  <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
                 </View>
              }
           />

@@ -1,6 +1,7 @@
 import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator, TouchableOpacity,Component,  } from 'react-native'
-var Tabs = require('react-native-tabs');
+import Tabs from 'react-native-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
 
@@ -9,6 +10,7 @@ import Style       from "./Style"
 import Loading     from "./Loading"
 import GoogleMap   from "./GoogleMap"
 //import GooglePlace from "./GooglePlace"
+import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import GiftedListView from './GiftedListViewSimple'
 
@@ -50,8 +52,8 @@ export default class Main extends Component {
   pages(){
     if(this.state.page ==='ios-chatboxes'){
       return <GiftedListView navigator={this.props.navigator}/>
-    } else if(this.state.page ==='ios-people'){
-      return <Text>Friends</Text>
+    } else if(this.state.page ==='plug'){
+      return <APIList navigator={this.props.navigator}/>
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
@@ -70,7 +72,7 @@ export default class Main extends Component {
         <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=>{ if(!this.state.isDoing) this.setState({page:e.props.name})}}>
             <Icon name="ios-chatboxes" size={40} />
-            <Icon name="ios-people" size={40} />
+            <FIcon name="plug" size={30} />
             <Icon name="email" size={40} />
             <Icon name="ios-world" size={40} />
             <Icon name="navicon-round" size={40} />
