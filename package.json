@@ -6,18 +6,21 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react": "latest",
+    "apsl-react-native-button": "latest",
+    "react": "^0.14.8",
     "react-native": "latest",
-    "react-native-facebook-login": "https://github.com/lwhiteley/react-native-facebook-login",
+    "react-native-datetime": "^0.1.1",
+    "react-native-facebook-login": "git+https://github.com/lwhiteley/react-native-facebook-login.git",
     "react-native-gifted-listview": "latest",
     "react-native-google-places-autocomplete": "latest",
     "react-native-google-signin": "latest",
-    "react-native-localization": "^0.1.12",
+    "react-native-localization": "^0.1.13",
     "react-native-maps": "latest",
     "react-native-navbar": "latest",
     "react-native-tableview-simple": "^0.8.0",
     "react-native-tabs": "latest",
     "react-native-vector-icons": "latest",
-    "react-native-wechat": "latest"
+    "react-native-wechat": "latest",
+    "react-timer-mixin": "^0.13.3"
   }
 }

@@ -4,6 +4,7 @@ import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Style from './Style'
 import AddJson from './AddJson'
+import FormAddJson from './FormAddJson'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 //import YQL from 'yql' //sorry, react native is not nodejs
@@ -78,10 +79,11 @@ export default class ListJson extends React.Component{
     componentWillMount() {
         var _this=this;
         //Store.save('exchange', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
-        //Store.save('exchange2', {"list":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates Watch List"});
+        //Store.save('exchange', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
+        //Store.save('exchange2',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates Watch List"});
         Store.get(this.props.API_NAME).then((value) => {
           if(value !=null){
-              _this.foods= value.list.split(',')
+              _this.foods= value.filter.split(',')
               if(value.yql != null){
                  _this.yql= value.yql
                  _this.parser=_this.getYQLjsonpath.bind(_this);
@@ -91,7 +93,7 @@ export default class ListJson extends React.Component{
               }
               _this.path= value.path
               _this.subpath= value.subpath
-              _this.filter= value.list
+              _this.filter= value.filter
               _this.title= value.title
               _this.reload();
           }
@@ -137,11 +139,11 @@ export default class ListJson extends React.Component{
     }
     getYQLjsonpath(array){
         if(this.yql==null) return;
-        var items = this.arrayToStr(array);
-        var sql = this.yql+' (' + items + ')';
+        //var items = this.arrayToStr(array);
+        //var sql = this.yql+' (' + items + ')';
         var prefixUrl = 'http://query.yahooapis.com/v1/public/yql?q=';
         var suffixUrl = '&format=json&env=store://datatables.org/alltableswithkeys';
-        var URL = prefixUrl+encodeURI(sql)+suffixUrl;
+        var URL = prefixUrl+encodeURI(this.yql)+suffixUrl;
         fetch(URL).then((response) => response.json()).then((responseData) => {
             var rates = JSONPath({json: responseData, path: this.path});//responseData.query.results.rate
             var list = rates[0];
@@ -302,7 +304,7 @@ export default class ListJson extends React.Component{
              }
              rightButton={
                <View style={{flexDirection:'row',}}>
-                  <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: AddJson, }) } />
+                  <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
                   <View style={{width:50}} />
                   <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>
                 </View>

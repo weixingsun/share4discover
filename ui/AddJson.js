@@ -6,14 +6,14 @@ import FIcon from 'react-native-vector-icons/FontAwesome'
 import Style from './Style'
 import { Cell, CustomCell, Section, TableView, } from 'react-native-tableview-simple'
 
-export default class Filter extends Component {
+export default class AddJson extends Component {
   constructor(props) {
       super(props);
+      this.types = ['currency','stock','weather'];//this.props.types;
+      this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
       this.state = {
-          selectedType: this.props.selectedType,
-          typeSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
+          dataSource: this.ds.cloneWithRows(this.types),
       };
-      this.types = this.props.types;
   }
   setSelectedType(type){
     this.setState({
@@ -21,11 +21,6 @@ export default class Filter extends Component {
     });
   }
   componentDidMount() {
-    console.log('types:'+this.types);
-    console.log('selectedType:'+this.state.selectedType);
-    this.setState({
-      typeSource: this.state.typeSource.cloneWithRows(this.types)
-    });
   }
   renderRow(rowData) {
     //console.log('rowData:'+rowData);
@@ -57,7 +52,7 @@ export default class Filter extends Component {
             }
         />
         <ListView
-          dataSource={this.state.typeSource}
+          dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)} />
       </View>
     );

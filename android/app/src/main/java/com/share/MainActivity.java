@@ -10,6 +10,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
+import com.keyee.datetime.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +31,9 @@ public class MainActivity extends ReactActivity {
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
-        new ReactNativeLocalizationPackage(),
+      new ReactNativeLocalizationPackage(),
       new RNGoogleSigninPackage(this),
+      new RCTDateTimePickerPackage(this),
       new WeChatPackage(),
       new AirPackage(),
       new FacebookLoginPackage(),
