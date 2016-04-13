@@ -39,6 +39,7 @@ export default class Main extends Component {
         longitudeDelta: 10,
       },
       filters: {type:"car",range:2000},
+      drawerPanEnabled:false,
     }; 
     this.changeFilter=this.changeFilter.bind(this)
   }
@@ -72,15 +73,15 @@ export default class Main extends Component {
   }
 //FontAwesome: cubes  th  th-large  
   gotoPage(name){ //ios-world
-    this.setState({ page: name });
+    var drawerEnabled=false
+    if(name==='ios-chatboxes' || name==='ios-world') drawerEnabled=true;
+    this.setState({ page: name, drawerPanEnabled:drawerEnabled });
   }
   changeFilter(filter){
-    //alert(JSON.stringify(filter))
-    //this.drawer.close();
+    this.drawer.close();
     this.setState({
       filters: filter,
     });
-    this.drawer.close();
     //this.reload();
   }
   render() {
@@ -96,12 +97,12 @@ export default class Main extends Component {
         //content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value);} />} 
     >*/
     return (
-    <Drawer tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3}
+    <Drawer tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
         content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     >
         <View style={{flex:1}}>
           <Tabs selected={this.state.page} style={Style.mainbar}
-              selectedStyle={{color:'blue'}} onSelect={(e)=>{ if(!this.state.isDoing) this.setState({page:e.props.name})}}>
+              selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon name="ios-chatboxes" size={40} />
             <FIcon name="plug" size={30} />
             <Icon name="email" size={40} />

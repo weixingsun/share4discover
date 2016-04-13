@@ -1,7 +1,7 @@
 'use strict';
-import GiftedListView from 'react-native-gifted-listview';
+//import GiftedListView from 'react-native-gifted-listview';
 import NavigationBar from 'react-native-navbar';
-import React, { StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
+import React, {ListView, StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
 import JsonAPI from "../io/Net"
 //const IIcon = require('react-native-vector-icons/Ionicons');
 const FIcon = require('react-native-vector-icons/FontAwesome');
@@ -10,16 +10,31 @@ import Filter from "./Filter"
 import Style from "./Style"
 //import Detail from "./Detail"
 import Main from "./Main"
-import Drawer from 'react-native-drawer'
-import ControlPanel from './ControlPanel'
+//import Drawer from 'react-native-drawer'
+//import ControlPanel from './ControlPanel'
 
 export default class ShareList extends Component {
   constructor(props) {
       super(props);
+      this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       this.state = {
+          dataSource: this.ds.cloneWithRows([]),
           filters: this.props.filters,
       };
   }
+  //componentWillReceiveProps (nextProps) {
+    //if(JSON.stringify(nextProps.filters) !==JSON.stringify(this.state.filters)){
+      //this.setState({filters: nextProps.filters})
+    //  this._forceRefresh()
+      //alert('this.props='+JSON.stringify(this.props.filters)+'\nnextProps='+JSON.stringify(nextProps.filters)+'\nthis.state='+JSON.stringify(this.state.filters))
+    //}
+    //this.loadData(nextProps.filters);
+  //}
+  /*shouldComponentUpdate(nextProps, nextState) {
+    var b = JSON.stringify(nextProps.filters) !==JSON.stringify(this.state.filters)
+    return b;
+  }*/
+
   componentWillMount() {
   }
   /**
@@ -28,25 +43,16 @@ export default class ShareList extends Component {
    * @param {function} callback Should pass the rows
    * @param {object} options Inform if first load
    */
-  _onFetch(page = 1, callback, options) {
-    JsonAPI.rangeMsg(this.state.filters.type,'-43.52,172.62',this.state.filters.range).then((rows)=> {
+  reload(filters) {
+    var _this = this;
+    //alert('_onFetch'+JSON.stringify(this.state.filters))
+    JsonAPI.rangeMsg(filters.type,'-43.52,172.62',filters.range).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
-      callback(rows, {allLoaded: true} );
+      _this.setState({ dataSource: _this.ds.cloneWithRows(rows)});
     });
-    JsonAPI.getMsgTypes().then((rows)=> {
-      this.setState({types:rows});
-    });
-    /*
-    setTimeout(() => {
-      var rows = ['row '+((page - 1) * 3 + 1), 'row '+((page - 1) * 3 + 2), 'row '+((page - 1) * 3 + 3)];
-      if (page === 10) {
-        callback(rows, {
-          allLoaded: true, // the end of the list is reached
-        });        
-      } else {
-        callback(rows);
-      }
-    }, 1000);*/
+    //JsonAPI.getMsgTypes().then((rows)=> {
+    //  this.setState({types:rows});
+    //});
   }
   
   /**
@@ -56,19 +62,12 @@ export default class ShareList extends Component {
   _onPress(rowData) {
     //alert('rowData='+rowData);
     this.props.navigator.push({
-        //component: Detail,
-        //passProps: {
-        //    data: rowData,
-        //}
         component: Main,
         passProps: { 
             page:'ios-world', 
             msg:rowData,
         }
     });
-  }
-  _forceRefresh(){
-    this.refs.list._refresh(null, {external: true});
   }
   /**
    * Render a row  // customize this function for prettier view for each row.
@@ -108,7 +107,8 @@ export default class ShareList extends Component {
     };
   }*/
   render() {
-    alert('render:'+JSON.stringify(this.state.filters))
+    //alert(JSON.stringify(this.props.filters))
+    this.reload(this.props.filters)
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
@@ -118,16 +118,10 @@ export default class ShareList extends Component {
             rightButton={
                 <FIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
             } />
-        <GiftedListView
-	  ref='list'
-          rowView={this._renderRowView.bind(this)}
-          onFetch={this._onFetch.bind(this)}
-          firstLoader={true}
-          pagination={true}
-          refreshable={true}
-          withSections={false}
-          enableEmptySections={true}      //annoying warnings
-        />
+        <ListView 
+            dataSource={this.state.dataSource} 
+            renderRow={this._renderRowView.bind(this)} 
+            enableEmptySections={true} />
       </View>
     );
   }
