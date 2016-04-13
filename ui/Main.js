@@ -1,5 +1,6 @@
 import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator, TouchableOpacity,Component,  } from 'react-native'
 import Tabs from 'react-native-tabs'
+import Drawer from 'react-native-drawer'
 import Icon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import EventEmitter from 'EventEmitter'
@@ -10,6 +11,7 @@ import Style       from "./Style"
 import Loading     from "./Loading"
 import GoogleMap   from "./GoogleMap"
 //import GooglePlace from "./GooglePlace"
+import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import ShareList from './ShareList'
@@ -20,6 +22,7 @@ export default class Main extends Component {
   //};
   constructor(props) {
     super(props);
+    this.types = ['car','taxi']
     this.state = {
       //page:this.props.page!=null?this.props.page:'ios-chatboxes',
       page:this.props.page!=null?this.props.page:'navicon-round',
@@ -35,7 +38,9 @@ export default class Main extends Component {
         latitudeDelta: 10,
         longitudeDelta: 10,
       },
+      filters: {type:"car",range:2000},
     }; 
+    this.changeFilter=this.changeFilter.bind(this)
   }
   componentDidMount() {
     this.setState({isDoing:false})
@@ -54,7 +59,7 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ==='ios-chatboxes'){
-      return <ShareList navigator={this.props.navigator}/>
+      return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
     } else if(this.state.page ==='plug'){
       return <APIList navigator={this.props.navigator}/>
     } else if(this.state.page ==='email'){
@@ -69,30 +74,43 @@ export default class Main extends Component {
   gotoPage(name){ //ios-world
     this.setState({ page: name });
   }
+  changeFilter(filter){
+    //alert(JSON.stringify(filter))
+    //this.drawer.close();
+    this.setState({
+      filters: filter,
+    });
+    this.drawer.close();
+    //this.reload();
+  }
   render() {
     if(this.state.isLoading) return <Loading />
-    return <View style={styles.container}>
-        <Tabs selected={this.state.page} style={Style.mainbar}
+    /*<Drawer tapToClose={true} //type="overlay"
+        ref={(ref) => this.drawer = ref}
+        styles={{
+                 main: {shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 3,},
+               }}
+        tweenHandler={(ratio)=> ({main:{opacity:(2-ratio)/2}})}
+        openDrawerOffset={0.3}
+        //openDrawerThreshold={this.state.openDrawerThreshold}
+        //content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value);} />} 
+    >*/
+    return (
+    <Drawer tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3}
+        content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
+    >
+        <View style={{flex:1}}>
+          <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=>{ if(!this.state.isDoing) this.setState({page:e.props.name})}}>
             <Icon name="ios-chatboxes" size={40} />
             <FIcon name="plug" size={30} />
             <Icon name="email" size={40} />
             <Icon name="ios-world" size={40} />
             <Icon name="navicon-round" size={40} />
-        </Tabs>
-        {this.pages()}
-    </View>
+          </Tabs>
+          {this.pages()}
+        </View>
+    </Drawer>
+    );
   }
 }
-//<GooglePlace style={styles.search} />
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  search:{
-    position: 'absolute',
-    alignItems: 'center',
-  },
-});
-
-//module.exports = Main;

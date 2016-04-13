@@ -1,5 +1,5 @@
 import React, { Component, ListView, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
-import Style from '../Style'
+import Style from './Style'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import Slider from 'react-native-slider'
 

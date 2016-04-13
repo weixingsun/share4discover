@@ -11,18 +11,16 @@ import Style from "./Style"
 //import Detail from "./Detail"
 import Main from "./Main"
 import Drawer from 'react-native-drawer'
-import ControlPanel from './drawer/ControlPanel'
+import ControlPanel from './ControlPanel'
 
 export default class ShareList extends Component {
   constructor(props) {
       super(props);
-      this.types = []
       this.state = {
-          filters: {type:"car",range:2000},
+          filters: this.props.filters,
       };
   }
   componentWillMount() {
-    this.types = ['car','taxi'];
   }
   /**
    * refreshing
@@ -72,14 +70,6 @@ export default class ShareList extends Component {
   _forceRefresh(){
     this.refs.list._refresh(null, {external: true});
   }
-  changeFilter(filter){
-    //alert(JSON.stringify(filter))
-    this.setState({
-      filters: filter,
-    });
-    //console.log('type changed to:'+type);
-    this._forceRefresh();
-  }
   /**
    * Render a row  // customize this function for prettier view for each row.
    * @param {object} rowData Row data
@@ -118,22 +108,12 @@ export default class ShareList extends Component {
     };
   }*/
   render() {
+    alert('render:'+JSON.stringify(this.state.filters))
     return (
-    <Drawer tapToClose={true} //type="overlay"
-        ref={(ref) => this.drawer = ref} 
-        styles={{
-                 main: {shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 3,},
-                 //drawer:{marginBottom: 50}
-                 }}
-        tweenHandler={(ratio)=> ({main:{opacity:(2-ratio)/2}})}
-        openDrawerOffset={0.3}
-        //openDrawerThreshold={this.state.openDrawerThreshold}
-        content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => {this.drawer.close(); this.changeFilter(value);}} />} >
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                //<FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter,passProps: {types:this.state.types,selectedType:this.state.type}, callback:(type)=>{this.state.type=type;this.changeType(type); } }) }/>
-                <FIcon name={'filter'} size={30} onPress={() => this.drawer.open()}/>
+                <FIcon name={'filter'} size={30} onPress={() => this.props.drawer.open()}/>
             }
             rightButton={
                 <FIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
@@ -149,7 +129,6 @@ export default class ShareList extends Component {
           enableEmptySections={true}      //annoying warnings
         />
       </View>
-    </Drawer>
     );
   }
 }
