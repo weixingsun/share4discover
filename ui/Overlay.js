@@ -3,7 +3,6 @@ import React, {ListView,Component,View,Text,TouchableHighlight,StyleSheet,Scroll
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import Style from './Style'
-import { Cell, CustomCell, Section, TableView, } from 'react-native-tableview-simple'
 
 export default class Overlay extends Component {
   constructor(props) {

@@ -5,7 +5,6 @@ import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import Style from './Style'
 import GooglePlace from './GooglePlace'
-//import { Cell, CustomCell, Section, TableView, } from 'react-native-tableview-simple'
 
 export default class SearchAddr extends Component {
   constructor(props) {
