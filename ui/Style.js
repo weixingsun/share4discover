@@ -66,6 +66,10 @@ module.exports = {
       //justifyContent: 'center',
       height: 66,
   },
+  drawerBar:{
+      paddingRight:12,
+      paddingTop:8,
+  },
   mainbar:{
       backgroundColor: '#ebeef0',
       paddingBottom:10,
@@ -104,7 +108,7 @@ module.exports = {
       top: 76,
       left: 10,
   },
-  listseparator: {
+  separator: {
     height: 1,
     backgroundColor: '#CCCCCC',
   },
@@ -126,5 +130,52 @@ module.exports = {
       shadowOpacity: 0.5,
       shadowRadius: 3,
       flexDirection:'row',
+  },
+  row: {
+    backgroundColor: 'rgba(255, 255, 255, 1.0)',
+    padding: 2,
+    height: 68,
+    //flex: 1,
+    justifyContent: 'center',
+    //alignItems: 'center'
+  },
+  rowThumbnail: {
+    width: 66,
+    height: 66,
+  },
+  rowTitleView:{
+    height: 66,
+    //marginBottom: 10,
+    justifyContent: 'center',
+    //flex:1,
+  },
+  rowTitleText:{
+    fontSize:20,
+    marginLeft:10,
+    //fontWeight:'bold',
+    //marginBottom:10,
+  },
+  rotate270: {
+    transform: [{ rotate: '270deg' }]
+  },
+  slimRow: {
+    flexDirection: 'row',
+    padding: 12,
+    marginLeft: 1,
+    marginRight: 2,
+    height: 44,
+    borderWidth: 1,
+    borderColor: '#AAAAAA',
+  },
+  selectedRow:{
+    flexDirection: 'row',
+    padding: 12,
+    marginLeft: 1,
+    marginRight: 2,
+    height: 44,
+    backgroundColor: '#AAAAAA',
+  },
+  textInDark: {
+    color:'white',
   },
 };

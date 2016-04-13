@@ -1,12 +1,12 @@
 import React, {AppRegistry, Component, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
-var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
-import NavigationBar from 'react-native-navbar';
+//var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
+//import NavigationBar from 'react-native-navbar';
 //import Register from './ui/Register'
-import Error from './ui/Error'
+//import Error from './ui/Error'
 import Main from './ui/Main'
-import Detail from './ui/Detail'
+//import Drawer from './ui/Drawer'
+//import Detail from './ui/Detail'
 //import Filter from './ui/Filter'
-import Filter from './ui/Filter'
 
 export default class Nav extends Component {
       //if (route.id === 2) {
@@ -28,6 +28,7 @@ export default class Nav extends Component {
         return (
             <Navigator 
               initialRoute={{component: Main}} 
+              //initialRoute={{component: Drawer}} 
               renderScene={this._renderScene} 
               //configureScene={this._configureScene}
             />

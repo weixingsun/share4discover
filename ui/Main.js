@@ -12,9 +12,12 @@ import GoogleMap   from "./GoogleMap"
 //import GooglePlace from "./GooglePlace"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
-import GiftedListView from './GiftedListViewSimple'
+import ShareList from './ShareList'
 
 export default class Main extends Component {
+  //static contextTypes = {
+  //  drawer: PropTypes.object.isRequired,
+  //};
   constructor(props) {
     super(props);
     this.state = {
@@ -51,7 +54,7 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ==='ios-chatboxes'){
-      return <GiftedListView navigator={this.props.navigator}/>
+      return <ShareList navigator={this.props.navigator}/>
     } else if(this.state.page ==='plug'){
       return <APIList navigator={this.props.navigator}/>
     } else if(this.state.page ==='email'){

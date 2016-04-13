@@ -10,13 +10,19 @@ import Filter from "./Filter"
 import Style from "./Style"
 //import Detail from "./Detail"
 import Main from "./Main"
+import Drawer from 'react-native-drawer'
+import ControlPanel from './drawer/ControlPanel'
 
-export default class List extends Component {
+export default class ShareList extends Component {
   constructor(props) {
       super(props);
+      this.types = []
       this.state = {
-          type: "car",
+          filters: {type:"car",range:2000},
       };
+  }
+  componentWillMount() {
+    this.types = ['car','taxi'];
   }
   /**
    * refreshing
@@ -25,7 +31,7 @@ export default class List extends Component {
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    JsonAPI.rangeMsg(this.state.type,'-43.52,172.62',5000).then((rows)=> {
+    JsonAPI.rangeMsg(this.state.filters.type,'-43.52,172.62',this.state.filters.range).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       callback(rows, {allLoaded: true} );
     });
@@ -66,9 +72,10 @@ export default class List extends Component {
   _forceRefresh(){
     this.refs.list._refresh(null, {external: true});
   }
-  changeType(type){
+  changeFilter(filter){
+    //alert(JSON.stringify(filter))
     this.setState({
-      type: type,
+      filters: filter,
     });
     //console.log('type changed to:'+type);
     this._forceRefresh();
@@ -80,63 +87,53 @@ export default class List extends Component {
   _renderRowView(rowData) {
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.png';
     return (
-      <TouchableHighlight style={styles.row} underlayColor='#c8c7cc' 
+      <TouchableHighlight style={Style.row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
           <View style={{height: 66}}>
               <View style={{flexDirection: 'row', height: 66}}>
-                <Image source={{uri: URL}} style={styles.thumbnail} resizeMode={'contain'} />
-                <View style={styles.rowTitleView}>
-                    <Text style={styles.rowTitleText}>{rowData.title}</Text>
+                <Image source={{uri: URL}} style={Style.rowThumbnail} resizeMode={'contain'} />
+                <View style={Style.rowTitleView}>
+                    <Text style={Style.rowTitleText}>{rowData.title}</Text>
                 </View>
               </View>
-              <View style={Style.listseparator} />
+              <View style={Style.separator} />
           </View>
       </TouchableHighlight>
     );
   }
-  showPopover() {
-    this.setState({isVisible: true});
-    this.setHeaderViewStyle();
-  }
-  closePopover() {
-    this.setState({isVisible: false});
-    //this._forceRefresh();
-  }
-  setItem(item) {
-    this.setHeaderViewStyle();
-    this.setState({type: item});
-    this._forceRefresh();
-  }
-  setHeaderViewStyle(){
+  /*setHeaderViewStyle(){
     if(this.state.typeHeaderHeight===50 ) {
         this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
-        //this.refs.picker.show()
     }else{
         //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
         this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
-        //this.refs.picker.hide()
     }
   }
+
   getDynamicStyle(){
     return {
       height: this.state.typeHeaderHeight,
       width: this.state.typeHeaderWidth,
       backgroundColor: 'rgba(200, 200, 200, 0.8)',
     };
-  }
+  }*/
   render() {
-    const rightButtonConfig = {
-      title: 'Forward',
-      handler: () => this.props.navigator.push({
-        component: Filter,
-      }),
-    };
-    // //onPress={() => alert('Charmandeeeer!')}/>}
     return (
+    <Drawer tapToClose={true} //type="overlay"
+        ref={(ref) => this.drawer = ref} 
+        styles={{
+                 main: {shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 3,},
+                 //drawer:{marginBottom: 50}
+                 }}
+        tweenHandler={(ratio)=> ({main:{opacity:(2-ratio)/2}})}
+        openDrawerOffset={0.3}
+        //openDrawerThreshold={this.state.openDrawerThreshold}
+        content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => {this.drawer.close(); this.changeFilter(value);}} />} >
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                <FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter,passProps: {types:this.state.types,selectedType:this.state.type}, callback:(type)=>{this.state.type=type;this.changeType(type); } }) }/>
+                //<FIcon name={'filter'} size={30} onPress={() => this.props.navigator.push({ component: Filter,passProps: {types:this.state.types,selectedType:this.state.type}, callback:(type)=>{this.state.type=type;this.changeType(type); } }) }/>
+                <FIcon name={'filter'} size={30} onPress={() => this.drawer.open()}/>
             }
             rightButton={
                 <FIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
@@ -152,39 +149,7 @@ export default class List extends Component {
           enableEmptySections={true}      //annoying warnings
         />
       </View>
+    </Drawer>
     );
   }
 }
-
-var styles = {
-  row: {
-    backgroundColor: 'rgba(255, 255, 255, 1.0)',
-    padding: 2,
-    height: 68,
-    //flex: 1,
-    justifyContent: 'center',
-    //alignItems: 'center'
-  },
-  thumbnail: {
-    width: 66,
-    height: 66, 
-  },
-  rowTitleView:{
-    height: 66,
-    //marginBottom: 10,
-    justifyContent: 'center',
-    //flex:1,
-  },
-  rowTitleText:{
-    fontSize:20,
-    marginLeft:10,
-    //fontWeight:'bold',
-    //marginBottom:10,
-  },
-  rotate270: {
-    transform: [{ rotate: '270deg' }]
-  },
-  normal:{
-
-  },
-};

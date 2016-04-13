@@ -73,21 +73,6 @@ export default class Settings extends React.Component {
                   <View style={Style.card}>
                     <Login />
                   </View>
-                  <TouchableOpacity style={Style.card} onPress={this.openWebList} >
-                    <Text style={{fontWeight: 'bold'}}>My Web List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openRssList} >
-                    <Text style={{fontWeight: 'bold'}}>My RSS List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openJsonList} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange Simple List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openJsonList2} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange Full List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openStockList} >
-                    <Text style={{fontWeight: 'bold'}}>My Stock List </Text>
-                  </TouchableOpacity>
           </View>
         </View>
         );

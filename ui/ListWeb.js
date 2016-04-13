@@ -4,7 +4,6 @@ import Style from './Style'
 import Web from './Web'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
-import GiftedListView from 'react-native-gifted-listview';
 
 var styles = StyleSheet.create({
     container: {
@@ -195,13 +194,3 @@ export default class WatchList extends React.Component{
         )
     }
 };
-/*
-            <GiftedListView
-              ref='list'
-              rowView={this._renderRow}
-              onFetch={this._onFetch}
-              firstLoader={true}
-              refreshable={false}
-              //withSections={false}
-            />
-*/
