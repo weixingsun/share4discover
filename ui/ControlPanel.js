@@ -1,6 +1,7 @@
 import React, { Component, ListView, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import Style from './Style'
 import FIcon from 'react-native-vector-icons/FontAwesome'
+import IIcon from 'react-native-vector-icons/Ionicons'
 import Slider from 'react-native-slider'
 
 export default class ControlPanel extends Component {
@@ -11,6 +12,7 @@ export default class ControlPanel extends Component {
   }
   constructor(props) {
       super(props);
+      this.radius=10000;
       this.state = {
           filters: this.props.filters,
           typeSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
@@ -29,7 +31,7 @@ export default class ControlPanel extends Component {
   }
   changeRange(_range){
     this.setState({
-      filters: {type: this.state.filters.type,range:_range*5000},
+      filters: {type: this.state.filters.type,range:_range*this.radius},
     });
   }
   renderTypeRow(rowData) {
@@ -49,21 +51,43 @@ export default class ControlPanel extends Component {
       <ScrollView style={{flex:1,backgroundColor:'black',}}>
         <View style={{flex:1,flexDirection:'row',backgroundColor:'#333',height:66,alignItems:'center',justifyContent:'center',}}>
           <View style={{height:66,justifyContent:'center',alignItems:'center',flex:1,}}>
-              <Text style={{color:'white',fontSize:24}}>Filtering Conditions</Text>
+              <Text style={{color:'white',fontSize:20}}>Filtering Conditions</Text>
           </View>
-          <FIcon name={'refresh'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
+          <IIcon name={'ios-reload'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
         </View>
         <View style={{flex:1,flexDirection:'row',}}>
             <Text style={{color:'white',marginLeft:5}}>Range</Text>
             <View style={{flex:1}} />
-            <Text style={{color:'white',marginRight:10}}>{Math.floor(this.state.filters.range)}</Text>
+            <Text style={{color:'white',marginRight:10}}>{(this.state.filters.range/1000).toFixed(1)} km</Text>
         </View>
-        <Slider value={this.state.filters.range/5000} onValueChange={(value) => this.changeRange(value)} />
+        <Slider 
+            trackStyle={iosStyles.track}
+            thumbStyle={iosStyles.thumb}
+            minimumTrackTintColor='#1073ff'
+            maximumTrackTintColor='#b7b7b7'
+            value={this.state.filters.range/this.radius} onValueChange={(value) => this.changeRange(value)} />
         <Text style={{color:'white',marginLeft:5,}}>Types</Text>
         <ListView
           dataSource={this.state.typeSource}
           renderRow={this.renderTypeRow.bind(this)} />
       </ScrollView>
     )
+  }
+}
+
+var iosStyles = {
+  track: {
+    height: 2,
+    borderRadius: 1,
+  },
+  thumb: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 2,
+    shadowOpacity: 0.35,
   }
 }
