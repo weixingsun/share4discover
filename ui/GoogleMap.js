@@ -149,7 +149,20 @@ export default class GoogleMap extends Component {
         this.move(this.getRegion(position.latitude,position.longitude));
     }
     fetch(){
-      
+       //this.state.region.latitude
+       //this.state.region.longitude
+       alert('radius:'+this.distance(this.state.region.latitudeDelta))
+    }
+    distance(latDelta){
+       return Math.floor(111111 * latDelta); //110574
+    }
+    distanceComplex(lat1, lon1, lat2, lon2) {
+      var R = 6371;
+      var a = 0.5 - Math.cos((lat2 - lat1) * Math.PI / 180)/2 + 
+         Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+         (1 - Math.cos((lon2 - lon1) * Math.PI / 180))/2;
+      var m = R * 2 * Math.asin(Math.sqrt(a))*1000;
+      return Math.floor(m);
     }
     renderNavBar() {
       if(this.msg!=null){
@@ -166,7 +179,7 @@ export default class GoogleMap extends Component {
                 <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
             }
             rightButton={
-                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.fetch} />
+                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.fetch.bind(this)} />
             }
           />
         );
@@ -221,6 +234,7 @@ export default class GoogleMap extends Component {
               style={Style.map}
               //showsUserLocation={this.state.gps}
               rotateEnabled={false}
+              showsScale={true}
               onRegionChangeComplete={this.onRegionChange}
               initialRegion={this.state.region}
               //region={this.state.region}
