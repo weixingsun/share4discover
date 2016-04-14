@@ -9,6 +9,7 @@
     "apsl-react-native-button": "latest",
     "react": "^0.14.8",
     "react-native": "latest",
+    "react-native-auto-updater": "^0.2.5",
     "react-native-datetime": "^0.1.1",
     "react-native-drawer": "^2.0.0",
     "react-native-facebook-login": "git+https://github.com/lwhiteley/react-native-facebook-login.git",

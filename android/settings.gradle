@@ -15,3 +15,5 @@ include ':react-native-localization'
 project(':react-native-localization').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-localization/android')
 include ':react-native-datetime'
 project(':react-native-datetime').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-datetime/android')
+include ':react-native-auto-updater'
+project(':react-native-auto-updater').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-auto-updater/android')

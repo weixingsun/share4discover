@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -49,6 +48,7 @@
 		BE218903798946B08A0E9328 /* libReactNativeLocalization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5BF1542DD5147CEA55A2F68 /* libReactNativeLocalization.a */; };
 		C912204C97C1476483377E2D /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D04A9734ECC49849E7925EC /* Entypo.ttf */; };
 		CC240873A61B43F18323D8C2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71C8ABAFB9A947B1A2805816 /* Zocial.ttf */; };
+		D2378AAE2C2A48D29EBC31BB /* libReactNativeAutoUpdater.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32A956741ACB4433AABFEBD1 /* libReactNativeAutoUpdater.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +238,8 @@
 		CAB8E873DA534D02B349B791 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		E06EA3AB22D045CA9B68E8C1 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		E5BF1542DD5147CEA55A2F68 /* libReactNativeLocalization.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeLocalization.a; sourceTree = "<group>"; };
+		85E668D9620348CDA067C313 /* ReactNativeAutoUpdater.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeAutoUpdater.xcodeproj"; path = "../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		32A956741ACB4433AABFEBD1 /* libReactNativeAutoUpdater.a */ = {isa = PBXFileReference; name = "libReactNativeAutoUpdater.a"; path = "libReactNativeAutoUpdater.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,6 +281,7 @@
 				6756CC43DDD145E6913D283D /* libRCTFBLogin.a in Frameworks */,
 				A43A9855F2594823AEE5CE21 /* libRCTWeChat.a in Frameworks */,
 				BE218903798946B08A0E9328 /* libReactNativeLocalization.a in Frameworks */,
+				D2378AAE2C2A48D29EBC31BB /* libReactNativeAutoUpdater.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +479,7 @@
 				5B0299193E924A8F9EF60BAC /* RCTFBLogin.xcodeproj */,
 				40995B11D3DA48D2AF5496E5 /* RCTWeChat.xcodeproj */,
 				B35CC15329FE49FCACF24682 /* ReactNativeLocalization.xcodeproj */,
+				85E668D9620348CDA067C313 /* ReactNativeAutoUpdater.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -911,6 +915,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -932,6 +937,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -964,6 +970,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
+					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -994,6 +1001,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
+					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1049,6 +1057,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
+					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1094,6 +1103,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
+					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
