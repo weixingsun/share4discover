@@ -28,7 +28,6 @@ export default class Nav extends Component {
         return (
             <Navigator 
               initialRoute={{component: Main}} 
-              //initialRoute={{component: Drawer}} 
               renderScene={this._renderScene} 
               //configureScene={this._configureScene}
             />

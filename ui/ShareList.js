@@ -1,14 +1,11 @@
 'use strict';
-//import GiftedListView from 'react-native-gifted-listview';
 import NavigationBar from 'react-native-navbar';
-import React, {ListView, StyleSheet, Text, View, TouchableHighlight, Image, TouchableOpacity, Dimensions, Component } from 'react-native';
+import React, {Component, ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
 import JsonAPI from "../io/Net"
 //const IIcon = require('react-native-vector-icons/Ionicons');
 const FIcon = require('react-native-vector-icons/FontAwesome');
-//import ListPopover from './ListPopover'
 import Filter from "./Filter"
 import Style from "./Style"
-//import Detail from "./Detail"
 import Main from "./Main"
 //import Drawer from 'react-native-drawer'
 //import ControlPanel from './ControlPanel'
@@ -16,26 +13,50 @@ import Main from "./Main"
 export default class ShareList extends Component {
   constructor(props) {
       super(props);
-      this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       this.state = {
-          dataSource: this.ds.cloneWithRows([]),
           filters: this.props.filters,
+          accessToken: false,
+          isConnected: false,
       };
+      this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.dataSource= this.ds.cloneWithRows([]);
+      this.firstLoad=true
   }
   //componentWillReceiveProps (nextProps) {
     //if(JSON.stringify(nextProps.filters) !==JSON.stringify(this.state.filters)){
       //this.setState({filters: nextProps.filters})
-    //  this._forceRefresh()
+      //this._forceRefresh()
       //alert('this.props='+JSON.stringify(this.props.filters)+'\nnextProps='+JSON.stringify(nextProps.filters)+'\nthis.state='+JSON.stringify(this.state.filters))
     //}
     //this.loadData(nextProps.filters);
   //}
   /*shouldComponentUpdate(nextProps, nextState) {
-    var b = JSON.stringify(nextProps.filters) !==JSON.stringify(this.state.filters)
+    var b = this.isConnected
     return b;
   }*/
 
-  componentWillMount() {
+  //componentWillMount() {
+    //NetInfo.isConnected.addEventListener('change', this.handleConnectivityChange)
+    //NetInfo.isConnected.fetch().done((data) => {
+    //  this.isConnected= data
+    //})
+  //}
+  //componentDidMount() {
+  //  this.setState({firstLoad:false,})
+  //}
+  //componentWillUnmount() {
+    //NetInfo.isConnected.removeEventListener('change', this.handleConnectivityChange );
+  //}
+  //handleConnectivityChange(change) {
+    //this.setState({isConnected: change});
+  //}
+  componentDidUpdate(prevProps, prevState){
+     this.firstLoad=false
+  }
+  comparefilters(){
+    //alert('first:'+this.firstLoad+'\nstate:'+JSON.stringify(this.state.filters)+'\nprops:'+JSON.stringify(this.props.filters))
+    if(this.props.filters === this.state.filters) return true;
+    else return false;
   }
   /**
    * refreshing
@@ -44,11 +65,17 @@ export default class ShareList extends Component {
    * @param {object} options Inform if first load
    */
   reload(filters) {
-    var _this = this;
+    var self = this;
     //alert('_onFetch'+JSON.stringify(this.state.filters))
+    //alert(this.isConnected)
     JsonAPI.rangeMsg(filters.type,'-43.52,172.62',filters.range).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
-      _this.setState({ dataSource: _this.ds.cloneWithRows(rows)});
+      self.dataSource= self.ds.cloneWithRows(rows);
+      if(!self.comparefilters() || self.firstLoad) self.setState({filters:self.props.filters})
+    })
+    .catch((e)=>{
+      //_this.isConnected = false
+      //_this.setState({dataSource:})
     });
     //JsonAPI.getMsgTypes().then((rows)=> {
     //  this.setState({types:rows});
@@ -119,7 +146,7 @@ export default class ShareList extends Component {
                 <FIcon name={'plus'} size={30} onPress={() => alert('new!')}/>
             } />
         <ListView 
-            dataSource={this.state.dataSource} 
+            dataSource={this.dataSource} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
       </View>

@@ -1,6 +1,7 @@
-//import React,{ AsyncStorage } from 'react-native'
+//import React,{ NetInfo } from 'react-native'
 
 var Net = {
+    HOST:'http://45.32.83.93',
     async netCmd(url, data) {
       try {
         let response = await fetch(url, data);
@@ -24,23 +25,23 @@ var Net = {
       });
     },
     getMsgTypes(){
-      var url = 'http://45.32.83.93/api/msg_types';
+      var url = HOST+'/api/msg_types';
       return this._get(url);
     },
     rangeMsg(type,pos,dist){
-      var url = 'http://45.32.83.93/api/msgs/'+type+'&'+pos+'&'+dist;
+      var url = this.HOST+'/api/msgs/'+type+'&'+pos+'&'+dist;
       return this._get(url);
     },
     getMsg(key){
-      var url = 'http://45.32.83.93/api/msg/'+key;
+      var url = this.HOST+'/api/msg/'+key;
       return this._get(url);
     },
     setMsg(json){
-      var url = 'http://45.32.83.93/api/msg/';
+      var url = this.HOST+'/api/msg/';
       return this._post(url, json);
     },
     delMsg(key){
-      var url = 'http://45.32.83.93/api/msg/'+key;
+      var url = this.HOST+'/api/msg/'+key;
       return this._del(url);
     },
 };

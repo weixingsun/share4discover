@@ -1,4 +1,4 @@
-import React, {StyleSheet, Text, View, ScrollView, Dimensions, ToastAndroid, Navigator, TouchableOpacity,Component,  } from 'react-native'
+import React, {InteractionManager, Text, View, Navigator, Component, } from 'react-native'
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -27,7 +27,6 @@ export default class Main extends Component {
       //page:this.props.page!=null?this.props.page:'ios-chatboxes',
       page:this.props.page!=null?this.props.page:'navicon-round',
       isLoading:true,
-      isDoing:true,
       selectedMsg:this.props.msg,
       user: null,
       markers: [],
@@ -44,7 +43,9 @@ export default class Main extends Component {
     this.changeFilter=this.changeFilter.bind(this)
   }
   componentDidMount() {
-    this.setState({isDoing:false})
+      InteractionManager.runAfterInteractions(() => {
+          this.setState({isLoading: false});
+      });
   }
   componentWillMount(){
     var _this = this;
@@ -54,7 +55,7 @@ export default class Main extends Component {
       }
       Store.get('user').then((user_value) => {
         _this.setState({ user:user_value });
-        _this.setState({ isLoading:false, });
+        //_this.setState({ isLoading:false, });
       });
     });
   }
