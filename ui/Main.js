@@ -67,7 +67,7 @@ export default class Main extends Component {
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
-      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} />
+      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} />
     } else if(this.state.page ==='navicon-round'){
       return <SettingsList navigator={this.props.navigator}/>
     }

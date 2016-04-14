@@ -7,6 +7,7 @@ import IIcon from 'react-native-vector-icons/Ionicons'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
+import JsonAPI from "../io/Net"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
@@ -16,6 +17,7 @@ export default class GoogleMap extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        filters: this.props.filters,
         center: {lat:0,lng:0},
         region: this.props.region,
         mkid:1,
@@ -149,9 +151,17 @@ export default class GoogleMap extends Component {
         this.move(this.getRegion(position.latitude,position.longitude));
     }
     fetch(){
-       //this.state.region.latitude
-       //this.state.region.longitude
-       alert('radius:'+this.distance(this.state.region.latitudeDelta))
+       var range = this.distance(this.state.region.latitudeDelta)
+       this.reload(this.props.filters,this.state.region)
+    }
+    reload(filters,location) {
+      var self = this;
+      JsonAPI.rangeMsg(filters.type, location.latitude+','+location.longitude, filters.range).then((rows)=> {
+          self.renderMarkers(rows)
+      })
+      .catch((e)=>{
+        alert('Network Problem!')
+      });
     }
     distance(latDelta){
        return Math.floor(111111 * latDelta); //110574
@@ -201,9 +211,16 @@ export default class GoogleMap extends Component {
       Store.save('region', r);
     }
     onLongPress(event) {
-      console.log(event.nativeEvent);
+      //alert(JSON.stringify(event.nativeEvent.coordinate));
       //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
       this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+    }
+    renderMarkers(rows){
+       rows.map((row)=>{
+         //row ={ lat,lng,type,title,content,ctime, }
+         var point = {latitude:parseFloat(row.lat), longitude:parseFloat(row.lng)}
+         this.addMarker({id: this.state.mkid++, pos: point, s:'#0000ff' });
+       })
     }
     addMarker(marker){
       var {markers} = this.state;
@@ -239,7 +256,7 @@ export default class GoogleMap extends Component {
               initialRegion={this.state.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid
-              //onLongPress={this.onLongPress} 
+              onLongPress={this.onLongPress.bind(this)} 
               >
                  {this.renderMyPosMarker()}
                  {this.renderPlaceMarkers()}

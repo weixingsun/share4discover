@@ -76,6 +76,7 @@ export default class ShareList extends Component {
     .catch((e)=>{
       //_this.isConnected = false
       //_this.setState({dataSource:})
+      alert('Network Problem!')
     });
     //JsonAPI.getMsgTypes().then((rows)=> {
     //  this.setState({types:rows});
