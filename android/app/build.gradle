@@ -128,14 +128,9 @@ android {
             }
         }
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
 }
 
 dependencies {
-    compile project(':react-native-auto-updater')
     compile project(':react-native-localization')
     compile project(':react-native-google-signin')
     compile project(':react-native-wechat')
