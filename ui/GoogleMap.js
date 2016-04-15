@@ -150,14 +150,13 @@ export default class GoogleMap extends Component {
         //}
         this.move(this.getRegion(position.latitude,position.longitude));
     }
-    fetch(){
-       var range = this.distance(this.state.region.latitudeDelta)
-       this.reload(this.props.filters,this.state.region)
-    }
-    reload(filters,location) {
+    reload() {
       var self = this;
-      JsonAPI.rangeMsg(filters.type, location.latitude+','+location.longitude, filters.range).then((rows)=> {
-          self.renderMarkers(rows)
+      var range = this.distance(this.state.region.latitudeDelta)
+      JsonAPI.rangeMsg(this.props.filters.type, this.state.region.latitude+','+this.state.region.longitude, range).then((rows)=> {
+          self.clearMarkers();
+          self.renderMarkers(rows);
+          //if(!self.comparefilters()) self.setState({filters:self.props.filters})
       })
       .catch((e)=>{
         alert('Network Problem!')
@@ -189,7 +188,7 @@ export default class GoogleMap extends Component {
                 <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
             }
             rightButton={
-                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.fetch.bind(this)} />
+                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
             }
           />
         );
@@ -214,6 +213,12 @@ export default class GoogleMap extends Component {
       //alert(JSON.stringify(event.nativeEvent.coordinate));
       //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
       this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+    }
+    clearMarkers(){
+      this.setState({
+        mkid:1,
+        markers: [],
+      });
     }
     renderMarkers(rows){
        rows.map((row)=>{
@@ -242,7 +247,13 @@ export default class GoogleMap extends Component {
           circle]
       });
     } 
+    comparefilters(){
+        //alert('first:'+this.firstLoad+'\nstate:'+JSON.stringify(this.state.filters)+'\nprops:'+JSON.stringify(this.props.filters))
+        if(this.props.filters === this.state.filters) return true;
+        else return false;
+    }
     render(){
+        //this.reload(this.props.filters,this.state.region)
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }

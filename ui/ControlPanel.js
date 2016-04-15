@@ -1,4 +1,4 @@
-import React, { Component, ListView, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
+import React, { Component, ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import Style from './Style'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
@@ -67,14 +67,20 @@ export default class ControlPanel extends Component {
             maximumTrackTintColor='#b7b7b7'
             value={this.state.filters.range/this.radius} onValueChange={(value) => this.changeRange(value)} />
         <Text style={{color:'white',marginLeft:5,}}>Types</Text>
-        <ListView
-          dataSource={this.state.typeSource}
-          renderRow={this.renderTypeRow.bind(this)} />
+        <Picker style={{color:'white',backgroundColor:'gray',borderWidth:1}} selectedValue={this.state.filters.type} onValueChange={(value)=> { this.changeType(value)}}>
+            {this.props.list.map(function(item,n){
+                return <Picker.Item key={item} label={item} value={item} />;
+            })}
+        </Picker>
       </ScrollView>
     )
   }
 }
-
+/*
+        <ListView
+          dataSource={this.state.typeSource}
+          renderRow={this.renderTypeRow.bind(this)} />
+*/
 var iosStyles = {
   track: {
     height: 2,

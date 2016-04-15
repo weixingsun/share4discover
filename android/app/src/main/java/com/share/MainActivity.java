@@ -5,7 +5,6 @@ import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.AirMaps.AirPackage;
 import com.facebook.react.ReactActivity;
 import com.microsoft.codepush.react.CodePush;
-import com.aerofs.reactnativeautoupdater.ReactNativeAutoUpdaterPackage;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -46,8 +45,8 @@ public class MainActivity extends ReactActivity {
       new RNGoogleSigninPackage(this),
       new FacebookLoginPackage(),
       new WeChatPackage(),
-      new VectorIconsPackage()
-      new AirPackage(),
+      new VectorIconsPackage(),
+      new AirPackage()
     );
   }
   // for google login
