@@ -7,9 +7,12 @@ import Main from './ui/Main'
 //import Drawer from './ui/Drawer'
 //import Detail from './ui/Detail'
 //import Filter from './ui/Filter'
+//import codePush from "react-native-code-push"
 
 export default class Nav extends Component {
-      //if (route.id === 2) {
+    componentDidMount() {
+        //codePush.sync();
+    }
     _renderScene(route, navigator) {
        //   return <Main navigator={navigator} {...route.passProps} />
        //   return <Detail navigator={navigator} {...route.passProps} />

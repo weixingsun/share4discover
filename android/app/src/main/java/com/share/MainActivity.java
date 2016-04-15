@@ -4,6 +4,7 @@ import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.AirMaps.AirPackage;
 import com.facebook.react.ReactActivity;
+import com.microsoft.codepush.react.CodePush;
 import com.aerofs.reactnativeautoupdater.ReactNativeAutoUpdaterPackage;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactPackage;
@@ -28,10 +29,18 @@ public class MainActivity extends ReactActivity {
     return BuildConfig.DEBUG;
   }
 
+    // 2. Override the getJSBundleFile method in order to let
+    // the CodePush runtime determine where to get the JS
+    // bundle location from on each app start
+    @Override
+    protected String getJSBundleFile() {
+        return CodePush.getBundleUrl();
+    }
   @Override 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
+      new CodePush(null, this, BuildConfig.DEBUG), //new CodePush("deployment-key-here", this, BuildConfig.DEBUG)
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
       new RNGoogleSigninPackage(this),

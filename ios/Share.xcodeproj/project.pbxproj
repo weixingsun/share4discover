@@ -49,6 +49,7 @@
 		C912204C97C1476483377E2D /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D04A9734ECC49849E7925EC /* Entypo.ttf */; };
 		CC240873A61B43F18323D8C2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71C8ABAFB9A947B1A2805816 /* Zocial.ttf */; };
 		D2378AAE2C2A48D29EBC31BB /* libReactNativeAutoUpdater.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32A956741ACB4433AABFEBD1 /* libReactNativeAutoUpdater.a */; };
+		1C31029FA42E422E81D49598 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 709D0E9795584C0FAECFF75E /* libCodePush.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +241,8 @@
 		E5BF1542DD5147CEA55A2F68 /* libReactNativeLocalization.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeLocalization.a; sourceTree = "<group>"; };
 		85E668D9620348CDA067C313 /* ReactNativeAutoUpdater.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeAutoUpdater.xcodeproj"; path = "../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		32A956741ACB4433AABFEBD1 /* libReactNativeAutoUpdater.a */ = {isa = PBXFileReference; name = "libReactNativeAutoUpdater.a"; path = "libReactNativeAutoUpdater.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		73198E5511634AC8AE654B84 /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		709D0E9795584C0FAECFF75E /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,6 +285,7 @@
 				A43A9855F2594823AEE5CE21 /* libRCTWeChat.a in Frameworks */,
 				BE218903798946B08A0E9328 /* libReactNativeLocalization.a in Frameworks */,
 				D2378AAE2C2A48D29EBC31BB /* libReactNativeAutoUpdater.a in Frameworks */,
+				1C31029FA42E422E81D49598 /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +484,7 @@
 				40995B11D3DA48D2AF5496E5 /* RCTWeChat.xcodeproj */,
 				B35CC15329FE49FCACF24682 /* ReactNativeLocalization.xcodeproj */,
 				85E668D9620348CDA067C313 /* ReactNativeAutoUpdater.xcodeproj */,
+				73198E5511634AC8AE654B84 /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -916,6 +921,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -937,6 +943,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -971,6 +978,7 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
 					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1002,6 +1010,7 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
 					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1058,6 +1067,7 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
 					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1104,6 +1114,7 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-localization",
 					"$(SRCROOT)/../node_modules/react-native-auto-updater/ios/ReactNativeAutoUpdater",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
