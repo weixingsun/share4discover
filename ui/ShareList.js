@@ -136,12 +136,13 @@ export default class ShareList extends Component {
   }*/
   render() {
     //alert(JSON.stringify(this.props.filters))
-    this.reload(this.props.filters)
+    this.reload(this.props.filters);
+    //IIcon name="navicon"
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                <IIcon name={'navicon'} size={40} onPress={() => this.props.drawer.open()}/>
+                <IIcon name={'ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             }
             rightButton={
                 <IIcon name={'plus'} size={33} onPress={() => alert('new!')}/>

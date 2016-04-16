@@ -1,5 +1,5 @@
 'use strict';
-import React, {ToastAndroid,Component,} from 'react-native'
+import React, {Component,} from 'react-native'
 import {GooglePlacesAutocomplete} from "./GooglePlacesAutocomplete"
 
 export default class GooglePlaces extends Component {
@@ -16,8 +16,7 @@ export default class GooglePlaces extends Component {
       <GooglePlacesAutocomplete
         placeholder='Search'
         minLength={3} // minimum length of text to search
-        //autoFocus={false}
-        autoFocus={true}
+        autoFocus={false}
         fetchDetails={true}
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
           // data = details 

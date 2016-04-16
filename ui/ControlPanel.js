@@ -1,8 +1,9 @@
 import React, { Component, ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
-import Style from './Style'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Slider from 'react-native-slider'
+import Style from './Style'
+import GooglePlace from './GooglePlace'
 
 export default class ControlPanel extends Component {
   static propTypes = {
@@ -26,15 +27,15 @@ export default class ControlPanel extends Component {
   }
   changeType(_type){
     this.setState({
-      filters: {type: _type,range:this.state.filters.range},
+      filters: {type: _type,range:this.state.filters.range, position:this.state.filters.position},
     });
   }
   changeRange(_range){
     this.setState({
-      filters: {type: this.state.filters.type,range:_range*this.radius},
+      filters: {type: this.state.filters.type, range:_range*this.radius, position:this.state.filters.position},
     });
   }
-  renderTypeRow(rowData) {
+  /*renderTypeRow(rowData) {
     //console.log('rowData:'+rowData);  //<View style={Style.separator} />
     return (
     <TouchableHighlight
@@ -45,6 +46,12 @@ export default class ControlPanel extends Component {
         </View>
     </TouchableHighlight>
     );
+  }*/
+  onSelect(place){
+    //alert(JSON.stringify(place))
+    this.setState({ 
+        filters: {type: this.state.filters.type,range:this.state.filters.range, position:place},
+    })
   }
   render() {
     return (
@@ -53,9 +60,9 @@ export default class ControlPanel extends Component {
           <View style={{height:66,justifyContent:'center',alignItems:'center',flex:1,}}>
               <Text style={{color:'white',fontSize:20}}>Filtering Conditions</Text>
           </View>
-          <IIcon name={'ios-reload'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
+          <IIcon name={'refresh'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
         </View>
-        <View style={{flex:1,flexDirection:'row',}}>
+        <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
             <Text style={{color:'white',marginLeft:5}}>Range</Text>
             <View style={{flex:1}} />
             <Text style={{color:'white',marginRight:10}}>{(this.state.filters.range/1000).toFixed(1)} km</Text>
@@ -66,12 +73,20 @@ export default class ControlPanel extends Component {
             minimumTrackTintColor='#1073ff'
             maximumTrackTintColor='#b7b7b7'
             value={this.state.filters.range/this.radius} onValueChange={(value) => this.changeRange(value)} />
-        <Text style={{color:'white',marginLeft:5,}}>Types</Text>
+        <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
+            <Text style={{color:'white',marginLeft:5,}}>Types</Text>
+            <View style={{flex:1}} />
+        </View>
         <Picker style={{color:'white',backgroundColor:'gray',borderWidth:1}} selectedValue={this.state.filters.type} onValueChange={(value)=> { this.changeType(value)}}>
             {this.props.list.map(function(item,n){
                 return <Picker.Item key={item} label={item} value={item} />;
             })}
         </Picker>
+        <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
+            <Text style={{color:'white',marginLeft:5,}}>Place</Text>
+            <View style={{flex:1}} />
+        </View>
+        <GooglePlace style={{flex:1}} onSelect={this.onSelect.bind(this)}/>
       </ScrollView>
     )
   }

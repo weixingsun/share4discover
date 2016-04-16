@@ -141,18 +141,25 @@ export default class GoogleMap extends Component {
     move(p){
       this.refs.map.animateToRegion(p);
     }
+    between(n, n1,delta){
+        return (n > n1-delta) && (n < n1+delta)
+    }
+    pointInBBox(position){
+        var latIn=false,lngIn=false;
+        //alert(JSON.stringify(position))
+        if(this.between(position.latitude,  this.state.region.latitude,  this.state.region.latitudeDelta))
+            latIn=true
+        if(this.between(position.longitude, this.state.region.longitude, this.state.region.longitudeDelta))
+            lngIn=true
+        return latIn && lngIn;
+    }
     moveOrNot(position){
-        //if(this.state.lastPosition!=null || this.state.initialPosition!=null) {
-          //var oldpos = this.state.lastPosition==null?this.state.initialPosition:this.state.lastPosition;
-          //if(Tool.distance(oldpos, position) > 5) {
-          //this.move(this.getRegion(position.latitude,position.longitude));
-          //}
-        //}
+        if(!this.pointInBBox(position))
         this.move(this.getRegion(position.latitude,position.longitude));
     }
     reload() {
       var self = this;
-      var range = this.distance(this.state.region.latitudeDelta)
+      var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       JsonAPI.rangeMsg(this.props.filters.type, this.state.region.latitude+','+this.state.region.longitude, range).then((rows)=> {
           self.clearMarkers();
           self.renderMarkers(rows);
@@ -162,8 +169,8 @@ export default class GoogleMap extends Component {
         alert('Network Problem!')
       });
     }
-    distance(latDelta){
-       return Math.floor(111111 * latDelta); //110574
+    distance(latDelta,lngDelta){
+       return Math.floor(111111 * Math.min(latDelta,lngDelta)); //range circle in bbox
     }
     distanceComplex(lat1, lon1, lat2, lon2) {
       var R = 6371;
