@@ -37,10 +37,15 @@ export default class Main extends Component {
         latitudeDelta: 10,
         longitudeDelta: 10,
       },
-      filters: {type:"car",range:2000},
+      filters: {type:"car",range:2000,position:{latitude:0,longitude:0,latitudeDelta:10,longitudeDelta:10}},
       drawerPanEnabled:false,
+      gps:false,
     }; 
     this.changeFilter=this.changeFilter.bind(this)
+    this.watchID = (null: ?number);
+  }
+  componentWillUnmount() {
+      this.turnOffGps();
   }
   componentDidMount() {
       InteractionManager.runAfterInteractions(() => {
@@ -51,13 +56,26 @@ export default class Main extends Component {
     var _this = this;
     Store.get('region').then((region_value) => {
       if(region_value !=null){
-        _this.setState({ region:region_value });
+        _this.setState({ region:region_value,  });
       }
       Store.get('user').then((user_value) => {
         _this.setState({ user:user_value });
-        //_this.setState({ isLoading:false, });
       });
     });
+  }
+  turnOffGps(){
+      navigator.geolocation.clearWatch(this.watchID);
+      this.setState({gps:false});
+  }
+  turnOnGps(){
+      this.watchID = navigator.geolocation.watchPosition(
+        (position) => {
+          this.updateMyPos(position.coords);
+        },
+        (error) => console.log(error.message),
+        {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
+      );
+      this.setState({gps:true});
   }
   pages(){
     if(this.state.page ==='ios-chatboxes'){
@@ -67,7 +85,7 @@ export default class Main extends Component {
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
-      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} />
+      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
     } else if(this.state.page ==='navicon-round'){
       return <SettingsList navigator={this.props.navigator}/>
     }

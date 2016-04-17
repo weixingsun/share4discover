@@ -8,8 +8,8 @@ export default class GooglePlaces extends Component {
       this.state = {
           selectedType: this.props.selectedType,
       };
-      this.homePlace = {description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
-      this.workPlace = {description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
+      this.homePlace = {description: 'Home', geometry: { location: { lat: -43.5347, lng: 172.604 } }};
+      this.workPlace = {description: 'Work', geometry: { location: { lat: -43.5235, lng: 172.586 } }};
   } 
   render() {
     return (
@@ -41,8 +41,8 @@ export default class GooglePlaces extends Component {
             color: '#1faadb',
           },
         }}
-        currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-        currentLocationLabel="Current location"
+        currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+        currentLocationLabel="My location"
         nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
         GoogleReverseGeocodingQuery={{
           // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro

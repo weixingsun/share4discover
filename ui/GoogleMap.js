@@ -26,15 +26,11 @@ export default class GoogleMap extends Component {
         circles: [],
         initialPosition: null,
         lastPosition: null,
-        gps: false,
+        gps: this.props.gps,
       };
       this.myPosMarker = null;
       this.msg = this.props.msg;
-      this.renderNavBar   = this.renderNavBar.bind(this);
-      this.onRegionChange = this.onRegionChange.bind(this);
-      this.back = this.back.bind(this);
-      this.switchGps = this.switchGps.bind(this);
-      this.search = this.search.bind(this);
+      //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
     }
     componentWillMount(){
@@ -128,15 +124,9 @@ export default class GoogleMap extends Component {
     back(){
       this.props.navigator.pop();
     }
-    search(){
-      this.props.navigator.push({
-        component: SearchAddr,
-        callback:(place)=>{
-          //this.state.center=place;
-          this.move(place); 
-          this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
-        }
-      });
+    search(place){
+        this.move(place); 
+        this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
     }
     move(p){
       this.refs.map.animateToRegion(p);
@@ -160,7 +150,7 @@ export default class GoogleMap extends Component {
     reload() {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
-      JsonAPI.rangeMsg(this.props.filters.type, this.state.region.latitude+','+this.state.region.longitude, range).then((rows)=> {
+      JsonAPI.rangeMsg(this.props.filters.type, this.state.region, range).then((rows)=> {
           self.clearMarkers();
           self.renderMarkers(rows);
           //if(!self.comparefilters()) self.setState({filters:self.props.filters})
@@ -185,14 +175,14 @@ export default class GoogleMap extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back} />
+                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
             }
           />);
       }else{
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-                <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={this.search} />
+                <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
             }
             rightButton={
                 <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
@@ -208,9 +198,9 @@ export default class GoogleMap extends Component {
     }
     renderGpsIcon(){
       if(this.state.gps) 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps} />);
+          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
       else 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps} />);
+          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
       this.setState({ region: r, });
@@ -261,6 +251,7 @@ export default class GoogleMap extends Component {
     }
     render(){
         //this.reload(this.props.filters,this.state.region)
+        //alert('render()')
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -270,7 +261,7 @@ export default class GoogleMap extends Component {
               //showsUserLocation={this.state.gps}
               rotateEnabled={false}
               showsScale={true}
-              onRegionChangeComplete={this.onRegionChange}
+              onRegionChangeComplete={this.onRegionChange.bind(this)}
               initialRegion={this.state.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid

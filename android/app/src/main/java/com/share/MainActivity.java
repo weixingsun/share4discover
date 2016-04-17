@@ -37,9 +37,11 @@ public class MainActivity extends ReactActivity {
     }
   @Override 
   protected List<ReactPackage> getPackages() {
+    String stagingKey = "2ssnSG7sskaaELPFLIHjvusA9Og14yG-vGnJ-";
+    String productionKey = "ATk9f1lkC3zpmIqebUPi8GHGeOWE4yG-vGnJ-";
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
-      new CodePush(null, this, BuildConfig.DEBUG), //new CodePush("deployment-key-here", this, BuildConfig.DEBUG)
+      new CodePush(stagingKey, this, BuildConfig.DEBUG), //new CodePush("deployment-key-here", this, BuildConfig.DEBUG)
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
       new RNGoogleSigninPackage(this),

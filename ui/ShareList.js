@@ -66,9 +66,8 @@ export default class ShareList extends Component {
    */
   reload(filters) {
     var self = this;
-    //alert('_onFetch'+JSON.stringify(this.state.filters))
-    //alert(this.isConnected)
-    JsonAPI.rangeMsg(filters.type,'-43.52,172.62',filters.range).then((rows)=> {
+    //alert(JSON.stringify(filters))
+    JsonAPI.rangeMsg(filters.type,filters.position,filters.range).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       self.dataSource= self.ds.cloneWithRows(rows);
       if(!self.comparefilters() || self.firstLoad) self.setState({filters:self.props.filters})

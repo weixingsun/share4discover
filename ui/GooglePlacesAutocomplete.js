@@ -12,8 +12,8 @@ const defaultStyles = {
     height: 44,
     //width: Style.SEARCH_WIDTH,
     marginTop: 1,
-    marginLeft: 50,
-    marginRight: 70,
+    marginLeft: 1,
+    marginRight: 1,
     //borderTopColor: '#7e7e7e',
     //borderBottomColor: '#b5b5b5',
     //borderTopWidth: 1 / PixelRatio.get(),
@@ -22,11 +22,11 @@ const defaultStyles = {
   textInput: {
     backgroundColor: '#FFFFFF',
     height: 30,
-    borderRadius: 5,
-    paddingTop: 4.5,
+    //borderRadius: 5,
+    //paddingTop: 4.5,
     paddingBottom: 4.5,
-    paddingLeft: 5,
-    paddingRight: 5,
+    //paddingLeft: 5,
+    //paddingRight: 5,
     marginTop: 7.5,
     marginLeft: 8,
     marginRight: 8,
@@ -288,8 +288,8 @@ const GooglePlacesAutocomplete = React.createClass({
       this.setState({
         text: rowData.description,
       });
-      this.triggerBlur(); // hide keyboard but not the results
-
+      //this.triggerBlur(); // hide keyboard but not the results
+      this._onBlur();
       //delete rowData.isLoading;
 
       //this.getCurrentLocation();

@@ -47,10 +47,10 @@ export default class ControlPanel extends Component {
     </TouchableHighlight>
     );
   }*/
-  onSelect(place){
+  changePlace(place){
     //alert(JSON.stringify(place))
     this.setState({ 
-        filters: {type: this.state.filters.type,range:this.state.filters.range, position:place},
+        filters: {type: this.state.filters.type,range:this.state.filters.range, position:place },
     })
   }
   render() {
@@ -58,7 +58,7 @@ export default class ControlPanel extends Component {
       <ScrollView style={{flex:1,backgroundColor:'black',}}>
         <View style={{flex:1,flexDirection:'row',backgroundColor:'#333',height:66,alignItems:'center',justifyContent:'center',}}>
           <View style={{height:66,justifyContent:'center',alignItems:'center',flex:1,}}>
-              <Text style={{color:'white',fontSize:20}}>Filtering Conditions</Text>
+              <Text style={{color:'white',fontSize:20}}>Search Conditions</Text>
           </View>
           <IIcon name={'refresh'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
         </View>
@@ -83,10 +83,13 @@ export default class ControlPanel extends Component {
             })}
         </Picker>
         <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
-            <Text style={{color:'white',marginLeft:5,}}>Place</Text>
+            <Text style={{color:'white',marginLeft:5,}}>Where</Text>
             <View style={{flex:1}} />
         </View>
-        <GooglePlace style={{flex:1}} onSelect={this.onSelect.bind(this)}/>
+        <View style={{flex:1,flexDirection:'row',justifyContent:'center',}}>
+            <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
+            <IIcon name={'pinpoint'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginTop:5,marginBottom:5}} />
+        </View>
       </ScrollView>
     )
   }
