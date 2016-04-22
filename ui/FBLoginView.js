@@ -9,10 +9,16 @@ export default class FBLoginView extends React.Component {
     props: React.PropTypes.object
     };
 
-  constructor(props) {
-      super(props);
+    constructor(props) {
+        super(props);
     }
-
+    getColor(){
+        if(this.props.user != null){
+            return "#dddddd"
+        }else{
+            return "#425bb4"
+        }
+    }
     render(){
         return (
             <Icon.Button onPress={() => {
@@ -31,7 +37,7 @@ export default class FBLoginView extends React.Component {
                 }
               }}
               //color={"#000000"}
-              backgroundColor={"#425bb4"}
+              backgroundColor={this.getColor()}
               name={"social-facebook-outline"}
               size={20} 
               //borderRadius={10}

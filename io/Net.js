@@ -29,7 +29,8 @@ var Net = {
       return this._get(url);
     },
     rangeMsg(type,pos,dist){
-      var url = this.HOST+'/api/msgs/'+type+'&'+pos+'&'+dist;
+      var strLatlng = pos.latitude+','+pos.longitude
+      var url = this.HOST+'/api/msgs/'+type+'&'+strLatlng+'&'+dist;
       return this._get(url);
     },
     getMsg(key){

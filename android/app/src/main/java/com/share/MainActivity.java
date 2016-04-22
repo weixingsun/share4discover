@@ -18,15 +18,15 @@ import java.util.List;
 
 public class MainActivity extends ReactActivity {
 
-  @Override
-  protected String getMainComponentName(){
-    return "Share";
-  }
+    @Override
+    protected String getMainComponentName(){
+        return "Share";
+    }
 
-  @Override
-  protected boolean getUseDeveloperSupport(){
-    return BuildConfig.DEBUG;
-  }
+    @Override
+    protected boolean getUseDeveloperSupport(){
+        return BuildConfig.DEBUG;
+    }
 
     // 2. Override the getJSBundleFile method in order to let
     // the CodePush runtime determine where to get the JS
@@ -41,7 +41,7 @@ public class MainActivity extends ReactActivity {
     String productionKey = "ATk9f1lkC3zpmIqebUPi8GHGeOWE4yG-vGnJ-";
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
-      new CodePush(stagingKey, this, BuildConfig.DEBUG), //new CodePush("deployment-key-here", this, BuildConfig.DEBUG)
+      new CodePush(stagingKey, this, BuildConfig.DEBUG),
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
       new RNGoogleSigninPackage(this),

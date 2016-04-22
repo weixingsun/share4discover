@@ -1,77 +1,74 @@
 'use strict';
 import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
-import Login from './Login'
+import Login from './Login9'
 import Style from './Style'
-import Web from './Web'
-import ListWeb from './ListWeb'
-import ListJson from './ListJson'
 import NavigationBar from 'react-native-navbar'
+import CodePush from "react-native-code-push"
 
 export default class Settings extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
+          types:[],
+          users:[],
       };
-      this.openWebList = this.openWebList.bind(this);
-      this.openRssList = this.openRssList.bind(this);
-      this.openJsonList = this.openJsonList.bind(this);
-      this.openJsonList2 = this.openJsonList2.bind(this);
-      this.openStockList = this.openStockList.bind(this);
+      //this.openWebList = this.openWebList.bind(this);
+      //this.openRssList = this.openRssList.bind(this);
+      //this.openJsonList = this.openJsonList.bind(this);
+      //this.openJsonList2 = this.openJsonList2.bind(this);
+      //this.openStockList = this.openStockList.bind(this);
     }
-    openWebList(){
-        this.props.navigator.push({
-            component: ListWeb,
-            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
-            passProps: {navigator:this.props.navigator,},
+    checkUpdate(){
+      //CodePush.sync()
+        CodePush.checkForUpdate().then( (update) =>{
+            if( !update ){
+                console.log("app is latest version:"+JSON.stringify(update));
+            }else {
+                console.log("there is an update:"+JSON.stringify(update));
+                //CodePush.sync({ updateDialog: true, installMode: CodePush.InstallMode.IMMEDIATE });
+            }
         });
     }
-    openRssList(){
-        this.props.navigator.push({
-            component: ListWeb,
-            passProps: {navigator:this.props.navigator,},
+    about(){
+        CodePush.getCurrentPackage().then((update) => {
+           // If the current app "session" represents the first time
+           // this update has run, and it had a description provided
+           // with it upon release, let's show it to the end user
+           console.log("current app version:"+JSON.stringify(update));
+           if (update.isFirstRun && update.description) {
+               // Display a "what's new?" modal
+           }
         });
     }
-    openJsonList(){
-        this.props.navigator.push({
-            component: ListJson,
-            passProps: {
-                navigator:this.props.navigator,
-                API_NAME:'exchange',
-            },
-        });
+    componentDidMount(){
+        CodePush.notifyApplicationReady();
     }
-    openJsonList2(){
-        this.props.navigator.push({
-            component: ListJson,
-            passProps: {
-                navigator:this.props.navigator,
-                API_NAME:'exchange2',
-            },
-        });
+    login(type,user){
+        this.setState({types:new_types, users:new_users});
     }
-    openStockList(){
-        this.props.navigator.push({
-            component: ListJson,
-            passProps: {
-                navigator:this.props.navigator,
-                API_NAME:'exchange',
-            },
-        });
-    }
+    //componentDidMount() {
+    //    CodePush.sync();
+    //}
 //<ScrollView style={{flex:1}}>
     render(){
         return (
         <View>
           <NavigationBar style={Style.navbar} title={{title:'Share',}} />
           <View style={Style.map}>
-                  <View style={Style.card}>
+                  <TouchableOpacity style={Style.card} onPress={()=> this.checkUpdate()} >
+                    <Text>Check for Update</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={()=> this.about()}>
                     <Text>About</Text>
-                  </View>
+                  </TouchableOpacity>
                   <View style={Style.card}>
                     <Text>Settings</Text>
                   </View>
                   <View style={Style.card}>
-                    <Login />
+                    <Login type={'google'} login={this.login} />
+                  </View>
+                  <View style={Style.card}>
+                    <Login type={'facebook'} login={this.login} />
                   </View>
           </View>
         </View>
