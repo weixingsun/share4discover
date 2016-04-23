@@ -1,7 +1,9 @@
 'use strict';
 import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
-import Login from './Login9'
+import LoginGG from './LoginGG'
+import LoginFB from './LoginFB'
 import Style from './Style'
+import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 
@@ -9,14 +11,26 @@ export default class Settings extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          types:[],
-          users:[],
+          user_fb:null,
+          user_gg:null,
       };
-      //this.openWebList = this.openWebList.bind(this);
-      //this.openRssList = this.openRssList.bind(this);
-      //this.openJsonList = this.openJsonList.bind(this);
-      //this.openJsonList2 = this.openJsonList2.bind(this);
-      //this.openStockList = this.openStockList.bind(this);
+      this.login_fb = this.login_fb.bind(this);
+      this.logout_fb = this.logout_fb.bind(this);
+      this.login_gg = this.login_gg.bind(this);
+      this.logout_gg = this.logout_gg.bind(this);
+    }
+    componentWillMount(){
+        this.getUserDB();
+    }
+    getUserDB() {
+        Store.get('user_fb').then((value) => {
+            this.setState({ user_fb:value });
+           //console.log('getUserDB:'+JSON.stringify(value));
+        });
+        Store.get('user_gg').then((value) => {
+            this.setState({ user_gg:value });
+           //console.log('getUserDB:'+JSON.stringify(value));
+        });
     }
     checkUpdate(){
       //CodePush.sync()
@@ -43,13 +57,18 @@ export default class Settings extends React.Component {
     componentDidMount(){
         CodePush.notifyApplicationReady();
     }
-    login(type,user){
-        this.setState({types:new_types, users:new_users});
+    login_gg(user){
+        this.setState({user_gg:user});
     }
-    //componentDidMount() {
-    //    CodePush.sync();
-    //}
-//<ScrollView style={{flex:1}}>
+    logout_gg(user){
+        this.setState({user_gg:null});
+    }
+    login_fb(user){
+        this.setState({user_fb:user});
+    }
+    logout_fb(user){
+        this.setState({user_fb:null});
+    }
     render(){
         return (
         <View>
@@ -65,10 +84,10 @@ export default class Settings extends React.Component {
                     <Text>Settings</Text>
                   </View>
                   <View style={Style.card}>
-                    <Login type={'google'} login={this.login} />
+                    <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>
                   <View style={Style.card}>
-                    <Login type={'facebook'} login={this.login} />
+                    <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
                   </View>
           </View>
         </View>
