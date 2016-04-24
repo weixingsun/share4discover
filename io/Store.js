@@ -1,7 +1,9 @@
 import React, { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
-        API_LIST_NAME:"api_list",
+        API_LIST:"api_list",
+        PLACE_LIST:"place_list",
+        SETTINGS:"settings",
         
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {

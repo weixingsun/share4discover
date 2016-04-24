@@ -21,13 +21,11 @@ var Login = React.createClass({
                   _this._facebookSignIn(data);
                 }}
                 onLoginFound={function(data){
-                  console.log('FB:onLoginFound:');
-                  console.log(data);
+                  console.log('FB:onLoginFound:'+JSON.stringify(data));
                   //_this.setState({user: null });
                 }}
                 onLoginNotFound={function(data){
-                  console.log('FB:onLoginNotFound:');
-                  console.log(data);
+                  //console.log('FB:onLoginNotFound:'+JSON.stringify(data));
                   //_this.setState({user: null });
                 }}
                 onLogout={function(data){
@@ -42,7 +40,7 @@ var Login = React.createClass({
       );
   },
   renderLoginName() {
-    console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
+    //console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
     var name = 'Login in Facebook'
     if(this.props.user !== null ){ //&& this.props.user.type === 'fb'){
          name = this.props.user.name;
@@ -61,8 +59,8 @@ var Login = React.createClass({
     Store.delete('user_fb');
   },
   _facebookSignIn(data) {
-    console.log('facebook login:')
-    console.log(data)
+    //console.log('facebook login:')
+    //console.log(data)
     if(data.hasOwnProperty('profile')){ //Android get all info in 1 time
         var _user={
             id: data.profile.id,

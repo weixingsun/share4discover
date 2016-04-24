@@ -19,7 +19,7 @@ var Login = React.createClass({
     }
   },
   renderLoginName() {
-    console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
+    //console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
     var name = 'Login in Google'; //this.props.user.name;
     if(this.props.user !== null ){
        name=this.props.user.name;

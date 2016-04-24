@@ -9,19 +9,16 @@ import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
  
-export default class PDF extends Component {
+export default class PlaceForm extends Component {
     constructor(props) {
         super(props);
         this.state={ 
-            api_list:["-- Add Another API --"],
-            selected_api:"-- Add Another API --",
+            place_list:["-- New Place --"],
+            selected_place:"-- New Place --",
             disabled: false,
             name:'',
-            title:'',
-            yql:'',
-            path:'',
-            subpath:'',
-            filter:'',
+            lat:'',
+            lng:'',
         }
     }
     componentWillMount(){
@@ -44,7 +41,6 @@ export default class PDF extends Component {
             );
           }else{
               _this.save(form);
-              //
               _this.props.navigator.pop();
           }
         })
@@ -52,47 +48,60 @@ export default class PDF extends Component {
     save(){
         var form = this.loginForm.getValue();
         Store.save(form.name,form);
-        if (this.state.api_list.indexOf(form.name) == -1) {
-            this.state.api_list.push(form.name);
-            Store.save(Store.API_LIST,this.state.api_list)
+        if (this.state.place_list.indexOf(form.name) == -1) {
+            this.state.place_list.push(form.name);
+            Store.save(Store.PLACE_LIST,this.state.place_list)
         }
     }
     load(){
         var _this=this;
-        Store.get(Store.API_LIST).then(function(list){
+        //alert('load():'+Store.PLACE_LIST)
+        Store.get(Store.PLACE_LIST).then(function(list){
             if(list==null) return;
-            _this.setState({api_list:list});
-            console.log('load:'+JSON.stringify(list));
+            _this.setState({place_list:list.locations});
+            console.log('load():result:'+JSON.stringify(list.locations));
         })
     }
-    loadApi(name){
+    loadApi(place_option_name){
         var _this=this;
-        //console.log('loadApi:'+name);
-        Store.get(name).then(function(value){
-            if(value!=null)
-            _this.setState({
-               selected_api:name,
-               name:value.name,
-               title:value.title,
-               yql:value.yql,
-               path:value.path,
-               subpath:value.subpath,
-               filter:value.filter,
+        var selected_name='',selected_location='';
+        this.state.place_list.map((place)=>{
+            console.log('loadApi:name='+place_option_name+',place:'+place);
+            if(selected_name === place){
+                name=place.split(':')[0];
+                location=place.split(':')[1];
+                
+            }
+        })
+        console.log('loadApi:looop end: name='+name);
+        if(name !== ''){
+            this.setState({
+                selected_place:place_option_name,
+                name:name,
+                location:location,
             });
-            else
-            _this.setState({
-               selected_api:name,
-               name:'',
-               title:'',
-               yql:'',
-               path:'',
-               subpath:'',
-               filter:'',
-            });
+        }
+        this.setModel();
+
+        /*Store.get(name).then(function(value){
+            if(value!=null){
+              console.log(value)
+              _this.setState({
+                selected_place:name,
+                name:value.split(':')[0],
+                location:value.split(':')[1],
+              });
+            }else{
+              _this.setState({
+                selected_place:name,
+                name:'',
+                location:'',
+              });
+            }
             //console.log('loadApi:'+name+',data:'+JSON.stringify(value))
             _this.setModel();
             //_this.loginForm.forceRender();
-        })
+        })*/
     }
     getLockIcon(){
         if(this.state.disabled) return 'ios-locked-outline'
@@ -104,47 +113,29 @@ export default class PDF extends Component {
     }
     setModel(){
       let model = {
-            title: {
+            /*title: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Title",
                 value: this.state.title,
-            },
+            },*/
             name: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Name",
                 value: this.state.name,
             },
-            filter: {
+            location: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
-                label: "Filter",
-                multiline: true,
-                value: this.state.filter,
+                label: "Location",
+                multiline: false,
+                value: this.state.location,
                 ///onFieldChange: (value, ref)=>{
                     //new value, ref to element
                 //}
             },
-            /*url: {
-                type: Form.fieldType.String,
-                label: "Url",
-                value: "",
-                onFieldChange: (value, ref)=>{
-                    //new value, ref to element
-                }
-            },*/
-            yql: {
-                disabled: this.state.disabled,
-                type: Form.fieldType.String,
-                label: "YQL",
-                multiline: true,
-                value: this.state.yql,
-                //onFieldChange: (value, ref)=>{
-                    //new value, ref to element
-                //}
-            },
-            path: {
+            /*path: {
                 disabled: this.state.disabled,
                 type: Form.fieldType.String,
                 label: "Path",
@@ -152,24 +143,24 @@ export default class PDF extends Component {
                 //onFieldChange: (value, ref)=>{
                     //new value, ref to element
                 //}
-            },
+            },*/
             //RN 0.23.1  Picker cannot inside form, many issues
-            /*api_type: {
+            /*place_type: {
                 type: Form.fieldType.Select,
                 disabled: false,
                 label: "API Types",
                 //valueStyle: {},
                 values: [{id:"0",label:"Yahoo",value:"yql"},{id:"1",label:"Url",value:"url"}],
-                selected: this.state.api_type,
+                selected: this.state.place_type,
                 onChange:(value)=>{
-                    this.setState({api_type:value})
+                    this.setState({place_type:value})
                 }
             },*/
         };
         this.setState({model:model})
     }
     render(){
-        //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
+        //console.log('rendering....this.state.place_list:'+JSON.stringify(this.state.place_list));
         return (
             <View style={{flex:1}}>
                   <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
@@ -185,8 +176,8 @@ export default class PDF extends Component {
                    }
                   />
                 <View style={styles.container}>
-                    <Picker selectedValue={this.state.selected_api} onValueChange={(value)=> { this.loadApi(value)}}>
-                        {this.state.api_list.map(function(item,n){
+                    <Picker selectedValue={this.state.selected_place} onValueChange={(value)=> { this.loadApi(value)}}>
+                        {this.state.place_list.map(function(item,n){
                             return <Picker.Item key={item} label={item} value={item} />;
                         })}
                     </Picker>

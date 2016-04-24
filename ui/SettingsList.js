@@ -3,11 +3,12 @@ import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'rea
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import Style from './Style'
+import Settings from './Settings'
 import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 
-export default class Settings extends React.Component {
+export default class SettingsList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -80,9 +81,13 @@ export default class Settings extends React.Component {
                   <TouchableOpacity style={Style.card} onPress={()=> this.about()}>
                     <Text>About</Text>
                   </TouchableOpacity>
-                  <View style={Style.card}>
+                  <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
+                    component: Settings,
+                    //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
+                    passProps: {navigator:this.props.navigator,},
+                  })}>
                     <Text>Settings</Text>
-                  </View>
+                  </TouchableOpacity>
                   <View style={Style.card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>
