@@ -68,11 +68,12 @@ export default class Settings extends React.Component{
     }
     componentWillMount() {
         var _this=this;
+        //Store.save(Store.PLACE_LIST, ["Home:0,0","Work:0,0"] );
         Store.get(Store.PLACE_LIST).then((value) => {
           if(value !=null){
-              _this.foods= value.locations;
+              _this.foods= value;
           }else{
-              Store.save(Store.PLACE_LIST, {"locations":["Home:0,0","Work:0,0"]} );
+              Store.save(Store.PLACE_LIST, ["Home:0,0","Work:0,0"] );
               _this.foods= ["Home:0,0","Work:0,0"];
           }
           _this.reload();
@@ -141,10 +142,10 @@ export default class Settings extends React.Component{
         //             <Text>{ k }</Text>
         //           </View>
         //})
-        let Arr = <Text>{ data }</Text>
+        let Arr = <Text>{ data.split(':')[0] }</Text>
 	return (
           <View style={Style.card}>
-            <TouchableOpacity style={{flex:1}} onPress={()=>{ this.props.navigator.push({  component: PlaceForm,  passProps: {}  }); }} >
+            <TouchableOpacity style={{flex:1}} onPress={()=>{ this.props.navigator.push({  component: PlaceForm,  passProps: {data:data}  }); }} >
               <View style={{flexDirection:'row'}}>
                 { Arr }
               </View>

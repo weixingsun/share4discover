@@ -80,8 +80,8 @@ export default class Main extends Component {
   pages(){
     if(this.state.page ==='ios-chatboxes'){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
-    } else if(this.state.page ==='plug'){
-      return <APIList navigator={this.props.navigator}/>
+    } else if(this.state.page ==='android-contacts'){
+      return <Text>Friends</Text>
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
@@ -123,7 +123,7 @@ export default class Main extends Component {
           <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon name="ios-chatboxes" size={40} />
-            <FIcon name="plug" size={30} />
+            <Icon name="android-contacts" size={40} />
             <Icon name="email" size={40} />
             <Icon name="ios-world" size={40} />
             <Icon name="navicon-round" size={40} />

@@ -3,7 +3,8 @@ import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'rea
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import Style from './Style'
-import Settings from './Settings'
+import APIList from './APIList'
+import PlaceSettings from './PlaceSettings'
 import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
@@ -55,6 +56,7 @@ export default class SettingsList extends React.Component {
            }
         });
     }
+
     componentDidMount(){
         CodePush.notifyApplicationReady();
     }
@@ -82,11 +84,16 @@ export default class SettingsList extends React.Component {
                     <Text>About</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
-                    component: Settings,
-                    //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
+                    component: PlaceSettings,
                     passProps: {navigator:this.props.navigator,},
                   })}>
-                    <Text>Settings</Text>
+                    <Text>Places Settings</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
+                    component: APIList,
+                    passProps: {navigator:this.props.navigator,},
+                  })}>
+                    <Text>API List</Text>
                   </TouchableOpacity>
                   <View style={Style.card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
@@ -99,3 +106,4 @@ export default class SettingsList extends React.Component {
         );
     }
 }
+//<FIcon name="plug" size={30} />
