@@ -78,9 +78,9 @@ export default class ListJson extends React.Component{
     }
     componentWillMount() {
         var _this=this;
-        //Store.save('exchange', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
-        //Store.save('exchange', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
-        //Store.save('exchange2',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates Watch List"});
+        //Store.save('exchange_yql', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
+        Store.save('exchange_yql', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates YQL API"});
+        Store.save('exchange_url',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates URL API"});
         Store.get(this.props.API_NAME).then((value) => {
           if(value !=null){
               _this.foods= value.filter.split(',')

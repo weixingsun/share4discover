@@ -15,10 +15,10 @@ export default class APIList extends React.Component {
           api_list:null,
       };
       this.switchEditMode = this.switchEditMode.bind(this);
-      this.openRssList = this.openRssList.bind(this);
-      this.openJsonList = this.openJsonList.bind(this);
-      this.openJsonList2 = this.openJsonList2.bind(this);
-      this.openStockList = this.openStockList.bind(this);
+      //this.openRssList = this.openRssList.bind(this);
+      //this.openJsonList = this.openJsonList.bind(this);
+      //this.openJsonList2 = this.openJsonList2.bind(this);
+      //this.openStockList = this.openStockList.bind(this);
     }
     componentWillMount(){
         this.load();
@@ -44,21 +44,21 @@ export default class APIList extends React.Component {
             passProps: {navigator:this.props.navigator,},
         });
     }
-    openJsonList(){
+    openYQLJsonAPI(){
         this.props.navigator.push({
             component: ListJson,
             passProps: {
                 navigator:this.props.navigator,
-                API_NAME:'exchange',
+                API_NAME:'exchange_yql',
             },
         });
     }
-    openJsonList2(){
+    openURLJsonAPI(){
         this.props.navigator.push({
             component: ListJson,
             passProps: {
                 navigator:this.props.navigator,
-                API_NAME:'exchange2',
+                API_NAME:'exchange_url',
             },
         });
     }
@@ -67,7 +67,7 @@ export default class APIList extends React.Component {
             component: ListJson,
             passProps: {
                 navigator:this.props.navigator,
-                API_NAME:'exchange',
+                API_NAME:'exchange_url',
             },
         });
     }
@@ -90,9 +90,9 @@ export default class APIList extends React.Component {
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={this.getLockIcon()} color={'#333333'} size={40} onPress={() => this.switchEditMode() } />
-                    <>
-                    <Icon name={'plus'} size={40} onPress={() => this.props.navigator.push({component: FormAddJson, })} />
+                    <Icon name={this.getLockIcon()} color={'#333333'} size={30} onPress={()=>this.switchEditMode()} />
+                    <View style={{width:50}} />
+                    <Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />
                  </View>
               }
           />
@@ -103,11 +103,11 @@ export default class APIList extends React.Component {
                   <TouchableOpacity style={Style.card} onPress={this.openRssList} >
                     <Text style={{fontWeight: 'bold'}}>My RSS List</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openJsonList} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange Simple List</Text>
+                  <TouchableOpacity style={Style.card} onPress={this.openYQLJsonAPI.bind(this)} >
+                    <Text style={{fontWeight: 'bold'}}>My Exchange YQL API</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openJsonList2} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange Full List</Text>
+                  <TouchableOpacity style={Style.card} onPress={this.openURLJsonAPI.bind(this)} >
+                    <Text style={{fontWeight: 'bold'}}>My Exchange URL API</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={this.openStockList} >
                     <Text style={{fontWeight: 'bold'}}>My Stock List </Text>
