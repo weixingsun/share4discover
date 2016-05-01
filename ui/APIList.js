@@ -25,7 +25,7 @@ export default class APIList extends React.Component {
     }
     load(){
         var _this=this;
-        Store.get(Store.API_LIST_NAME).then(function(list){
+        Store.get(Store.API_LIST).then(function(list){
             if(list==null) return;
             _this.setState({api_list:list});
             //console.log('load:'+JSON.stringify(list));
@@ -85,12 +85,14 @@ export default class APIList extends React.Component {
           <NavigationBar style={Style.navbar} title={{title:'My API List',}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={this.getLockIcon()} color={'#333333'} size={40} onPress={() => this.switchEditMode() } />
+                    <Icon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'plus'} size={40} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
+                    <Icon name={this.getLockIcon()} color={'#333333'} size={40} onPress={() => this.switchEditMode() } />
+                    <>
+                    <Icon name={'plus'} size={40} onPress={() => this.props.navigator.push({component: FormAddJson, })} />
                  </View>
               }
           />
