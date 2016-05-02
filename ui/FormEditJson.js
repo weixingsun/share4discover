@@ -13,14 +13,15 @@ export default class PDF extends Component {
     constructor(props) {
         super(props);
         this.state={ 
-            api_list:["-- Add Another API --"],
+            //api_list:["-- Add Another API --"],
             name:"-- Add Another API --",
             disabled: false,
             data:{},
         }
     }
     componentWillMount(){
-        this.load();
+        //this.load();
+        this.loadApi(this.props.name)
     }
     onSubmit(){
         var _this=this;
@@ -129,7 +130,7 @@ export default class PDF extends Component {
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
+                  <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
@@ -142,11 +143,6 @@ export default class PDF extends Component {
                    }
                   />
                 <View style={styles.container}>
-                    <Picker selectedValue={this.state.name} onValueChange={(value)=> { this.loadApi(value)}}>
-                        {this.state.api_list.map(function(item,n){
-                            return <Picker.Item key={item} label={item} value={item} />;
-                        })}
-                    </Picker>
                     <Form
                         style={{flex:1}}
                         ref={(frm)=> this.loginForm = frm}

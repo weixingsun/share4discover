@@ -30,6 +30,42 @@ var deviceStorage = {
 			return value;
 		});
 	},
+	insertExampleData: function() {
+                var api_json_yql_exchange = 'api:json:yql:exchange';
+                var api_json_url_exchange = 'api:json:url:exchange';
+                var api_json_yql_stock    = 'api:json:yql:stock';
+		
+		AsyncStorage.setItem(api_json_yql_exchange, JSON.stringify({
+			name:api_json_yql_exchange, 
+			filter:"USDCNY,USDNZD", 
+			yql:'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', 
+			path:"$.query.results.rate", 
+			title:"Exchange Rates YQL API"
+		}));
+		AsyncStorage.setItem(api_json_url_exchange, JSON.stringify({
+			name:api_json_url_exchange, 
+			filter:'USD/CNY,USD/NZD',
+			url:'http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic',
+			path:"$.list.resources", 
+			subpath:"$.resource.fields",
+			title:"Exchange Rates URL API"
+		}));
+		AsyncStorage.setItem('api_list', JSON.stringify( [api_json_yql_exchange, api_json_url_exchange] ));
+	},
+	//name: 'api:url:exchange' 'api:yql:exchange'
+	//json: {title: filter: url: yql: path: subpath}
+	insertApi: function(name,json){
+		AsyncStorage.setItem(name, JSON.stringify(json));
+		AsyncStorage.getItem('api_list').then(function(list) {
+			var names = [name];
+			if(list!==null && list.indexOf(name)<0){
+				names = JSON.parse(list).push(name);
+			}else if(list!==null && list.indexOf(name)>-1){
+				names = JSON.parse(list)
+			}
+			AsyncStorage.setItem('api_list', JSON.stringify( names ));
+		});
+	},
 };
 
 module.exports = deviceStorage;

@@ -4,10 +4,10 @@ import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Style from './Style'
 import AddJson from './AddJson'
-import FormAddJson from './FormAddJson'
+import FormEditJson from './FormEditJson'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
-//import YQL from 'yql' //sorry, react native is not nodejs
+import FIcon from 'react-native-vector-icons/FontAwesome'
 
 var styles = StyleSheet.create({
     container: {
@@ -79,8 +79,9 @@ export default class ListJson extends React.Component{
     componentWillMount() {
         var _this=this;
         //Store.save('exchange_yql', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
-        Store.save('exchange_yql', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates YQL API"});
-        Store.save('exchange_url',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates URL API"});
+        //Store.save('exchange_yql', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates YQL API"});
+        //Store.save('exchange_url',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates URL API"});
+        //Store.insertExampleData();
         Store.get(this.props.API_NAME).then((value) => {
           if(value !=null){
               _this.foods= value.filter.split(',')
@@ -304,9 +305,9 @@ export default class ListJson extends React.Component{
              }
              rightButton={
                <View style={{flexDirection:'row',}}>
-                  <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
+                  <FIcon name={"edit"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormEditJson, passProps: {name: this.props.API_NAME} }) } />
                   <View style={{width:50}} />
-                  <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
+                  <IIcon name={this.getLockIcon()} size={30} onPress={() => this.switchEdit()} />
                 </View>
              }
           />

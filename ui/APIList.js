@@ -1,5 +1,5 @@
 'use strict';
-import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import React, {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Store from '../io/Store'
 import Style from './Style'
@@ -10,13 +10,19 @@ import NavigationBar from 'react-native-navbar'
 export default class APIList extends React.Component {
     constructor(props) {
       super(props);
+      this.api_list = [];
+      //this.seq=0;
+      this.ds = new ListView.DataSource({
+          rowHasChanged: (row1, row2) => row1 !== row2,
+          sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+      });
       this.state = {
           disabled:true,
-          api_list:null,
+          dataSource:this.ds.cloneWithRows(this.api_list),
       };
       this.switchEditMode = this.switchEditMode.bind(this);
       //this.openRssList = this.openRssList.bind(this);
-      //this.openJsonList = this.openJsonList.bind(this);
+      this.openJsonAPI = this.openJsonAPI.bind(this);
       //this.openJsonList2 = this.openJsonList2.bind(this);
       //this.openStockList = this.openStockList.bind(this);
     }
@@ -27,8 +33,8 @@ export default class APIList extends React.Component {
         var _this=this;
         Store.get(Store.API_LIST).then(function(list){
             if(list==null) return;
-            _this.setState({api_list:list});
-            //console.log('load:'+JSON.stringify(list));
+            _this.setState({dataSource: _this.ds.cloneWithRows(list)});
+            _this.api_list = list;
         })
     }
     openWebList(){
@@ -44,32 +50,19 @@ export default class APIList extends React.Component {
             passProps: {navigator:this.props.navigator,},
         });
     }
-    openYQLJsonAPI(){
+    openJsonAPI(name){
         this.props.navigator.push({
             component: ListJson,
             passProps: {
                 navigator:this.props.navigator,
-                API_NAME:'exchange_yql',
+                API_NAME:name,
             },
         });
     }
-    openURLJsonAPI(){
-        this.props.navigator.push({
-            component: ListJson,
-            passProps: {
-                navigator:this.props.navigator,
-                API_NAME:'exchange_url',
-            },
-        });
-    }
-    openStockList(){
-        this.props.navigator.push({
-            component: ListJson,
-            passProps: {
-                navigator:this.props.navigator,
-                API_NAME:'exchange_url',
-            },
-        });
+    openAPI(name){
+        if(name.indexOf('api:json')>-1){
+            this.openJsonAPI(name);
+        }
     }
     getLockIcon(){
         if(this.state.disabled) return 'ios-locked-outline'
@@ -79,9 +72,29 @@ export default class APIList extends React.Component {
         if(this.state.disabled) this.setState({disabled:false})
         else this.setState({disabled:true})
     }
-    render(){
+    //incSeq(){
+    //    if(this.seq==this.api_list.length-1){
+    //      this.seq=0;
+    //    }else{
+    //      this.seq++;
+    //    }
+    //}
+    _renderRow(data, sectionID, rowID) {
+        //this.incSeq();
         return (
-        <View>
+          <View style={Style.card}>
+            <TouchableOpacity style={{flex:1}} onPress={()=> this.openAPI(data) } >
+              <View style={{flexDirection:'row'}}>
+                  <Text>{ data }</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+        //{this._renderDeleteButton(this.seq-1,data.Name)}
+    }
+    render(){
+      return (
+      <View>
           <NavigationBar style={Style.navbar} title={{title:'My API List',}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
@@ -96,24 +109,45 @@ export default class APIList extends React.Component {
                  </View>
               }
           />
-          <View style={Style.map}>
-                  <TouchableOpacity style={Style.card} onPress={this.openWebList} >
-                    <Text style={{fontWeight: 'bold'}}>My Web List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openRssList} >
-                    <Text style={{fontWeight: 'bold'}}>My RSS List</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openYQLJsonAPI.bind(this)} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange YQL API</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openURLJsonAPI.bind(this)} >
-                    <Text style={{fontWeight: 'bold'}}>My Exchange URL API</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={this.openStockList} >
-                    <Text style={{fontWeight: 'bold'}}>My Stock List </Text>
-                  </TouchableOpacity>
-          </View>
-        </View>
-        );
+          <ListView
+              enableEmptySections={true}      //annoying warning
+              style={styles.listViewContainer}
+              dataSource={this.state.dataSource}
+              renderRow={this._renderRow.bind(this)}
+              //renderHeader={this._renderHeader.bind(this)}
+              //renderSectionHeader = {this._renderSectionHeader.bind(this)}
+              automaticallyAdjustContentInsets={false}
+              initialListSize={9}
+          />
+      </View>
+      );
     }
 }
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    scrollViewContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        padding: 15,
+    },
+    listViewContainer: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    buttonContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        padding: 15,
+        backgroundColor: "#EEE",
+    },
+    header: {
+        flex: 0,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 6,
+        backgroundColor: "#387ef5",
+    },
+});
