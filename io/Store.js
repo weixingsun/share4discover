@@ -2,8 +2,10 @@ import React, { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
         API_LIST:"api_list",
+        MAP_LIST:"map_list",
         PLACE_LIST:"place_list",
         SETTINGS:"settings",
+        SETTINGS_MAP:"settings:map",
         
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {
@@ -59,11 +61,43 @@ var deviceStorage = {
 		AsyncStorage.getItem('api_list').then(function(list) {
 			var names = [name];
 			if(list!==null && list.indexOf(name)<0){
-				names = JSON.parse(list).push(name);
+				names = JSON.parse(list)
+				names.push(name);
 			}else if(list!==null && list.indexOf(name)>-1){
 				names = JSON.parse(list)
 			}
 			AsyncStorage.setItem('api_list', JSON.stringify( names ));
+		});
+	},
+        copyApi: function(name){
+		var new_name = '';
+		var num = 0;
+		AsyncStorage.getItem('api_list').then(function(list) {
+			var names = JSON.parse(list)
+			num = names.length;
+			new_name = name+'-'+num;
+			names.push(new_name);
+			AsyncStorage.setItem('api_list', JSON.stringify( names ));
+			//console.log('new api_list:'+JSON.stringify( names ))
+		});
+		AsyncStorage.getItem(name).then(function(value) {
+			var new_value = JSON.parse(value)
+			new_value['name']=new_name;
+			AsyncStorage.setItem(new_name,JSON.stringify(new_value));
+			//console.log('new name:'+new_name+'  value:'+JSON.stringify(new_value))
+		});
+	},
+	deleteApi: function(api_name){
+		AsyncStorage.removeItem(api_name);
+		AsyncStorage.getItem('api_list').then(function(list) {
+			var old_names = JSON.parse(list);
+			var new_names = [];
+			old_names.map((name)=>{
+				if(name !== api_name){
+					new_names.push(name)
+				}
+			})
+			AsyncStorage.setItem('api_list', JSON.stringify( new_names ));
 		});
 	},
 };

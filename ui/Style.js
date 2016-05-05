@@ -131,6 +131,22 @@ module.exports = {
       shadowRadius: 3,
       flexDirection:'row',
   },
+  slim_card:{
+      height: 35,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0,0,0,0.1)',
+      margin: 1,
+      //marginLeft: 10, //item move to right
+      //padding: 15,
+      shadowColor: '#ccc',
+      shadowOffset: { width: 2, height: 2, },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      flexDirection:'row',
+  },
   row: {
     backgroundColor: 'rgba(255, 255, 255, 1.0)',
     padding: 2,

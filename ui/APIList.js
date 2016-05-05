@@ -17,16 +17,15 @@ export default class APIList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
-          disabled:true,
+          editable:false,
           dataSource:this.ds.cloneWithRows(this.api_list),
       };
       this.switchEditMode = this.switchEditMode.bind(this);
-      //this.openRssList = this.openRssList.bind(this);
-      this.openJsonAPI = this.openJsonAPI.bind(this);
-      //this.openJsonList2 = this.openJsonList2.bind(this);
-      //this.openStockList = this.openStockList.bind(this);
+      //this.openJsonAPI = this.openJsonAPI.bind(this);
+      //this.openWebList = this.openWebList.bind(this);
     }
     componentWillMount(){
+        //Store.insertExampleData();
         this.load();
     }
     load(){
@@ -37,6 +36,7 @@ export default class APIList extends React.Component {
             _this.api_list = list;
         })
     }
+    //fetch html
     openWebList(){
         this.props.navigator.push({
             component: ListWeb,
@@ -65,20 +65,52 @@ export default class APIList extends React.Component {
         }
     }
     getLockIcon(){
-        if(this.state.disabled) return 'ios-locked-outline'
+        if(!this.state.editable) return 'ios-locked-outline'
         return 'ios-unlocked-outline'
     }
     switchEditMode(){
-        if(this.state.disabled) this.setState({disabled:false})
-        else this.setState({disabled:true})
+        if(this.state.editable) this.setState({editable:false})
+        else this.setState({editable:true})
     }
-    //incSeq(){
-    //    if(this.seq==this.api_list.length-1){
-    //      this.seq=0;
-    //    }else{
-    //      this.seq++;
-    //    }
-    //}
+    /*incSeq(){
+        if(this.seq==this.api_list.length-1){
+          this.seq=0;
+        }else{
+          this.seq++;
+        }
+    }*/
+    arrayDelete(old_array,name_delete){
+        var new_array = [];
+        old_array.map((name)=>{
+            if(name !== name_delete){
+                new_array.push(name)
+            }
+        })
+        return new_array;
+    }
+    deleteItem(id,name){
+        Store.deleteApi(name)
+        var new_list = this.arrayDelete(this.api_list,name) 
+        this.api_list = new_list;
+        this.setState({dataSource: this.ds.cloneWithRows(this.api_list)});
+    }
+    copyItem(id,name){
+        Store.copyApi(name)
+        var new_name = name+'-'+this.api_list.length;
+        this.api_list.push(new_name)
+        //console.log('copyItem():'+new_name)
+        this.setState({dataSource: this.ds.cloneWithRows(this.api_list)});
+    }
+    _renderDeleteButton(id,name){
+        if(this.state.editable)
+            return <Icon style={{marginRight:15}} name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
+        else return null;
+    }
+    _renderCopyButton(id,name){
+        if(this.state.editable)
+            return <Icon style={{marginRight:25}} name="ios-copy-outline" size={30} color="#C00" onPress={()=>this.copyItem(id,name)} />
+        else return null;
+    }
     _renderRow(data, sectionID, rowID) {
         //this.incSeq();
         return (
@@ -88,9 +120,10 @@ export default class APIList extends React.Component {
                   <Text>{ data }</Text>
               </View>
             </TouchableOpacity>
+            {this._renderCopyButton(this.seq,data)}
+            {this._renderDeleteButton(this.seq,data)}
           </View>
         );
-        //{this._renderDeleteButton(this.seq-1,data.Name)}
     }
     render(){
       return (
@@ -104,8 +137,6 @@ export default class APIList extends React.Component {
               rightButton={
                  <View style={{flexDirection:'row',}}>
                     <Icon name={this.getLockIcon()} color={'#333333'} size={30} onPress={()=>this.switchEditMode()} />
-                    <View style={{width:50}} />
-                    <Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />
                  </View>
               }
           />
@@ -151,3 +182,5 @@ var styles = StyleSheet.create({
         backgroundColor: "#387ef5",
     },
 });
+//<View style={{width:50}} />
+//<Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />

@@ -47,7 +47,7 @@ var styles = StyleSheet.create({
 
 //API_NAME: exchange
 //value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
-export default class Settings extends React.Component{
+export default class MapSettings extends React.Component{
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({
@@ -69,12 +69,12 @@ export default class Settings extends React.Component{
     componentWillMount() {
         var _this=this;
         //Store.save(Store.PLACE_LIST, ["Home:0,0","Work:0,0"] );
-        Store.get(Store.PLACE_LIST).then((value) => {
+        Store.get(Store.MAP_LIST).then((value) => {
           if(value !=null){
               _this.foods= value;
           }else{
-              Store.save(Store.PLACE_LIST, ["Home:0,0","Work:0,0"] );
-              _this.foods= ["Home:0,0","Work:0,0"];
+              Store.save(Store.MAP_LIST, ["GoogleMap","Mapbox"] );
+              _this.foods= ["GoogleMap","Mapbox"];
           }
           _this.reload();
         });

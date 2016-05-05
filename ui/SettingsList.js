@@ -4,7 +4,8 @@ import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import Style from './Style'
 import APIList from './APIList'
-import PlaceSettings from './PlaceSettings'
+import Settings from './Settings'
+//import MapSettings from './MapSettings'
 import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
@@ -84,10 +85,10 @@ export default class SettingsList extends React.Component {
                     <Text>About</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
-                    component: PlaceSettings,
+                    component: Settings,
                     passProps: {navigator:this.props.navigator,},
                   })}>
-                    <Text>Places Settings</Text>
+                    <Text>Settings</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
                     component: APIList,
