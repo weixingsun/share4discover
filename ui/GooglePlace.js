@@ -1,5 +1,5 @@
 'use strict';
-import React, {Component,} from 'react-native'
+import React, {Component,} from 'react'
 import {GooglePlacesAutocomplete} from "./GooglePlacesAutocomplete"
 
 export default class GooglePlaces extends Component {

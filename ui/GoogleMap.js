@@ -1,6 +1,6 @@
 'use strict';
-
-import React,{View, Text, StyleSheet, ScrollView, Component, } from 'react-native'
+import React, { Component } from 'react'
+import {View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import MapView from 'react-native-maps'
 import IIcon from 'react-native-vector-icons/Ionicons'

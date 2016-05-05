@@ -1,7 +1,9 @@
 'use strict';
-import React, {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import React, { Component } from 'react'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
+import LoginWX from './LoginWX'
 import Style from './Style'
 import APIList from './APIList'
 import Settings from './Settings'
@@ -9,6 +11,7 @@ import Settings from './Settings'
 import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
+import IIcon from 'react-native-vector-icons/Ionicons'
 
 export default class SettingsList extends React.Component {
     constructor(props) {
@@ -16,11 +19,14 @@ export default class SettingsList extends React.Component {
       this.state = {
           user_fb:null,
           user_gg:null,
+          user_wx:null,
       };
       this.login_fb = this.login_fb.bind(this);
       this.logout_fb = this.logout_fb.bind(this);
       this.login_gg = this.login_gg.bind(this);
       this.logout_gg = this.logout_gg.bind(this);
+      this.login_wx = this.login_wx.bind(this);
+      this.logout_wx = this.logout_wx.bind(this);
     }
     componentWillMount(){
         this.getUserDB();
@@ -28,11 +34,15 @@ export default class SettingsList extends React.Component {
     getUserDB() {
         Store.get('user_fb').then((value) => {
             this.setState({ user_fb:value });
-           //console.log('getUserDB:'+JSON.stringify(value));
+           //console.log('getFBUserDB:'+JSON.stringify(value));
         });
         Store.get('user_gg').then((value) => {
             this.setState({ user_gg:value });
-           //console.log('getUserDB:'+JSON.stringify(value));
+           //console.log('getGGUserDB:'+JSON.stringify(value));
+        });
+        Store.get('user_wx').then((value) => {
+            this.setState({ user_wx:value });
+           //console.log('getWXUserDB:'+JSON.stringify(value));
         });
     }
     checkUpdate(){
@@ -73,34 +83,59 @@ export default class SettingsList extends React.Component {
     logout_fb(user){
         this.setState({user_fb:null});
     }
+    login_wx(user){
+        this.setState({user_wx:user});
+    }
+    logout_wx(user){
+        this.setState({user_wx:null});
+    }
     render(){
         return (
         <View>
           <NavigationBar style={Style.navbar} title={{title:'Share',}} />
           <View style={Style.map}>
-                  <TouchableOpacity style={Style.card} onPress={()=> this.checkUpdate()} >
-                    <Text>Check for Update</Text>
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
+                      <View style={{width:Style.DEVICE_WIDTH/3}} />
+                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <IIcon name={'arrow-up-a'} size={35}/>
+                      </View>
+                    <Text>Update</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={()=> this.about()}>
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
+                      <View style={{width:Style.DEVICE_WIDTH/3}} />
+                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <IIcon name={'ios-information-outline'} size={35}/>
+                      </View>
                     <Text>About</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
-                    component: Settings,
-                    passProps: {navigator:this.props.navigator,},
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: Settings,
+                      passProps: {navigator:this.props.navigator,},
                   })}>
-                    <Text>Settings</Text>
+                      <View style={{width:Style.DEVICE_WIDTH/3}} />
+                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <IIcon name={'ios-cog-outline'} size={35}/>
+                      </View>
+                      <Text>Settings</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.card} onPress={()=> this.props.navigator.push({
-                    component: APIList,
-                    passProps: {navigator:this.props.navigator,},
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: APIList,
+                      passProps: {navigator:this.props.navigator,},
                   })}>
-                    <Text>API List</Text>
+                      <View style={{width:Style.DEVICE_WIDTH/3}} />
+                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <IIcon name={'ios-lightbulb-outline'} size={35}/>
+                      </View>
+                      <Text>API List</Text>
                   </TouchableOpacity>
-                  <View style={Style.card}>
+                  <View style={Style.left_card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>
-                  <View style={Style.card}>
+                  <View style={Style.left_card}>
                     <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
+                  </View>
+                  <View style={Style.left_card}>
+                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
                   </View>
           </View>
         </View>

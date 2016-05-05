@@ -1,5 +1,6 @@
 'use strict'
-import React, {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, ListView,} from 'react-native';
+import React, {Component} from 'react';
+import {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, ListView,} from 'react-native';
 import Style from './Style'
 import Web from './Web'
 import NavigationBar from 'react-native-navbar'

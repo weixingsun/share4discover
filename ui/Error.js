@@ -1,13 +1,12 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet, Animated, Dimensions} = React;
+import React, {Component} 'react'
+import {View, Text, StyleSheet, Animated, Dimensions} from 'react-native'
 //var Button = require('react-native-button');
 
 var { height: deviceHeight } = Dimensions.get('window');
 
-
-class Error extends React.Component {
+export default class Error extends React.Component {
     constructor(props){
         super (props)
 
@@ -46,9 +45,6 @@ class Error extends React.Component {
         );
     }
 }
-
-
-module.exports = Error;
 
 var styles = StyleSheet.create({
     container: {

@@ -1,13 +1,9 @@
 'use strict';
 
-var React = require('react-native');
-var {
-  Component,
-  View,
-  Text,
-} = React;
+import React, {Component} from 'react'
+import { View, Text,} from 'react-native'
 
-class Welcome extends Component {
+export default class Welcome extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: '#246dd5', alignItems: 'center', justifyContent: 'center'}}>
@@ -16,5 +12,3 @@ class Welcome extends Component {
     );
   }
 }
-
-module.exports = Welcome;

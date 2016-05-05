@@ -1,14 +1,5 @@
-import React,{
-    Component,
-    Picker,
-    PropTypes,
-    StyleSheet,
-    View,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    Dimensions
-} from 'react-native';
+import React,{Component} from 'react'
+import { Picker, PropTypes, StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Dimensions} from 'react-native'
 import Input from './form/Input';
 import Switch from './form/Switch';
 import ProgressBar from './form/ProgressBar';
@@ -51,7 +42,7 @@ Date.prototype.Format = function (fmt) {
     return fmt;
 }
 
-class Form extends Component {
+export default class Form extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -477,5 +468,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     }
 });
-
-export default Form;

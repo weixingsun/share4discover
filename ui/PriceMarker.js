@@ -1,9 +1,5 @@
-var React = require('react-native');
-var {
-  StyleSheet,
-  View,
-  Text,
-} = React;
+import React, {Component} from 'react'
+import {StyleSheet, View, Text,} from 'react-native'
 
 var PriceMarker = React.createClass({
   getDefaultProps() {

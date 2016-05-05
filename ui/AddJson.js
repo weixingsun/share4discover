@@ -1,5 +1,6 @@
 'use strict';
-import React, {ListView,Component,View,Text,TouchableHighlight,StyleSheet,ScrollView,ActivityIndicatorIOS,SwitchIOS,} from 'react-native'
+import React, { Component } from 'react'
+import {ListView,View,Text,TouchableHighlight,StyleSheet,ScrollView,ActivityIndicatorIOS,SwitchIOS,} from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'

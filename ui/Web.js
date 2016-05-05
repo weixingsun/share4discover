@@ -1,5 +1,6 @@
 'use strict';
-import React, {Component, StyleSheet, Text, View, WebView} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View, WebView} from 'react-native';
 import NavigationBar from 'react-native-navbar'
 import Style from './Style'
 import IIcon from 'react-native-vector-icons/Ionicons'

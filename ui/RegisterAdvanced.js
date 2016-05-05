@@ -1,13 +1,10 @@
 'use strict';
 
-import React, { AppRegistry, } from 'react-native';
-
-
+import React, { Component } from 'react';
 import ExNavigator from '@exponent/react-native-navigator';
-var {GiftedForm, GiftedFormManager} = require('react-native-gifted-form');
+import {GiftedForm, GiftedFormManager} from 'react-native-gifted-form'
 
-
-class Example extends React.Component {
+export default class Example extends Component {
   render() {
     return (
       <ExNavigator
@@ -283,6 +280,3 @@ class Example extends React.Component {
     }
   }
 }
-
-
-module.exports = Example;

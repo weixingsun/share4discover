@@ -1,4 +1,4 @@
-import React from "react-native";
+import React from "react";
 import Dimensions from "Dimensions";
 
 const x = Dimensions.get('window').width;
@@ -19,6 +19,7 @@ module.exports = {
   //General
   DEVICE_WIDTH:x,
   QUARTER_DEVICE_WIDTH:x/4,
+  SIX_DEVICE_WIDTH:x/6,
   DEVICE_HEIGHT:y,
   QUARTER_DEVICE_HEIGHT:y/4,
   RATIO_X:ratioX,
@@ -119,6 +120,21 @@ module.exports = {
   card:{
       height: 50,
       justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0,0,0,0.1)',
+      margin: 5,
+      //padding: 15,
+      shadowColor: '#ccc',
+      shadowOffset: { width: 2, height: 2, },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      flexDirection:'row',
+  },
+  left_card:{
+      height: 50,
+      //justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 1,
       backgroundColor: '#fff',

@@ -1,6 +1,7 @@
 'use strict';
 
-import React, {Component,View,Text,TouchableHighlight,} from 'react-native';
+import React, {Component} from 'react';
+import {View,Text,TouchableHighlight,} from 'react-native';
 import Style from './Style'
 import Filter from './Filter'
 const IIcon = require('react-native-vector-icons/Ionicons');

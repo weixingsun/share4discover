@@ -1,6 +1,6 @@
 'use strict';
- 
-import React,{Alert, Component, Picker, StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react' 
+import {Alert, Picker, StyleSheet, Text, View } from 'react-native';
 import Button from 'apsl-react-native-button';
 import IIcon from 'react-native-vector-icons/Ionicons';
 //import Form from 'react-native-tableview-form';

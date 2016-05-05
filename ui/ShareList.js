@@ -1,9 +1,10 @@
 'use strict';
+import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
-import React, {Component, ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
+import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
 import JsonAPI from "../io/Net"
-const IIcon = require('react-native-vector-icons/Ionicons');
-//const FIcon = require('react-native-vector-icons/FontAwesome');
+import IIcon from 'react-native-vector-icons/Ionicons'
+//import FIcon from 'react-native-vector-icons/FontAwesome'
 import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"

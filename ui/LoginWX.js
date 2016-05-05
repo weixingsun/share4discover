@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
-//import FIcon from 'react-native-vector-icons/FontAwesome'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
@@ -12,11 +12,11 @@ import FBLoginView from "./FBLoginView"
 var Login = React.createClass({
   renderLoginButton() {
     if(this.props.user !== null){ // && this.props.user.type ==='gg'){
-        return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dddddd" onPress={this._googleSignOut} />
+        return <FIcon.Button name={'weixin'} size={20} backgroundColor="#dddddd" onPress={this._googleSignOut} />
         //return <FIcon name={'google-plus-square'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
     }else{
         //return (<GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );
-        return <IIcon.Button name={'social-google-outline'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
+        return <FIcon.Button name={'weixin'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
     }
   },
   renderLoginName() {

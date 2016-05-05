@@ -1,5 +1,6 @@
 'use strict';
-import React, {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import React, {Component} from 'react'
+import {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Store from '../io/Store'
 import Style from './Style'

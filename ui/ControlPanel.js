@@ -1,4 +1,5 @@
-import React, { Component, ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
+import React, { Component } from 'react'
+import {ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Slider from 'react-native-slider'

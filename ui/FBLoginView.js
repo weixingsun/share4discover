@@ -1,7 +1,8 @@
-import React, {Alert, View, Text, StyleSheet} from 'react-native'
+import React, {Component} from 'react'
+import {Alert, View, Text, StyleSheet} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-export default class FBLoginView extends React.Component {
+export default class FBLoginView extends Component {
   static contextTypes = {
     isLoggedIn: React.PropTypes.bool,
     login: React.PropTypes.func,

@@ -1,5 +1,6 @@
 'use strict';
-import React, {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import React, { Component } from 'react'
+import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 //import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FBLogin from 'react-native-facebook-login'
@@ -97,9 +98,12 @@ var Login = React.createClass({
   },
   render(){
     return (
-        <View style={{flexDirection:'row',}}>
-        {this.renderLoginButton()}
-        {this.renderLoginName()}
+        <View style={{flexDirection:'row',alignItems: 'center',}}>
+          <View style={{width:Style.DEVICE_WIDTH/3}} />
+          <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+              {this.renderLoginButton()}
+          </View>
+          {this.renderLoginName()}
         </View>
     );
   }

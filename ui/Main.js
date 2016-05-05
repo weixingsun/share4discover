@@ -1,4 +1,5 @@
-import React, {InteractionManager, Text, View, Navigator, Component, } from 'react-native'
+import React, { Component } from 'react'
+import {InteractionManager, Text, View, Navigator, } from 'react-native'
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import Icon from 'react-native-vector-icons/Ionicons'

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, StyleSheet, Text, View,} from 'react-native'
+import React, { Component,} from 'react'
+import { PropTypes, StyleSheet, Text, View,} from 'react-native'
 import Drawer from 'react-native-drawer'
 import ControlPanel from './drawer/ControlPanel'
 import Main from './Main'

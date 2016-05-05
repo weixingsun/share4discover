@@ -1,16 +1,7 @@
 'use strict';
-
-var React = require('react-native');
-var {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Animated,
-} = React;
-
-const Icon = require('react-native-vector-icons/Ionicons');
-//<Icon name={'ion-chevron-down'} size={30} color='#ccc' 
+import React,{Component} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Animated,} from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
 var styles = StyleSheet.create({
   tab: {
     flex: 1,
