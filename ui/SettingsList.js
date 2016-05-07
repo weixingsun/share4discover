@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-nati
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
+import LoginWB from './LoginWB'
 import Style from './Style'
 import APIList from './APIList'
 import Settings from './Settings'
@@ -20,13 +21,16 @@ export default class SettingsList extends React.Component {
           user_fb:null,
           user_gg:null,
           user_wx:null,
+          user_wb:null,
       };
-      this.login_fb = this.login_fb.bind(this);
+      this.login_fb  = this.login_fb.bind(this);
       this.logout_fb = this.logout_fb.bind(this);
-      this.login_gg = this.login_gg.bind(this);
+      this.login_gg  = this.login_gg.bind(this);
       this.logout_gg = this.logout_gg.bind(this);
-      this.login_wx = this.login_wx.bind(this);
+      this.login_wx  = this.login_wx.bind(this);
       this.logout_wx = this.logout_wx.bind(this);
+      this.login_wb  = this.login_wb.bind(this);
+      this.logout_wb = this.logout_wb.bind(this);
     }
     componentWillMount(){
         this.getUserDB();
@@ -89,6 +93,12 @@ export default class SettingsList extends React.Component {
     logout_wx(user){
         this.setState({user_wx:null});
     }
+    login_wb(user){
+        this.setState({user_wb:user});
+    }
+    logout_wb(user){
+        this.setState({user_wb:null});
+    }
     render(){
         return (
         <View>
@@ -136,6 +146,9 @@ export default class SettingsList extends React.Component {
                   </View>
                   <View style={Style.left_card}>
                     <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
+                  </View>
+                  <View style={Style.left_card}>
+                    <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
                   </View>
           </View>
         </View>

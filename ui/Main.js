@@ -11,7 +11,7 @@ import TabBarFrame from './TabBar'
 import Style       from "./Style"
 import Loading     from "./Loading"
 import GoogleMap   from "./GoogleMap"
-//import GooglePlace from "./GooglePlace"
+import BaiduMap from "./BaiduMap"
 import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
@@ -41,6 +41,7 @@ export default class Main extends Component {
       filters: {type:"car",range:2000,position:{latitude:0,longitude:0,latitudeDelta:10,longitudeDelta:10}},
       drawerPanEnabled:false,
       gps:false,
+      map:'GoogleMap',
     }; 
     this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
@@ -54,15 +55,24 @@ export default class Main extends Component {
       });
   }
   componentWillMount(){
-    var _this = this;
-    Store.get('region').then((region_value) => {
-      if(region_value !=null){
-        _this.setState({ region:region_value,  });
-      }
+      var _this = this;
+      Store.get('region').then((region_value) => {
+        if(region_value !=null){
+          _this.setState({ region:region_value,  });
+        }
+      });
       Store.get('user').then((user_value) => {
         _this.setState({ user:user_value });
       });
-    });
+      //Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
+      //  _this.map = map_value;
+      //});
+  }
+  componentWillUpdate() {
+      var _this = this;
+      Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
+        _this.map = map_value;
+      });
   }
   turnOffGps(){
       navigator.geolocation.clearWatch(this.watchID);
@@ -78,6 +88,18 @@ export default class Main extends Component {
       );
       this.setState({gps:true});
   }
+  renderMap(){
+      switch(this.map) {
+          case 'GoogleMap':
+              return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
+              break;
+          case 'BaiduMap':
+              return <BaiduMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
+              break;
+          default:
+              return null;
+      }
+  }
   pages(){
     if(this.state.page ==='ios-chatboxes'){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
@@ -86,7 +108,7 @@ export default class Main extends Component {
     } else if(this.state.page ==='email'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='ios-world'){
-      return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
+      return this.renderMap();
     } else if(this.state.page ==='navicon-round'){
       return <SettingsList navigator={this.props.navigator}/>
     }
@@ -117,7 +139,7 @@ export default class Main extends Component {
         //content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value);} />} 
     >*/
     return (
-    <Drawer tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
+    <Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
         content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     >
         <View style={{flex:1}}>

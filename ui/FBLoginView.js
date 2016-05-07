@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Alert, View, Text, StyleSheet} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 
 export default class FBLoginView extends Component {
   static contextTypes = {
@@ -22,7 +23,7 @@ export default class FBLoginView extends Component {
     }
     render(){
         return (
-            <Icon.Button onPress={() => {
+            <FIcon onPress={() => {
                 if(!this.context.isLoggedIn){
                   this.context.login()
                 }else{
@@ -39,8 +40,8 @@ export default class FBLoginView extends Component {
               }}
               //color={"#000000"}
               backgroundColor={this.getColor()}
-              name={"social-facebook-outline"}
-              size={20} 
+              name={"facebook-square"}
+              size={35} 
               //borderRadius={10}
             />
       )

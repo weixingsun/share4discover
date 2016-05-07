@@ -12,15 +12,15 @@ import FBLoginView from "./FBLoginView"
 var Login = React.createClass({
   renderLoginButton() {
     if(this.props.user !== null){
-        return <FIcon name={'weixin'} size={30} backgroundColor="#dddddd" onPress={this._googleSignOut} />
+        return <FIcon name={'weibo'} size={30} backgroundColor="#dddddd" onPress={this._googleSignOut} />
     }else{
         //return (<GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );
-        return <FIcon name={'weixin'} size={30} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
+        return <FIcon name={'weibo'} size={30} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
     }
   },
   renderLoginName() {
     //console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
-    var name = 'Login in Wechat';
+    var name = 'Login in Weibo';
     if(this.props.user !== null ){
        name=this.props.user.name;
     }
