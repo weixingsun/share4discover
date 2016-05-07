@@ -1,4 +1,5 @@
-import React, {AppRegistry, Component, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
+import React, {Component} from 'react'
+import {AppRegistry, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
 //var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 //import NavigationBar from 'react-native-navbar';
 //import Register from './ui/Register'

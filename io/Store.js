@@ -1,4 +1,4 @@
-import React, { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
         API_LIST:"api_list",

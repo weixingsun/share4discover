@@ -2,8 +2,21 @@
     package="com.share">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />  
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />  
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />  
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />  
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
 
     <application
       android:allowBackup="true"
@@ -23,6 +36,9 @@
       <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A"/>
+      <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L"/>
       <!--add FacebookActivity-->
       <activity
         android:name="com.facebook.FacebookActivity"

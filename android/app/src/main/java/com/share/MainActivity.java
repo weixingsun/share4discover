@@ -4,6 +4,9 @@ import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.AirMaps.AirPackage;
 import com.facebook.react.ReactActivity;
+import com.yiyang.reactnativebaidumap.ReactMapPackage;
+import cn.reactnative.modules.weibo.WeiboPackage;
+import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactPackage;
@@ -41,14 +44,17 @@ public class MainActivity extends ReactActivity {
     String productionKey = "ATk9f1lkC3zpmIqebUPi8GHGeOWE4yG-vGnJ-";
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
+      new ReactMapPackage(),  //BaiduMap
       new CodePush(stagingKey, this, BuildConfig.DEBUG),
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
       new RNGoogleSigninPackage(this),
       new FacebookLoginPackage(),
       new WeChatPackage(),
+      new WeiboPackage(),
       new VectorIconsPackage(),
-      new AirPackage()
+      new AirPackage(),  //GoogleMap
+      new ReactNativeMapboxGLPackage()
     );
   }
   // for google login

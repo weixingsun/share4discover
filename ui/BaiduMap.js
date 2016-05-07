@@ -271,6 +271,7 @@ export default class BaiduMap extends Component {
                 style={Style.map}
                 ref="mapView"
                 showsUserLocation={true}
+                rotateEnabled={false}
                 //userLocationViewParams={{accuracyCircleFillColor: 'red', image:roundIcon }}  //require('./start_icon.png')
                 /*annotations={[
                     {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: iconStart}, //require('./amap_start.png')
@@ -287,11 +288,9 @@ export default class BaiduMap extends Component {
                     }
                 ]}
             />
+            { this.renderGpsIcon() }
+            { this.renderDetailOverlay() }
           </View>
         );
     }
 };
-/*
-            { this.renderGpsIcon() }
-            { this.renderDetailOverlay() }
-*/
