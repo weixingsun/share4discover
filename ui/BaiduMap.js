@@ -3,9 +3,12 @@ import React, { Component } from 'react'
 import {View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
+import OIcon from 'react-native-vector-icons/Octicons'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
+import Loading from "./Loading"
 import JsonAPI from "../io/Net"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
@@ -19,7 +22,6 @@ export default class BaiduMap extends Component {
       super(props);
       this.state = {
         filters: this.props.filters,
-        center: {lat:0,lng:0},
         region: this.props.region,
         mkid:1,
         markers: [],
@@ -28,26 +30,37 @@ export default class BaiduMap extends Component {
         initialPosition: null,
         lastPosition: null,
         gps: this.props.gps,
+        isLoading: true,
       };
       this.myPosMarker = null;
+      //this.markerIcon = null;
       this.msg = this.props.msg;
       //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
     }
+    loadSettings(){
+        var _this = this;
+        Store.get('gps_position').then(function(value) {
+            if(value!=null){
+                _this.setState({initialPosition: value});
+            }
+        });
+        IIcon.getImageSource('ios-location', 40, 'blue').then((source) => {
+            this.setState({
+                markerIcon: source,
+                isLoading:false,
+            });
+            if(this.msg!=null){
+                var lat=parseFloat(this.msg.lat);
+                var lng=parseFloat(this.msg.lng);
+                this.addMarker({ latitude:lat, longitude:lng, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon });
+                this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
+                //autofit to multiple waypoints
+            }
+        });
+    }
     componentWillMount(){
-      var _this = this;
-      if(this.msg!=null){
-        var lat=parseFloat(this.msg.lat);
-        var lng=parseFloat(this.msg.lng);
-        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, s:'#0000ff' });
-        this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
-        //autofit to multiple waypoints
-      }
-      Store.get('gps_position').then(function(value) {
-          if(value!=null){
-              _this.setState({initialPosition: value});
-          }
-      });
+        this.loadSettings();
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -56,15 +69,17 @@ export default class BaiduMap extends Component {
         (error) => alert(error.message), 
         {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
       );*/ 
-      this.refs["mapView"].zoomToLocs([[39.918541, 116.4835]]);
-      KKLocation.getCurrentPosition((position) => {
-        console.log("location get current position: ", position);
-      }, (error) => {
-        console.log("location get current position error: ", error);
-      });
-      this.watchID = KKLocation.watchPosition((position) => {
-        console.log("watch position: ", position);
-      });
+      if(this.state.markerIcon!=null){
+        //this.refs["mapView"].zoomToLocs([[39.918541, 116.4835]]);
+        KKLocation.getCurrentPosition((position) => {
+          console.log("location get current position: ", position);
+        }, (error) => {
+          console.log("location get current position error: ", error);
+        });
+        this.watchID = KKLocation.watchPosition((position) => {
+          console.log("watch position: ", position);
+        });
+      }
     }
     componentWillUnmount() { 
       this.turnOffGps();
@@ -135,10 +150,12 @@ export default class BaiduMap extends Component {
     }
     search(place){
         this.move(place); 
-        this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
+//////////////////////////////////////////////////
+        //this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon })
+        //this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
     }
     move(p){
-      this.refs.map.animateToRegion(p);
+      this.refs["mapView"].zoomToLocs([[p.latitude, p.longitude]]);
     }
     between(n, n1,delta){
         return (n > n1-delta) && (n < n1+delta)
@@ -153,8 +170,8 @@ export default class BaiduMap extends Component {
         return latIn && lngIn;
     }
     moveOrNot(position){
-        if(!this.pointInBBox(position))
-        this.move(this.getRegion(position.latitude,position.longitude));
+        //if(!this.pointInBBox(position))
+        this.move(position);
     }
     reload() {
       var self = this;
@@ -218,7 +235,7 @@ export default class BaiduMap extends Component {
     onLongPress(event) {
       //alert(JSON.stringify(event.nativeEvent.coordinate));
       //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-      this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+      this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: 'LongPress', subtile: '', image: this.state.markerIcon })
     }
     clearMarkers(){
       this.setState({
@@ -260,10 +277,16 @@ export default class BaiduMap extends Component {
     }
     render(){
         //this.reload(this.props.filters,this.state.region)
-        //alert('render()')
-        var roundIcon = <IIcon name={'ios-paperplane'} size={20} color={'#0000aa'} />
-        var iconStart = <IIcon name={'ios-flag-outline'} size={20} color={'#0000aa'} />
-        var iconEnd = <IIcon name={'ios-flag'} size={20} color={'#0000aa'} />
+        //var iconObj = <IIcon name={'ios-flag'} size={20} color={'#0000aa'} />
+        //alert(JSON.stringify(Object.keys(iconObj)))  //[$$typeof, type, key, ref, props, _owner, _store]
+        //alert(JSON.stringify(iconObj.props))  //{name,size,color}
+        if(this.state.isLoading || this.state.markerIcon===null) { // || this.state.initialPosition===null) {
+            //alert('isLoading:'+this.state.isLoading+'\nmarkerIcon:'+this.state.markerIcon)
+            return <Loading />
+        }
+        //alert(JSON.stringify(this.state.markerIcon))    //{uri:'file:///data/data/com.share/cache/-vioav8_48@2x.png', scale:2}
+        //var icon = require('./images/marker_g_64.png')  //1
+        if(this.state.region!==null) this.move(this.state.region)
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -272,11 +295,11 @@ export default class BaiduMap extends Component {
                 ref="mapView"
                 showsUserLocation={true}
                 rotateEnabled={false}
-                //userLocationViewParams={{accuracyCircleFillColor: 'red', image:roundIcon }}  //require('./start_icon.png')
-                /*annotations={[
-                    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: iconStart}, //require('./amap_start.png')
-                    {latitude: 39.902136, longitude: 116.44095, title: "end", subtile: "hello", image: iconEnd } //require('./amap_start.png')
-                ]}*/
+                showsCompass={true}
+                //userLocationViewParams={{accuracyCircleFillColor: 'blue', image:roundIcon }}  //require('./start_icon.png')
+                annotations={ this.state.markers }
+                //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
+                //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
                 overlays={[
                     {coordinates: [
                         {latitude: 39.832136, longitude: 116.34095}, 
