@@ -4,7 +4,7 @@ import NavigationBar from 'react-native-navbar';
 import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
 import JsonAPI from "../io/Net"
 import IIcon from 'react-native-vector-icons/Ionicons'
-//import FIcon from 'react-native-vector-icons/FontAwesome'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
@@ -92,7 +92,7 @@ export default class ShareList extends Component {
     this.props.navigator.push({
         component: Main,
         passProps: { 
-            page:'ios-world', 
+            page:'globe', 
             msg:rowData,
         }
     });
@@ -145,7 +145,7 @@ export default class ShareList extends Component {
                 <IIcon name={'ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             }
             rightButton={
-                <IIcon name={'plus'} size={33} onPress={() => alert('new!')}/>
+                <FIcon name={'plus'} size={33} onPress={() => alert('new!')}/>
             } />
         <ListView 
             dataSource={this.dataSource} 

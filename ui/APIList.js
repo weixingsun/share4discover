@@ -2,6 +2,7 @@
 import React, {Component} from 'react'
 import {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 import Store from '../io/Store'
 import Style from './Style'
 import ListJson from './ListJson'
@@ -66,8 +67,8 @@ export default class APIList extends React.Component {
         }
     }
     getLockIcon(){
-        if(!this.state.editable) return 'ios-locked-outline'
-        return 'ios-unlocked-outline'
+        if(!this.state.editable) return 'lock' //'ios-lock-outline'
+        return 'unlock-alt'
     }
     switchEditMode(){
         if(this.state.editable) this.setState({editable:false})
@@ -104,7 +105,7 @@ export default class APIList extends React.Component {
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-            return <Icon style={{marginRight:15}} name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
+            return <FIcon style={{marginRight:15}} name="minus-circle" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
     }
     _renderCopyButton(id,name){
@@ -132,12 +133,12 @@ export default class APIList extends React.Component {
           <NavigationBar style={Style.navbar} title={{title:'My API List',}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                    <Icon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={this.getLockIcon()} color={'#333333'} size={30} onPress={()=>this.switchEditMode()} />
+                    <FIcon name={this.getLockIcon()} color={'#333333'} size={30} onPress={()=>this.switchEditMode()} />
                  </View>
               }
           />

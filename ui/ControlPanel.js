@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
-import Slider from 'react-native-slider'
+import Slider from './form/Slider'
 import Style from './Style'
 import GooglePlace from './GooglePlace'
 
@@ -61,7 +61,7 @@ export default class ControlPanel extends Component {
           <View style={{height:66,justifyContent:'center',alignItems:'center',flex:1,}}>
               <Text style={{color:'white',fontSize:20}}>Search Conditions</Text>
           </View>
-          <IIcon name={'refresh'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
+          <FIcon name={'refresh'} size={30} style={{color:'white',marginRight:30,}} onPress={()=>this.props.onClose(this.state.filters)} />
         </View>
         <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
             <Text style={{color:'white',marginLeft:5}}>Range</Text>
@@ -89,7 +89,7 @@ export default class ControlPanel extends Component {
         </View>
         <View style={{flex:1,flexDirection:'row',justifyContent:'center',}}>
             <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
-            <IIcon name={'pinpoint'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginTop:5,marginBottom:5}} />
+            <FIcon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginTop:5,marginBottom:5}} />
         </View>
       </ScrollView>
     )

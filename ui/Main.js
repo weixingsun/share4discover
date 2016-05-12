@@ -24,9 +24,10 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.types = ['car','taxi']
+    this.settingsTab='ios-settings'
     this.state = {
       //page:this.props.page!=null?this.props.page:'ios-chatboxes',
-      page:this.props.page!=null?this.props.page:'navicon-round',
+      page:this.props.page!=null?this.props.page: this.settingsTab,
       isLoading:true,
       selectedMsg:this.props.msg,
       user: null,
@@ -103,13 +104,13 @@ export default class Main extends Component {
   pages(){
     if(this.state.page ==='ios-chatboxes'){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
-    } else if(this.state.page ==='android-contacts'){
+    } else if(this.state.page ==='ios-people'){
       return <Text>Friends</Text>
-    } else if(this.state.page ==='email'){
+    } else if(this.state.page ==='envelope'){
       return <Text>Messengers</Text>
-    } else if(this.state.page ==='ios-world'){
+    } else if(this.state.page ==='globe'){
       return this.renderMap();
-    } else if(this.state.page ==='navicon-round'){
+    } else if(this.state.page ==='ios-settings'){
       return <SettingsList navigator={this.props.navigator}/>
     }
   }
@@ -146,10 +147,10 @@ export default class Main extends Component {
           <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon name="ios-chatboxes" size={40} />
-            <Icon name="android-contacts" size={40} />
-            <Icon name="email" size={40} />
-            <Icon name="ios-world" size={40} />
-            <Icon name="navicon-round" size={40} />
+            <Icon name="ios-people" size={40} />
+            <FIcon name="envelope" size={33} />
+            <FIcon name="globe" size={38} />
+            <Icon name="ios-settings" size={38} />
           </Tabs>
           {this.pages()}
         </View>

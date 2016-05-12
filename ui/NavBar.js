@@ -38,7 +38,7 @@ var NavBar = React.createClass ({
     renderBack(){
         return (
             <TouchableHighlight style={Style.navButton} onPress={this.goBack}>
-                <IIcon name="ios-arrow-thin-left" color='#3B3938' size={40}/>
+                <IIcon name="ios-arrow-back" color='#3B3938' size={40}/>
             </TouchableHighlight>
         );
     },

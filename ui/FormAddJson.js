@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {Alert, Picker, StyleSheet, Text, View } from 'react-native';
 import Button from 'apsl-react-native-button';
 import IIcon from 'react-native-vector-icons/Ionicons';
+import FIcon from 'react-native-vector-icons/FontAwesome';
 //import Form from 'react-native-tableview-form';
 import Form from './Form';
 import NavigationBar from 'react-native-navbar';
@@ -73,8 +74,8 @@ export default class PDF extends Component {
         })
     }
     getLockIcon(){
-        if(this.state.disabled) return 'ios-locked-outline'
-        return 'ios-unlocked-outline'
+        if(this.state.disabled) return 'lock' //'ios-lock-outline'
+        return 'unlock-alt'
     }
     switchEditMode(){
         if(this.state.disabled) this.setState({disabled:false})
@@ -132,12 +133,12 @@ export default class PDF extends Component {
                   <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                       <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
+                        <FIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
                      </View>
                    }
                   />

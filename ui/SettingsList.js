@@ -13,6 +13,7 @@ import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 
 export default class SettingsList extends React.Component {
     constructor(props) {
@@ -107,7 +108,7 @@ export default class SettingsList extends React.Component {
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <IIcon name={'arrow-up-a'} size={35}/>
+                          <IIcon name={'ios-arrow-up'} size={35}/>
                       </View>
                     <Text>Update</Text>
                   </TouchableOpacity>
@@ -134,7 +135,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <IIcon name={'ios-lightbulb-outline'} size={35}/>
+                          <FIcon name={'plug'} size={35}/>
                       </View>
                       <Text>API List</Text>
                   </TouchableOpacity>

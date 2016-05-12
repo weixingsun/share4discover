@@ -43,7 +43,7 @@ export default class AddJson extends Component {
       <View>
         <NavigationBar style={Style.navbar} title={{title:'Choose a Type',}}
             leftButton={
-                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
+                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
             }
             rightButton={
                 <TouchableHighlight onPress={() =>{ this.props.route.callback(this.state.selectedType); this.props.navigator.pop() }}>

@@ -29,7 +29,7 @@ export default class SearchAddr extends Component {
       <View>
         <NavigationBar style={Style.navbar} title={{title:'Type to Search',}}
             leftButton={
-                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
+                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
             }
             rightButton={
                 <TouchableHighlight onPress={() =>{ this.props.route.callback(this.state.selectedPlace); this.props.navigator.pop() }}>

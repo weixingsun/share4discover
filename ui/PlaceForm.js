@@ -164,7 +164,7 @@ export default class PlaceForm extends Component {
                   <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                       <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
                    rightButton={

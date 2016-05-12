@@ -40,12 +40,17 @@ export default class BaiduMap extends Component {
     }
     loadSettings(){
         var _this = this;
+        IIcon.getImageSource('ios-circle-filled', 24, 'blue').then((source) => {
+            this.setState({
+                userIcon: source,
+            });
+        });
         Store.get('gps_position').then(function(value) {
             if(value!=null){
                 _this.setState({initialPosition: value});
             }
         });
-        IIcon.getImageSource('ios-location', 40, 'blue').then((source) => {
+        FIcon.getImageSource('map-marker', 40, 'blue').then((source) => {
             this.setState({
                 markerIcon: source,
                 isLoading:false,
@@ -150,11 +155,11 @@ export default class BaiduMap extends Component {
     }
     search(place){
         this.move(place); 
-//////////////////////////////////////////////////
         //this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon })
         //this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
     }
     move(p){
+      if(this.refs["mapView"]!==null)
       this.refs["mapView"].zoomToLocs([[p.latitude, p.longitude]]);
     }
     between(n, n1,delta){
@@ -201,7 +206,7 @@ export default class BaiduMap extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
+                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
             }
           />);
       }else{
@@ -286,17 +291,18 @@ export default class BaiduMap extends Component {
         }
         //alert(JSON.stringify(this.state.markerIcon))    //{uri:'file:///data/data/com.share/cache/-vioav8_48@2x.png', scale:2}
         //var icon = require('./images/marker_g_64.png')  //1
-        if(this.state.region!==null) this.move(this.state.region)
+        //if(this.state.region!==null) this.move(this.state.region)
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
             <MapView
                 style={Style.map}
                 ref="mapView"
+                region={ this.state.region }
                 showsUserLocation={true}
                 rotateEnabled={false}
                 showsCompass={true}
-                //userLocationViewParams={{accuracyCircleFillColor: 'blue', image:roundIcon }}  //require('./start_icon.png')
+                userLocationViewParams={{accuracyCircleFillColor: 'blue', image:this.state.userIcon }}  //require('./start_icon.png')
                 annotations={ this.state.markers }
                 //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},

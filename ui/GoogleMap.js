@@ -175,7 +175,7 @@ export default class GoogleMap extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
+                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
             }
           />);
       }else{

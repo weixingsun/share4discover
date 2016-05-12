@@ -8,6 +8,7 @@ import Loading from './Loading'
 import PlaceForm from './PlaceForm'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 //import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
@@ -129,8 +130,8 @@ export default class Settings extends React.Component{
         );
     }
     getLockIcon(){
-        if(!this.state.editable) return 'ios-locked-outline'
-        return 'ios-unlocked-outline'
+        if(!this.state.editable) return 'lock' //'ios-lock-outline'
+        return 'unlock-alt'
     }
     reload(){
         if(this.place_list.length>0){
@@ -179,16 +180,16 @@ export default class Settings extends React.Component{
           <NavigationBar style={Style.navbar} title={{title: "Settings"}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                  <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                   <View style={{width:50}} />
                   <IIcon name={"ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
                 </View>
              }
              rightButton={
                <View style={{flexDirection:'row',}}>
-                  <IIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
+                  <FIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
                   <View style={{width:50}} />
-                  <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
+                  <FIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
                 </View>
              }
           />

@@ -299,7 +299,7 @@ export default class ListJson extends React.Component{
           <NavigationBar style={Style.navbar} title={{title: this.title,}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                  <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                   <View style={{width:50}} />
                   <IIcon name={"ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
                 </View>
@@ -307,8 +307,6 @@ export default class ListJson extends React.Component{
              rightButton={
                <View style={{flexDirection:'row',}}>
                   <FIcon name={"edit"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormEditJson, passProps: {name: this.props.API_NAME} }) } />
-                  <View style={{width:50}} />
-                  <IIcon name={this.getLockIcon()} size={30} onPress={() => this.switchEdit()} />
                 </View>
              }
           />
@@ -328,3 +326,4 @@ export default class ListJson extends React.Component{
         )
     }
 };
+//<IIcon name={this.getLockIcon()} size={30} onPress={() => this.switchEdit()} />
