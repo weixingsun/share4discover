@@ -53,6 +53,9 @@ var deviceStorage = {
 			title:"Exchange Rates URL API"
 		}));
 		AsyncStorage.setItem('api_list', JSON.stringify( [api_json_yql_exchange, api_json_url_exchange] ));
+
+		AsyncStorage.setItem("place_list", JSON.stringify(["Home:0,0","Work:0,0"]) );
+		AsyncStorage.setItem("settings:map","GoogleMap")
 	},
 	//name: 'api:url:exchange' 'api:yql:exchange'
 	//json: {title: filter: url: yql: path: subpath}

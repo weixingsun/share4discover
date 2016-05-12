@@ -25,9 +25,10 @@ export default class Main extends Component {
     super(props);
     this.types = ['car','taxi']
     this.settingsTab='ios-settings'
+    this.emailTab='envelope'
     this.state = {
       //page:this.props.page!=null?this.props.page:'ios-chatboxes',
-      page:this.props.page!=null?this.props.page: this.settingsTab,
+      page:this.props.page!=null?this.props.page: this.emailTab,
       isLoading:true,
       selectedMsg:this.props.msg,
       user: null,
@@ -126,6 +127,7 @@ export default class Main extends Component {
       filters: filter,
     });
     //this.reload();
+    //alert(JSON.stringify(filter))
   }
   render() {
     if(this.state.isLoading) return <Loading />

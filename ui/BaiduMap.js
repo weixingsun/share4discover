@@ -25,6 +25,16 @@ export default class BaiduMap extends Component {
         region: this.props.region,
         mkid:1,
         markers: [],
+        polylines:[
+                    {coordinates: [
+                        {latitude: 39.832136, longitude: 116.34095},
+                        {latitude: 39.832136, longitude: 116.42095},
+                        {latitude: 39.902136, longitude: 116.42095},
+                        {latitude: 39.902136, longitude: 116.44095}
+                     ],
+                     strokeColor: '#666666', lineWidth: 3
+                    }
+                ],
         ccid:0,
         circles: [],
         initialPosition: null,
@@ -178,12 +188,14 @@ export default class BaiduMap extends Component {
         //if(!this.pointInBBox(position))
         this.move(position);
     }
-    reload() {
+    download() {
       var self = this;
-      var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
-      JsonAPI.rangeMsg(this.props.filters.type, this.state.region, range).then((rows)=> {
+      //alert(JSON.stringify(this.props.filters));
+      JsonAPI.rangeMsg(this.props.filters.type, this.state.region, this.props.filters.range).then((rows)=> {
           self.clearMarkers();
           self.renderMarkers(rows);
+          //alert('range:'+range+', result.count='+rows.length)
+          //alert(JSON.stringify(this.props.filters));
           //if(!self.comparefilters()) self.setState({filters:self.props.filters})
       })
       .catch((e)=>{
@@ -216,7 +228,7 @@ export default class BaiduMap extends Component {
                 <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
             }
             rightButton={
-                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
+                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.download.bind(this)} />
             }
           />
         );
@@ -251,8 +263,7 @@ export default class BaiduMap extends Component {
     renderMarkers(rows){
        rows.map((row)=>{
          //row ={ lat,lng,type,title,content,ctime, }
-         var point = {latitude:parseFloat(row.lat), longitude:parseFloat(row.lng)}
-         this.addMarker({id: this.state.mkid++, pos: point, s:'#0000ff' });
+         this.addMarker({latitude:parseFloat(row.lat), longitude:parseFloat(row.lng), title: row.title, subtile: row.content, image: this.state.markerIcon });
        })
     }
     addMarker(marker){
@@ -281,7 +292,6 @@ export default class BaiduMap extends Component {
         else return false;
     }
     render(){
-        //this.reload(this.props.filters,this.state.region)
         //var iconObj = <IIcon name={'ios-flag'} size={20} color={'#0000aa'} />
         //alert(JSON.stringify(Object.keys(iconObj)))  //[$$typeof, type, key, ref, props, _owner, _store]
         //alert(JSON.stringify(iconObj.props))  //{name,size,color}
@@ -306,16 +316,7 @@ export default class BaiduMap extends Component {
                 annotations={ this.state.markers }
                 //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
-                overlays={[
-                    {coordinates: [
-                        {latitude: 39.832136, longitude: 116.34095}, 
-                        {latitude: 39.832136, longitude: 116.42095}, 
-                        {latitude: 39.902136, longitude: 116.42095}, 
-                        {latitude: 39.902136, longitude: 116.44095}
-                     ], 
-                     strokeColor: '#666666', lineWidth: 3
-                    }
-                ]}
+                overlays={ this.state.polylines }
             />
             { this.renderGpsIcon() }
             { this.renderDetailOverlay() }
