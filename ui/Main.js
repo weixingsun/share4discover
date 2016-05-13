@@ -59,7 +59,7 @@ export default class Main extends Component {
   componentWillMount(){
       var _this = this;
       Store.get('region').then((region_value) => {
-        if(region_value !=null){
+        if(region_value !=null && region_value.latitude !=null){
           _this.setState({ region:region_value,  });
         }
       });

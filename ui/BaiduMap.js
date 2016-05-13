@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, ScrollView, } from 'react-native'
+import { DeviceEventEmitter, View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
@@ -47,6 +47,7 @@ export default class BaiduMap extends Component {
       this.msg = this.props.msg;
       //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
+      //this.onRegionChange = this.onRegionChange.bind(this)
     }
     loadSettings(){
         var _this = this;
@@ -75,7 +76,12 @@ export default class BaiduMap extends Component {
         });
     }
     componentWillMount(){
+        var _this=this;
         this.loadSettings();
+        DeviceEventEmitter.addListener('regionChange', function(event: Event){
+            //alert('regionChange:'+JSON.stringify(event))
+            _this.onRegionChange(event)
+        });
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -98,6 +104,7 @@ export default class BaiduMap extends Component {
     }
     componentWillUnmount() { 
       this.turnOffGps();
+      //DeviceEventEmitter.removeListener('regionChange', this.onRegionChange);
     }
     turnOnGps(){
       this.watchID = navigator.geolocation.watchPosition(
@@ -246,7 +253,8 @@ export default class BaiduMap extends Component {
           return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
-      this.setState({ region: r, });
+      //alert(JSON.stringify(r))
+      //this.setState({ region: r, });
       Store.save('region', r);
     }
     onLongPress(event) {
@@ -302,6 +310,7 @@ export default class BaiduMap extends Component {
         //alert(JSON.stringify(this.state.markerIcon))    //{uri:'file:///data/data/com.share/cache/-vioav8_48@2x.png', scale:2}
         //var icon = require('./images/marker_g_64.png')  //1
         //if(this.state.region!==null) this.move(this.state.region)
+        //alert(JSON.stringify(this.state.region))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
