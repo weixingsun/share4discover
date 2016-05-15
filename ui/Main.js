@@ -60,6 +60,13 @@ export default class Main extends Component {
       var _this = this;
       Store.get('region').then((region_value) => {
         if(region_value !=null && region_value.latitude !=null){
+          if(region_value.zoom == null){
+              region_value['zoom'] = 14
+          }
+          if(region_value.latitudeDelta == null){
+              region_value['latitudeDelta'] = 0.01
+              region_value['longitudeDelta'] = 0.01
+          }
           _this.setState({ region:region_value,  });
         }
       });

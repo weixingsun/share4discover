@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import Store from '../io/Store'
 import Style from './Style'
+import Loading from './Loading'
 import ListJson from './ListJson'
 import FormAddJson from './FormAddJson'
 import NavigationBar from 'react-native-navbar'
@@ -33,7 +34,10 @@ export default class APIList extends React.Component {
     load(){
         var _this=this;
         Store.get(Store.API_LIST).then(function(list){
-            if(list==null) return;
+            //alert(JSON.stringify(list))
+            if(list==null){ 
+                Store.insertExampleData();
+            }
             _this.setState({dataSource: _this.ds.cloneWithRows(list)});
             _this.api_list = list;
         })
@@ -128,6 +132,8 @@ export default class APIList extends React.Component {
         );
     }
     render(){
+      //if(this.api_list.length===0) return <Loading />
+      //alert(JSON.stringify(this.api_list))
       return (
       <View>
           <NavigationBar style={Style.navbar} title={{title:'My API List',}} 

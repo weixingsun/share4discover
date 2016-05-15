@@ -22,7 +22,7 @@ export default class BaiduMap extends Component {
       super(props);
       this.state = {
         filters: this.props.filters,
-        region: this.props.region,
+        //region: this.props.region,
         mkid:1,
         markers: [],
         polylines:[
@@ -37,17 +37,19 @@ export default class BaiduMap extends Component {
                 ],
         ccid:0,
         circles: [],
-        initialPosition: null,
-        lastPosition: null,
+        //initialPosition: null,
+        //lastPosition: null,
         gps: this.props.gps,
         isLoading: true,
       };
+      this.region = this.props.region,
       this.myPosMarker = null;
       //this.markerIcon = null;
       this.msg = this.props.msg;
       //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
       //this.onRegionChange = this.onRegionChange.bind(this)
+      //this.onMarkerClick = this.onMarkerClick.bind(this)
     }
     loadSettings(){
         var _this = this;
@@ -56,23 +58,20 @@ export default class BaiduMap extends Component {
                 userIcon: source,
             });
         });
-        Store.get('gps_position').then(function(value) {
+        /*Store.get(Store.GPS_POS).then(function(value) {
             if(value!=null){
                 _this.setState({initialPosition: value});
             }
-        });
+        });*/
         FIcon.getImageSource('map-marker', 40, 'blue').then((source) => {
-            this.setState({
-                markerIcon: source,
-                isLoading:false,
-            });
             if(this.msg!=null){
                 var lat=parseFloat(this.msg.lat);
                 var lng=parseFloat(this.msg.lng);
                 this.addMarker({ latitude:lat, longitude:lng, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon });
-                this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
+                this.region = {latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}
                 //autofit to multiple waypoints
             }
+            this.setState({isLoading:false, markerIcon: source,});
         });
     }
     componentWillMount(){
@@ -82,6 +81,10 @@ export default class BaiduMap extends Component {
             //alert('regionChange:'+JSON.stringify(event))
             _this.onRegionChange(event)
         });
+        DeviceEventEmitter.addListener('markerClick', function(event: Event){
+            //alert('markerClick:'+JSON.stringify(event))
+            _this.onMarkerClick(event)
+        });
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -89,7 +92,7 @@ export default class BaiduMap extends Component {
         }, 
         (error) => alert(error.message), 
         {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
-      );*/ 
+      ); 
       if(this.state.markerIcon!=null){
         //this.refs["mapView"].zoomToLocs([[39.918541, 116.4835]]);
         KKLocation.getCurrentPosition((position) => {
@@ -100,24 +103,42 @@ export default class BaiduMap extends Component {
         this.watchID = KKLocation.watchPosition((position) => {
           console.log("watch position: ", position);
         });
-      }
+      }*/
     }
     componentWillUnmount() { 
       this.turnOffGps();
       //DeviceEventEmitter.removeListener('regionChange', this.onRegionChange);
     }
     turnOnGps(){
-      this.watchID = navigator.geolocation.watchPosition(
+      /*this.watchID = navigator.geolocation.watchPosition(
         (position) => {
           this.updateMyPos(position.coords);
         },
         (error) => console.log(error.message),
         {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
-      );
-      this.setState({gps:true});
+      );*/
+
+        /*KKLocation.getCurrentPosition((position) => {
+          console.log("location get current position: ", position);
+        }, (error) => {
+          console.log("location get current position error: ", error);
+        });*/
+        this.watchID = KKLocation.watchPosition(
+            (position) => {
+                //alert("watch position: "+ position);
+                this.userPosition= position;
+                alert(JSON.stringify(position))
+            },
+            (error) => {
+                //alert("watch position error: "+ error);
+            },
+            {enableHighAccuracy: true, timeout: 30000, maximumAge: 2000, distanceFilter:30},
+        );
+        this.setState({gps:true});
     }
     turnOffGps(){
-      navigator.geolocation.clearWatch(this.watchID);
+      //navigator.geolocation.clearWatch(this.watchID);
+      KKLocation.clearWatch(this.watchID);
       this.setState({gps:false});
     }
     switchGps(){
@@ -131,10 +152,10 @@ export default class BaiduMap extends Component {
         return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
     }
     updateMyPos(position){
-        this.myPosMarker = {id: 0, pos: position, s:'#0000ff' };
-        Store.save('gps_position', position);
+        this.myPosMarker = { latitude:position.latitude, longitude:position.longitude, title: 'Me', subtitle: '', image: this.state.userIcon }
+        Store.save(Store.GPS_POS, position);
         this.moveOrNot(position);
-        this.setState({lastPosition: position});
+        //this.setState({lastPosition: position});
     }
     renderMyPosMarker(){
       if(this.myPosMarker===null) return null;
@@ -197,16 +218,16 @@ export default class BaiduMap extends Component {
     }
     download() {
       var self = this;
-      //alert(JSON.stringify(this.props.filters));
-      JsonAPI.rangeMsg(this.props.filters.type, this.state.region, this.props.filters.range).then((rows)=> {
+      //alert('type:'+this.props.filters.type+'\n'+JSON.stringify(this.state.region)+'\nrange:'+this.props.filters.range);
+      JsonAPI.rangeMsg(this.props.filters.type, this.region, this.props.filters.range).then((rows)=> {
+          //alert('range:'+range+', result.count='+rows.length )
           self.clearMarkers();
           self.renderMarkers(rows);
-          //alert('range:'+range+', result.count='+rows.length)
           //alert(JSON.stringify(this.props.filters));
           //if(!self.comparefilters()) self.setState({filters:self.props.filters})
       })
       .catch((e)=>{
-        alert('Network Problem!')
+        //alert('Network Problem!'+JSON.stringify(e))
       });
     }
     distance(latDelta,lngDelta){
@@ -254,13 +275,22 @@ export default class BaiduMap extends Component {
     }
     onRegionChange(r) {
       //alert(JSON.stringify(r))
-      //this.setState({ region: r, });
+      this.region = r
       Store.save('region', r);
+    }
+    onMarkerClick(e) {
+        //alert(JSON.stringify(e))
+        this.region = {latitude:e.latitude,longitude:e.longitude, latitudeDelta:0.02,longitudeDelta:0.02}
+        this.setState({isLoading:false, });
+        /*this.props.navigator.push({
+            component: ,
+            passProps: {navigator:this.props.navigator,},
+        });*/
     }
     onLongPress(event) {
       //alert(JSON.stringify(event.nativeEvent.coordinate));
       //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-      this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: 'LongPress', subtile: '', image: this.state.markerIcon })
+      this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: 'LongPress', subtitle: '', image: this.state.markerIcon })
     }
     clearMarkers(){
       this.setState({
@@ -310,16 +340,16 @@ export default class BaiduMap extends Component {
         //alert(JSON.stringify(this.state.markerIcon))    //{uri:'file:///data/data/com.share/cache/-vioav8_48@2x.png', scale:2}
         //var icon = require('./images/marker_g_64.png')  //1
         //if(this.state.region!==null) this.move(this.state.region)
-        //alert(JSON.stringify(this.state.region))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
             <MapView
                 style={Style.map}
                 ref="mapView"
-                region={ this.state.region }
+                region={ this.region }
                 showsUserLocation={true}
                 rotateEnabled={false}
+                pitchEnabled={false}
                 showsCompass={true}
                 userLocationViewParams={{accuracyCircleFillColor: 'blue', image:this.state.userIcon }}  //require('./start_icon.png')
                 annotations={ this.state.markers }

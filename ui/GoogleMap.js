@@ -24,7 +24,7 @@ export default class GoogleMap extends Component {
         markers: [],
         ccid:0,
         circles: [],
-        initialPosition: null,
+        //initialPosition: null,
         lastPosition: null,
         gps: this.props.gps,
       };
@@ -42,11 +42,11 @@ export default class GoogleMap extends Component {
         this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
-      Store.get('gps_position').then(function(value) {
+      /*Store.get(Store.GPS_POS).then(function(value) {
           if(value!=null){
               _this.setState({initialPosition: value});
           }
-      });
+      });*/
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -86,7 +86,7 @@ export default class GoogleMap extends Component {
     }
     updateMyPos(position){
         this.myPosMarker = {id: 0, pos: position, s:'#0000ff' };
-        Store.save('gps_position', position);
+        Store.save(Store.GPS_POS, position);
         this.moveOrNot(position);
         this.setState({lastPosition: position});
     }

@@ -135,7 +135,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <FIcon name={'plug'} size={35}/>
+                          <FIcon name={'plug'} size={30}/>
                       </View>
                       <Text>API List</Text>
                   </TouchableOpacity>

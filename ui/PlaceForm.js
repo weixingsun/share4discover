@@ -3,6 +3,7 @@ import React,{Component} from 'react';
 import {Alert, Picker, StyleSheet, Text, View } from 'react-native';
 import Button from 'apsl-react-native-button'
 import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 //import Form from 'react-native-tableview-form'
 import Form from './Form'
 import NavigationBar from 'react-native-navbar'
@@ -115,8 +116,8 @@ export default class PlaceForm extends Component {
         })*/
     }
     getLockIcon(){
-        if(this.state.disabled) return 'ios-locked-outline'
-        return 'ios-unlocked-outline'
+        if(this.state.disabled) return 'lock'
+        return 'unlock-alt'
     }
     switchEditMode(){
         if(this.state.disabled) this.setState({disabled:false})
@@ -161,7 +162,7 @@ export default class PlaceForm extends Component {
         //console.log('rendering....this.state.place_list:'+JSON.stringify(this.state.place_list));
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: 'Add Another API',}}
+                  <NavigationBar style={Style.navbar} title={{title: 'Edit Place',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
@@ -169,7 +170,7 @@ export default class PlaceForm extends Component {
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <IIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
+                        <FIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
                      </View>
                    }
                   />

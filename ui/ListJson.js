@@ -296,7 +296,7 @@ export default class ListJson extends React.Component{
     render() {
         return(
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title: this.title,}}
+          <NavigationBar style={Style.navbar} title={{title: 'Edit API Configuration'}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
                   <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />

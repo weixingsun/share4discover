@@ -6,6 +6,7 @@ var deviceStorage = {
         PLACE_LIST:"place_list",
         SETTINGS:"settings",
         SETTINGS_MAP:"settings:map",
+        GPS_POS:"gps:position",
         
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {
