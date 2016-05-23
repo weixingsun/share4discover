@@ -3,19 +3,18 @@ import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
-import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
-import FBLoginView from "./FBLoginView"
+import * as WeiboAPI from 'react-native-weibo'
 
 var Login = React.createClass({
   renderLoginButton() {
     if(this.props.user !== null){
-        return <FIcon name={'weibo'} size={30} backgroundColor="#dddddd" onPress={this._googleSignOut} />
+        return <FIcon name={'weibo'} size={30} backgroundColor="#dddddd" onPress={this._signOut} />
     }else{
         //return (<GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );
-        return <FIcon name={'weibo'} size={30} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
+        return <FIcon name={'weibo'} size={30} backgroundColor="#dd4b39" onPress={this._signIn} />
     }
   },
   renderLoginName() {
@@ -24,34 +23,34 @@ var Login = React.createClass({
     if(this.props.user !== null ){
        name=this.props.user.name;
     }
-    return <View key='user_wx'><Text>{name}</Text></View>
+    return <View key='user_wb'><Text>{name}</Text></View>
   },
   saveUserDB(data) {
     //console.log('saveUserDB:'+JSON.stringify(data));
-    Store.save('user_wx', data);
+    Store.save('user_wb', data);
   },
   logout(){
-    Store.delete('user_wx');
+    Store.delete('user_wb');
     this.props.logout()
   },
   deleteUserDB() {
-    Store.delete('user_wx');
+    Store.delete('user_wb');
   },
-  _googleSignIn() {
-    GoogleSignin.signIn().then((data) => {
-      console.log('loginWX:'+JSON.stringify(data));
+  _signIn() {
+    WeiboAPI.login().then((data) => {
+      console.log('loginWB:'+JSON.stringify(data));
       //this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
-      var user = {id:data.id, name:data.name, email:data.email, type:'wx', token:data.serverAuthCode}
+      var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
       this.saveUserDB(user);
       this.props.login(user);
     }).catch((err) => {
       console.log('WRONG SIGNIN', err);
     }).done();
   },
-  _googleSignOut() {
+  _signOut() {
     Alert.alert(
         "Logout",
-        "Do you want to logout from Google?",
+        "Do you want to logout from Weibo?",
         [
           {text:"Cancel", onPress:()=>console.log("")},
           {text:"OK", onPress:()=>{

@@ -21,6 +21,8 @@ import java.util.List;
 
 public class MainActivity extends ReactActivity {
 
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
     @Override
     protected String getMainComponentName(){
         return "Share";
@@ -48,7 +50,7 @@ public class MainActivity extends ReactActivity {
       new CodePush(stagingKey, this, BuildConfig.DEBUG),
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
-      new RNGoogleSigninPackage(this),
+      new RNGoogleSigninPackage(),
       new FacebookLoginPackage(),
       new WeChatPackage(),
       new WeiboPackage(),
@@ -56,13 +58,5 @@ public class MainActivity extends ReactActivity {
       new AirPackage(),  //GoogleMap
       new ReactNativeMapboxGLPackage()
     );
-  }
-  // for google login
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
-    if (requestCode == RNGoogleSigninModule.RC_SIGN_IN) {
-        RNGoogleSigninModule.onActivityResult(data);
-    }
-    super.onActivityResult(requestCode, resultCode, data);
   }
 }

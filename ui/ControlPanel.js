@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import {ListView, Picker, PropTypes, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
+import React, { Component,PropTypes } from 'react'
+import {ListView, Picker, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 import IIcon from 'react-native-vector-icons/Ionicons'
-import Slider from './form/Slider'
+import Slider from 'react-native-slider'
 import Style from './Style'
 import GooglePlace from './GooglePlace'
 
@@ -87,18 +87,21 @@ export default class ControlPanel extends Component {
             <Text style={{color:'white',marginLeft:5,}}>Where</Text>
             <View style={{flex:1}} />
         </View>
-        <View style={{flex:1,flexDirection:'row',justifyContent:'center',}}>
+        <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
             <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
-            <FIcon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginTop:5,marginBottom:5}} />
+            <FIcon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginBottom:5}} />
         </View>
       </ScrollView>
     )
   }
 }
 /*
+<GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
+<FIcon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginBottom:5}} />
         <ListView
           dataSource={this.state.typeSource}
           renderRow={this.renderTypeRow.bind(this)} />
+            <FIcon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginTop:5,marginBottom:5}} />
 */
 var iosStyles = {
   track: {

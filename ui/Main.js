@@ -16,6 +16,7 @@ import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import ShareList from './ShareList'
+import FriendList from './FriendList'
 
 export default class Main extends Component {
   //static contextTypes = {
@@ -80,7 +81,8 @@ export default class Main extends Component {
   componentWillUpdate() {
       var _this = this;
       Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
-        _this.map = map_value;
+        if(map_value == null) _this.map = "BaiduMap";
+        else _this.map = map_value;
       });
   }
   turnOffGps(){
@@ -113,7 +115,7 @@ export default class Main extends Component {
     if(this.state.page ==='ios-chatboxes'){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
     } else if(this.state.page ==='ios-people'){
-      return <Text>Friends</Text>
+      return <FriendList navigator={this.props.navigator} />
     } else if(this.state.page ==='envelope'){
       return <Text>Messengers</Text>
     } else if(this.state.page ==='globe'){

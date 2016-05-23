@@ -3,7 +3,8 @@
  */
 'use strict'
 
-import React,{Switch, StyleSheet, PropTypes,Component} from 'react-native';
+import React,{PropTypes,Component} from 'react';
+import {Switch, StyleSheet} from 'react-native';
 
 
 class SwitchComponent extends Component {

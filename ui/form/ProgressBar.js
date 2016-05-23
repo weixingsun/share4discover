@@ -3,8 +3,8 @@
  */
 'use strict'
 
-
-import React,{Animated,Easing,StyleSheet,View,Text, PropTypes,Component,Platform} from 'react-native';
+import React,{PropTypes,Component} from 'react';
+import {Animated,Easing,StyleSheet,View,Text, Platform} from 'react-native';
 
 const styles = StyleSheet.create({
     background: {

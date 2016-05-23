@@ -1,5 +1,5 @@
-import React,{Component} from 'react'
-import { Picker, PropTypes, StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Dimensions} from 'react-native'
+import React,{Component,PropTypes} from 'react'
+import { Picker, StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Dimensions} from 'react-native'
 import Input from './form/Input';
 import Switch from './form/Switch';
 import ProgressBar from './form/ProgressBar';

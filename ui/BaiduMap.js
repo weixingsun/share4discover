@@ -42,18 +42,18 @@ export default class BaiduMap extends Component {
         gps: this.props.gps,
         isLoading: true,
       };
-      this.region = this.props.region,
-      this.myPosMarker = null;
-      //this.markerIcon = null;
-      this.msg = this.props.msg;
-      //this.renderNavBar   = this.renderNavBar.bind(this);
-      this.watchID = (null: ?number);
+      this.region = this.props.region
+      this.userPosition = {}
+      this.myPosMarker = null
+      this.placeMarker = null
+      this.msg = this.props.msg
+      this.watchID = (null: ?number)
       //this.onRegionChange = this.onRegionChange.bind(this)
       //this.onMarkerClick = this.onMarkerClick.bind(this)
     }
     loadSettings(){
         var _this = this;
-        IIcon.getImageSource('ios-circle-filled', 24, 'blue').then((source) => {
+        IIcon.getImageSource('ios-circle-filled', 30, 'blue').then((source) => {
             this.setState({
                 userIcon: source,
             });
@@ -67,7 +67,7 @@ export default class BaiduMap extends Component {
             if(this.msg!=null){
                 var lat=parseFloat(this.msg.lat);
                 var lng=parseFloat(this.msg.lng);
-                this.addMarker({ latitude:lat, longitude:lng, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon });
+                this.addMarker({ latitude:lat, longitude:lng, title:this.msg.title, subtile:this.msg.content, image:source });
                 this.region = {latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}
                 //autofit to multiple waypoints
             }
@@ -127,7 +127,7 @@ export default class BaiduMap extends Component {
             (position) => {
                 //alert("watch position: "+ position);
                 this.userPosition= position;
-                alert(JSON.stringify(position))
+                //alert(JSON.stringify(position))
             },
             (error) => {
                 //alert("watch position error: "+ error);
@@ -325,21 +325,12 @@ export default class BaiduMap extends Component {
       });
     } 
     comparefilters(){
-        //alert('first:'+this.firstLoad+'\nstate:'+JSON.stringify(this.state.filters)+'\nprops:'+JSON.stringify(this.props.filters))
         if(this.props.filters === this.state.filters) return true;
         else return false;
     }
     render(){
-        //var iconObj = <IIcon name={'ios-flag'} size={20} color={'#0000aa'} />
-        //alert(JSON.stringify(Object.keys(iconObj)))  //[$$typeof, type, key, ref, props, _owner, _store]
-        //alert(JSON.stringify(iconObj.props))  //{name,size,color}
-        if(this.state.isLoading || this.state.markerIcon===null) { // || this.state.initialPosition===null) {
-            //alert('isLoading:'+this.state.isLoading+'\nmarkerIcon:'+this.state.markerIcon)
-            return <Loading />
-        }
-        //alert(JSON.stringify(this.state.markerIcon))    //{uri:'file:///data/data/com.share/cache/-vioav8_48@2x.png', scale:2}
-        //var icon = require('./images/marker_g_64.png')  //1
-        //if(this.state.region!==null) this.move(this.state.region)
+        if(this.state.isLoading) return <Loading /> // || this.state.markerIcon===null || this.state.initialPosition===null) 
+        //var icon = require('./images/marker_g_64.png')
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -351,7 +342,7 @@ export default class BaiduMap extends Component {
                 rotateEnabled={false}
                 pitchEnabled={false}
                 showsCompass={true}
-                userLocationViewParams={{accuracyCircleFillColor: 'blue', image:this.state.userIcon }}  //require('./start_icon.png')
+                userLocationViewParams={{accuracyCircleFillColor:'blue', accuracyCircleStrokeColor:'red', image:this.state.userIcon }}
                 annotations={ this.state.markers }
                 //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},

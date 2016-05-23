@@ -3,10 +3,11 @@
  */
 'use strict'
 
-import React,{TextInput, StyleSheet, PropTypes,Component,Platform} from 'react-native';
+import React,{PropTypes,Component} from 'react';
+import {TextInput, StyleSheet, Platform} from 'react-native';
 
 
-class Input extends Component {
+export default class Input extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -62,5 +63,3 @@ const styles = StyleSheet.create({
         //color: '#aaa'
     }
 })
-
-export default Input;
