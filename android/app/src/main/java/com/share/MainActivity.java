@@ -1,11 +1,12 @@
 package com.share;
 
+import cn.reactnative.modules.weibo.WeiboPackage;
 import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.AirMaps.AirPackage;
+import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
-import cn.reactnative.modules.weibo.WeiboPackage;
 import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
@@ -51,6 +52,7 @@ public class MainActivity extends ReactActivity {
       new ReactNativeLocalizationPackage(),
       new RCTDateTimePickerPackage(this),
       new RNGoogleSigninPackage(),
+      new RNPermissionsPackage(),  //Android 6.0 permission
       new FacebookLoginPackage(),
       new WeChatPackage(),
       new WeiboPackage(),
@@ -58,5 +60,10 @@ public class MainActivity extends ReactActivity {
       new AirPackage(),  //GoogleMap
       new ReactNativeMapboxGLPackage()
     );
+  }
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+      RNPermissionsPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // event callback
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

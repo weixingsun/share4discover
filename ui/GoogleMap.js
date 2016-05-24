@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import MapView from 'react-native-maps'
 import IIcon from 'react-native-vector-icons/Ionicons'
+import FIcon from 'react-native-vector-icons/FontAwesome'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
@@ -12,6 +13,7 @@ import Style from "./Style"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
 import SearchAddr from './SearchAddr'
+import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 export default class GoogleMap extends Component {
     constructor(props) {
@@ -28,12 +30,28 @@ export default class GoogleMap extends Component {
         lastPosition: null,
         gps: this.props.gps,
       };
-      this.myPosMarker = null;
+      //this.myPosMarker = null;
       this.msg = this.props.msg;
       //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
     }
+    singlePermission(name){
+        requestPermission(name).then((result) => {
+          console.log(name+" Granted!", result);
+          // now you can set the listenner to watch the user geo location
+        }, (result) => {
+          console.log(name+" Not Granted!");
+          console.log(result);
+        });
+    }
+
+    permission(){ 
+        this.singlePermission('android.permission.ACCESS_FINE_LOCATION')
+        this.singlePermission('android.permission.ACCESS_COARSE_LOCATION')
+    }
     componentWillMount(){
+        this.permission();
+
       var _this = this;
       if(this.msg!=null){
         var lat=parseFloat(this.msg.lat);
@@ -63,7 +81,7 @@ export default class GoogleMap extends Component {
     turnOnGps(){
       this.watchID = navigator.geolocation.watchPosition(
         (position) => {
-          this.updateMyPos(position.coords);
+          //this.updateMyPos(position.coords);
         },
         (error) => console.log(error.message),
         {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
@@ -103,7 +121,7 @@ export default class GoogleMap extends Component {
         //onSelect={(e) => console.log('onSelect', e)}
         //    <PriceMarker amount={99} color={marker.s} />
         >
-            <IIcon name={"record"} color={'#3333ff'} size={16} />
+            <FIcon name={"circle"} color={'#3333ff'} size={16} />
         </MapView.Marker>
       );
     }
@@ -113,12 +131,13 @@ export default class GoogleMap extends Component {
             <MapView.Marker
             key={marker.id}
             coordinate={marker.pos}
-            pinColor={marker.s}
+            //pinColor={marker.s}
             //title={marker.title}
             //description={marker.description}
             //onSelect={(e) => console.log('onSelect', e)}
-            //    <PriceMarker amount={99} color={marker.s} />
-            />
+            >
+                <FIcon size={26} color={marker.s} name={'map-marker'} />
+            </MapView.Marker>
         ));
     }
     back(){
@@ -231,6 +250,7 @@ export default class GoogleMap extends Component {
           ...markers,
           marker]
       });
+      //alert(this.state.markers.length)
     }
     incMarkerId(){
       this.setState({mkid:this.state.mkid+1});
@@ -258,8 +278,8 @@ export default class GoogleMap extends Component {
             <MapView
               ref='map'
               style={Style.map}
-              //showsUserLocation={this.state.gps}
-              rotateEnabled={false}
+              showsUserLocation={this.state.gps}
+              rotateEnabled={false} //showsCompass={true}
               showsScale={true}
               onRegionChangeComplete={this.onRegionChange.bind(this)}
               initialRegion={this.state.region}
@@ -267,7 +287,6 @@ export default class GoogleMap extends Component {
               //mapType=standard,satellite,hybrid
               onLongPress={this.onLongPress.bind(this)} 
               >
-                 {this.renderMyPosMarker()}
                  {this.renderPlaceMarkers()}
             </MapView>
             { this.renderGpsIcon() }
@@ -276,3 +295,4 @@ export default class GoogleMap extends Component {
         );
     }
 };
+//{this.renderMyPosMarker()}

@@ -170,7 +170,7 @@ export default class BaiduMap extends Component {
         //onSelect={(e) => console.log('onSelect', e)}
         //    <PriceMarker amount={99} color={marker.s} />
         >
-            <IIcon name={"record"} color={'#3333ff'} size={16} />
+            <FIcon name={"circle"} color={'#3333ff'} size={16} />
         </MapView.Marker>
       );
     }

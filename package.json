@@ -11,6 +11,7 @@
     "react": "^15.0.2",
     "react-leaflet": "^0.11.4",
     "react-native": "^0.26.1",
+    "react-native-android-permissions": "0.0.3",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
     "react-native-code-push": "^1.11.0-beta",
     "react-native-datetime": "^0.1.2",
