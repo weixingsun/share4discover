@@ -1,6 +1,11 @@
 //import React,{ NetInfo } from 'react-native'
 
 var Net = {
+    MSG_TYPES:{
+        'car':'Car',
+        'estate':'Real Estate',
+        'help':'Help',
+    },
     HOST:'http://45.32.83.93',
     async netCmd(url, data) {
       try {

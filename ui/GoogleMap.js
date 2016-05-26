@@ -30,13 +30,14 @@ export default class GoogleMap extends Component {
         lastPosition: null,
         gps: this.props.gps,
       };
+      this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
       //this.myPosMarker = null;
       this.msg = this.props.msg;
       //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
     }
     singlePermission(name){
-        requestPermission(name).then((result) => {
+        requestPermission('android.permission.'+name).then((result) => {
           console.log(name+" Granted!", result);
           // now you can set the listenner to watch the user geo location
         }, (result) => {
@@ -46,12 +47,12 @@ export default class GoogleMap extends Component {
     }
 
     permission(){ 
-        this.singlePermission('android.permission.ACCESS_FINE_LOCATION')
-        this.singlePermission('android.permission.ACCESS_COARSE_LOCATION')
+        this.singlePermission('ACCESS_FINE_LOCATION')
+        this.singlePermission('ACCESS_COARSE_LOCATION')
     }
     componentWillMount(){
         this.permission();
-
+        //if(this.all_permissions_granted) alert()
       var _this = this;
       if(this.msg!=null){
         var lat=parseFloat(this.msg.lat);

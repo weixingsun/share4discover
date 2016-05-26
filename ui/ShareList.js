@@ -9,7 +9,7 @@ import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
 //import Drawer from 'react-native-drawer'
-//import ControlPanel from './ControlPanel'
+import FormAddMsg from './FormAddMsg'
 
 export default class ShareList extends Component {
   constructor(props) {
@@ -135,7 +135,6 @@ export default class ShareList extends Component {
     };
   }*/
   render() {
-    //alert(JSON.stringify(this.props.filters))
     this.reload(this.props.filters);
     //IIcon name="navicon"
     return (
@@ -145,7 +144,7 @@ export default class ShareList extends Component {
                 <IIcon name={'ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             }
             rightButton={
-                <FIcon name={'plus'} size={33} onPress={() => alert('new!')}/>
+                <FIcon name={'plus'} size={33} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
             } />
         <ListView 
             dataSource={this.dataSource} 

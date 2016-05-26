@@ -20,8 +20,9 @@ export default class GooglePlaces extends Component {
         fetchDetails={true}
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
           // data = details 
+          //alert('data:'+JSON.stringify(data)+'\n\n details:'+JSON.stringify(details))
 	  var latlng = details.geometry.location;
-          this.props.onSelect({latitude:latlng.lat, longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02 });
+          this.props.onSelect({latitude:latlng.lat, longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02, addr:data.description });
 	  //ToastAndroid.show('details.geometry.location='+JSON.stringify(latlng), ToastAndroid.LONG); //SHORT
         }}
         getDefaultValue={() => {

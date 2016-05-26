@@ -102,9 +102,10 @@ export default class SettingsList extends React.Component {
     }
     render(){
         return (
-        <View>
+      <View>
           <NavigationBar style={Style.navbar} title={{title:'Share',}} />
           <View style={Style.map}>
+              <ScrollView >
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
@@ -151,8 +152,9 @@ export default class SettingsList extends React.Component {
                   <View style={Style.left_card}>
                     <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
                   </View>
+              </ScrollView>
           </View>
-        </View>
+      </View>
         );
     }
 }
