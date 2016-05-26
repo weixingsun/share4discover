@@ -8,6 +8,12 @@ var deviceStorage = {
         SETTINGS_MAP:"settings:map",
         GPS_POS:"gps:position",
         
+        msgTab:'ion-md-chatboxes',
+        userTab:'ion-ios-people',
+        emailTab:'ion-ios-mail',
+        mapTab:'ion-ios-globe',
+        confTab:'ion-md-settings',
+
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {
 			return JSON.parse(value);

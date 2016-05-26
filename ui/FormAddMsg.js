@@ -19,36 +19,49 @@ export default class PDF extends Component {
     constructor(props) {
         super(props);
         this.old_value = {};
-        //this.content_height=22;
-        this.immutableMap = Immutable.fromJS(t.form.Form.stylesheet);
-        this.multilineStyle = this.immutableMap.mergeDeep({textbox: {normal: {height: 200}}}).toJS();
         this.state={ 
             disabled: false,
-            type: {
-                type: t.enums(Net.MSG_TYPES),
-                owner: t.String,
-                title: t.String,
-                address: t.String,
-                lat: t.Number,
-                lng: t.Number,
-                content: t.String,
-            },
+            content_height: 40,
             value:{owner:'wsun',address:'',latlng:''},
-            options:{
-                fields:{
-                    owner:{editable:false},
-                    content:{multiline:true,stylesheet:this.multilineStyle}, //waiting for autoGrow prop
-                    address:{hidden:true},
-                    lat:{hidden:true},
-                    lng:{hidden:true},
-                }
-            },
         }
+        this.type= {
+            type: t.enums(Net.MSG_TYPES),
+            owner: t.String,
+            title: t.String,
+            address: t.String,
+            lat: t.Number,
+            lng: t.Number,
+            content: t.String,
+        },
+        this.options = {
+        fields: {
+          owner:{editable:false},
+          address:{hidden:true},
+          lat:{hidden:true},
+          lng:{hidden:true},
+          content: {
+            stylesheet: Object.assign({}, Form.stylesheet, {
+              textbox: {
+                normal: {
+                  height: this.state.content_height
+                },
+                error: {
+                  height: this.state.content_height
+                }
+              }
+            }),
+            multiline: true,
+            onChange: (event) => {
+              this.setState({
+                content_height: event.nativeEvent.contentSize.height
+              });
+            }
+          }
+        }
+        }
+        this.onChangeNative=this.onChangeNative.bind(this)
     }
     multilineChange(event){
-        this.setState({
-            value: event.nativeEvent.text,
-        });
         //this.content_height=event.nativeEvent.contentSize.height;
         //alert(event.nativeEvent.contentSize)
     }
@@ -90,8 +103,22 @@ export default class PDF extends Component {
         }
         this.old_value = form
     }
-    onChangeEvent(event){
-        alert(JSON.stringify(Object.keys(event)))
+    onChangeNative(event){
+        this.content_height= event.nativeEvent.contentSize.height
+        this.multilineStyle = this.immutableMap.mergeDeep({textbox: {normal: {height: this.content_height}}}).toJS();
+        this.setState({
+            options:{
+                fields:{
+                    owner:{editable:false},
+                    content:{multiline:true,stylesheet: this.multilineStyle, onChange:this.onChangeNative},
+                    address:{hidden:true},
+                    lat:{hidden:true},
+                    lng:{hidden:true},
+                }
+            },
+        });
+            //text: event.nativeEvent.text,
+            //content_height: event.nativeEvent.contentSize.height,
     }
     componentWillMount(){
         //this.load();
@@ -202,6 +229,32 @@ export default class PDF extends Component {
     }
     render(){
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
+      const options = {
+        fields: {
+          owner:{editable:false},
+          address:{hidden:true},
+          lat:{hidden:true},
+          lng:{hidden:true},
+          content: {
+            stylesheet: Object.assign({}, Form.stylesheet, {
+              textbox: {
+                normal: {
+                  height: this.state.content_height
+                },
+                error: {
+                  height: this.state.content_height
+                }
+              }
+            }),
+            multiline: true,
+            onChange: (event) => {
+              this.setState({
+                content_height: event.nativeEvent.contentSize.height
+              });
+            }
+          }
+        }
+      }
         return (
             <View style={{flex:1}}>
                   <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -212,7 +265,7 @@ export default class PDF extends Component {
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <FIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEditMode()} />
+                        <IIcon name={'ios-paper-plane-outline'} size={40} onPress={() => this.switchEditMode()} />
                      </View>
                    }
                   />
@@ -225,9 +278,9 @@ export default class PDF extends Component {
                     <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
                     <Form
                         ref="form"
-                        type={t.struct(this.state.type)}
+                        type={t.struct(this.type)}
                         value={this.state.value}
-                        options={this.state.options}
+                        options={options}
                         onChange={this.onChange.bind(this)}
                     />
                     <TouchableHighlight style={styles.button} onPress={this.onSubmit.bind(this)} underlayColor='#99d9f4'>

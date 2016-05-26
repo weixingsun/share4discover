@@ -2,9 +2,7 @@
 import React, { Component } from 'react'
 import { DeviceEventEmitter, View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
-import OIcon from 'react-native-vector-icons/Octicons'
+import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
@@ -53,7 +51,7 @@ export default class BaiduMap extends Component {
     }
     loadSettings(){
         var _this = this;
-        IIcon.getImageSource('ios-circle-filled', 30, 'blue').then((source) => {
+        getImageSource('ion-ios-circle-filled', 30, 'blue').then((source) => {
             this.setState({
                 userIcon: source,
             });
@@ -63,7 +61,7 @@ export default class BaiduMap extends Component {
                 _this.setState({initialPosition: value});
             }
         });*/
-        FIcon.getImageSource('map-marker', 40, 'blue').then((source) => {
+        getImageSource('fa-map-marker', 40, 'blue').then((source) => {
             if(this.msg!=null){
                 var lat=parseFloat(this.msg.lat);
                 var lng=parseFloat(this.msg.lng);
@@ -170,7 +168,7 @@ export default class BaiduMap extends Component {
         //onSelect={(e) => console.log('onSelect', e)}
         //    <PriceMarker amount={99} color={marker.s} />
         >
-            <FIcon name={"circle"} color={'#3333ff'} size={16} />
+            <Icon name={"fa-circle"} color={'#3333ff'} size={16} />
         </MapView.Marker>
       );
     }
@@ -246,17 +244,17 @@ export default class BaiduMap extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
+                <Icon name={"ion-ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
             }
           />);
       }else{
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-                <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
+                <Icon name={"ion-ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
             }
             rightButton={
-                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.download.bind(this)} />
+                <Icon name={'ion-ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.download.bind(this)} />
             }
           />
         );
@@ -269,9 +267,9 @@ export default class BaiduMap extends Component {
     }
     renderGpsIcon(){
       if(this.state.gps) 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
+          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
       else 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
+          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
       //alert(JSON.stringify(r))

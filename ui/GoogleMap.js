@@ -3,8 +3,7 @@ import React, { Component } from 'react'
 import {View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import MapView from 'react-native-maps'
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
@@ -18,7 +17,8 @@ import {checkPermission,requestPermission} from 'react-native-android-permission
 export default class GoogleMap extends Component {
     constructor(props) {
       super(props);
-      this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
+      //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
+      this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'fa-taxi',};
       this.state = {
         filters: this.props.filters,
         center: {lat:0,lng:0},
@@ -58,7 +58,7 @@ export default class GoogleMap extends Component {
       if(this.msg!=null){
         var lat=parseFloat(this.msg.lat);
         var lng=parseFloat(this.msg.lng);
-        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, color:'blue', icon:this.fa_place_icon[this.msg.type] });
+        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, color:'blue', icon:this.icons[this.msg.type] });
         this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
@@ -104,7 +104,7 @@ export default class GoogleMap extends Component {
     getRegion(lat,lng){
         return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
     }
-    updateMyPos(position){
+    /*updateMyPos(position){
         this.myPosMarker = {id: 0, pos: position, s:'#0000ff' };
         Store.save(Store.GPS_POS, position);
         this.moveOrNot(position);
@@ -123,10 +123,10 @@ export default class GoogleMap extends Component {
         //onSelect={(e) => console.log('onSelect', e)}
         //    <PriceMarker amount={99} color={marker.s} />
         >
-            <FIcon name={"circle"} color={'#3333ff'} size={16} />
+            <Icon name={"circle"} color={'#3333ff'} size={16} />
         </MapView.Marker>
       );
-    }
+    }*/
     renderPlaceMarkers(){
         return this.state.markers.map(
           marker => (
@@ -138,7 +138,7 @@ export default class GoogleMap extends Component {
             //description={marker.description}
             //onSelect={(e) => console.log('onSelect', e)}
             >
-                <FIcon size={26} color={marker.color} name={marker.icon} />
+                <Icon size={26} color={marker.color} name={marker.icon} />
             </MapView.Marker>
         ));
     }
@@ -196,17 +196,17 @@ export default class GoogleMap extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
+                <Icon name={"ion-ios-arrow-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
             }
           />);
       }else{
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-                <IIcon name={"ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
+                <Icon name={"ion-ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
             }
             rightButton={
-                <IIcon name={'ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
+                <Icon name={'ion-ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
             }
           />
         );
@@ -219,9 +219,9 @@ export default class GoogleMap extends Component {
     }
     renderGpsIcon(){
       if(this.state.gps) 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
+          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
       else 
-          return (<IIcon style={Style.gpsIcon} name={"ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
+          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
       this.setState({ region: r, });
@@ -242,7 +242,7 @@ export default class GoogleMap extends Component {
        rows.map((row)=>{
          //row ={ lat,lng,type,title,content,ctime, }
          var point = {latitude:parseFloat(row.lat), longitude:parseFloat(row.lng)}
-         this.addMarker({id: this.state.mkid++, pos: point, color:'blue', icon:this.fa_place_icon[row.type] });
+         this.addMarker({id: this.state.mkid++, pos: point, color:'blue', icon:this.icons[row.type] });
        })
     }
     addMarker(marker){

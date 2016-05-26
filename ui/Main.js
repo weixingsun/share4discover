@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import {InteractionManager, Text, View, Navigator, } from 'react-native'
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
-import Icon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
 
@@ -25,13 +24,9 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.types = ['car','taxi','estate']
-    this.settingsTab='cog'
-    this.mapTab='globe'
-    this.emailTab='envelope'
-    this.friendsTab='user'
-    this.msgTab='comments'
+
     this.state = {
-      page:this.props.page!=null?this.props.page: this.emailTab,
+      page:this.props.page!=null?this.props.page: Store.emailTab,
       isLoading:true,
       selectedMsg:this.props.msg,
       user: null,
@@ -114,22 +109,22 @@ export default class Main extends Component {
       }
   }
   pages(){
-    if(this.state.page ===this.msgTab){
+    if(this.state.page ===Store.msgTab){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
-    } else if(this.state.page ===this.friendsTab){
+    } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
-    } else if(this.state.page ===this.emailTab){
+    } else if(this.state.page ===Store.emailTab){
       return <Text>Messengers</Text>
-    } else if(this.state.page ===this.mapTab){
+    } else if(this.state.page ===Store.mapTab){
       return this.renderMap();
-    } else if(this.state.page ===this.settingsTab){
+    } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator}/>
     }
   }
 //FontAwesome: cubes  th  th-large  
   gotoPage(name){ //ios-world
     var drawerEnabled=false
-    if(name===this.msgTab || name===this.mapTab) drawerEnabled=true;
+    if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
     this.setState({ page: name, drawerPanEnabled:drawerEnabled });
   }
   changeFilter(filter){
@@ -159,11 +154,11 @@ export default class Main extends Component {
         <View style={{flex:1}}>
           <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
-            <FIcon name={this.msgTab} size={40} />
-            <FIcon name={this.friendsTab} size={40} />
-            <FIcon name={this.emailTab} size={33} />
-            <FIcon name={this.mapTab} size={38} />
-            <FIcon name={this.settingsTab} size={38} />
+            <Icon size={40} name={Store.msgTab}      />
+            <Icon size={40} name={Store.userTab}  />
+            <Icon size={40} name={Store.emailTab}    />
+            <Icon size={40} name={Store.mapTab}      />
+            <Icon size={40} name={Store.confTab} />
           </Tabs>
           {this.pages()}
         </View>
