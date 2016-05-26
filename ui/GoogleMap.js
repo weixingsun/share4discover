@@ -18,6 +18,7 @@ import {checkPermission,requestPermission} from 'react-native-android-permission
 export default class GoogleMap extends Component {
     constructor(props) {
       super(props);
+      this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.state = {
         filters: this.props.filters,
         center: {lat:0,lng:0},
@@ -57,7 +58,7 @@ export default class GoogleMap extends Component {
       if(this.msg!=null){
         var lat=parseFloat(this.msg.lat);
         var lng=parseFloat(this.msg.lng);
-        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, s:'#0000ff' });
+        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, color:'blue', icon:this.fa_place_icon[this.msg.type] });
         this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
@@ -137,7 +138,7 @@ export default class GoogleMap extends Component {
             //description={marker.description}
             //onSelect={(e) => console.log('onSelect', e)}
             >
-                <FIcon size={26} color={marker.s} name={'map-marker'} />
+                <FIcon size={26} color={marker.color} name={marker.icon} />
             </MapView.Marker>
         ));
     }
@@ -229,7 +230,7 @@ export default class GoogleMap extends Component {
     onLongPress(event) {
       //alert(JSON.stringify(event.nativeEvent.coordinate));
       //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-      this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+      //this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
     }
     clearMarkers(){
       this.setState({
@@ -241,7 +242,7 @@ export default class GoogleMap extends Component {
        rows.map((row)=>{
          //row ={ lat,lng,type,title,content,ctime, }
          var point = {latitude:parseFloat(row.lat), longitude:parseFloat(row.lng)}
-         this.addMarker({id: this.state.mkid++, pos: point, s:'#0000ff' });
+         this.addMarker({id: this.state.mkid++, pos: point, color:'blue', icon:this.fa_place_icon[row.type] });
        })
     }
     addMarker(marker){

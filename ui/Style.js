@@ -55,6 +55,9 @@ module.exports = {
       right: 0,
       bottom: 50,
   },
+  scrollview:{
+      flex:1,
+  },
   navbar: {
       flex:1,
       backgroundColor: '#ebeef0',

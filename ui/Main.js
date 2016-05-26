@@ -24,11 +24,13 @@ export default class Main extends Component {
   //};
   constructor(props) {
     super(props);
-    this.types = ['car','taxi']
-    this.settingsTab='ios-settings'
+    this.types = ['car','taxi','estate']
+    this.settingsTab='cog'
+    this.mapTab='globe'
     this.emailTab='envelope'
+    this.friendsTab='user'
+    this.msgTab='comments'
     this.state = {
-      //page:this.props.page!=null?this.props.page:'ios-chatboxes',
       page:this.props.page!=null?this.props.page: this.emailTab,
       isLoading:true,
       selectedMsg:this.props.msg,
@@ -112,22 +114,22 @@ export default class Main extends Component {
       }
   }
   pages(){
-    if(this.state.page ==='ios-chatboxes'){
+    if(this.state.page ===this.msgTab){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
-    } else if(this.state.page ==='ios-people'){
+    } else if(this.state.page ===this.friendsTab){
       return <FriendList navigator={this.props.navigator} />
-    } else if(this.state.page ==='envelope'){
+    } else if(this.state.page ===this.emailTab){
       return <Text>Messengers</Text>
-    } else if(this.state.page ==='globe'){
+    } else if(this.state.page ===this.mapTab){
       return this.renderMap();
-    } else if(this.state.page ==='ios-settings'){
+    } else if(this.state.page ===this.settingsTab){
       return <SettingsList navigator={this.props.navigator}/>
     }
   }
 //FontAwesome: cubes  th  th-large  
   gotoPage(name){ //ios-world
     var drawerEnabled=false
-    if(name==='ios-chatboxes' || name==='ios-world') drawerEnabled=true;
+    if(name===this.msgTab || name===this.mapTab) drawerEnabled=true;
     this.setState({ page: name, drawerPanEnabled:drawerEnabled });
   }
   changeFilter(filter){
@@ -157,11 +159,11 @@ export default class Main extends Component {
         <View style={{flex:1}}>
           <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
-            <Icon name="ios-chatboxes" size={40} />
-            <Icon name="ios-people" size={40} />
-            <FIcon name="envelope" size={33} />
-            <FIcon name="globe" size={38} />
-            <Icon name="ios-settings" size={38} />
+            <FIcon name={this.msgTab} size={40} />
+            <FIcon name={this.friendsTab} size={40} />
+            <FIcon name={this.emailTab} size={33} />
+            <FIcon name={this.mapTab} size={38} />
+            <FIcon name={this.settingsTab} size={38} />
           </Tabs>
           {this.pages()}
         </View>

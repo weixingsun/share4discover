@@ -102,10 +102,10 @@ export default class SettingsList extends React.Component {
     }
     render(){
         return (
-      <View>
-          <NavigationBar style={Style.navbar} title={{title:'Share',}} />
-          <View style={Style.map}>
-              <ScrollView >
+          <View>
+              <NavigationBar style={Style.navbar} title={{title:'Share',}} />
+              <View style={Style.map}>
+                <ScrollView style={Style.scrollview}>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
@@ -116,7 +116,7 @@ export default class SettingsList extends React.Component {
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <IIcon name={'ios-information-outline'} size={35}/>
+                          <FIcon name={'info-circle'} size={30}/>
                       </View>
                     <Text>About</Text>
                   </TouchableOpacity>
@@ -146,16 +146,17 @@ export default class SettingsList extends React.Component {
                   <View style={Style.left_card}>
                     <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
                   </View>
+              </ScrollView>
+            </View>
+          </View>
+        );
+    }
+}
+/*
                   <View style={Style.left_card}>
                     <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
                   </View>
                   <View style={Style.left_card}>
                     <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
                   </View>
-              </ScrollView>
-          </View>
-      </View>
-        );
-    }
-}
-//<FIcon name="plug" size={30} />
+*/
