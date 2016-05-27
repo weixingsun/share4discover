@@ -9,6 +9,7 @@ var Form = t.form.Form;
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
+//import Global from '../io/Global';
 import Net from '../io/Net'
 import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
@@ -19,9 +20,8 @@ export default class PDF extends Component {
         super(props);
         this.old_value = {};
         this.state={ 
-            disabled: false,
             content_height: 40,
-            value:{owner:'wsun',address:'',latlng:''},
+            value: {owner:'wsun',address:'',latlng:''},
         }
         this.type= {
             type: t.enums(Net.MSG_TYPES),
@@ -31,34 +31,8 @@ export default class PDF extends Component {
             lat: t.Number,
             lng: t.Number,
             content: t.String,
-        },
-        this.options = {
-        fields: {
-          owner:{editable:false},
-          address:{hidden:true},
-          lat:{hidden:true},
-          lng:{hidden:true},
-          content: {
-            stylesheet: Object.assign({}, Form.stylesheet, {
-              textbox: {
-                normal: {
-                  height: this.state.content_height
-                },
-                error: {
-                  height: this.state.content_height
-                }
-              }
-            }),
-            multiline: true,
-            onChange: (event) => {
-              this.setState({
-                content_height: event.nativeEvent.contentSize.height
-              });
-            }
-          }
         }
-        }
-        this.onChangeNative=this.onChangeNative.bind(this)
+        //this.onChangeNative=this.onChangeNative.bind(this)
     }
     multilineChange(event){
         //this.content_height=event.nativeEvent.contentSize.height;
@@ -77,12 +51,12 @@ export default class PDF extends Component {
         var value = this.refs.form.getValue();
         //alert(JSON.stringify(value))
         if (value) { // if validation fails, value will be null
-            value['ctime']=Math.floor(Date.now()/1000);
-            //value['pics']=[]
+            value['ctime']=Date.now()
+            //value['pics']=[]                             ////////ctime undefined
             var _this = this;
             Alert.alert(
               "Publish",
-              "Do you want to publish this information ? ",
+              "Do you want to publish this information ? "
               [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
@@ -102,7 +76,7 @@ export default class PDF extends Component {
         }
         this.old_value = form
     }
-    onChangeNative(event){
+    /*onChangeNative(event){
         this.content_height= event.nativeEvent.contentSize.height
         this.multilineStyle = this.immutableMap.mergeDeep({textbox: {normal: {height: this.content_height}}}).toJS();
         this.setState({
@@ -118,113 +92,8 @@ export default class PDF extends Component {
         });
             //text: event.nativeEvent.text,
             //content_height: event.nativeEvent.contentSize.height,
-    }
+    }*/
     componentWillMount(){
-        //this.load();
-        //this.loadApi('MSG')
-    }
-    onSubmit2(){
-        var _this=this;
-        var form = this.loginForm.getValue();
-        Store.get(form.name).then(function(value){
-          if(value!=null){
-            Alert.alert(
-              "Overwrite",
-              "Do you want to overwrite: "+form.name+" ? \nold_value:"+JSON.stringify(value)+'\nnew_value:'+JSON.stringify(form),
-              [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    _this.save();
-                    _this.props.navigator.pop();
-                }},
-              ]
-            );
-          }else{ //add new api
-              _this.save();
-              _this.props.navigator.pop();
-          }
-        })
-    }
-    save(){
-        var form = this.loginForm.getValue();
-        Store.insertApi(form.name, form);
-    }
-    load(){
-        var _this=this;
-        Store.get(Store.API_LIST).then(function(list){
-            if(list==null) return;
-            _this.setState({api_list:list});
-        })
-    }
-    loadApi(name){
-        var _this=this;
-        //console.log('loadApi:'+name);
-        Store.get(name).then(function(value){
-            if(value!=null)
-              _this.setState({
-                  name:name,
-                  data: value,
-              });
-            else
-              _this.setState({
-                name:name,
-                data:{},
-              });
-            _this.setModel();
-        })
-    }
-    getLockIcon(){
-        if(this.state.disabled) return 'lock' //'ios-locked-outline'
-        return 'unlock-alt'
-    }
-    switchEditMode(){
-        if(this.state.disabled) this.setState({disabled:false})
-        else this.setState({disabled:true})
-    }
-    setModel(){
-      //this.state.data = {name,title,filter,yql,path,url,subpath,}
-      var fields = Object.keys(this.state.data);  //["name","title","filter","yql","path"]
-      //alert(JSON.stringify(this.state.data[fields[0]]))
-      var model = {};
-      fields.map((key,n)=>{
-          model[key] = {
-              disabled: this.state.disabled,
-              type: Form.fieldType.String,
-              label: key,
-              multiline: true,
-              value: this.state.data[key],
-          }
-      })
-      /*let model = {
-            name: {
-                disabled: this.state.disabled,
-                type: Form.fieldType.String,
-                label: "Name",
-                value: this.state.name,
-            },
-            path: {
-                disabled: this.state.disabled,
-                type: Form.fieldType.String,
-                label: "Path",
-                value: this.state.path,
-                //onFieldChange: (value, ref)=>{
-                    //new value, ref to element
-                //}
-            },
-            //RN 0.23.1  Picker cannot inside form, many issues
-            api_type: {
-                type: Form.fieldType.Select,
-                disabled: false,
-                label: "API Types",
-                //valueStyle: {},
-                values: [{id:"0",label:"Yahoo",value:"yql"},{id:"1",label:"Url",value:"url"}],
-                selected: this.state.api_type,
-                onChange:(value)=>{
-                    this.setState({api_type:value})
-                }
-            },
-        };*/
-        this.setState({model:model})
     }
     render(){
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
@@ -247,7 +116,9 @@ export default class PDF extends Component {
             }),
             multiline: true,
             onChange: (event) => {
+              this.old_value['content']= event.nativeEvent.text
               this.setState({
+                value: this.old_value,
                 content_height: event.nativeEvent.contentSize.height
               });
             }
@@ -264,7 +135,7 @@ export default class PDF extends Component {
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={() => this.switchEditMode()} />
+                        <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
                      </View>
                    }
                   />
@@ -282,9 +153,6 @@ export default class PDF extends Component {
                         options={options}
                         onChange={this.onChange.bind(this)}
                     />
-                    <TouchableHighlight style={styles.button} onPress={this.onSubmit.bind(this)} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Save</Text>
-                    </TouchableHighlight>
                 </KeyboardAwareScrollView>
             </View>
         );
