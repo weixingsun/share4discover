@@ -1,14 +1,16 @@
 'use strict';
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, ScrollView, } from 'react-native'
+import {View, Text, StyleSheet, ScrollView, Picker} from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import MapView from 'react-native-maps'
-import {Icon} from './Icon'
+import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
+import Global from "../io/Global"
 import JsonAPI from "../io/Net"
 import Style from "./Style"
+import Main from "./Main"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
 import SearchAddr from './SearchAddr'
@@ -19,23 +21,28 @@ export default class GoogleMap extends Component {
       super(props);
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'fa-taxi',};
+      this.mkid=1;
+      this.placeIcon=null;
       this.state = {
-        filters: this.props.filters,
-        center: {lat:0,lng:0},
+        type:'car',
         region: this.props.region,
-        mkid:1,
         markers: [],
         ccid:0,
         circles: [],
         //initialPosition: null,
         lastPosition: null,
         gps: this.props.gps,
+        downloadEnabled: true,
       };
       this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
-      //this.myPosMarker = null;
       this.msg = this.props.msg;
-      //this.renderNavBar   = this.renderNavBar.bind(this);
       this.watchID = (null: ?number);
+    }
+    loadIcon(name){
+        var _this = this;
+        getImageSource(name, 30, 'blue').then((source) => {
+            _this.placeIcon= source
+        });
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
@@ -46,7 +53,9 @@ export default class GoogleMap extends Component {
           console.log(result);
         });
     }
-
+    incMkid(){
+        return this.mkid++
+    }
     permission(){ 
         this.singlePermission('ACCESS_FINE_LOCATION')
         this.singlePermission('ACCESS_COARSE_LOCATION')
@@ -56,10 +65,13 @@ export default class GoogleMap extends Component {
         //if(this.all_permissions_granted) alert()
       var _this = this;
       if(this.msg!=null){
-        var lat=parseFloat(this.msg.lat);
-        var lng=parseFloat(this.msg.lng);
-        this.addMarker({id: this.incMarkerId(), pos: {latitude:lat, longitude:lng}, color:'blue', icon:this.icons[this.msg.type] });
-        this.setState({region:{latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}});
+         this.msg['latitude'] = parseFloat(this.msg.lat)
+         this.msg['longitude']= parseFloat(this.msg.lng)
+         this.msg['id']       = this.incMkid()
+         this.msg['color']    = 'blue'
+         this.msg['icon']     = this.icons[this.msg.type]
+        this.addMarker( this.msg );
+        this.setState({region:{latitude:this.msg['latitude'],longitude:this.msg['longitude'], latitudeDelta:0.02,longitudeDelta:0.02}});
         //autofit to multiple waypoints
       }
       /*Store.get(Store.GPS_POS).then(function(value) {
@@ -67,6 +79,7 @@ export default class GoogleMap extends Component {
               _this.setState({initialPosition: value});
           }
       });*/
+      this.loadIcon(this.icons[this.state.type]);
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -105,7 +118,7 @@ export default class GoogleMap extends Component {
         return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
     }
     /*updateMyPos(position){
-        this.myPosMarker = {id: 0, pos: position, s:'#0000ff' };
+        this.myPosMarker = {id: 0, latlng: position, color:'#0000ff' };
         Store.save(Store.GPS_POS, position);
         this.moveOrNot(position);
         this.setState({lastPosition: position});
@@ -116,7 +129,7 @@ export default class GoogleMap extends Component {
       return (
         <MapView.Marker
         key={0}
-        coordinate={this.myPosMarker.pos}
+        coordinate={this.myPosMarker.latlng}
         //pinColor={'#0000ff'}
         //title={marker.title}
         //description={marker.description}
@@ -128,26 +141,72 @@ export default class GoogleMap extends Component {
       );
     }*/
     renderPlaceMarkers(){
+      /*if(this.msg==null && this.placeIcon==null){
+            return this.state.markers.map(
+              marker => (
+                <MapView.Marker
+                  key={marker.id}
+                  coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
+                  //pinColor={marker.s}
+                  //title={marker.title}       //description={marker.description}
+                  onPress={(e) => { this.props.navigator.push({
+                                        component: Main,
+                                        passProps: {
+                                            page: Store.mapTab,
+                                            msg:marker,
+                                        }
+                                    }); 
+                          }}
+                >
+                    <Icon size={26} color={marker.color} name={marker.icon} />
+                </MapView.Marker>
+              )
+            );
+      }else if(this.msg!=null && this.placeIcon==null){
         return this.state.markers.map(
-          marker => (
-            <MapView.Marker
-            key={marker.id}
-            coordinate={marker.pos}
-            //pinColor={marker.s}
-            //title={marker.title}
-            //description={marker.description}
-            //onSelect={(e) => console.log('onSelect', e)}
-            >
-                <Icon size={26} color={marker.color} name={marker.icon} />
-            </MapView.Marker>
-        ));
+            marker => (
+              <MapView.Marker
+                  key={marker.id}
+                  coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
+              >
+                    <Icon size={26} color={marker.color} name={marker.icon} />
+                </MapView.Marker>
+            )
+        );
+      }else */
+      if(this.msg==null && this.placeIcon!=null){
+        return this.state.markers.map(
+            marker => (
+              <MapView.Marker
+                  key={marker.id}
+                  coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
+                  image={this.placeIcon}
+                  onPress={(e) => { this.props.navigator.push({
+                                        component: Main,
+                                        passProps: {
+                                            page: Store.mapTab,
+                                            msg:marker,
+                                        }
+                                    });
+                          }}
+              />
+            )
+        );
+      }else 
+      if(this.msg!=null && this.placeIcon!=null){
+        return this.state.markers.map(
+            marker => (
+              <MapView.Marker
+                  key={marker.id}
+                  coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
+                  image={this.placeIcon}
+              />
+            )
+        );
+      }
     }
     back(){
       this.props.navigator.pop();
-    }
-    search(place){
-        this.move(place); 
-        this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
     }
     move(p){
       this.refs.map.animateToRegion(p);
@@ -171,14 +230,14 @@ export default class GoogleMap extends Component {
     reload() {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
-      JsonAPI.rangeMsg(this.props.filters.type, this.state.region, range).then((rows)=> {
+      JsonAPI.rangeMsg(this.state.type, this.state.region, range).then((rows)=> {
           self.clearMarkers();
-          self.renderMarkers(rows);
-          //if(!self.comparefilters()) self.setState({filters:self.props.filters})
+          self.loadMarkers(rows);
       })
       .catch((e)=>{
         alert('Network Problem!')
       });
+      this.enableDownload(false)
     }
     distance(latDelta,lngDelta){
        return Math.floor(111111 * Math.min(latDelta,lngDelta)); //range circle in bbox
@@ -203,14 +262,36 @@ export default class GoogleMap extends Component {
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-                <Icon name={"ion-ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
+              <View style={{flexDirection:'row'}}>
+                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
+                <Picker
+                    style={{width:40}}
+                    selectedValue={this.state.type}
+                    onValueChange={this.onTypeChange.bind(this, 'type')}
+                    prompt="Choose a Type">
+                       <Picker.Item label="Car" value="car" />
+                       <Picker.Item label="Real Estate" value="estate" />
+                </Picker>
+              </View>
             }
             rightButton={
-                <Icon name={'ion-ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.reload.bind(this)} />
+                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.downloadEnabled)} size={40} onPress={this.reload.bind(this)} />
             }
           />
         );
       }
+    }
+    onTypeChange(key: string, value: string) {
+        const newState = {};
+        newState[key] = value;
+        this.setState(newState);
+        this.loadIcon(this.icons[value])
+        this.enableDownload(true)
+        this.clearMarkers()
+    }
+    getDownloadIcon(flag){
+        if(flag) return '#3B3938'
+        else return '#dddddd'
     }
     renderDetailOverlay() {
       if(this.msg!=null){
@@ -226,23 +307,31 @@ export default class GoogleMap extends Component {
     onRegionChange(r) {
       this.setState({ region: r, });
       Store.save('region', r);
+      this.enableDownload(true);
     }
-    onLongPress(event) {
-      //alert(JSON.stringify(event.nativeEvent.coordinate));
-      //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-      //this.addMarker({id: this.state.mkid++, pos: event.nativeEvent.coordinate, s:'#0000ff' });
+    enableDownload(flag){
+        this.setState({downloadEnabled:flag})
     }
+    /*onLongPress(event) {
+        alert(JSON.stringify(event.nativeEvent.coordinate));
+        this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
+        this.addMarker({id: this.state.mkid++, latlng: event.nativeEvent.coordinate, s:'#0000ff' });
+    }*/
     clearMarkers(){
-      this.setState({
-        mkid:1,
-        markers: [],
-      });
+        this.mkid=1;
+        this.setState({
+            markers: [],
+        });
     }
-    renderMarkers(rows){
+    loadMarkers(rows){
        rows.map((row)=>{
          //row ={ lat,lng,type,title,content,ctime, }
-         var point = {latitude:parseFloat(row.lat), longitude:parseFloat(row.lng)}
-         this.addMarker({id: this.state.mkid++, pos: point, color:'blue', icon:this.icons[row.type] });
+         row['latitude'] = parseFloat(row.lat)
+         row['longitude']= parseFloat(row.lng)
+         row['id']       = this.incMkid()
+         row['color']    = 'blue'
+         row['icon']     = this.icons[row.type]
+         this.addMarker( row );
        })
     }
     addMarker(marker){
@@ -254,10 +343,6 @@ export default class GoogleMap extends Component {
       });
       //alert(this.state.markers.length)
     }
-    incMarkerId(){
-      this.setState({mkid:this.state.mkid+1});
-      return this.state.mkid;
-    }
     addCircle(circle){
       var {circles} = this.state;
       this.setState({
@@ -266,14 +351,7 @@ export default class GoogleMap extends Component {
           circle]
       });
     } 
-    comparefilters(){
-        //alert('first:'+this.firstLoad+'\nstate:'+JSON.stringify(this.state.filters)+'\nprops:'+JSON.stringify(this.props.filters))
-        if(this.props.filters === this.state.filters) return true;
-        else return false;
-    }
     render(){
-        //this.reload(this.props.filters,this.state.region)
-        //alert('render()')
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -287,7 +365,8 @@ export default class GoogleMap extends Component {
               initialRegion={this.state.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid
-              onLongPress={this.onLongPress.bind(this)} 
+              //onLongPress={this.onLongPress.bind(this)} 
+              //onMarkerPress={(e)=> alert('Map.onMarkerPress')} 
               >
                  {this.renderPlaceMarkers()}
             </MapView>

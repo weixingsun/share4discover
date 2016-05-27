@@ -5,8 +5,7 @@ import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
-
-import TabBarFrame from './TabBar'
+import Global from "../io/Global"
 import Style       from "./Style"
 import Loading     from "./Loading"
 import GoogleMap   from "./GoogleMap"
@@ -16,6 +15,7 @@ import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import ShareList from './ShareList'
 import FriendList from './FriendList'
+
 
 export default class Main extends Component {
   //static contextTypes = {
@@ -27,9 +27,9 @@ export default class Main extends Component {
 
     this.state = {
       page:this.props.page!=null?this.props.page: Store.emailTab,
-      isLoading:true,
+      //isLoading:true,
       selectedMsg:this.props.msg,
-      user: null,
+      //user: null,
       markers: [],
       circles: [],
       region: {
@@ -41,7 +41,6 @@ export default class Main extends Component {
       filters: {type:"car",range:2000,position:{latitude:0,longitude:0,latitudeDelta:10,longitudeDelta:10}},
       drawerPanEnabled:false,
       gps:false,
-      map:'GoogleMap',
     }; 
     this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
@@ -50,9 +49,9 @@ export default class Main extends Component {
       this.turnOffGps();
   }
   componentDidMount() {
-      InteractionManager.runAfterInteractions(() => {
-          this.setState({isLoading: false});
-      });
+      //InteractionManager.runAfterInteractions(() => {
+      //    this.setState({isLoading: false});
+      //});
   }
   componentWillMount(){
       var _this = this;
@@ -68,19 +67,25 @@ export default class Main extends Component {
           _this.setState({ region:region_value,  });
         }
       });
-      Store.get('user').then((user_value) => {
-        _this.setState({ user:user_value });
-      });
-      //Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
-      //  _this.map = map_value;
+      //Store.get('user').then((user_value) => {
+      //  _this.setState({ user:user_value });
       //});
+      if(Global.MAP == null)
+      Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
+        if(map_value != null){
+            _this.map = map_value;
+        }else{
+            _this.map = 'BaiduMap'
+        }
+        Global.MAP = _this.map
+      });
   }
   componentWillUpdate() {
-      var _this = this;
+      /*var _this = this;
       Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
         if(map_value == null) _this.map = "BaiduMap";
         else _this.map = map_value;
-      });
+      });*/
   }
   turnOffGps(){
       navigator.geolocation.clearWatch(this.watchID);
@@ -97,7 +102,7 @@ export default class Main extends Component {
       this.setState({gps:true});
   }
   renderMap(){
-      switch(this.map) {
+      switch(Global.MAP) {
           case 'GoogleMap':
               return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
               break;
@@ -136,7 +141,7 @@ export default class Main extends Component {
     //alert(JSON.stringify(filter))
   }
   render() {
-    if(this.state.isLoading) return <Loading />
+    //if(this.state.isLoading) return <Loading />
     /*<Drawer tapToClose={true} //type="overlay"
         ref={(ref) => this.drawer = ref}
         styles={{

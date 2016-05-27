@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {Alert, Image, ListView, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
+import Global from '../io/Global'
 import Style from './Style'
 import Loading from './Loading'
 import PlaceForm from './PlaceForm'
@@ -191,6 +192,7 @@ export default class Settings extends React.Component{
              <Picker selectedValue={this.state.map} onValueChange={(value)=> {
                   this.setState({ map:value })
                   Store.save_string(Store.SETTINGS_MAP,value)
+                  Global.MAP=value
              }}>
                  {this.map_list.map(function(item,n){
                       return <Picker.Item key={item} label={item} value={item} />;

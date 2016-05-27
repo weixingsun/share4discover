@@ -344,7 +344,7 @@ export default class BaiduMap extends Component {
                 annotations={ this.state.markers }
                 //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
-                overlays={ this.state.polylines }
+                //overlays={ this.state.polylines }
             />
             { this.renderGpsIcon() }
             { this.renderDetailOverlay() }
