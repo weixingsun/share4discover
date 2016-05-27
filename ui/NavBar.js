@@ -4,10 +4,8 @@ import React, {Component} from 'react';
 import {View,Text,TouchableHighlight,} from 'react-native';
 import Style from './Style'
 import Filter from './Filter'
-const IIcon = require('react-native-vector-icons/Ionicons');
-const FIcon = require('react-native-vector-icons/FontAwesome');
+import {Icon} from './Icon'
 
-//<NavBar navigator={nav} title={msg.title} />
 var NavBar = React.createClass ({
 
     getInitialState() {
@@ -31,14 +29,14 @@ var NavBar = React.createClass ({
     renderFilter(){
         return (
             <TouchableHighlight style={Style.navButton} onPress={this.goFilter}>
-                <FIcon name="filter" color='#3B3938' size={40}/>
+                <Icon name="fa-filter" color='#3B3938' size={40}/>
             </TouchableHighlight>
         );
     },
     renderBack(){
         return (
             <TouchableHighlight style={Style.navButton} onPress={this.goBack}>
-                <IIcon name="ios-arrow-back" color='#3B3938' size={40}/>
+                <Icon name="ion-ios-arrow-back" color='#3B3938' size={40}/>
             </TouchableHighlight>
         );
     },
@@ -52,7 +50,7 @@ var NavBar = React.createClass ({
              {this.renderLeftIcon()}
              <Text style={Style.navTitle}>{this.props.title}</Text>
              <TouchableHighlight style={Style.navButton} onPress={this.goBack}>
-                 <IIcon name="ios-upload-outline" color='#3B3938' size={40}/>
+                 <Icon name="ion-ios-upload-outline" color='#3B3938' size={40}/>
              </TouchableHighlight>
         </View>
         );

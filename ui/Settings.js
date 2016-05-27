@@ -7,8 +7,7 @@ import Style from './Style'
 import Loading from './Loading'
 import PlaceForm from './PlaceForm'
 import NavigationBar from 'react-native-navbar'
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 //import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
@@ -130,8 +129,8 @@ export default class Settings extends React.Component{
         );
     }
     getLockIcon(){
-        if(!this.state.editable) return 'lock' //'ios-lock-outline'
-        return 'unlock-alt'
+        if(!this.state.editable) return 'ion-ios-lock-outline'
+        return 'ion-ios-unlock-outline'
     }
     reload(){
         if(this.place_list.length>0){
@@ -143,7 +142,7 @@ export default class Settings extends React.Component{
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-            return <IIcon name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
+            return <Icon name="ion-minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
     }
     _renderRow(data, sectionID, rowID) {
@@ -175,27 +174,19 @@ export default class Settings extends React.Component{
     render() {
         //alert('render.map:'+this.state.map)
         if(this.state.isLoading) return <Loading />
+        //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: "Settings"}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
-                  <View style={{width:50}} />
-                  <IIcon name={"ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
-                </View>
-             }
-             rightButton={
-               <View style={{flexDirection:'row',}}>
-                  <FIcon name={"plus"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
-                  <View style={{width:50}} />
-                  <FIcon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
+                  <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                 </View>
              }
           />
           <View style={styles.container}>
-             <TouchableOpacity style={styles.header} onPress={()=> alert('Maps') }>
-                 <Text>Map Settings</Text>
+             <TouchableOpacity style={styles.header} >
+                 <Text>Map & Search Engine</Text>
              </TouchableOpacity>
              <Picker selectedValue={this.state.map} onValueChange={(value)=> {
                   this.setState({ map:value })
@@ -205,8 +196,13 @@ export default class Settings extends React.Component{
                       return <Picker.Item key={item} label={item} value={item} />;
                  })}
              </Picker>
-             <TouchableOpacity style={styles.header} onPress={()=> alert('Places') }>
+             <TouchableOpacity style={styles.header} >
                  <Text>Places Settings</Text>
+                 <View style={{flex:1}} />
+                 <Icon name={"ion-ios-add"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
+                 <View style={{width:40}} />
+                 <Icon name={this.getLockIcon()} size={30} onPress={() => this.switchEdit()} />
+                 <View style={{width:20}} />
              </TouchableOpacity>
              <ListView
                 enableEmptySections={true}      //annoying warning
@@ -223,3 +219,12 @@ export default class Settings extends React.Component{
         )
     }
 };
+/*
+             rightButton={
+               <View style={{flexDirection:'row',}}>
+                  <Icon name={"ion-ios-add"} color={'#333333'} size={48} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
+                  <View style={{width:50}} />
+                  <Icon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
+                </View>
+             }
+*/

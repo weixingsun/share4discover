@@ -4,7 +4,7 @@ import {Alert, ScrollView, Text, Image, StyleSheet, TouchableOpacity, View, List
 import Style from './Style'
 import Web from './Web'
 import NavigationBar from 'react-native-navbar'
-import IIcon from 'react-native-vector-icons/Ionicons'
+import {Icon} from './Icon'
 
 var styles = StyleSheet.create({
     container: {
@@ -136,7 +136,7 @@ export default class WatchList extends React.Component{
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-            return <IIcon name="minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
+            return <Icon name="ion-minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
 //containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
     }
@@ -175,7 +175,7 @@ export default class WatchList extends React.Component{
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title:'My Watch List',}}
              leftButton={
-               <IIcon name={"ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
+               <Icon name={"ion-ios-arrow-thin-left"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
              }
              rightButton={
                <Text size={28} onPress={() => this.switchEdit()}>{this.getEditText()}</Text>

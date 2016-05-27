@@ -15,9 +15,9 @@ export default class FBLoginView extends Component {
     }
     getColor(){
         if(this.props.user != null){
-            return "#dddddd"
-        }else{
             return "#425bb4"
+        }else{
+            return "#dddddd"
         }
     }
     render(){
@@ -38,7 +38,7 @@ export default class FBLoginView extends Component {
                 }
               }}
               //color={"#000000"}
-              backgroundColor={this.getColor()}
+              color={this.getColor()}
               name={"fa-facebook-square"}
               size={35} 
               //borderRadius={10}

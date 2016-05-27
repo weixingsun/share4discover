@@ -2,8 +2,7 @@
 import React, {Component} from 'react'
 import {ListView,View,Text,TouchableHighlight,StyleSheet,ScrollView,ActivityIndicatorIOS,SwitchIOS,} from 'react-native'
 import NavigationBar from 'react-native-navbar'
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 import Style from './Style'
 import GooglePlace from './GooglePlace'
 
@@ -29,7 +28,7 @@ export default class SearchAddr extends Component {
       <View>
         <NavigationBar style={Style.navbar} title={{title:'Type to Search',}}
             leftButton={
-                <IIcon name={"ios-arrow-back"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
+                <Icon name={"ion-ios-arrow-back"} color={'#3B3938'} size={40} onPress={() => this.props.navigator.pop() } />
             }
             rightButton={
                 <TouchableHighlight onPress={() =>{ this.props.route.callback(this.state.selectedPlace); this.props.navigator.pop() }}>

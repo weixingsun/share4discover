@@ -1,8 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
-//import FIcon from 'react-native-vector-icons/FontAwesome'
-import IIcon from 'react-native-vector-icons/Ionicons'
+import {Icon} from './Icon'
 import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"

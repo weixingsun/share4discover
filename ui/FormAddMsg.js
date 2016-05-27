@@ -1,8 +1,7 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
 import {Alert, Picker, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import IIcon from 'react-native-vector-icons/Ionicons';
-import FIcon from 'react-native-vector-icons/FontAwesome';
+import {Icon} from './Icon'
 //import Form from 'react-native-tableview-form';
 //import Form from './Form';
 import t from 'tcomb-form-native'
@@ -260,12 +259,12 @@ export default class PDF extends Component {
                   <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <IIcon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                       <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <IIcon name={'ios-paper-plane-outline'} size={40} onPress={() => this.switchEditMode()} />
+                        <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={() => this.switchEditMode()} />
                      </View>
                    }
                   />

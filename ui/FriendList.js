@@ -3,8 +3,7 @@ import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
 import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
 import JsonAPI from "../io/Net"
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
@@ -137,15 +136,14 @@ export default class ShareList extends Component {
   render() {
     //alert(JSON.stringify(this.props.filters))
     this.reload(this.props.filters);
-    //IIcon name="navicon"
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                <IIcon name={'ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
+                <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             }
             rightButton={
-                <FIcon name={'plus'} size={33} onPress={() => alert('new!')}/>
+                <Icon name={'ion-ios-add'} size={48} onPress={() => alert('new!')}/>
             } />
         <ListView 
             dataSource={this.dataSource} 

@@ -1,8 +1,7 @@
 'use strict';
 import React, {Component} from 'react'
 import {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 import Store from '../io/Store'
 import Style from './Style'
 import Loading from './Loading'
@@ -71,8 +70,8 @@ export default class APIList extends React.Component {
         }
     }
     getLockIcon(){
-        if(!this.state.editable) return 'lock' //'ios-lock-outline'
-        return 'unlock-alt'
+        if(!this.state.editable) return 'ion-ios-lock-outline'
+        return 'ion-ios-unlock-outline'
     }
     switchEditMode(){
         if(this.state.editable) this.setState({editable:false})
@@ -109,12 +108,12 @@ export default class APIList extends React.Component {
     }
     _renderDeleteButton(id,name){
         if(this.state.editable)
-            return <FIcon style={{marginRight:15}} name="minus-circle" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
+            return <Icon style={{marginRight:15}} name="ion-ios-remove-circle" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
         else return null;
     }
     _renderCopyButton(id,name){
         if(this.state.editable)
-            return <Icon style={{marginRight:25}} name="ios-copy-outline" size={30} color="#C00" onPress={()=>this.copyItem(id,name)} />
+            return <Icon style={{marginRight:25}} name="ion-ios-copy-outline" size={30} color="#C00" onPress={()=>this.copyItem(id,name)} />
         else return null;
     }
     _renderRow(data, sectionID, rowID) {
@@ -139,12 +138,12 @@ export default class APIList extends React.Component {
           <NavigationBar style={Style.navbar} title={{title:'My API List',}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={"ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                    <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <FIcon name={this.getLockIcon()} color={'#333333'} size={30} onPress={()=>this.switchEditMode()} />
+                    <Icon name={this.getLockIcon()} color={'#333333'} size={40} onPress={()=>this.switchEditMode()} />
                  </View>
               }
           />

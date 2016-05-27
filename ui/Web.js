@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, WebView} from 'react-native';
 import NavigationBar from 'react-native-navbar'
 import Style from './Style'
-import IIcon from 'react-native-vector-icons/Ionicons'
+import {Icon} from './Icon'
 //import TimerMixin from 'react-timer-mixin'
  
 export default class Web extends Component {
@@ -88,16 +88,16 @@ requestAnimationFrame <> cancelAnimationFrame
           <NavigationBar style={Style.navbar} title={{title: this.state.title+'',}}
             leftButton={
                 <View style={{flexDirection:'row',}}>
-                <IIcon name={"close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                <Icon name={"ion-close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
                  <View style={{width:50}} />
-                <IIcon name={"ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
+                <Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
                 </View>
             }
             rightButton={
                 <View style={{flexDirection:'row',}}>
-                <IIcon name={"arrow-left-a"} color={this.getColor(this.state.backEnabled)} size={30} onPress={() => this.back() } />
+                <Icon name={"ion-arrow-left-a"} color={this.getColor(this.state.backEnabled)} size={30} onPress={() => this.back() } />
                   <View style={{width:50}} />
-                <IIcon name={"arrow-right-a"} color={this.getColor(this.state.forwardEnabled)} size={30} onPress={() => this.forward() } />
+                <Icon name={"ion-arrow-right-a"} color={this.getColor(this.state.forwardEnabled)} size={30} onPress={() => this.forward() } />
                 </View>
             }
           />

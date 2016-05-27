@@ -1,8 +1,7 @@
 'use strict';
 import React, {Component} from 'react'
 import {ListView,View,Text,TouchableHighlight,StyleSheet,ScrollView,ActivityIndicatorIOS,SwitchIOS,} from 'react-native'
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 import Style from './Style'
 
 export default class Overlay extends Component {

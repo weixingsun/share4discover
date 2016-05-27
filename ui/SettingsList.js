@@ -12,8 +12,7 @@ import Settings from './Settings'
 import Store from '../io/Store'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
-import IIcon from 'react-native-vector-icons/Ionicons'
-import FIcon from 'react-native-vector-icons/FontAwesome'
+import {Icon} from './Icon'
 
 export default class SettingsList extends React.Component {
     constructor(props) {
@@ -109,14 +108,14 @@ export default class SettingsList extends React.Component {
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <IIcon name={'ios-arrow-up'} size={35}/>
+                          <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
                     <Text>Update</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <FIcon name={'info-circle'} size={30}/>
+                          <Icon name={'fa-info-circle'} size={30}/>
                       </View>
                     <Text>About</Text>
                   </TouchableOpacity>
@@ -126,7 +125,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <IIcon name={'ios-cog-outline'} size={35}/>
+                          <Icon name={'ion-ios-cog-outline'} size={35}/>
                       </View>
                       <Text>Settings</Text>
                   </TouchableOpacity>
@@ -136,7 +135,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <FIcon name={'plug'} size={30}/>
+                          <Icon name={'fa-plug'} size={30}/>
                       </View>
                       <Text>API List</Text>
                   </TouchableOpacity>

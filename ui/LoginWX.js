@@ -1,8 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
-import FIcon from 'react-native-vector-icons/FontAwesome'
-import IIcon from 'react-native-vector-icons/Ionicons'
+import {Icon} from './Icon'
 import FBLogin from 'react-native-facebook-login'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
@@ -12,10 +11,10 @@ import FBLoginView from "./FBLoginView"
 var Login = React.createClass({
   renderLoginButton() {
     if(this.props.user !== null){
-        return <FIcon name={'weixin'} size={30} backgroundColor="#dddddd" onPress={this._googleSignOut} />
+        return <Icon name={'fa-weixin'} size={30} color="#dddddd" onPress={this._googleSignOut} />
     }else{
         //return (<GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );
-        return <FIcon name={'weixin'} size={30} backgroundColor="#dd4b39" onPress={this._googleSignIn} />
+        return <Icon name={'fa-weixin'} size={30} color="#4ddb39" onPress={this._googleSignIn} />
     }
   },
   renderLoginName() {
