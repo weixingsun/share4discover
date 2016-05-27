@@ -21,7 +21,6 @@ export default class GoogleMap extends Component {
       super(props);
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'fa-taxi',};
-      this.mkid=1;
       this.placeIcon=null;
       this.state = {
         type:'car',
@@ -53,9 +52,6 @@ export default class GoogleMap extends Component {
           console.log(result);
         });
     }
-    incMkid(){
-        return this.mkid++
-    }
     permission(){ 
         this.singlePermission('ACCESS_FINE_LOCATION')
         this.singlePermission('ACCESS_COARSE_LOCATION')
@@ -67,7 +63,7 @@ export default class GoogleMap extends Component {
       if(this.msg!=null){
          this.msg['latitude'] = parseFloat(this.msg.lat)
          this.msg['longitude']= parseFloat(this.msg.lng)
-         this.msg['id']       = this.incMkid()
+         this.msg['id']       = this.msg.ctime
          this.msg['color']    = 'blue'
          this.msg['icon']     = this.icons[this.msg.type]
         this.addMarker( this.msg );
@@ -318,7 +314,6 @@ export default class GoogleMap extends Component {
         this.addMarker({id: this.state.mkid++, latlng: event.nativeEvent.coordinate, s:'#0000ff' });
     }*/
     clearMarkers(){
-        this.mkid=1;
         this.setState({
             markers: [],
         });
@@ -328,7 +323,7 @@ export default class GoogleMap extends Component {
          //row ={ lat,lng,type,title,content,ctime, }
          row['latitude'] = parseFloat(row.lat)
          row['longitude']= parseFloat(row.lng)
-         row['id']       = this.incMkid()
+         row['id']       = row.ctime
          row['color']    = 'blue'
          row['icon']     = this.icons[row.type]
          this.addMarker( row );
