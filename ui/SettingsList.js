@@ -10,6 +10,7 @@ import APIList from './APIList'
 import Settings from './Settings'
 //import MapSettings from './MapSettings'
 import Store from '../io/Store'
+import Global from '../io/Global'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 import {Icon} from './Icon'

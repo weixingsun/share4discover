@@ -10,6 +10,8 @@ import Style       from "./Style"
 import Loading     from "./Loading"
 import GoogleMap   from "./GoogleMap"
 import BaiduMap from "./BaiduMap"
+import Maps from "./Maps"
+
 import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
@@ -26,7 +28,7 @@ export default class Main extends Component {
     this.types = ['car','taxi','estate']
 
     this.state = {
-      page:this.props.page!=null?this.props.page: Store.emailTab,
+      page:this.props.page!=null?this.props.page: Store.msgTab,
       //isLoading:true,
       selectedMsg:this.props.msg,
       //user: null,
@@ -101,27 +103,15 @@ export default class Main extends Component {
       );
       this.setState({gps:true});
   }
-  renderMap(){
-      switch(Global.MAP) {
-          case 'GoogleMap':
-              return <GoogleMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
-              break;
-          case 'BaiduMap':
-              return <BaiduMap navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} filters={this.state.filters} drawer={this.drawer} gps={this.state.gps} />
-              break;
-          default:
-              return null;
-      }
-  }
   pages(){
     if(this.state.page ===Store.msgTab){
       return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
-    } else if(this.state.page ===Store.emailTab){
-      return <Text>Messengers</Text>
+    //} else if(this.state.page ===Store.emailTab){
+    //  return <Text>Messengers</Text>
     } else if(this.state.page ===Store.mapTab){
-      return this.renderMap();
+      return <Maps navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} placeIcon={this.props.placeIcon} gps={this.state.gps} />
     } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator}/>
     }
@@ -161,7 +151,6 @@ export default class Main extends Component {
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon size={40} name={Store.msgTab}      />
             <Icon size={40} name={Store.userTab}  />
-            <Icon size={40} name={Store.emailTab}    />
             <Icon size={40} name={Store.mapTab}      />
             <Icon size={40} name={Store.confTab} />
           </Tabs>
@@ -171,3 +160,4 @@ export default class Main extends Component {
     );
   }
 }
+//<Icon size={40} name={Store.emailTab}    />

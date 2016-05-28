@@ -21,25 +21,25 @@ export default class PDF extends Component {
         this.old_value = {};
         this.state={ 
             content_height: 40,
-            value: {owner:'wsun',address:'',latlng:''},
+            value: {owner:'',ask:false,address:'',latlng:''},
         }
         this.type= {
             type: t.enums(Net.MSG_TYPES),
             owner: t.String,
+            ask: t.Boolean,
             title: t.String,
             address: t.String,
             lat: t.Number,
             lng: t.Number,
+            ctime: t.Number,
             content: t.String,
         }
         //this.onChangeNative=this.onChangeNative.bind(this)
     }
-    multilineChange(event){
-        //this.content_height=event.nativeEvent.contentSize.height;
-        //alert(event.nativeEvent.contentSize)
-    }
     changePlace(place){
         //this.refs.form.props.value;
+        var ctime = +new Date();
+        this.old_value['ctime']= ctime
         this.old_value['address']= place.addr
         this.old_value['lat']= place.latitude.toFixed(5)
         this.old_value['lng']= place.longitude.toFixed(5)
@@ -51,12 +51,11 @@ export default class PDF extends Component {
         var value = this.refs.form.getValue();
         //alert(JSON.stringify(value))
         if (value) { // if validation fails, value will be null
-            value['ctime']=Date.now()
             //value['pics']=[]                             ////////ctime undefined
             var _this = this;
             Alert.alert(
               "Publish",
-              "Do you want to publish this information ? "
+              "Do you want to publish this information ? ",
               [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
@@ -68,13 +67,12 @@ export default class PDF extends Component {
        }
     }
     onChange(form){
-        if(form.content != null && form.content !== this.old_value.content) {
-            //this.content_height=event.nativeEvent.contentSize.height;
-            //this.setState({
-            //    value: event.nativeEvent.text,
-            //});
-        }
+        var ctime = +new Date();
         this.old_value = form
+        this.old_value['ctime']= ctime
+        this.setState({
+             value: this.old_value,
+        })
     }
     /*onChangeNative(event){
         this.content_height= event.nativeEvent.contentSize.height
@@ -94,6 +92,30 @@ export default class PDF extends Component {
             //content_height: event.nativeEvent.contentSize.height,
     }*/
     componentWillMount(){
+        //alert(Date.now())
+        this.checkLoginUser();
+    }
+    checkLoginUser(){
+        var self = this
+        Store.get('user_fb').then(function(fb){
+            if(fb == null){
+                Store.get('user_gg').then(function(gg){
+                    if(gg == null) {
+                        alert('Please login to publish information.')
+                    }else{
+                        var name = gg.type+':'+gg.email
+                        self.setState({
+                            value: {owner:name,address:'',latlng:''},
+                        });
+                    }
+                });
+            }else{
+                var name = fb.type+':'+fb.email
+                self.setState({
+                    value: {owner:name,address:'',latlng:''},
+                });
+            }
+        });
     }
     render(){
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
@@ -103,6 +125,7 @@ export default class PDF extends Component {
           address:{hidden:true},
           lat:{hidden:true},
           lng:{hidden:true},
+          ctime:{hidden:true},
           content: {
             stylesheet: Object.assign({}, Form.stylesheet, {
               textbox: {

@@ -18,11 +18,21 @@ export default class Overlay extends Component {
       dataSource: this.state.dataSource.cloneWithRows(arr)
     });
   }
+  isNumeric(n) {
+      return !isNaN(parseInt(n)) && isFinite(n);
+  }
   getMsgArray(data){
       var arr = [];
       for (var key in data) {
         if (data.hasOwnProperty(key) && this.filterKeys(key, data)) {
-           arr.push(key + ":" + data[key]);
+           var name = data[key]
+           if(this.isNumeric(data[key]) && data[key]>100000000000){
+               name=new Date(parseInt(data[key]))  //.toLocaleString
+               //console.log(data[key])
+           }else{
+               name = name.replace(/[\r\n]\s*/g, ' ');
+           }
+           arr.push(key + ":" + name);
         }
       }
       return arr;
@@ -33,13 +43,16 @@ export default class Overlay extends Component {
       var b3 = key !== 'lat'
       var b4 = key !== 'lng'
       var b5 = key !== 'title'
-      return b1 && b2 && b3 && b4 && b5;
+      var b6 = key !== 'image'
+      var b7 = key !== 'longitude'
+      var b8 = key !== 'latitude'
+      var b9 = key !== 'ask'
+      return b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 ;
   }
   press(data){
     console.log(data)
   }
   renderRow(rowData) {
-    //console.log('rowData:'+rowData);
     return (
     <TouchableHighlight
       underlayColor='#dddddd'

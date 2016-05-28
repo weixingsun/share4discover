@@ -14,7 +14,7 @@ export default class GooglePlaces extends Component {
   render() {
     return (
       <GooglePlacesAutocomplete
-        placeholder='Search'
+        placeholder='Search Place in Google'
         minLength={3} // minimum length of text to search
         autoFocus={false}
         fetchDetails={true}

@@ -1,12 +1,12 @@
 'use strict';
 import React, { Component } from 'react'
-import { DeviceEventEmitter, View, Text, StyleSheet, ScrollView, } from 'react-native'
+import { DeviceEventEmitter,Picker, View, Text, StyleSheet, ScrollView, } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
 import Tool from "../io/Tool"
-import Loading from "./Loading"
+import FormAddMsg from "./FormAddMsg"
 import JsonAPI from "../io/Net"
 import Style from "./Style"
 import PriceMarker from './PriceMarker'
@@ -18,10 +18,12 @@ import KKLocation from 'react-native-baidumap/KKLocation';
 export default class BaiduMap extends Component {
     constructor(props) {
       super(props);
+      this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'fa-taxi',};
+      this.bluePlaceIcon=null;
+      this.grayPlaceIcon=null;
       this.state = {
-        filters: this.props.filters,
         //region: this.props.region,
-        mkid:1,
+        type:'car',
         markers: [],
         polylines:[
                     {coordinates: [
@@ -35,10 +37,9 @@ export default class BaiduMap extends Component {
                 ],
         ccid:0,
         circles: [],
-        //initialPosition: null,
-        //lastPosition: null,
         gps: this.props.gps,
-        isLoading: true,
+        //isLoading: true,
+        download:true,
       };
       this.region = this.props.region
       this.userPosition = {}
@@ -49,32 +50,17 @@ export default class BaiduMap extends Component {
       //this.onRegionChange = this.onRegionChange.bind(this)
       //this.onMarkerClick = this.onMarkerClick.bind(this)
     }
-    loadSettings(){
+    loadIcon(name){
         var _this = this;
-        getImageSource('ion-ios-circle-filled', 30, 'blue').then((source) => {
-            this.setState({
-                userIcon: source,
-            });
+        getImageSource(name, 30, 'blue').then((source) => {
+            this.bluePlaceIcon= source
         });
-        /*Store.get(Store.GPS_POS).then(function(value) {
-            if(value!=null){
-                _this.setState({initialPosition: value});
-            }
-        });*/
-        getImageSource('fa-map-marker', 40, 'blue').then((source) => {
-            if(this.msg!=null){
-                var lat=parseFloat(this.msg.lat);
-                var lng=parseFloat(this.msg.lng);
-                this.addMarker({ latitude:lat, longitude:lng, title:this.msg.title, subtile:this.msg.content, image:source });
-                this.region = {latitude:lat,longitude:lng, latitudeDelta:0.02,longitudeDelta:0.02}
-                //autofit to multiple waypoints
-            }
-            this.setState({isLoading:false, markerIcon: source,});
+        getImageSource(name, 30, 'gray').then((source) => {
+            this.grayPlaceIcon= source
         });
     }
     componentWillMount(){
         var _this=this;
-        this.loadSettings();
         DeviceEventEmitter.addListener('regionChange', function(event: Event){
             //alert('regionChange:'+JSON.stringify(event))
             _this.onRegionChange(event)
@@ -83,6 +69,7 @@ export default class BaiduMap extends Component {
             //alert('markerClick:'+JSON.stringify(event))
             _this.onMarkerClick(event)
         });
+        this.loadIcon(this.icons[this.state.type])
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -146,53 +133,14 @@ export default class BaiduMap extends Component {
           this.turnOnGps();
       }
     }
-    getRegion(lat,lng){
-        return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
-    }
-    updateMyPos(position){
+    /*updateMyPos(position){
         this.myPosMarker = { latitude:position.latitude, longitude:position.longitude, title: 'Me', subtitle: '', image: this.state.userIcon }
         Store.save(Store.GPS_POS, position);
         this.moveOrNot(position);
         //this.setState({lastPosition: position});
-    }
-    renderMyPosMarker(){
-      if(this.myPosMarker===null) return null;
-      else
-      return (
-        <MapView.Marker
-        key={0}
-        coordinate={this.myPosMarker.pos}
-        //pinColor={'#0000ff'}
-        //title={marker.title}
-        //description={marker.description}
-        //onSelect={(e) => console.log('onSelect', e)}
-        //    <PriceMarker amount={99} color={marker.s} />
-        >
-            <Icon name={"fa-circle"} color={'#3333ff'} size={16} />
-        </MapView.Marker>
-      );
-    }
-    renderPlaceMarkers(){
-        return this.state.markers.map(
-          marker => (
-            <MapView.Marker
-            key={marker.id}
-            coordinate={marker.pos}
-            pinColor={marker.s}
-            //title={marker.title}
-            //description={marker.description}
-            //onSelect={(e) => console.log('onSelect', e)}
-            //    <PriceMarker amount={99} color={marker.s} />
-            />
-        ));
-    }
+    }*/
     back(){
       this.props.navigator.pop();
-    }
-    search(place){
-        this.move(place); 
-        //this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: this.msg.title, subtile: this.msg.content, image: this.state.markerIcon })
-        //this.addMarker({id: this.incMarkerId(), pos: place, s:'#0000ff' });
     }
     move(p){
       if(this.refs["mapView"]!==null)
@@ -214,10 +162,13 @@ export default class BaiduMap extends Component {
         //if(!this.pointInBBox(position))
         this.move(position);
     }
+    enableDownload(flag){
+        this.setState({download:flag})
+    }
     download() {
       var self = this;
-      //alert('type:'+this.props.filters.type+'\n'+JSON.stringify(this.state.region)+'\nrange:'+this.props.filters.range);
-      JsonAPI.rangeMsg(this.props.filters.type, this.region, this.props.filters.range).then((rows)=> {
+      alert('type:'+this.state.type+'\n'+JSON.stringify(this.region));
+      JsonAPI.rangeMsg(this.state.type, this.region, this.props.filters.range).then((rows)=> {
           //alert('range:'+range+', result.count='+rows.length )
           self.clearMarkers();
           self.renderMarkers(rows);
@@ -251,10 +202,25 @@ export default class BaiduMap extends Component {
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-                <Icon name={"ion-ios-search"} color={'#3B3938'} size={40} onPress={() => this.props.drawer.open()} />
+              <View style={{flexDirection:'row'}}>
+                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={() => this.props.drawer.open()} />
+                <Picker
+                    style={{width:40}}
+                    selectedValue={this.state.type}
+                    onValueChange={this.onTypeChange.bind(this, 'type')}
+                    //prompt="Choose a Type"
+                >
+                       <Picker.Item label="Car" value="car" />
+                       <Picker.Item label="Real Estate" value="estate" />
+                </Picker>
+              </View>
             }
             rightButton={
-                <Icon name={'ion-ios-cloud-download-outline'} color={'#3B3938'} size={40} onPress={this.download.bind(this)} />
+              <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={36} onPress={this.download.bind(this)} />
+                <View style={{width:40}} />
+                <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
+              </View>
             }
           />
         );
@@ -272,24 +238,24 @@ export default class BaiduMap extends Component {
           return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
-      //alert(JSON.stringify(r))
+      alert(JSON.stringify(r)) //{latitude,longitude,zoom}
       this.region = r
       Store.save('region', r);
     }
     onMarkerClick(e) {
-        //alert(JSON.stringify(e))
-        this.region = {latitude:e.latitude,longitude:e.longitude, latitudeDelta:0.02,longitudeDelta:0.02}
-        this.setState({isLoading:false, });
+        alert(JSON.stringify(e))
+        //this.region = {latitude:e.latitude,longitude:e.longitude, latitudeDelta:0.02,longitudeDelta:0.02}
+        //this.setState({isLoading:false, });
         /*this.props.navigator.push({
             component: ,
             passProps: {navigator:this.props.navigator,},
         });*/
     }
-    onLongPress(event) {
-      //alert(JSON.stringify(event.nativeEvent.coordinate));
-      //this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
+    /*onLongPress(event) {
+      alert(JSON.stringify(event.nativeEvent.coordinate));
+      this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
       this.addMarker({ latitude:place.latitude, longitude:place.longitude, title: 'LongPress', subtitle: '', image: this.state.markerIcon })
-    }
+    }*/
     clearMarkers(){
       this.setState({
         mkid:1,
@@ -310,10 +276,6 @@ export default class BaiduMap extends Component {
           marker]
       });
     }
-    incMarkerId(){
-      this.setState({mkid:this.state.mkid+1});
-      return this.state.mkid;
-    }
     addCircle(circle){
       var {circles} = this.state;
       this.setState({
@@ -326,8 +288,20 @@ export default class BaiduMap extends Component {
         if(this.props.filters === this.state.filters) return true;
         else return false;
     }
+    onTypeChange(key: string, value: string) {
+        const newState = {};
+        newState[key] = value;
+        this.setState(newState);
+        this.loadIcon(this.icons[value])
+        this.enableDownload(true)
+        this.clearMarkers()
+    }
+    getDownloadIcon(flag){
+        if(flag) return '#3B3938'
+        else return '#dddddd'
+    }
     render(){
-        if(this.state.isLoading) return <Loading /> // || this.state.markerIcon===null || this.state.initialPosition===null) 
+        //if(this.state.isLoading) return <Loading /> // || this.state.markerIcon===null || this.state.initialPosition===null) 
         //var icon = require('./images/marker_g_64.png')
         return (
           <View style={{flex:1}}>
