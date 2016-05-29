@@ -1,7 +1,7 @@
 'use strict'
 import React, { Component } from 'react'
 import {Alert, Image, ListView, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import jsonpath from '../io/jsonpath'
+//import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Global from '../io/Global'
 import Style from './Style'

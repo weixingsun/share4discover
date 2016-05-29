@@ -77,7 +77,7 @@ export default class ControlPanel extends Component {
             <Text style={{color:'white',marginLeft:5,}}>Types</Text>
             <View style={{flex:1}} />
         </View>
-        <Picker style={{color:'white',backgroundColor:'gray',borderWidth:1}} selectedValue={this.state.filters.type} onValueChange={(value)=> { this.changeType(value)}}>
+        <Picker style={{backgroundColor:'gray',borderWidth:1}} selectedValue={this.state.filters.type} onValueChange={(value)=> { this.changeType(value)}}>
             {this.props.list.map(function(item,n){
                 return <Picker.Item key={item} label={item} value={item} />;
             })}

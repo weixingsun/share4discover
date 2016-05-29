@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {DeviceEventEmitter, View, Text, StyleSheet, ScrollView, Picker} from 'react-native'
+import {DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -16,26 +16,32 @@ import FormAddMsg from "./FormAddMsg"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
 import SearchAddr from './SearchAddr'
+import Modal from 'react-native-root-modal';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 export default class Maps extends Component {
     constructor(props) {
       super(props);
+      this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.typesDict = {car:'Car', estate:'Estate'}
+      this.typesArr = ['car','estate', 'meal', 'taxi', 'book', 'help', 'tool', 'medkit']
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
-      this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'fa-taxi',};
+      this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'ion-md-car',book:'ion-ios-book', help:'ion-ios-help-buoy',tool:'ion-md-hammer', meal:'ion-ios-beer',medkit:'ion-md-medkit'};
       this.bluePlaceIcon=null;
       this.grayPlaceIcon=null;
       this.markers = []
       this.region = this.props.region
       this.download = true
       this.state = {
+        typeDataSource: this.ds.cloneWithRows(this.typesArr),
         type:'car',
         ccid:0,
         circles: [],
         //initialPosition: null,
         lastPosition: null,
         gps: this.props.gps,
-        reload:false
+        reload:false,
+        showTypes:false,
       };
       this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
       this.msg = this.props.msg;
@@ -60,23 +66,21 @@ export default class Maps extends Component {
         });
     }
     permission(){ 
-        this.singlePermission('ACCESS_FINE_LOCATION')
-        this.singlePermission('ACCESS_COARSE_LOCATION')
+        if(Platform.OS === 'android' && Platform.Version > 22){
+            this.singlePermission('ACCESS_FINE_LOCATION')
+            this.singlePermission('ACCESS_COARSE_LOCATION')
+        }
     }
     componentWillMount(){
         this.permission();
         //if(this.all_permissions_granted) alert()
         var _this = this;
+        //this.region['zoom']=15
         if(this.msg!=null){
           this.addMarker( this.msg );
-          this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02, zoom:15}
+          this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
           //autofit to multiple waypoints
         }
-        /*Store.get(Store.GPS_POS).then(function(value) {
-          if(value!=null){
-              _this.setState({initialPosition: value});
-          }
-        });*/
         var _this=this;
         DeviceEventEmitter.addListener('regionChange', function(event: Event){
             //alert('regionChange:'+JSON.stringify(event))
@@ -122,7 +126,7 @@ export default class Maps extends Component {
       }
     }
     getRegion(lat,lng){
-        return {latitude:lat, longitude:lng, latitudeDelta:this.region.latitudeDelta,longitudeDelta:this.region.longitudeDelta,zoom:14 }
+        return {latitude:lat, longitude:lng, latitudeDelta:this.region.latitudeDelta,longitudeDelta:this.region.longitudeDelta }
     }
     /*updateMyPos(position){
         this.myPosMarker = {id: 0, latlng: position, color:'#0000ff' };
@@ -203,7 +207,7 @@ export default class Maps extends Component {
       if(!this.download) return
       var self = this;
       var range = this.distance(this.region.latitudeDelta,this.region.longitudeDelta)
-      alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.region))
+      //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.region))
       Net.rangeMsg(this.state.type, this.region, range).then((rows)=> {
           self.clearMarkers();
           self.loadMarkers(rows);
@@ -213,11 +217,8 @@ export default class Maps extends Component {
       });
       this.enableDownload(false)
     }
-    distanceZoom(zoom){
-        
-    }
     distance(latDelta,lngDelta){
-       return Math.floor(111111 * Math.min(latDelta,lngDelta)); //range circle in bbox
+       return Math.floor(111111 * Math.min(latDelta,lngDelta)/2); //range circle in bbox
     }
     distanceComplex(lat1, lon1, lat2, lon2) {
       var R = 6371;
@@ -240,16 +241,22 @@ export default class Maps extends Component {
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row'}}>
-                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={() => this.props.drawer.open()} />
+                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={() => this.setState({showTypes:!this.state.showTypes})} />
                 <Picker
                     style={{width:40}}
                     selectedValue={this.state.type}
                     onValueChange={this.onTypeChange.bind(this, 'type')}
                     //prompt="Choose a Type"
                 >
-                       <Picker.Item label="Car" value="car" />
-                       <Picker.Item label="Real Estate" value="estate" />
+                    <Picker.Item label="Car"         value="car"    />
+                    <Picker.Item label="Real Estate" value="estate" />
                 </Picker>
+                <Modal 
+                    style={{top:250,bottom:150,left:50,right:50,backgroundColor:'rgba(0, 0, 0, 0.8)',transform: [{scale: this.state.scaleAnimation}]}}
+                    visible={this.state.showTypes}
+                >
+                    {this.renderTypesModal()}
+                </Modal>
               </View>
             }
             rightButton={
@@ -262,6 +269,38 @@ export default class Maps extends Component {
           />
         );
       }
+    }
+    renderTypesModal(){
+        return (
+            <ListView
+                dataSource={this.state.typeDataSource}
+                renderRow={ this.renderTypeRow.bind(this) }
+            />
+        );
+    }
+    renderTypeRow(row: string, sectionID: number, rowID: number){
+      return (
+      <TouchableHighlight onPress={() => this._pressType(sectionID,rowID,row)}>
+        <View>
+          <View style={{flexDirection:'row', justifyContent:'center', padding:10, marginLeft:50, alignItems:'center' }}>
+            <Icon name={this.icons[row]} size={40} color={'gray'} />
+            <View style={{width:200}}>
+              <Text style={{ color:'white', fontSize:30,marginLeft:30,}}>
+                { row }
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
+      )
+    }
+    _pressType(sid,rid,data){
+        //alert('section:'+sid+', row:'+rid+', data:'+data)
+        
+        this.setState({type:data,showTypes:false})
+        this.loadIcon(this.icons[data])
+        this.enableDownload(true)
+        this.clearMarkers()
     }
     onTypeChange(key: string, value: string) {
         const newState = {};

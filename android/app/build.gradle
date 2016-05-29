@@ -137,7 +137,6 @@ android {
 dependencies {
     compile project(':react-native-baidumap')
     compile project(':react-native-weibo')
-    compile project(':react-native-mapbox-gl')
     compile project(':react-native-code-push')
     compile project(':react-native-localization')
     compile project(':react-native-google-signin')
