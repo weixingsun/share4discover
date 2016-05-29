@@ -24,7 +24,7 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.typesDict = {car:'Car', estate:'Estate'}
-      this.typesArr = ['car','estate', 'meal', 'taxi', 'book', 'help', 'tool', 'medkit']
+      this.typesArr = ['car','estate', 'meal', 'taxi', 'book', 'help', 'tool', 'medkit', ]
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'ion-md-car',book:'ion-ios-book', help:'ion-ios-help-buoy',tool:'ion-md-hammer', meal:'ion-ios-beer',medkit:'ion-md-medkit'};
       this.bluePlaceIcon=null;
@@ -241,19 +241,12 @@ export default class Maps extends Component {
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row'}}>
-                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={() => this.setState({showTypes:!this.state.showTypes})} />
-                <Picker
-                    style={{width:40}}
-                    selectedValue={this.state.type}
-                    onValueChange={this.onTypeChange.bind(this, 'type')}
-                    //prompt="Choose a Type"
-                >
-                    <Picker.Item label="Car"         value="car"    />
-                    <Picker.Item label="Real Estate" value="estate" />
-                </Picker>
+                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={'ion-ios-arrow-down'} color={'#3B3938'} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Modal 
-                    style={{top:250,bottom:150,left:50,right:50,backgroundColor:'rgba(0, 0, 0, 0.8)',transform: [{scale: this.state.scaleAnimation}]}}
+                    //style={{top:0,bottom:0,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
                     visible={this.state.showTypes}
+                    onPress={() => this.setState({showTypes:false})}
                 >
                     {this.renderTypesModal()}
                 </Modal>
@@ -270,22 +263,36 @@ export default class Maps extends Component {
         );
       }
     }
+/*
+                <Picker
+                    style={{width:40}}
+                    selectedValue={this.state.type}
+                    onValueChange={this.onTypeChange.bind(this, 'type')}
+                    //prompt="Choose a Type"
+                >
+                    <Picker.Item label="Car"         value="car"    />
+                    <Picker.Item label="Real Estate" value="estate" />
+                </Picker>
+*/
     renderTypesModal(){
         return (
+          <TouchableHighlight style={{ height:Style.DEVICE_HEIGHT*2/3, alignItems: 'center', justifyContent: 'center' }} >
             <ListView
-                dataSource={this.state.typeDataSource}
+                dataSource={ this.state.typeDataSource }
                 renderRow={ this.renderTypeRow.bind(this) }
+                renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{height: 1,backgroundColor: '#CCCCCC'}} />}
             />
+          </TouchableHighlight>
         );
     }
     renderTypeRow(row: string, sectionID: number, rowID: number){
       return (
-      <TouchableHighlight onPress={() => this._pressType(sectionID,rowID,row)}>
+      <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressType(sectionID,rowID,row)}>
         <View>
-          <View style={{flexDirection:'row', justifyContent:'center', padding:10, marginLeft:50, alignItems:'center' }}>
+          <View style={{flexDirection:'row',backgroundColor:'white', justifyContent:'center', padding:10, marginLeft:30,marginRight:30, alignItems:'center' }}>
             <Icon name={this.icons[row]} size={40} color={'gray'} />
-            <View style={{width:200}}>
-              <Text style={{ color:'white', fontSize:30,marginLeft:30,}}>
+            <View style={{width:Style.DEVICE_WIDTH/3}}>
+              <Text style={{ fontSize:20,marginLeft:30 }}>
                 { row }
               </Text>
             </View>
@@ -295,8 +302,6 @@ export default class Maps extends Component {
       )
     }
     _pressType(sid,rid,data){
-        //alert('section:'+sid+', row:'+rid+', data:'+data)
-        
         this.setState({type:data,showTypes:false})
         this.loadIcon(this.icons[data])
         this.enableDownload(true)
