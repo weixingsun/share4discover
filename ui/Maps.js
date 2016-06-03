@@ -421,7 +421,7 @@ export default class Maps extends Component {
                 region={ this.region }
                 showsUserLocation={this.state.gps}
                 rotateEnabled={false}
-                pitchEnabled={false}
+                //pitchEnabled={false}
                 showsCompass={true}
                 //userLocationViewParams={{accuracyCircleFillColor:'blue', accuracyCircleStrokeColor:'red', image:this.state.userIcon }}
                 annotations={ this.markers }

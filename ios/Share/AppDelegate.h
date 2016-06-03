@@ -10,7 +10,11 @@
 #import <UIKit/UIKit.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
 @property (nonatomic, strong) UIWindow *window;
-
 @end
+
+/*@interface BaiduMapApiDemoAppDelegate : NSObject <UIApplicationDelegate> {
+       //UIWindow *window;    
+       UINavigationController *navigationController;     
+       BMKMapManager* _mapManager;
+}*/
