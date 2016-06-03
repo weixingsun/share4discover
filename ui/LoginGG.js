@@ -2,11 +2,11 @@
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import {Icon} from './Icon'
-import FBLogin from 'react-native-facebook-login'
-import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
+//import FBLogin from 'react-native-facebook-login'
+import {GoogleSignin} from 'react-native-google-signin' //GoogleSigninButton
 import Style from "./Style"
 import Store from "../io/Store"
-import FBLoginView from "./FBLoginView"
+//import FBLoginView from "./FBLoginView"
 
 var Login = React.createClass({
   renderLoginButton() {
@@ -46,6 +46,7 @@ var Login = React.createClass({
       this.props.login(user);
     }).catch((err) => {
       console.log('WRONG SIGNIN', err);
+      //alert(JSON.stringify(err))
     }).done();
   },
   _googleSignOut() {
@@ -64,10 +65,12 @@ var Login = React.createClass({
   },
   componentDidMount() {
     //https://developers.google.com/identity/protocols/googlescopes
-    var deb_ios_id = '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com';
-    var deb_web_id = '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com';
-    var rel_ios_id = '562005031552-0c7t5d6m39g0pu50pibll1bdkr5aag9r.apps.googleusercontent.com';
-    var rel_web_id = '562005031552-0090s2j3muc1mkelqmokg2is1oqahajj.apps.googleusercontent.com';
+    //https://console.developers.google.com/apis/credentials?project=stone-botany-480
+    //https://console.developers.google.com/apis/credentials?project=share-50667
+    var deb_ios_id = '840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com'; //for ios debug: 
+    var deb_web_id = '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com'; //for android debug: account (sun.app.service) only
+    var rel_ios_id = '562005031552-0c7t5d6m39g0pu50pibll1bdkr5aag9r.apps.googleusercontent.com'; //for ios
+    var rel_web_id = '562005031552-0090s2j3muc1mkelqmokg2is1oqahajj.apps.googleusercontent.com'; //for android release
     var ios_id=rel_ios_id;
     var web_id=rel_web_id;
     if (__DEV__) {
@@ -77,9 +80,7 @@ var Login = React.createClass({
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/calendar'],
       iosClientId: ios_id,
-      //webClientId: '840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com',  //stone-botany-480
       webClientId: web_id,
-      //AndroidClientId: '562005031552-0c7t5d6m39g0pu50pibll1bdkr5aag9r.apps.googleusercontent.com',
       offlineAccess: false,
     });
 

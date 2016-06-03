@@ -27,6 +27,7 @@
 		030488201C94EEC700AA2D90 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0304881F1C94EEC700AA2D90 /* AddressBook.framework */; };
 		030488221C94EED200AA2D90 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488211C94EED200AA2D90 /* StoreKit.framework */; };
 		030F81C31CFA416B00508D46 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 030F81C21CFA40C600508D46 /* libCodePush.a */; };
+		03A3C6BB1D014A8F00BA71CA /* RNGoogleSigninButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0304881A1C94EE7300AA2D90 /* RNGoogleSigninButtonManager.m */; };
 		03D2FFF51CAF5507001823F9 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D2FFF41CAF5507001823F9 /* SafariServices.framework */; };
 		03F77A361CFA47D7001D0743 /* libRCTBaiduMap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035DEB4E1CDCDCBF0067B8D5 /* libRCTBaiduMap.a */; };
 		03F77A3B1CFA4BF0001D0743 /* BaiduMapAPI_Base.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F77A371CFA4BF0001D0743 /* BaiduMapAPI_Base.framework */; };
@@ -973,6 +974,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03A3C6BB1D014A8F00BA71CA /* RNGoogleSigninButtonManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				0304881D1C94EE7300AA2D90 /* RNGoogleSignin.m in Sources */,
