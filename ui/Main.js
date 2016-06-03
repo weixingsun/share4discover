@@ -147,6 +147,7 @@ export default class Main extends Component {
         content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     >
         <View style={{flex:1}}>
+          {this.pages()}
           <Tabs selected={this.state.page} style={Style.mainbar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon size={40} name={Store.msgTab}      />
@@ -154,7 +155,6 @@ export default class Main extends Component {
             <Icon size={40} name={Store.mapTab}      />
             <Icon size={40} name={Store.confTab} />
           </Tabs>
-          {this.pages()}
         </View>
     </Drawer>
     );
