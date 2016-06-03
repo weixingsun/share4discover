@@ -71,16 +71,8 @@ export default class Maps extends Component {
             this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
-    componentWillMount(){
-        this.permission();
-        //if(this.all_permissions_granted) alert()
-        var _this = this;
-        //this.region['zoom']=15
-        if(this.msg!=null){
-          this.addMarker( this.msg );
-          this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
-          //autofit to multiple waypoints
-        }
+    listenBMapEvents(){
+      if(Global.MAP === 'BaiduMap'){
         var _this=this;
         DeviceEventEmitter.addListener('regionChange', function(event: Event){
             //alert('regionChange:'+JSON.stringify(event))
@@ -90,6 +82,16 @@ export default class Maps extends Component {
             //alert('markerClick:'+JSON.stringify(event))
             _this.onMarkerClickBmap(event)
         });
+      }
+    }
+    componentWillMount(){
+        this.permission();
+        if(this.msg!=null){
+          this.addMarker( this.msg );
+          this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
+          //autofit to multiple waypoints
+        }
+        this.listenBMapEvents();
         this.loadIcon(this.icons[this.state.type]);
     }
     componentDidMount() {
@@ -152,34 +154,36 @@ export default class Maps extends Component {
       );
     }*/
     renderPlaceMarkersGmap(){
-        return this.markers.map( this.markerGeneratorGmap.bind(this) );
-    }
-    markerGeneratorGmap(marker) {
-        var self=this
-        var placeIcon = this.bluePlaceIcon
-        if(marker.ask === 'true') placeIcon = this.grayPlaceIcon
-        var clickFunc = function(){
-            self.props.navigator.push({
-                component: Main,
-                passProps: {
+        return this.markers.map( (marker) => {
+            var self=this
+            //var placeIcon = this.bluePlaceIcon
+            var color='blue'
+            if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
+            var clickFunc = function(){
+                self.props.navigator.push({
+                  component: Main,
+                  passProps: {
                     page: Store.mapTab,
                     msg:marker,
-                    placeIcon:placeIcon,
-                }
-            });
-        }
-        if(this.msg!=null){
-            clickFunc = null,
-            placeIcon = this.props.placeIcon;
-        }
-        return (
+                    //placeIcon:placeIcon,
+                  }
+                });
+            }
+            if(this.msg!=null){
+                clickFunc = null
+                //placeIcon = this.props.placeIcon;
+            }
+            return (
               <GMapView.Marker
                   key={marker.ctime}
                   coordinate={{latitude:parseFloat(marker.lat), longitude:parseFloat(marker.lng)}}
-                  image={ placeIcon }
+                  //image={ placeIcon }
                   onPress={ clickFunc }
-              />
-        )
+              >
+                  <Icon name={this.icons[this.state.type]} color={color} size={30} />
+              </GMapView.Marker>
+            )
+        });
     }
     back(){
       this.props.navigator.pop();
@@ -208,9 +212,11 @@ export default class Maps extends Component {
       var self = this;
       var range = this.distance(this.region.latitudeDelta,this.region.longitudeDelta)
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.region))
+      //alert('gray:'+JSON.stringify(this.grayPlaceIcon)+'\nblue:'+JSON.stringify(this.bluePlaceIcon))
       Net.rangeMsg(this.state.type, this.region, range).then((rows)=> {
           self.clearMarkers();
           self.loadMarkers(rows);
+          //alert(rows.length)
       })
       .catch((e)=>{
           //alert('Problem:'+JSON.stringify(e))
@@ -244,7 +250,7 @@ export default class Maps extends Component {
                 <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Icon name={'ion-ios-arrow-down'} color={'#3B3938'} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Modal 
-                    //style={{top:0,bottom:0,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
+                    //style={{top:0,bottom:50,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
                     visible={this.state.showTypes}
                     onPress={() => this.setState({showTypes:false})}
                 >
@@ -263,17 +269,6 @@ export default class Maps extends Component {
         );
       }
     }
-/*
-                <Picker
-                    style={{width:40}}
-                    selectedValue={this.state.type}
-                    onValueChange={this.onTypeChange.bind(this, 'type')}
-                    //prompt="Choose a Type"
-                >
-                    <Picker.Item label="Car"         value="car"    />
-                    <Picker.Item label="Real Estate" value="estate" />
-                </Picker>
-*/
     renderTypesModal(){
         return (
           <TouchableHighlight style={{ height:Style.DEVICE_HEIGHT*2/3, alignItems: 'center', justifyContent: 'center' }} >
