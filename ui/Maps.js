@@ -91,7 +91,7 @@ export default class Maps extends Component {
           this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
           //autofit to multiple waypoints
         }
-        this.listenBMapEvents();
+        //this.listenBMapEvents();
         this.loadIcon(this.icons[this.state.type]);
     }
     componentDidMount() {
