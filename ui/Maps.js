@@ -74,10 +74,6 @@ export default class Maps extends Component {
     listenBMapEvents(){
       if(Global.MAP === 'BaiduMap'){
         var _this=this;
-        DeviceEventEmitter.addListener('regionChange', function(event: Event){
-            //alert('regionChange:'+JSON.stringify(event))
-            _this.onRegionChange(event)
-        });
         DeviceEventEmitter.addListener('markerClick', function(event: Event){
             //alert('markerClick:'+JSON.stringify(event))
             _this.onMarkerClickBmap(event)
@@ -329,6 +325,7 @@ export default class Maps extends Component {
       this.region= r;
       Store.save('region', r);
       this.enableDownload(true);
+      //alert(JSON.stringify(r))
     }
     onMarkerClickBmap(e) {
         alert(JSON.stringify(e))
@@ -428,6 +425,7 @@ export default class Maps extends Component {
                 //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
                 //overlays={ this.state.polylines }
+                onRegionChangeComplete={this.onRegionChange.bind(this)}
             />
 
       );
