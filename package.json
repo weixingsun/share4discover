@@ -7,10 +7,9 @@
   },
   "dependencies": {
     "apsl-react-native-button": "^2.5.0",
-    "leaflet": "^0.7.7",
     "react": "^15.0.2",
-    "react-leaflet": "^0.11.4",
-    "react-native": "^0.26.1",
+    "react-addons-shallow-compare": "^15.1.0",
+    "react-native": "^0.26.3",
     "react-native-android-permissions": "0.0.3",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
     "react-native-code-push": "^1.12.0-beta",
