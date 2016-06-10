@@ -81,7 +81,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.share"
@@ -147,7 +147,7 @@ dependencies {
     compile project(':react-native-datetime')
     compile project(':RNPermissionsModule')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:23.0.3"
     compile "com.facebook.react:react-native:0.26.+"
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-measurement:8.4.0'
