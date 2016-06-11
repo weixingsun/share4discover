@@ -3,7 +3,7 @@ import {ListView, Picker, ScrollView, StyleSheet, Text, TouchableHighlight, Touc
 import {Icon} from './Icon'
 import Slider from 'react-native-slider'
 import Style from './Style'
-import GooglePlace from './GooglePlace'
+import PlaceSearch from './PlaceSearch'
 
 export default class ControlPanel extends Component {
   static propTypes = {
@@ -87,7 +87,7 @@ export default class ControlPanel extends Component {
             <View style={{flex:1}} />
         </View>
         <View style={{flex:1,flexDirection:'row',justifyContent:'center',}}>
-            <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
+            <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
         </View>
       </ScrollView>
     )

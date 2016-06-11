@@ -7,7 +7,7 @@ import {FBLoginManager} from 'react-native-facebook-login'
 //import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
-import FBLoginView from "./FBLoginView"
+//import FBLoginView from "./FBLoginView"
 import FBLoginButton from './LoginFBButton'
 
 var Login = React.createClass({

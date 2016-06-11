@@ -1,6 +1,6 @@
 'use strict';
 import React, {Component,} from 'react'
-import {GooglePlacesAutocomplete} from "./GooglePlacesAutocomplete"
+import {GooglePlacesAutocomplete} from "./GooglePlaceTip"
 
 export default class GooglePlaces extends Component {
   constructor(props) {
