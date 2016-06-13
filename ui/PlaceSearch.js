@@ -22,9 +22,9 @@ export default class PlaceSearch extends Component {
           //alert('data:'+JSON.stringify(data)+'\n\n details:'+JSON.stringify(details))
           if(typeof data.id === 'undefined') {
 	    var latlng = details.geometry.location;
-            this.props.onSelect({latitude:latlng.lat,longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02,addr:data.description});
+            this.props.onSelect({latitude:latlng.lat,longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02,address:data.description});
 	  }else{  //'lng,lat'
-            this.props.onSelect({latitude:data.location.split(',')[1],longitude:data.location.split(',')[0], latitudeDelta:0.02,longitudeDelta:0.02,addr:data.description});
+            this.props.onSelect({latitude:data.location.split(',')[1],longitude:data.location.split(',')[0], latitudeDelta:0.02,longitudeDelta:0.02,address:data.description});
 	  }
         }}
         getDefaultValue={() => {
@@ -125,7 +125,6 @@ export default class PlaceSearch extends Component {
               return this.renderGaode()
               break;
           default:
-              alert('Global.MAP=null')
               return null;
       }
   }

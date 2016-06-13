@@ -13,7 +13,7 @@ import Store from '../io/Store';
 import Net from '../io/Net'
 import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import GooglePlace from './GooglePlace'
+import PlaceSearch from './PlaceSearch'
  
 export default class PDF extends Component {
     constructor(props) {
@@ -38,11 +38,12 @@ export default class PDF extends Component {
     }
     changePlace(place){
         //this.refs.form.props.value;
+	//alert('place.latitude:'+parseFloat(place.latitude))
         var ctime = +new Date();
         this.old_value['ctime']= ctime
-        this.old_value['address']= place.addr
-        this.old_value['lat']= place.latitude.toFixed(5)
-        this.old_value['lng']= place.longitude.toFixed(5)
+        this.old_value['address']= place.address
+        this.old_value['lat']= typeof place.latitude =='string'?parseFloat(place.latitude): place.latitude.toFixed(5)
+        this.old_value['lng']= typeof place.longitude =='string'?parseFloat(place.longitude): place.longitude.toFixed(5)
         this.setState({
              value: this.old_value,
         })
@@ -168,7 +169,7 @@ export default class PDF extends Component {
                         marginTop: 50,
                         margin: 15,
                 }}>
-                    <GooglePlace style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
+                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
                     <Form
                         ref="form"
                         type={t.struct(this.type)}
