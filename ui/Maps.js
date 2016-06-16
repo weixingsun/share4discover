@@ -24,24 +24,33 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.typesDict = {car:'Car', estate:'Estate'}
-      this.typesArr = ['car','estate', 'meal', 'taxi', 'book', 'help', 'tool', 'medkit', ]
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
-      this.icons = {estate:'ion-ios-home',car:'ion-ios-car',taxi:'ion-md-car',book:'ion-ios-book', help:'ion-ios-help-buoy',tool:'ion-md-hammer', meal:'ion-ios-beer',medkit:'ion-md-medkit'};
+      this.icons = {
+             estate:'ion-ios-home',
+             car:'ion-ios-car',
+             taxi:'ion-md-car',
+             book:'ion-ios-book',
+             help:'ion-ios-help-buoy',
+             tool:'ion-md-hammer',
+             food:'ion-md-pizza',
+             medkit:'ion-md-medkit'
+      };
       this.bluePlaceIcon=null;
       this.grayPlaceIcon=null;
       this.markers = []
       this.region = this.props.region
       this.download = true
       this.state = {
-        typeDataSource: this.ds.cloneWithRows(this.typesArr),
+	typeDataSource: this.ds.cloneWithRows(Object.keys(this.icons)),
         type:'car',
         ccid:0,
         circles: [],
         //initialPosition: null,
-        lastPosition: null,
+        //lastPosition: null,
         gps: this.props.gps,
         reload:false,
         showTypes:false,
+	showPlaceSearch: false,
       };
       this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
       this.msg = this.props.msg;

@@ -1,5 +1,13 @@
 //import React,{ NetInfo } from 'react-native'
-
+/*
+#https
+wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+./certbot-auto  //install dependencies
+./certbot-auto certonly  //text ui
+#./certbot-auto renew --dry-run  //manually
+./certbot-auto renew --quiet --no-self-upgrade  //cron
+*/
 var Net = {
     MSG_TYPES:{
         'car':'Car',
