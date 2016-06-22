@@ -12,27 +12,27 @@ import Store from '../io/Store';
 //import Global from '../io/Global';
 import Net from '../io/Net'
 import Immutable from 'immutable'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import PlaceSearch from './PlaceSearch'
+import {Cell, Section, TableView} from 'react-native-tableview-simple'
  
-export default class PDF extends Component {
+export default class Detail extends Component {
     constructor(props) {
         super(props);
         this.old_value = {};
         this.state={ 
             content_height: 40,
-            value: {owner:'',ask:false,address:'',latlng:''},
         }
         this.type= {
-            type: t.enums(Net.MSG_TYPES),
-            owner: t.String,
-            ask: t.Boolean,
             title: t.String,
             address: t.String,
+            type: t.String,
+            owner: t.String,
+            ask: t.String,
             lat: t.Number,
             lng: t.Number,
             ctime: t.Number,
             content: t.String,
+            reply: t.String,
         }
         //this.onChangeNative=this.onChangeNative.bind(this)
     }
@@ -49,52 +49,27 @@ export default class PDF extends Component {
         })
     }
     onSubmit () {
-        var value = this.refs.form.getValue();
-        //alert(JSON.stringify(value))
-        if (value) { // if validation fails, value will be null
-            //value['pics']=[]                             ////////ctime undefined
-            var _this = this;
-            Alert.alert(
-              "Publish",
-              "Do you want to publish this information ? ",
-              [
+        //var value = this.refs.form.getValue();
+        //value['pics']=[]                             ////////ctime undefined
+	var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+	var value={key:key, field:'reply', value:'reply in app'}
+        var _this = this;
+        Alert.alert(
+            "Reply",
+            "Do you want to reply this information ? ",
+            [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    Net.setMsg(value)
+                    Net.putMsg(value)
                     _this.props.navigator.pop();
                 }},
-              ]
-           );
-       }
+            ]
+        );
     }
-    onChange(form){
-        var ctime = +new Date();
-        this.old_value = form
-        this.old_value['ctime']= ctime
-        this.setState({
-             value: this.old_value,
-        })
-    }
-    /*onChangeNative(event){
-        this.content_height= event.nativeEvent.contentSize.height
-        this.multilineStyle = this.immutableMap.mergeDeep({textbox: {normal: {height: this.content_height}}}).toJS();
-        this.setState({
-            options:{
-                fields:{
-                    owner:{editable:false},
-                    content:{multiline:true,stylesheet: this.multilineStyle, onChange:this.onChangeNative},
-                    address:{hidden:true},
-                    lat:{hidden:true},
-                    lng:{hidden:true},
-                }
-            },
-        });
-            //text: event.nativeEvent.text,
-            //content_height: event.nativeEvent.contentSize.height,
-    }*/
     componentWillMount(){
         //alert(Date.now())
-        this.checkLoginUser();
+        //alert(JSON.stringify(this.props.msg))
+        //this.checkLoginUser();
     }
     checkLoginUser(){
         var self = this
@@ -123,10 +98,13 @@ export default class PDF extends Component {
       const options = {
         fields: {
           owner:{editable:false},
-          address:{hidden:true},
+          type:{editable:false},
+          title:{editable:false},
+          address:{editable:false},
           lat:{hidden:true},
+          ask:{editable:false},
           lng:{hidden:true},
-          ctime:{hidden:true},
+          ctime:{editable:false},
           content: {
             stylesheet: Object.assign({}, Form.stylesheet, {
               textbox: {
@@ -139,19 +117,14 @@ export default class PDF extends Component {
               }
             }),
             multiline: true,
-            onChange: (event) => {
-              this.old_value['content']= event.nativeEvent.text
-              this.setState({
-                value: this.old_value,
-                content_height: event.nativeEvent.contentSize.height
-              });
-            }
-          }
+	    editable:false,
+          },
+	  //reply:{}
         }
       }
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: '',}}
+                <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
@@ -159,25 +132,21 @@ export default class PDF extends Component {
                    }
                    rightButton={
                      <View style={{flexDirection:'row',}}>
-                        <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
+                        <Icon 
+			    name={'ion-ios-mail-outline'} //ion-ios-checkmark-circle green
+			    color={'red'} 
+			    size={40} 
+			    onPress={this.onSubmit.bind(this) } />
                      </View>
                    }
-                  />
-                <KeyboardAwareScrollView style={{
-                        flexDirection: 'column',
-                        flex: 1,
-                        marginTop: 50,
-                        margin: 15,
-                }}>
-                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
-                    <Form
-                        ref="form"
-                        type={t.struct(this.type)}
-                        value={this.state.value}
-                        options={options}
-                        onChange={this.onChange.bind(this)}
-                    />
-                </KeyboardAwareScrollView>
+                />
+                <Form
+                    ref="form"
+                    type={t.struct(this.type)}
+                    value={this.props.msg}
+                    options={options}
+                    //onChange={this.onChange.bind(this)}
+                />
             </View>
         );
     }

@@ -1,6 +1,6 @@
 'use strict';
 import React, {Component,} from 'react'
-import {GooglePlacesAutocomplete} from "./GooglePlaceTip"
+import GooglePlacesAutocomplete from "./GooglePlaceTip"
 
 export default class GooglePlaces extends Component {
   constructor(props) {
@@ -8,8 +8,8 @@ export default class GooglePlaces extends Component {
       this.state = {
           selectedType: this.props.selectedType,
       };
-      this.homePlace = {description: 'Home', geometry: { location: { lat: -43.5347, lng: 172.604 } }};
-      this.workPlace = {description: 'Work', geometry: { location: { lat: -43.5235, lng: 172.586 } }};
+      //this.homePlace = {description: 'Home', geometry: { location: { lat: -43.5347, lng: 172.604 } }};
+      //this.workPlace = {description: 'Work', geometry: { location: { lat: -43.5235, lng: 172.586 } }};
   } 
   render() {
     return (
@@ -28,12 +28,13 @@ export default class GooglePlaces extends Component {
         getDefaultValue={() => {
           return ''; // text input default value
         }}
+        // available options: https://developers.google.com/places/web-service/autocomplete
+        //types: '(cities)', // default: 'geocode'
         query={{
-          // available options: https://developers.google.com/places/web-service/autocomplete
           key: 'AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A',
-          language: 'en', // language of the results
-          //types: '(cities)', // default: 'geocode'
+          language: 'en'
         }}
+        key = { 'AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A' }
 	styles={{
           description: {
             fontWeight: 'bold',
@@ -43,7 +44,7 @@ export default class GooglePlaces extends Component {
           },
         }}
         currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-        currentLocationLabel="My location"
+        //currentLocationLabel="My location"
         nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
         GoogleReverseGeocodingQuery={{
           // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
@@ -55,8 +56,8 @@ export default class GooglePlaces extends Component {
         }}
         filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} 
 	// filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-        predefinedPlaces={[this.homePlace, this.workPlace]}
-        predefinedPlacesAlwaysVisible={true}
+        //predefinedPlaces={[this.homePlace, this.workPlace]}
+        //predefinedPlacesAlwaysVisible={true}
       />
     );
   }

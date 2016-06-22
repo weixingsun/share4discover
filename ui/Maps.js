@@ -12,6 +12,7 @@ import Global from "../io/Global"
 import Net from "../io/Net"
 import Style from "./Style"
 import Main from "./Main"
+import Detail from "./Detail"
 import FormAddMsg from "./FormAddMsg"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
@@ -166,18 +167,16 @@ export default class Maps extends Component {
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
             var clickFunc = function(){
                 self.props.navigator.push({
-                  component: Main,
+                  component: Detail,
                   passProps: {
-                    page: Store.mapTab,
                     msg:marker,
                     //placeIcon:placeIcon,
                   }
                 });
             }
-            if(this.msg!=null){
-                clickFunc = null
-                //placeIcon = this.props.placeIcon;
-            }
+            //if(this.msg!=null){
+            //    clickFunc = null
+            //}
             return (
               <GMapView.Marker
                   key={marker.ctime}

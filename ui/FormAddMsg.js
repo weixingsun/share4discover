@@ -41,6 +41,7 @@ export default class PDF extends Component {
 	//alert('place.latitude:'+parseFloat(place.latitude))
         var ctime = +new Date();
         this.old_value['ctime']= ctime
+        this.old_value['owner']= this.state.value.owner
         this.old_value['address']= place.address
         this.old_value['lat']= typeof place.latitude =='string'?parseFloat(place.latitude): place.latitude.toFixed(5)
         this.old_value['lng']= typeof place.longitude =='string'?parseFloat(place.longitude): place.longitude.toFixed(5)

@@ -65,7 +65,7 @@ const defaultStyles = {
   },
 };
 
-const GooglePlacesAutocomplete = React.createClass({
+const BaiduPlaceTip = React.createClass({
 
   propTypes: {
     placeholder: React.PropTypes.string,
@@ -102,8 +102,8 @@ const GooglePlacesAutocomplete = React.createClass({
       onTimeout: () => console.warn('google places autocomplete: request timeout'),
       query: {
         key: 'missing api key',
-        language: 'en',
-        types: 'geocode',
+        //language: 'en',
+        //types: 'geocode',
       },
       GoogleReverseGeocodingQuery: {
       },
@@ -152,7 +152,10 @@ const GooglePlacesAutocomplete = React.createClass({
     } else {
       res = [];
     }
-    
+    //if(results !==null && typeof results[0].id !== 'string'){
+    //  results[0]=null
+    //  delete results[0]
+    //}
     res = res.map(function(place) {
       return {
         ...place,
@@ -234,13 +237,11 @@ const GooglePlacesAutocomplete = React.createClass({
         // already requesting
         return;
       }
-
       this._abortRequests();
 
       // display loader
-      this._enableRowLoader(rowData);
-
-      // fetch details
+      //this._enableRowLoader(rowData);
+      ////////////////////////////////////////////////////// fetch details
       const request = new XMLHttpRequest();
       this._requests.push(request);
       request.timeout = this.props.timeout;
@@ -251,6 +252,8 @@ const GooglePlacesAutocomplete = React.createClass({
         }
         if (request.status === 200) {
           const responseJSON = JSON.parse(request.responseText);
+	  //console.log('----------------------------------------------');
+	  //console.log(responseJSON);
           if (responseJSON.status === 'OK') {
             if (this.isMounted()) {
               const details = responseJSON.result;
@@ -276,11 +279,10 @@ const GooglePlacesAutocomplete = React.createClass({
       request.open('GET', 'https://maps.googleapis.com/maps/api/place/details/json?' + Qs.stringify({
         key: this.props.query.key,
         placeid: rowData.place_id,
-        language: this.props.query.language,
+        //language: this.props.query.language,
       }));
       request.send();
     } else if (rowData.isCurrentLocation === true) {
-      
       // display loader
       //this._enableRowLoader(rowData);
       
@@ -295,12 +297,12 @@ const GooglePlacesAutocomplete = React.createClass({
       //this.getCurrentLocation();
       
     } else {
+      //alert('>>>>>>>>>>>>>>>>>>>Yes, Baidu/Gaode use this branch<<<<<<<<<<<<<<<<<<')
       this.setState({
         text: rowData.description,
       });
 
       this._onBlur();
-
       delete rowData.isLoading;
       
       let predefinedPlace = this._getPredefinedPlace(rowData);
@@ -424,11 +426,13 @@ const GooglePlacesAutocomplete = React.createClass({
         }
         if (request.status === 200) {
           const responseJSON = JSON.parse(request.responseText);
-          if (typeof responseJSON.predictions !== 'undefined') {
+	  //console.log('---------------in request()--------------')
+	  //alert(JSON.stringify(responseJSON))
+          if (typeof responseJSON.result !== 'undefined') {
             if (this.isMounted()) {
-              this._results = responseJSON.predictions;
+              this._results = responseJSON.result;
               this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.predictions)),
+                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.result)),
               });
             }
           }
@@ -439,8 +443,10 @@ const GooglePlacesAutocomplete = React.createClass({
           // console.warn("google places autocomplete: request could not be completed or has been aborted");
         }
       };
-      var url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?&input=' + encodeURI(text) + '&' + Qs.stringify(this.props.query);
-      request.open('GET', url );
+      var url='http://api.map.baidu.com/place/v2/suggestion?output=json&location=0,0&mcode=' +this.props.query.mcode +'&q=' +encodeURI(text) +'&ak='+this.props.query.ak;
+      //console.log('url='+url)
+      //alert(url)
+      request.open('GET', url);
       request.send();
     } else {
       this._results = [];
@@ -488,7 +494,7 @@ const GooglePlacesAutocomplete = React.createClass({
   },
 
   _renderRow(rowData = {}) {
-    rowData.description = rowData.description || rowData.formatted_address || rowData.name;
+    rowData.description = rowData.name +' '+ rowData.city + rowData.district ;
     
     return (
       <TouchableHighlight
@@ -503,7 +509,7 @@ const GooglePlacesAutocomplete = React.createClass({
               style={[{flex: 1}, defaultStyles.description, this.props.styles.description, rowData.isPredefinedPlace ? this.props.styles.predefinedPlacesDescription : {}]}
               numberOfLines={1}
             >
-              {rowData.description}
+              {rowData.name + ' ' + rowData.city+rowData.district}
             </Text>
             {this._renderLoader(rowData)}
           </View>
@@ -587,7 +593,7 @@ const create = function create(options = {}) {
   return React.createClass({
     render() {
       return (
-        <GooglePlacesAutocomplete ref="GooglePlacesAutocomplete"
+        <GaodePlaceTip ref="GaodePlaceTip"
           {...options}
         />
       );
@@ -596,4 +602,4 @@ const create = function create(options = {}) {
 };
 
 
-module.exports = GooglePlacesAutocomplete; //{GooglePlacesAutocomplete, create};
+module.exports = BaiduPlaceTip; //{BaiduPlaceTip, create};

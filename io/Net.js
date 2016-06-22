@@ -30,6 +30,13 @@ var Net = {
     _del(url) {
       return this.netCmd(url,{method:'delete'});
     },
+    _put(url,data) {
+        return this.netCmd(url,{
+            method:'put',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+            body: JSON.stringify(data)
+        });
+    },
     _post(url, data) {
       return this.netCmd(url,{
           method:'post',
@@ -53,6 +60,10 @@ var Net = {
     setMsg(json){
       var url = this.HOST+'/api/msg/';
       return this._post(url, json);
+    },
+    putMsg(json){
+      var url = this.HOST+'/api/msg/';
+      return this._put(url, json);
     },
     delMsg(key){
       var url = this.HOST+'/api/msg/'+key;
