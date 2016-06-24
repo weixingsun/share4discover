@@ -8,8 +8,8 @@ import Store from "../io/Store"
 import Global from "../io/Global"
 import Style       from "./Style"
 import Loading     from "./Loading"
-import GoogleMap   from "./GoogleMap"
-import BaiduMap from "./BaiduMap"
+//import GoogleMap   from "./GoogleMap"
+//import BaiduMap from "./BaiduMap"
 import Maps from "./Maps"
 
 import ControlPanel from "./ControlPanel"
@@ -35,10 +35,11 @@ export default class Main extends Component {
       markers: [],
       circles: [],
       region: {
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 10,
-        longitudeDelta: 10,
+        latitude: 39.9042,
+        longitude: 116.4074,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+        zoom: 16,
       },
       filters: {type:"car",range:2000,position:{latitude:0,longitude:0,latitudeDelta:10,longitudeDelta:10}},
       drawerPanEnabled:false,

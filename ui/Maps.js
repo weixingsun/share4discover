@@ -24,7 +24,6 @@ export default class Maps extends Component {
     constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.typesDict = {car:'Car', estate:'Estate'}
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.icons = {
              estate:'ion-ios-home',
@@ -81,15 +80,6 @@ export default class Maps extends Component {
             this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
-    listenBMapEvents(){
-      if(Global.MAP === 'BaiduMap'){
-        var _this=this;
-        DeviceEventEmitter.addListener('markerClick', function(event: Event){
-            //alert('markerClick:'+JSON.stringify(event))
-            _this.onMarkerClickBmap(event)
-        });
-      }
-    }
     componentWillMount(){
         this.permission();
         if(this.msg!=null){
@@ -97,7 +87,6 @@ export default class Maps extends Component {
           this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
           //autofit to multiple waypoints
         }
-        //this.listenBMapEvents();
         this.loadIcon(this.icons[this.state.type]);
     }
     componentDidMount() {
@@ -336,8 +325,15 @@ export default class Maps extends Component {
       //alert(JSON.stringify(r))
     }
     onMarkerClickBmap(e) {
-        alert(JSON.stringify(e))
-
+        //alert(JSON.stringify(e.nativeEvent))
+        var key = this.type+':'+e.nativeEvent.latitude+','+e.nativeEvent.longitude
+        //var msg = //for loop in this.markers
+        this.props.navigator.push({
+          component: Detail,
+          passProps: {
+            msg: {},
+          }
+        }); 
     }
     enableDownload(flag){
         this.download=flag
@@ -419,6 +415,7 @@ export default class Maps extends Component {
          );
     }
     renderBmap(){
+      if(this.region.zoom == null || this.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
       return (
             <BMapView
                 style={Style.map}
@@ -434,6 +431,7 @@ export default class Maps extends Component {
                 //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
                 //overlays={ this.state.polylines }
                 onRegionChangeComplete={this.onRegionChange.bind(this)}
+                onMarkerPress={this.onMarkerClickBmap.bind(this)}
             />
 
       );
