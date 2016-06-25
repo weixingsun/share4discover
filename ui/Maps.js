@@ -184,6 +184,9 @@ export default class Maps extends Component {
     move(p){
       this.refs.gmap.animateToRegion(p);
     }
+    moveBmap(p){
+      this.refs.bmap.animateTo(p);
+    }
     between(n, n1,delta){
         return (n > n1-delta) && (n < n1+delta)
     }
@@ -331,7 +334,7 @@ export default class Maps extends Component {
         this.props.navigator.push({
           component: Detail,
           passProps: {
-            msg: {},
+            msg: e.nativeEvent.extra,
           }
         }); 
     }
@@ -373,7 +376,7 @@ export default class Maps extends Component {
       });
     } 
     render(){
-        console.log('render()')
+        console.log('Maps.render() this.markers='+JSON.stringify(this.markers))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
