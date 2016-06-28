@@ -25,8 +25,6 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
-      this.bluePlaceIcon=null;
-      this.grayPlaceIcon=null;
       this.markers = []
       this.region = this.props.region
       this.download = true
@@ -46,7 +44,7 @@ export default class Maps extends Component {
       this.msg = this.props.msg;
       this.watchID = (null: ?number);
     }
-    loadIcon(name){
+    loadIcons(name){
         var _this = this;
         getImageSource(name, 30, 'blue').then((source) => {
             this.bluePlaceIcon= source
@@ -77,7 +75,7 @@ export default class Maps extends Component {
           this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
           //autofit to multiple waypoints
         }
-        this.loadIcon(Global.TYPE_ICONS[this.state.type]);
+        this.loadIcons(Global.TYPE_ICONS[this.state.type]);
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -121,27 +119,10 @@ export default class Maps extends Component {
         this.moveOrNot(position);
         this.setState({lastPosition: position});
     }
-    renderMyPosMarker(){
-      if(this.myPosMarker===null) return null;
-      else
-      return (
-        <MapView.Marker
-        key={0}
-        coordinate={this.myPosMarker.latlng}
-        //pinColor={'#0000ff'}
-        //title={marker.title}
-        //description={marker.description}
-        //onSelect={(e) => console.log('onSelect', e)}
-        //    <PriceMarker amount={99} color={marker.s} />
-        >
-            <Icon name={"circle"} color={'#3333ff'} size={16} />
-        </MapView.Marker>
-      );
     }*/
     renderPlaceMarkersGmap(){
         return this.markers.map( (marker) => {
             var self=this
-            //var placeIcon = this.bluePlaceIcon
             var color='blue'
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
             var clickFunc = function(){
@@ -198,7 +179,6 @@ export default class Maps extends Component {
       var self = this;
       var range = this.distance(this.region.latitudeDelta,this.region.longitudeDelta)
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.region))
-      //alert('gray:'+JSON.stringify(this.grayPlaceIcon)+'\nblue:'+JSON.stringify(this.bluePlaceIcon))
       Net.rangeMsg(this.state.type, this.region, range).then((rows)=> {
           self.clearMarkers();
           self.loadMarkers(rows);
@@ -284,7 +264,7 @@ export default class Maps extends Component {
     }
     _pressType(sid,rid,data){
         this.setState({type:data,showTypes:false})
-        this.loadIcon(Global.TYPE_ICONS[data])
+        this.loadIcons(Global.TYPE_ICONS[data])
         this.enableDownload(true)
         this.clearMarkers()
     }
@@ -292,7 +272,7 @@ export default class Maps extends Component {
         const newState = {};
         newState[key] = value;
         this.setState(newState);
-        this.loadIcon(Global.TYPE_ICONS[value])
+        this.loadIcons(Global.TYPE_ICONS[value])
         this.enableDownload(true)
         this.clearMarkers()
     }
@@ -346,7 +326,6 @@ export default class Maps extends Component {
          else row['image']=this.bluePlaceIcon
          row['latitude']=parseFloat(row.lat)
          row['longitude']=parseFloat(row.lng)
-         //alert(JSON.stringify(row))
          this.addMarker( row );
        })
        this.setState({ reload: true });
@@ -430,4 +409,3 @@ export default class Maps extends Component {
       );
     }
 };
-//{this.renderMyPosMarker()}

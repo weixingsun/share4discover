@@ -17,4 +17,10 @@ module.exports = {
       food:'ion-md-pizza',
       medkit:'ion-md-medkit'
   },
+  SNS_ICONS:{
+      fb:'fa-facebook-square',
+      gg:'fa-google-plus-square',
+      wx:'fa-weixin',
+      wb:'fa-weibo',
+  },
 };

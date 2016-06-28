@@ -11,15 +11,6 @@ import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
 var {height, width} = Dimensions.get('window');
-Date.prototype.yyyymmddhhmmss = function() {
-   var yyyy = this.getFullYear();
-   var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
-   var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
-   var hh = this.getHours() < 10 ? "0" + this.getHours() : this.getHours();
-   var min = this.getMinutes() < 10 ? "0" + this.getMinutes() : this.getMinutes();
-   var ss = this.getSeconds() < 10 ? "0" + this.getSeconds() : this.getSeconds();
-   return "".concat(yyyy).concat(mm).concat(dd).concat(hh).concat(min).concat(ss);
-};
 
 export default class Detail extends Component {
     constructor(props) {
@@ -129,20 +120,26 @@ export default class Detail extends Component {
                             <Text>Address     : {this.props.msg.address}</Text>
 			</View>
                     </View>
-                    <TouchableOpacity style={Style.contact_card} >
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
-                      </View>
-                      <Text>Contact</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Style.detail_card} >
+                    <View style={Style.contact_card} >
+                        <Icon
+                            style={{marginLeft:20,marginRight:1}}
+                            size={44}
+                            color={'blue'}
+                            name={Global.SNS_ICONS[this.props.msg.owner.split(':')[0]]}
+                        />
+                        <View style={{flex:1,marginLeft:30}}>
+                            <Text style={{fontSize:20,}}>{this.props.msg.owner.split(':')[1]}</Text>
+                            <Text>Phone  : {_ctime.toLocaleString()}</Text>
+                            <Text>Address: {this.props.msg.address}</Text>
+                        </View>
+                    </View>
+                    <View style={Style.detail_card} >
                       <View style={{width:Style.DEVICE_WIDTH/3}} />
                       <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
                       <Text>Details</Text>
-                    </TouchableOpacity>
+                    </View>
                   </ScrollView>
 		</View>
             </View>
