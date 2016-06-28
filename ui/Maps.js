@@ -25,23 +25,13 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
-      this.icons = {
-             estate:'ion-ios-home',
-             car:'ion-ios-car',
-             taxi:'ion-md-car',
-             book:'ion-ios-book',
-             help:'ion-ios-help-buoy',
-             tool:'ion-md-hammer',
-             food:'ion-md-pizza',
-             medkit:'ion-md-medkit'
-      };
       this.bluePlaceIcon=null;
       this.grayPlaceIcon=null;
       this.markers = []
       this.region = this.props.region
       this.download = true
       this.state = {
-	typeDataSource: this.ds.cloneWithRows(Object.keys(this.icons)),
+	typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
         ccid:0,
         circles: [],
@@ -87,7 +77,7 @@ export default class Maps extends Component {
           this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
           //autofit to multiple waypoints
         }
-        this.loadIcon(this.icons[this.state.type]);
+        this.loadIcon(Global.TYPE_ICONS[this.state.type]);
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -173,7 +163,7 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ clickFunc }
               >
-                  <Icon name={this.icons[this.state.type]} color={color} size={30} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={30} />
               </GMapView.Marker>
             )
         });
@@ -243,7 +233,7 @@ export default class Maps extends Component {
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row'}}>
-                <Icon name={this.icons[this.state.type]} color={'#3B3938'} size={36} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={Global.TYPE_ICONS[this.state.type]} color={'#3B3938'} size={36} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Icon name={'ion-ios-arrow-down'} color={'#3B3938'} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Modal 
                     //style={{top:0,bottom:50,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
@@ -281,7 +271,7 @@ export default class Maps extends Component {
       <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressType(sectionID,rowID,row)}>
         <View>
           <View style={{flexDirection:'row',backgroundColor:'white', justifyContent:'center', padding:10, marginLeft:30,marginRight:30, alignItems:'center' }}>
-            <Icon name={this.icons[row]} size={40} color={'gray'} />
+            <Icon name={Global.TYPE_ICONS[row]} size={40} color={'gray'} />
             <View style={{width:Style.DEVICE_WIDTH/3}}>
               <Text style={{ fontSize:20,marginLeft:30 }}>
                 { row }
@@ -294,7 +284,7 @@ export default class Maps extends Component {
     }
     _pressType(sid,rid,data){
         this.setState({type:data,showTypes:false})
-        this.loadIcon(this.icons[data])
+        this.loadIcon(Global.TYPE_ICONS[data])
         this.enableDownload(true)
         this.clearMarkers()
     }
@@ -302,7 +292,7 @@ export default class Maps extends Component {
         const newState = {};
         newState[key] = value;
         this.setState(newState);
-        this.loadIcon(this.icons[value])
+        this.loadIcon(Global.TYPE_ICONS[value])
         this.enableDownload(true)
         this.clearMarkers()
     }

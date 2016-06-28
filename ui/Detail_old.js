@@ -1,26 +1,20 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Dimensions, Picker, StyleSheet,View, ScrollView,Text,TouchableOpacity,TouchableHighlight } from 'react-native';
+import {Alert, Picker, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon} from './Icon'
+//import Form from 'react-native-tableview-simple';
+//import Form from './Form';
 import t from 'tcomb-form-native'
 var Form = t.form.Form;
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
-import Global from '../io/Global';
+//import Global from '../io/Global';
 import Net from '../io/Net'
-import DetailImg from './DetailImg';
-var {height, width} = Dimensions.get('window');
-Date.prototype.yyyymmddhhmmss = function() {
-   var yyyy = this.getFullYear();
-   var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
-   var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
-   var hh = this.getHours() < 10 ? "0" + this.getHours() : this.getHours();
-   var min = this.getMinutes() < 10 ? "0" + this.getMinutes() : this.getMinutes();
-   var ss = this.getSeconds() < 10 ? "0" + this.getSeconds() : this.getSeconds();
-   return "".concat(yyyy).concat(mm).concat(dd).concat(hh).concat(min).concat(ss);
-};
-
+import Immutable from 'immutable'
+import PlaceSearch from './PlaceSearch'
+import {Cell, Section, TableView} from 'react-native-tableview-simple'
+ 
 export default class Detail extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +36,19 @@ export default class Detail extends Component {
         }
         //this.onChangeNative=this.onChangeNative.bind(this)
     }
-    onReply () {
+    changePlace(place){
+        //this.refs.form.props.value;
+	//alert('place.latitude:'+parseFloat(place.latitude))
+        var ctime = +new Date();
+        this.old_value['ctime']= ctime
+        this.old_value['address']= place.address
+        this.old_value['lat']= typeof place.latitude =='string'?parseFloat(place.latitude): place.latitude.toFixed(5)
+        this.old_value['lng']= typeof place.longitude =='string'?parseFloat(place.longitude): place.longitude.toFixed(5)
+        this.setState({
+             value: this.old_value,
+        })
+    }
+    onSubmit () {
         //var value = this.refs.form.getValue();
         //value['pics']=[]                             ////////ctime undefined
 	var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
@@ -88,7 +94,34 @@ export default class Detail extends Component {
         });
     }
     render(){
-        var _ctime = new Date(parseInt(this.props.msg.ctime));
+        //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
+      const options = {
+        fields: {
+          owner:{editable:false},
+          type:{editable:false},
+          title:{editable:false},
+          address:{editable:false},
+          lat:{hidden:true},
+          ask:{editable:false},
+          lng:{hidden:true},
+          ctime:{editable:false},
+          content: {
+            stylesheet: Object.assign({}, Form.stylesheet, {
+              textbox: {
+                normal: {
+                  height: this.state.content_height
+                },
+                error: {
+                  height: this.state.content_height
+                }
+              }
+            }),
+            multiline: true,
+	    editable:false,
+          },
+	  //reply:{}
+        }
+      }
         return (
             <View style={{flex:1}}>
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -103,49 +136,46 @@ export default class Detail extends Component {
 			    name={'ion-ios-mail-outline'} //ion-ios-checkmark-circle green
 			    color={'red'} 
 			    size={40} 
-			    onPress={this.onReply.bind(this) } />
+			    onPress={this.onSubmit.bind(this) } />
                      </View>
                    }
                 />
-                <View style={{flex:8,backgroundColor: 'gray',}}>
-                  <ScrollView
-                    automaticallyAdjustContentInsets={false}
-                    scrollEventThrottle={200}
-                    style={{flex:8}}
-		  >
-                    <View style={{height:height/3}} onPress={()=>alert('open')}>
-		        <DetailImg />
-		    </View>
-                    <View style={Style.title_card} >
-                        <Icon 
-			    style={{marginLeft:20,marginRight:1}} 
-			    size={44} 
-			    color={this.props.msg.ask=='false'?'blue':'gray'} 
-			    name={Global.TYPE_ICONS[this.props.msg.type]} 
-			/>
-			<View style={{flex:1,marginLeft:30}}>
-                            <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Publish Time: {_ctime.toLocaleString()}</Text>
-                            <Text>Address     : {this.props.msg.address}</Text>
-			</View>
-                    </View>
-                    <TouchableOpacity style={Style.contact_card} >
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
-                      </View>
-                      <Text>Contact</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Style.detail_card} >
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
-                      </View>
-                      <Text>Details</Text>
-                    </TouchableOpacity>
-                  </ScrollView>
-		</View>
+                <Form
+                    ref="form"
+                    type={t.struct(this.type)}
+                    value={this.props.msg}
+                    options={options}
+                    //onChange={this.onChange.bind(this)}
+                />
             </View>
         );
     }
 }
+var styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    marginTop: 50,
+    padding: 20,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 30,
+    alignSelf: 'center',
+    marginBottom: 30
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: 36,
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  }
+});

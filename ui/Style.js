@@ -213,4 +213,67 @@ module.exports = {
   textInDark: {
     color:'white',
   },
+  /////////////////////////// detail page layout /////////////////
+  slideSection:{
+    //
+  },
+  title_card: {
+      height: 110,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0,0,0,0.1)',
+      margin: 5,
+      //padding: 15,
+      shadowColor: '#ccc',
+      shadowOffset: { width: 2, height: 2, },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      flexDirection:'row',
+  },
+  contact_card: {
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0,0,0,0.1)',
+      margin: 5,
+      //padding: 15,
+      shadowColor: '#ccc',
+      shadowOffset: { width: 2, height: 2, },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      flexDirection:'row',
+  },
+  detail_card: {
+      height: 450,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0,0,0,0.1)',
+      margin: 5,
+      //padding: 15,
+      shadowColor: '#ccc',
+      shadowOffset: { width: 2, height: 2, },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      flexDirection:'row',
+  },
+  typeIcon:{
+    //
+  },
+  titleText:{
+    //
+  },
+  ctime:{
+  },
+  address:{
+  },
+  ownerSection:{
+  },
+  contentSection:{
+  },
 };

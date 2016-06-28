@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {InteractionManager, Text, View, Navigator, } from 'react-native'
+import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
@@ -8,8 +8,6 @@ import Store from "../io/Store"
 import Global from "../io/Global"
 import Style       from "./Style"
 import Loading     from "./Loading"
-//import GoogleMap   from "./GoogleMap"
-//import BaiduMap from "./BaiduMap"
 import Maps from "./Maps"
 
 import ControlPanel from "./ControlPanel"
@@ -47,9 +45,13 @@ export default class Main extends Component {
     }; 
     this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
+    this.onBackAndroid=this.onBackAndroid.bind(this)
   }
   componentWillUnmount() {
       this.turnOffGps();
+      if(Platform.OS === 'android') {
+          BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      }
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -82,6 +84,22 @@ export default class Main extends Component {
         }
         Global.MAP = _this.map
       });
+      if(Platform.OS === 'android'){
+          BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+      }
+  }
+  onBackAndroid(){
+      var routers = this.props.navigator.getCurrentRoutes();
+      if (routers.length > 1) {
+          this.props.navigator.pop();
+          return true;
+      }
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+          return false;
+      }
+      this.lastBackPressed = Date.now();
+      ToastAndroid.show('Double press to exit!',ToastAndroid.SHORT);
+      return true;
   }
   componentWillUpdate() {
       /*var _this = this;
@@ -89,6 +107,9 @@ export default class Main extends Component {
         if(map_value == null) _this.map = "BaiduMap";
         else _this.map = map_value;
       });*/
+  }
+  goBack(){
+    this.props.navigator.pop();
   }
   turnOffGps(){
       navigator.geolocation.clearWatch(this.watchID);
