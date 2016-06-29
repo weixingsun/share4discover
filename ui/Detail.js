@@ -80,6 +80,7 @@ export default class Detail extends Component {
     }
     render(){
         var _ctime = new Date(parseInt(this.props.msg.ctime));
+	//((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
             <View style={{flex:1}}>
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -99,11 +100,11 @@ export default class Detail extends Component {
                    }
                 />
                 <View style={{flex:8,backgroundColor: 'gray',}}>
-                  <ScrollView
+                <ScrollView
                     automaticallyAdjustContentInsets={false}
                     scrollEventThrottle={200}
                     style={{flex:8}}
-		  >
+		>
                     <View style={{height:height/3}} onPress={()=>alert('open')}>
 		        <DetailImg />
 		    </View>

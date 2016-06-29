@@ -24,7 +24,6 @@ export default class Maps extends Component {
     constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      //this.fa_place_icon = {estate:'home',car:'car',taxi:'taxi',};
       this.markers = []
       this.region = this.props.region
       this.download = true

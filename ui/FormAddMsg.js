@@ -100,19 +100,19 @@ export default class PDF extends Component {
     checkLoginUser(){
         var self = this
         Store.get('user_fb').then(function(fb){
-            if(fb == null){
-                Store.get('user_gg').then(function(gg){
-                    if(gg == null) {
-                        alert('Please login to publish information.')
-                    }else{
-                        var name = gg.type+':'+gg.email
-                        self.setState({
-                            value: {owner:name,address:'',latlng:''},
-                        });
-                    }
-                });
-            }else{
+            if(fb != null){
                 var name = fb.type+':'+fb.email
+                if(self.state.value.owner !== '') name += ','+self.state.value.owner
+                self.setState({
+                    value: {owner:name,address:'',latlng:''},
+                });
+            }
+        });
+        Store.get('user_gg').then(function(gg){
+            if(gg != null) {
+                //alert('Please login to publish information.')
+                var name = gg.type+':'+gg.email
+                if(self.state.value.owner !== '') name += ','+self.state.value.owner
                 self.setState({
                     value: {owner:name,address:'',latlng:''},
                 });

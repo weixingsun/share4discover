@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import {Dimensions, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
@@ -101,31 +101,35 @@ export default class SettingsList extends React.Component {
         this.setState({user_wb:null});
     }
     render(){
+        var DEVICE_WIDTH = Dimensions.get('window').width
+	//alert('w:'+DEVICE_WIDTH)
         return (
-          <View>
+          <View style={Style.main}>
               <NavigationBar style={Style.navbar} title={{title:'Share',}} />
-              <View style={Style.map}>
-                <ScrollView style={Style.scrollview}>
+              <ScrollView
+                  //automaticallyAdjustContentInsets={false}
+                  //scrollEventThrottle={200}
+              >
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
-                    <Text>Update</Text>
+                      <Text>Update</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'fa-info-circle'} size={30}/>
                       </View>
-                    <Text>About</Text>
+                      <Text>About</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                       component: Settings,
                       passProps: {navigator:this.props.navigator,},
                   })}>
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-cog-outline'} size={35}/>
                       </View>
                       <Text>Settings</Text>
@@ -134,8 +138,8 @@ export default class SettingsList extends React.Component {
                       component: APIList,
                       passProps: {navigator:this.props.navigator,},
                   })}>
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'fa-plug'} size={30}/>
                       </View>
                       <Text>API List</Text>
@@ -146,8 +150,13 @@ export default class SettingsList extends React.Component {
                   <View style={Style.left_card}>
                     <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
                   </View>
+                  <View style={Style.left_card}>
+                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
+                  </View>
+                  <View style={Style.left_card}>
+                    <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
+                  </View>
               </ScrollView>
-            </View>
           </View>
         );
     }

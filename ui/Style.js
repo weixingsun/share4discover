@@ -1,8 +1,8 @@
 import React from "react";
 import Dimensions from "Dimensions";
 
-const x = Dimensions.get('window').width;
-const y = Dimensions.get('window').height;
+var x = Dimensions.get('window').width;
+var y = Dimensions.get('window').height;
 
 const ratioX = x<375 ?(x<320?0.75:0.875):1;
 const ratioY = y<568 ?(y<480?0.75:0.875):1;
@@ -17,11 +17,8 @@ function em(value){
 
 module.exports = {
   //General
-  DEVICE_WIDTH:x,
-  QUARTER_DEVICE_WIDTH:x/4,
-  SIX_DEVICE_WIDTH:x/6,
-  DEVICE_HEIGHT:y,
-  QUARTER_DEVICE_HEIGHT:y/4,
+  DEVICE_WIDTH:Dimensions.get('window').width,
+  DEVICE_HEIGHT:Dimensions.get('window').height,
   RATIO_X:ratioX,
   RATIO_Y:ratioY,
   UNIT:em(1),
@@ -47,7 +44,13 @@ module.exports = {
   FONT_SIZE_SMALLER: em(0.75),
   FONT_SIZE_SMALL: em(0.875),
   FONT_SIZE_TITLE: em(1.25),
-  
+  main:{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 50,
+  },  
   map:{
       position: 'absolute',
       top: 66,
@@ -74,7 +77,7 @@ module.exports = {
       paddingRight:12,
       paddingTop:8,
   },
-  mainbar:{
+  navBar:{
       backgroundColor: '#ebeef0',
       paddingBottom:10,
       paddingTop:10,

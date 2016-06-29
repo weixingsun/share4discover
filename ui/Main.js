@@ -170,7 +170,7 @@ export default class Main extends Component {
     >
         <View style={{flex:1}}>
           {this.pages()}
-          <Tabs selected={this.state.page} style={Style.mainbar}
+          <Tabs selected={this.state.page} style={Style.navBar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
             <Icon size={40} name={Store.msgTab}      />
             <Icon size={40} name={Store.userTab}  />
