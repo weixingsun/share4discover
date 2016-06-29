@@ -100,28 +100,28 @@ export default class Detail extends Component {
                    }
                 />
                 <View style={{flex:8,backgroundColor: 'gray',}}>
-                <ScrollView
-                    automaticallyAdjustContentInsets={false}
-                    scrollEventThrottle={200}
-                    style={{flex:8}}
-		>
-                    <View style={{height:height/3}} onPress={()=>alert('open')}>
-		        <DetailImg />
-		    </View>
-                    <View style={Style.title_card} >
-                        <Icon 
-			    style={{marginLeft:20,marginRight:1}} 
-			    size={44} 
-			    color={this.props.msg.ask=='false'?'blue':'gray'} 
-			    name={Global.TYPE_ICONS[this.props.msg.type]} 
-			/>
-			<View style={{flex:1,marginLeft:30}}>
+                    <ScrollView
+                      automaticallyAdjustContentInsets={false}
+                      scrollEventThrottle={200}
+                      style={{flex:8}}
+                    >
+                      <View style={{height:height/3}} onPress={()=>alert('open')}>
+                        <DetailImg />
+                      </View>
+                      <View style={Style.title_card} >
+                        <Icon
+                            style={{marginLeft:20,marginRight:1}}
+                            size={44}
+                            color={this.props.msg.ask=='false'?'blue':'gray'}
+                            name={Global.TYPE_ICONS[this.props.msg.type]}
+                        />
+                        <View style={{flex:1,marginLeft:30}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
                             <Text>Publish Time: {_ctime.toLocaleString()}</Text>
                             <Text>Address     : {this.props.msg.address}</Text>
-			</View>
-                    </View>
-                    <View style={Style.contact_card} >
+                        </View>
+                      </View>
+                      <View style={Style.contact_card} >
                         <Icon
                             style={{marginLeft:20,marginRight:1}}
                             size={44}
@@ -133,15 +133,15 @@ export default class Detail extends Component {
                             <Text>Phone  : {_ctime.toLocaleString()}</Text>
                             <Text>Address: {this.props.msg.address}</Text>
                         </View>
-                    </View>
-                    <View style={Style.detail_card} >
-                      <View style={{width:Style.DEVICE_WIDTH/3}} />
-                      <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
-                      <Text>Details</Text>
-                    </View>
-                  </ScrollView>
+                      <View style={Style.detail_card} >
+                        <View style={{width:Style.DEVICE_WIDTH/3}} />
+                        <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'ion-ios-arrow-up'} size={35}/>
+                        </View>
+                        <Text>Details</Text>
+                      </View>
+                    </ScrollView>
 		</View>
             </View>
         );

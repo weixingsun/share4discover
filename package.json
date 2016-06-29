@@ -16,7 +16,7 @@
     "react-native-datetime": "^0.1.2",
     "react-native-drawer": "^2.2.2",
     "react-native-facebook-login": "^1.2.0",
-    "react-native-google-signin": "^0.6.0",
+    "react-native-google-signin": "^0.6.1",
     "react-native-image-picker": "^0.19.3",
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-localization": "^0.1.13",

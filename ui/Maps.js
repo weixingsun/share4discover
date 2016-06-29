@@ -129,7 +129,6 @@ export default class Maps extends Component {
                   component: Detail,
                   passProps: {
                     msg:marker,
-                    //placeIcon:placeIcon,
                   }
                 });
             }
@@ -297,15 +296,18 @@ export default class Maps extends Component {
       //alert(JSON.stringify(r))
     }
     onMarkerClickBmap(e) {
-        //alert(JSON.stringify(e.nativeEvent))
-        var key = this.type+':'+e.nativeEvent.latitude+','+e.nativeEvent.longitude
-        //var msg = //for loop in this.markers
+	var msg = {}
+	if(Platform.OS === 'ios'){
+          msg = JSON.parse(decodeURIComponent(e.id))
+	}else if(Platform.OS === 'android'){
+          msg = e.nativeEvent.annotation
+	}
         this.props.navigator.push({
-          component: Detail,
-          passProps: {
-            msg: e.nativeEvent.extra,
-          }
-        }); 
+            component: Detail,
+            passProps: {
+              msg: msg,
+            }
+        });
     }
     enableDownload(flag){
         this.download=flag
@@ -325,6 +327,7 @@ export default class Maps extends Component {
          else row['image']=this.bluePlaceIcon
          row['latitude']=parseFloat(row.lat)
          row['longitude']=parseFloat(row.lng)
+	 //row['leftCalloutView']=row.owner+':'+row.title
          this.addMarker( row );
        })
        this.setState({ reload: true });
@@ -344,7 +347,7 @@ export default class Maps extends Component {
       });
     } 
     render(){
-        console.log('Maps.render() this.markers='+JSON.stringify(this.markers))
+        //console.log('Maps.render() this.markers='+JSON.stringify(this.markers))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
