@@ -10,6 +10,7 @@ import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
+import FormEditMsg from "./FormEditMsg"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -18,6 +19,7 @@ export default class Detail extends Component {
         this.old_value = {};
         this.state={ 
             content_height: 40,
+            isMyMsg:false,
         }
         this.type= {
             title: t.String,
@@ -33,11 +35,11 @@ export default class Detail extends Component {
         }
         //this.onChangeNative=this.onChangeNative.bind(this)
     }
-    onReply () {
+    onReply() {
         //var value = this.refs.form.getValue();
         //value['pics']=[]                             ////////ctime undefined
-	var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
-	var value={key:key, field:'reply', value:'reply in app'}
+        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        var value={key:key, field:'reply', value:'reply in app'}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -51,53 +53,93 @@ export default class Detail extends Component {
             ]
         );
     }
+    onDelete() {
+	var _this = this;
+        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        Alert.alert(
+            "Delete",
+            "Do you want to delete this information ? ",
+            [
+                {text:"Cancel", },
+                {text:"OK", onPress:()=>{
+                    Net.delMsg(key)
+                    _this.props.navigator.pop();
+                }},
+            ]
+        );
+    }
+    onEdit(){
+        this.props.navigator.push({component: FormEditMsg, passProps: { msg:this.props.msg } })
+    }
     componentWillMount(){
         //alert(Date.now())
         //alert(JSON.stringify(this.props.msg))
-        //this.checkLoginUser();
+	this.isMyMsg(this.props.msg)
     }
-    checkLoginUser(){
+    isMyMsg(msg){
+        this.checkSns('user_fb',msg.owner)
+        this.checkSns('user_gg',msg.owner)
+    }
+    checkSns(type,owner){
         var self = this
-        Store.get('user_fb').then(function(fb){
-            if(fb == null){
-                Store.get('user_gg').then(function(gg){
-                    if(gg == null) {
-                        alert('Please login to publish information.')
-                    }else{
-                        var name = gg.type+':'+gg.email
-                        self.setState({
-                            value: {owner:name,address:'',latlng:''},
-                        });
-                    }
-                });
-            }else{
-                var name = fb.type+':'+fb.email
-                self.setState({
-                    value: {owner:name,address:'',latlng:''},
-                });
+        Store.get(type).then(function(fb){  //fb={type,email}
+            if(fb != null){
+                if(owner.indexOf(fb.email) > -1)
+                    self.setState({isMyMsg:true})
             }
         });
     }
+    setStateOnce(key,value){
+        if(this.state[key] != value) {
+          this.setState({key:value})
+          //alert('setStateOnce:'+key+'='+value)
+        }
+    }
+    getSNSIcon(type){
+        return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
+    }
+    showActionIcons(){
+        if(!this.state.isMyMsg){
+	  return (
+            <View style={{flexDirection:'row',}}>
+              <Icon
+                name={'ion-ios-mail-outline'}
+                color={'red'}
+                size={40}
+                onPress={this.onReply.bind(this) } />
+            </View>
+          )
+        }else{
+          return (
+            <View style={{flexDirection:'row',}}>
+              <Icon
+                name={'ion-ios-trash-outline'}
+                color={'red'}
+                size={40}
+                onPress={this.onDelete.bind(this) } />
+              <View style={{width:50}} />
+              <Icon
+                name={'ion-ios-create-outline'}
+                color={'blue'}
+                size={40}
+                onPress={this.onEdit.bind(this) } />
+            </View>
+          )
+        }
+    }
     render(){
         var _ctime = new Date(parseInt(this.props.msg.ctime));
-	//((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
+        //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
+
         return (
             <View style={{flex:1}}>
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
-                   rightButton={
-                     <View style={{flexDirection:'row',}}>
-                        <Icon 
-			    name={'ion-ios-mail-outline'} //ion-ios-checkmark-circle green
-			    color={'red'} 
-			    size={40} 
-			    onPress={this.onReply.bind(this) } />
-                     </View>
-                   }
+                   rightButton={ this.showActionIcons() }
                 />
                 <View style={{flex:8,backgroundColor: 'gray',}}>
                     <ScrollView
@@ -105,7 +147,7 @@ export default class Detail extends Component {
                       scrollEventThrottle={200}
                       style={{flex:8}}
                     >
-                      <View style={{height:height/3}} onPress={()=>alert('open')}>
+                      <View style={{height:height/3}} >
                         <DetailImg />
                       </View>
                       <View style={Style.title_card} >
@@ -117,8 +159,8 @@ export default class Detail extends Component {
                         />
                         <View style={{flex:1,marginLeft:30}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Publish Time: {_ctime.toLocaleString()}</Text>
-                            <Text>Address     : {this.props.msg.address}</Text>
+                            <Text>Time   : {_ctime.toLocaleString()}</Text>
+                            <Text>Address: {this.props.msg.address}</Text>
                         </View>
                       </View>
                       <View style={Style.contact_card} >
@@ -131,14 +173,11 @@ export default class Detail extends Component {
                         <View style={{flex:1,marginLeft:30}}>
                             <Text style={{fontSize:20,}}>{this.props.msg.owner.split(':')[1]}</Text>
                             <Text>Phone  : {_ctime.toLocaleString()}</Text>
-                            <Text>Address: {this.props.msg.address}</Text>
+                            <Text>: {this.props.msg.address}</Text>
                         </View>
                       </View>
                       <View style={Style.detail_card} >
-                        <View style={{width:Style.DEVICE_WIDTH/3}} />
-                        <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
-                        </View>
+                        <Text>Publish Time: {_ctime.toLocaleString()}</Text>
                         <Text>Details</Text>
                       </View>
                     </ScrollView>

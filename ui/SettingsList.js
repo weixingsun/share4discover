@@ -161,11 +161,3 @@ export default class SettingsList extends React.Component {
         );
     }
 }
-/*
-                  <View style={Style.left_card}>
-                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
-                  </View>
-                  <View style={Style.left_card}>
-                    <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
-                  </View>
-*/
