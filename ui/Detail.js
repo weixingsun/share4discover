@@ -104,7 +104,7 @@ export default class Detail extends Component {
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-mail-outline'}
-                color={'red'}
+                color={'green'}
                 size={40}
                 onPress={this.onReply.bind(this) } />
             </View>
@@ -113,18 +113,33 @@ export default class Detail extends Component {
           return (
             <View style={{flexDirection:'row',}}>
               <Icon
-                name={'ion-ios-trash-outline'}
-                color={'red'}
+                name={'ion-ios-mail-outline'}
+                color={'green'}
                 size={40}
-                onPress={this.onDelete.bind(this) } />
+                onPress={this.onReply.bind(this) } />
               <View style={{width:50}} />
               <Icon
                 name={'ion-ios-create-outline'}
                 color={'blue'}
                 size={40}
                 onPress={this.onEdit.bind(this) } />
+	      <View style={{width:50}} />
+              <Icon
+                name={'ion-ios-trash-outline'}
+                color={'red'}
+                size={40}
+                onPress={this.onDelete.bind(this) } />
             </View>
           )
+        }
+    }
+    showSlides(){
+        if(this.props.msg.pics != null) {
+            return (
+              <View style={{height:height/3}} >
+                <DetailImg />
+              </View>
+            )
         }
     }
     render(){
@@ -141,15 +156,13 @@ export default class Detail extends Component {
                    }
                    rightButton={ this.showActionIcons() }
                 />
-                <View style={{flex:8,backgroundColor: 'gray',}}>
+                <View style={{flex:8,backgroundColor: '#DDDDDD',}}>
                     <ScrollView
                       automaticallyAdjustContentInsets={false}
                       scrollEventThrottle={200}
                       style={{flex:8}}
                     >
-                      <View style={{height:height/3}} >
-                        <DetailImg />
-                      </View>
+                      {this.showSlides()}
                       <View style={Style.title_card} >
                         <Icon
                             style={{marginLeft:20,marginRight:1}}
@@ -164,16 +177,23 @@ export default class Detail extends Component {
                         </View>
                       </View>
                       <View style={Style.contact_card} >
-                        <Icon
+		        <View style={{flexDirection:'row'}} >
+                          <Icon
                             style={{marginLeft:20,marginRight:1}}
-                            size={44}
+                            size={34}
                             color={'blue'}
                             name={Global.SNS_ICONS[this.props.msg.owner.split(':')[0]]}
-                        />
-                        <View style={{flex:1,marginLeft:30}}>
-                            <Text style={{fontSize:20,}}>{this.props.msg.owner.split(':')[1]}</Text>
-                            <Text>Phone  : {_ctime.toLocaleString()}</Text>
-                            <Text>: {this.props.msg.address}</Text>
+                          />
+		          <Text style={{marginLeft:20}}>{this.props.msg.owner.split(':')[1]}</Text>
+		        </View>
+                        <View style={{flexDirection:'row'}}>
+                          <Icon
+                            style={{marginLeft:22,marginRight:1}}
+                            size={34}
+                            color={'green'}
+                            name={Global.CALL}
+                          />
+                          <Text style={{marginLeft:21}}>{this.props.msg.phone}</Text>
                         </View>
                       </View>
                       <View style={Style.detail_card} >

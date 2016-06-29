@@ -238,7 +238,7 @@ module.exports = {
   contact_card: {
       height: 200,
       justifyContent: 'center',
-      alignItems: 'center',
+      //alignItems: 'center',
       borderWidth: 1,
       backgroundColor: '#fff',
       borderColor: 'rgba(0,0,0,0.1)',
