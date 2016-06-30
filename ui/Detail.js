@@ -16,7 +16,7 @@ var {height, width} = Dimensions.get('window');
 export default class Detail extends Component {
     constructor(props) {
         super(props);
-        this.old_value = {};
+        this.login = '';
         this.state={ 
             content_height: 40,
             isMyMsg:false,
@@ -53,6 +53,23 @@ export default class Detail extends Component {
             ]
         );
     }
+    onClose() {
+        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        var value={key:key, field:'close', value:this.login}
+        var _this = this;
+        Alert.alert(
+            "Close",
+            "Do you want to complete this request ? ",
+            [
+                {text:"Cancel", },
+                {text:"OK", onPress:()=>{
+                    Net.putMsg(value)
+                    //Net.emailOwner(value)
+                    _this.props.navigator.pop();
+                }},
+            ]
+        );
+    }
     onDelete() {
 	var _this = this;
         var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
@@ -82,9 +99,10 @@ export default class Detail extends Component {
     }
     checkSns(type,owner){
         var self = this
-        Store.get(type).then(function(fb){  //fb={type,email}
-            if(fb != null){
-                if(owner.indexOf(fb.email) > -1)
+        Store.get(type).then(function(user){  //{type,email}
+            if(user != null){
+                self.login = self.login===''? user.type+':'+user.email:self.login+','+user.type+':'+user.email
+                if(owner.indexOf(user.email) > -1)
                     self.setState({isMyMsg:true})
             }
         });
@@ -104,7 +122,7 @@ export default class Detail extends Component {
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-mail-outline'}
-                color={'green'}
+                color={'yellow'}
                 size={40}
                 onPress={this.onReply.bind(this) } />
             </View>
@@ -129,6 +147,12 @@ export default class Detail extends Component {
                 color={'red'}
                 size={40}
                 onPress={this.onDelete.bind(this) } />
+              <View style={{width:50}} />
+              <Icon
+                name={'ion-ios-checkmark-circle-outline'}
+                color={'green'}
+                size={40}
+                onPress={this.onClose.bind(this) } />
             </View>
           )
         }
@@ -141,6 +165,24 @@ export default class Detail extends Component {
               </View>
             )
         }
+    }
+    showOwners(){
+	var owners = this.props.msg.owner.split(',')
+        return (
+            owners.map( (owner) => {
+                return (
+                        <View style={{flexDirection:'row'}} key={owner} >
+                          <Icon
+                            style={{marginLeft:20,marginRight:1}}
+                            size={34}
+                            color={'blue'}
+                            name={Global.SNS_ICONS[owner.split(':')[0]]}
+                          />
+                          <Text style={{marginLeft:20}}>{owner.split(':')[1]}</Text>
+                        </View>
+                )
+            })
+        );
     }
     render(){
         var _ctime = new Date(parseInt(this.props.msg.ctime));
@@ -177,15 +219,7 @@ export default class Detail extends Component {
                         </View>
                       </View>
                       <View style={Style.contact_card} >
-		        <View style={{flexDirection:'row'}} >
-                          <Icon
-                            style={{marginLeft:20,marginRight:1}}
-                            size={34}
-                            color={'blue'}
-                            name={Global.SNS_ICONS[this.props.msg.owner.split(':')[0]]}
-                          />
-		          <Text style={{marginLeft:20}}>{this.props.msg.owner.split(':')[1]}</Text>
-		        </View>
+			{ this.showOwners() }
                         <View style={{flexDirection:'row'}}>
                           <Icon
                             style={{marginLeft:22,marginRight:1}}

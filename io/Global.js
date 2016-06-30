@@ -23,4 +23,5 @@ module.exports = {
       wx:'fa-weixin',
       wb:'fa-weibo',
   },
+  CALL:'ion-ios-call-outline',
 };
