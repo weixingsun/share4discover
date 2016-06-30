@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Dimensions, Picker, StyleSheet,View, ScrollView,Text,TouchableOpacity,TouchableHighlight } from 'react-native';
+import {Alert, Dimensions, Picker, StyleSheet,View, ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
 import {Icon} from './Icon'
 import t from 'tcomb-form-native'
 var Form = t.form.Form;
@@ -18,28 +18,15 @@ export default class Detail extends Component {
         super(props);
         this.login = '';
         this.state={ 
-            content_height: 40,
+            reply: '',
+            reply_height: 35,
             isMyMsg:false,
         }
-        this.type= {
-            title: t.String,
-            address: t.String,
-            type: t.String,
-            owner: t.String,
-            ask: t.String,
-            lat: t.Number,
-            lng: t.Number,
-            ctime: t.Number,
-            content: t.String,
-            reply: t.String,
-        }
-        //this.onChangeNative=this.onChangeNative.bind(this)
     }
     onReply() {
-        //var value = this.refs.form.getValue();
-        //value['pics']=[]                             ////////ctime undefined
         var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
-        var value={key:key, field:'reply', value:'reply in app'}
+	var time = +new Date();
+        var value={key:key, field:'#'+time, value:this.login+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -48,6 +35,7 @@ export default class Detail extends Component {
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.putMsg(value)
+		    //Net.
                     _this.props.navigator.pop();
                 }},
             ]
@@ -58,7 +46,7 @@ export default class Detail extends Component {
         var value={key:key, field:'close', value:this.login}
         var _this = this;
         Alert.alert(
-            "Close",
+            "Complete",
             "Do you want to complete this request ? ",
             [
                 {text:"Cancel", },
@@ -122,7 +110,7 @@ export default class Detail extends Component {
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-mail-outline'}
-                color={'yellow'}
+                color={'orange'}
                 size={40}
                 onPress={this.onReply.bind(this) } />
             </View>
@@ -132,7 +120,7 @@ export default class Detail extends Component {
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-mail-outline'}
-                color={'green'}
+                color={'orange'}
                 size={40}
                 onPress={this.onReply.bind(this) } />
               <View style={{width:50}} />
@@ -171,18 +159,43 @@ export default class Detail extends Component {
         return (
             owners.map( (owner) => {
                 return (
-                        <View style={{flexDirection:'row'}} key={owner} >
-                          <Icon
-                            style={{marginLeft:20,marginRight:1}}
-                            size={34}
+                    <View style={{flexDirection:'row'}} key={owner} >
+                        <Icon
+                            style={{marginLeft:23,marginRight:6}}
+                            size={24}
                             color={'blue'}
                             name={Global.SNS_ICONS[owner.split(':')[0]]}
-                          />
-                          <Text style={{marginLeft:20}}>{owner.split(':')[1]}</Text>
-                        </View>
+                        />
+                        <Text style={{marginLeft:20}}>{owner.split(':')[1]}</Text>
+                    </View>
                 )
             })
         );
+    }
+    showReplys(){
+        var keys = Object.keys(this.props.msg)
+	var replys = keys.filter((key) => {
+	    return (key.substring(0,1)==='#')
+	})
+	//fb:email|reply
+	return (
+	  replys.map((key)=>{
+            var str = this.props.msg[key];
+            let owner = str.split('|')[0]
+            let reply = str.split('|')[1]
+	    return (
+	        <View style={{flexDirection:'row'}} key={key} >
+                    <Icon
+                        style={{marginLeft:30,marginRight:6}}
+                        size={24}
+                        color={'blue'}
+                        name={Global.SNS_ICONS[owner.split(':')[0]]}
+                    />
+		    <Text style={{marginLeft:1}}>{ owner.split(':')[1] + ':  '+ reply }</Text>   
+		</View>
+	    )
+          })
+	)
     }
     render(){
         var _ctime = new Date(parseInt(this.props.msg.ctime));
@@ -207,23 +220,23 @@ export default class Detail extends Component {
                       {this.showSlides()}
                       <View style={Style.title_card} >
                         <Icon
-                            style={{marginLeft:20,marginRight:1}}
+                            style={{marginLeft:15,marginRight:6}}
                             size={44}
                             color={this.props.msg.ask=='false'?'blue':'gray'}
                             name={Global.TYPE_ICONS[this.props.msg.type]}
                         />
-                        <View style={{flex:1,marginLeft:30}}>
+                        <View style={{flex:1,marginLeft:10}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
                             <Text>Time   : {_ctime.toLocaleString()}</Text>
                             <Text>Address: {this.props.msg.address}</Text>
                         </View>
                       </View>
-                      <View style={Style.contact_card} >
+                      <View style={Style.detail_card} >
 			{ this.showOwners() }
                         <View style={{flexDirection:'row'}}>
                           <Icon
-                            style={{marginLeft:22,marginRight:1}}
-                            size={34}
+                            style={{marginLeft:23,marginRight:6}}
+                            size={24}
                             color={'green'}
                             name={Global.CALL}
                           />
@@ -231,8 +244,28 @@ export default class Detail extends Component {
                         </View>
                       </View>
                       <View style={Style.detail_card} >
-                        <Text>Publish Time: {_ctime.toLocaleString()}</Text>
-                        <Text>Details</Text>
+                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text>  {_ctime.toLocaleString()}</Text>
+			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Asking :  </Text>  {this.props.msg.ask}</Text>
+                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
+			<Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
+                      </View>
+                      <View style={Style.detail_card} >
+                        <Text style={{marginLeft:21,fontWeight:'bold'}}>Replys :  </Text>
+			{this.showReplys()}
+                      </View>
+                      <View style={Style.detail_card} >
+		        <Text style={{marginLeft:21,fontWeight:'bold'}}>Your Reply:  </Text>
+			<TextInput 
+			    style={{marginLeft:20,height:this.state.reply_height}} 
+			    multiline={true} 
+			    value={this.state.reply}
+		            onChange={(event) => {
+		                this.setState({
+		                    reply: event.nativeEvent.text,
+                                    reply_height: event.nativeEvent.contentSize.height,
+	                        });
+                            }}
+		        />
                       </View>
                     </ScrollView>
 		</View>

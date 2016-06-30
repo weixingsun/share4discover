@@ -347,7 +347,7 @@ export default class Maps extends Component {
       });
     } 
     render(){
-        //console.log('Maps.render() this.markers='+JSON.stringify(this.markers))
+        console.log('Maps.render() this.region='+JSON.stringify(this.region))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }

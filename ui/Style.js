@@ -221,7 +221,7 @@ module.exports = {
     //
   },
   title_card: {
-      height: 110,
+      //height: 110,
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 1,
@@ -234,9 +234,11 @@ module.exports = {
       shadowOpacity: 0.5,
       shadowRadius: 3,
       flexDirection:'row',
+      paddingTop:5,
+      paddingBottom:5,
   },
   contact_card: {
-      height: 200,
+      //height: 130,
       justifyContent: 'center',
       //alignItems: 'center',
       borderWidth: 1,
@@ -249,11 +251,13 @@ module.exports = {
       shadowOpacity: 0.5,
       shadowRadius: 3,
       //flexDirection:'row',
+      paddingTop:5,
+      paddingBottom:5,
   },
   detail_card: {
-      height: 450,
+      //height: 250,
       justifyContent: 'center',
-      alignItems: 'center',
+      //alignItems: 'center',
       borderWidth: 1,
       backgroundColor: '#fff',
       borderColor: 'rgba(0,0,0,0.1)',
@@ -263,7 +267,9 @@ module.exports = {
       //shadowOffset: { width: 2, height: 2, },
       shadowOpacity: 0.5,
       shadowRadius: 3,
-      flexDirection:'row',
+      //flexDirection:'row',
+      paddingTop:5,
+      paddingBottom:5,
   },
   typeIcon:{
     //
