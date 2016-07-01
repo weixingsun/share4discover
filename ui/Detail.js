@@ -28,7 +28,7 @@ export default class Detail extends Component {
         var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
 	var time = +new Date();
         var value={key:key, field:'#'+time, value:this.mainlogin+'|'+this.state.reply}
-        var notify_value={key:'#'+this.getMainLogin(this.props.msg.owner), field:key+':'+time, value:'1|'+this.mainlogin+'|'+this.state.reply}
+        var notify_value={key:'#'+Global.getMainLogin(this.props.msg.owner), field:key+':'+time, value:'1|'+this.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -91,37 +91,11 @@ export default class Detail extends Component {
         Store.get(type).then(function(user){  //{type,email}
             if(user != null){
                 self.login = self.login===''? user.type+':'+user.email:self.login+','+user.type+':'+user.email
-		self.mainlogin = self.getMainLogin(self.login)
+		//self.mainlogin = Global.getMainLogin(self.login)
                 if(owner.indexOf(user.email) > -1)
                     self.setState({isMyMsg:true})
             }
         });
-    }
-    getMainLogin(logins){
-        //fb > wx > gg > wb
-	var arr = logins.split(',')
-	if(arr.length===0){ 
-            return '';
-	//}else if(arr.length===1){
-	//    return logins;
-	}else{
-            var fb = arr.filter((user)=>{
-	        return (user.substring(0,2)==='fb')
-	    })
-	    if(fb!=null) return fb;
-            var wx = arr.filter((user)=>{
-                return (user.substring(0,2)==='wx')
-            })
-            if(wx!=null) return wx;
-            var gg = arr.filter((user)=>{
-                return (user.substring(0,2)==='gg')
-            })
-            if(gg!=null) return gg;
-            var wb = arr.filter((user)=>{
-                return (user.substring(0,2)==='wb')
-            })
-            if(wb!=null) return wb;
-	}
     }
     getSNSIcon(type){
         return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]

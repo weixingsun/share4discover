@@ -57,6 +57,10 @@ var Net = {
       var url = this.HOST+'/api/msg/'+key;
       return this._get(url);
     },
+    getNotify(key){
+      var url = this.HOST+'/api/notify/'+key;  //#fb:email
+      return this._get(url);
+    },
     setMsg(json){
       var url = this.HOST+'/api/msg/';
       return this._post(url, json);

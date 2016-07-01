@@ -13,7 +13,7 @@ import Maps from "./Maps"
 import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
-import ShareList from './ShareList'
+import NotifyList from './NotifyList'
 import FriendList from './FriendList'
 
 
@@ -127,7 +127,7 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <ShareList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
+      return <NotifyList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
     //} else if(this.state.page ===Store.emailTab){
