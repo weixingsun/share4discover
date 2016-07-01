@@ -17,6 +17,7 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
         this.login = '';
+	this.mainlogin = '';  //fb > wx > gg > wb
         this.state={ 
             reply: '',
             reply_height: 35,
@@ -26,7 +27,8 @@ export default class Detail extends Component {
     onReply() {
         var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
 	var time = +new Date();
-        var value={key:key, field:'#'+time, value:this.login+'|'+this.state.reply}
+        var value={key:key, field:'#'+time, value:this.mainlogin+'|'+this.state.reply}
+        var notify_value={key:'#'+this.getMainLogin(this.props.msg.owner), field:key+':'+time, value:'1|'+this.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -35,7 +37,7 @@ export default class Detail extends Component {
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.putMsg(value)
-		    //Net.
+		    Net.putMsg(notify_value)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -77,7 +79,6 @@ export default class Detail extends Component {
         this.props.navigator.push({component: FormEditMsg, passProps: { msg:this.props.msg } })
     }
     componentWillMount(){
-        //alert(Date.now())
         //alert(JSON.stringify(this.props.msg))
 	this.isMyMsg(this.props.msg)
     }
@@ -90,16 +91,37 @@ export default class Detail extends Component {
         Store.get(type).then(function(user){  //{type,email}
             if(user != null){
                 self.login = self.login===''? user.type+':'+user.email:self.login+','+user.type+':'+user.email
+		self.mainlogin = self.getMainLogin(self.login)
                 if(owner.indexOf(user.email) > -1)
                     self.setState({isMyMsg:true})
             }
         });
     }
-    setStateOnce(key,value){
-        if(this.state[key] != value) {
-          this.setState({key:value})
-          //alert('setStateOnce:'+key+'='+value)
-        }
+    getMainLogin(logins){
+        //fb > wx > gg > wb
+	var arr = logins.split(',')
+	if(arr.length===0){ 
+            return '';
+	//}else if(arr.length===1){
+	//    return logins;
+	}else{
+            var fb = arr.filter((user)=>{
+	        return (user.substring(0,2)==='fb')
+	    })
+	    if(fb!=null) return fb;
+            var wx = arr.filter((user)=>{
+                return (user.substring(0,2)==='wx')
+            })
+            if(wx!=null) return wx;
+            var gg = arr.filter((user)=>{
+                return (user.substring(0,2)==='gg')
+            })
+            if(gg!=null) return gg;
+            var wb = arr.filter((user)=>{
+                return (user.substring(0,2)==='wb')
+            })
+            if(wb!=null) return wb;
+	}
     }
     getSNSIcon(type){
         return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
@@ -183,6 +205,7 @@ export default class Detail extends Component {
             var str = this.props.msg[key];
             let owner = str.split('|')[0]
             let reply = str.split('|')[1]
+            let time  = new Date(parseInt(key.substring(1)))
 	    return (
 	        <View style={{flexDirection:'row'}} key={key} >
                     <Icon
@@ -191,7 +214,8 @@ export default class Detail extends Component {
                         color={'blue'}
                         name={Global.SNS_ICONS[owner.split(':')[0]]}
                     />
-		    <Text style={{marginLeft:1}}>{ owner.split(':')[1] + ':  '+ reply }</Text>   
+		    <Text style={{flex:1,marginLeft:1}}>{ owner.split(':')[1] + ':  '+ reply }</Text>
+                    <Text style={{marginRight:5,color:'gray'}}>{time.toLocaleString()}</Text>
 		</View>
 	    )
           })
