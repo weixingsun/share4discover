@@ -91,22 +91,25 @@ export default class NotifyList extends Component {
     });*/
   }
   _renderRowView(rowData) {
-    //var type =
+    var time = new Date(parseInt(rowData.time)).toLocaleString()
     return (
       <TouchableHighlight style={Style.row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
-          <View style={{height: 66}}>
-              <View style={{flexDirection: 'row', height: 66}}>
+          <View >
+              <View style={{flexDirection: 'row', height: 48, justifyContent:'center' }}>
                 <Icon 
 		    style={{marginLeft:15,marginRight:6}}
-		    size={44}
+		    size={40}
 		    //color={this.props.msg.ask=='false'?'blue':'gray'}
 		    color={'gray'}
 		    name={Global.TYPE_ICONS[rowData.type]}
 		/>
-                <View style={Style.rowTitleView}>
-                    <Text style={Style.rowTitleText}>{rowData.content}</Text>
-                </View>
+	        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
+                    <Text>{rowData.content}</Text>
+		</View>
+		<View style={{marginRight:10,justifyContent:'center'}}>
+                    <Text>{time}</Text>
+		</View>
               </View>
               <View style={Style.separator} />
           </View>
@@ -121,9 +124,10 @@ export default class NotifyList extends Component {
             leftButton={
                 <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             }
-            rightButton={
-                <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
-            } />
+            //rightButton={
+            //    <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
+            //} 
+	/>
         <ListView 
             dataSource={this.state.dataSource} 
             renderRow={this._renderRowView.bind(this)} 

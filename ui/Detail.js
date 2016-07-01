@@ -179,7 +179,7 @@ export default class Detail extends Component {
             var str = this.props.msg[key];
             let owner = str.split('|')[0]
             let reply = str.split('|')[1]
-            let time  = new Date(parseInt(key.substring(1)))
+            let time  = new Date(parseInt(key.substring(1)))    //toLocaleString()
 	    return (
 	        <View style={{flexDirection:'row'}} key={key} >
                     <Icon
