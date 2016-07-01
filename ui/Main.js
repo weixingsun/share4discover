@@ -3,6 +3,8 @@ import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navi
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
+import IconBadge from 'react-native-icon-badge';
+
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
 import Global from "../io/Global"
@@ -18,9 +20,6 @@ import FriendList from './FriendList'
 
 
 export default class Main extends Component {
-  //static contextTypes = {
-  //  drawer: PropTypes.object.isRequired,
-  //};
   constructor(props) {
     super(props);
     this.types = ['car','taxi','estate']
@@ -39,11 +38,10 @@ export default class Main extends Component {
         longitudeDelta: 1,
         zoom: 16,
       },
-      filters: {type:"car",range:2000,position:{latitude:0,longitude:0,latitudeDelta:10,longitudeDelta:10}},
-      drawerPanEnabled:false,
+      //drawerPanEnabled:false,
       gps:false,
     }; 
-    this.changeFilter=this.changeFilter.bind(this)
+    //this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
   }
@@ -127,11 +125,9 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} filters={this.state.filters} drawer={this.drawer}/>
+      return <NotifyList navigator={this.props.navigator} mainlogin={this.state.mainlogin} />
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
-    //} else if(this.state.page ===Store.emailTab){
-    //  return <Text>Messengers</Text>
     } else if(this.state.page ===Store.mapTab){
       return <Maps navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} placeIcon={this.props.placeIcon} gps={this.state.gps} />
     } else if(this.state.page ===Store.confTab){
@@ -140,46 +136,35 @@ export default class Main extends Component {
   }
 //FontAwesome: cubes  th  th-large  
   gotoPage(name){ //ios-world
-    var drawerEnabled=false
-    if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
-    this.setState({ page: name, drawerPanEnabled:drawerEnabled });
-  }
-  changeFilter(filter){
-    this.drawer.close();
-    this.setState({
-      filters: filter,
-    });
-    //this.reload();
-    //alert(JSON.stringify(filter))
+    //var drawerEnabled=false
+    //if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
+    this.setState({ page: name });
   }
   render() {
     //if(this.state.isLoading) return <Loading />
-    /*<Drawer tapToClose={true} //type="overlay"
-        ref={(ref) => this.drawer = ref}
-        styles={{
-                 main: {shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 3,},
-               }}
-        tweenHandler={(ratio)=> ({main:{opacity:(2-ratio)/2}})}
-        openDrawerOffset={0.3}
-        //openDrawerThreshold={this.state.openDrawerThreshold}
-        //content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value);} />} 
-    >*/
+    /*<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
+          content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
+      >*/
     return (
-    <Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
-        content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
-    >
         <View style={{flex:1}}>
           {this.pages()}
           <Tabs selected={this.state.page} style={Style.navBar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
-            <Icon size={40} name={Store.msgTab}      />
-            <Icon size={40} name={Store.userTab}  />
-            <Icon size={40} name={Store.mapTab}      />
+            <IconBadge
+                MainElement={
+                  <Icon size={40} name={Store.msgTab} style={{marginRight:10}} />
+                }
+                BadgeElement={
+                  <Text style={{color:'#FFFFFF'}}>1</Text>
+                }
+		//key={Store.msgTab}
+		name={Store.msgTab}
+            />
+            <Icon size={40} name={Store.userTab} />
+            <Icon size={40} name={Store.mapTab}  />
             <Icon size={40} name={Store.confTab} />
           </Tabs>
         </View>
-    </Drawer>
     );
   }
 }
-//<Icon size={40} name={Store.emailTab}    />
