@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
-import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
+import {ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
 import Net from "../io/Net"
 import Global from "../io/Global"
 import Store from "../io/Store"
@@ -9,6 +9,7 @@ import {Icon} from './Icon'
 import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
+import Detail from "./Detail"
 import FormAddMsg from './FormAddMsg'
 
 export default class NotifyList extends Component {
@@ -19,76 +20,21 @@ export default class NotifyList extends Component {
           filters: this.props.filters,
           accessToken: false,
           refresh: false,
-	  dataSource: this.ds.cloneWithRows([]),
       };
-      this.logins='';
   }
-  componentWillMount() {
-      this.checkLogin('user_fb')
-      this.checkLogin('user_gg')
-      //this.mainlogin = Global.getMainLogin(this.logins)
-      //this.loadNotify(this.mainlogin);
-  }
-  loadNotifyByLogin(){
-      this.mainlogin = Global.getMainLogin(this.logins)
-      //alert('mainlogin:'+this.mainlogin+'\nlogins:'+this.logins)
-      this.loadNotify(this.mainlogin);
-      //this.setState({refresh:true})
-  }
-  comparefilters(){
-    if(this.props.filters === this.state.filters) return true;
-    else return false;
-  }
-  checkLogin(type){
-      var self = this
-      Store.get(type).then(function(user){  //{type,email}
-          if(user != null){
-              self.logins = self.logins===''? user.type+':'+user.email:self.logins+','+user.type+':'+user.email
-	      self.setState({refresh:false})
-          }
+  getMsg(key){
+      var self = this;
+      Net.getMsg(key).then((json)=> {
+          self.props.navigator.push({
+              component: Detail,
+              passProps: {
+                  msg:json,
+              }
+          });
       });
-  }
-  /**
-   * refreshing
-   * @param {number} page Requested page to fetch
-   * @param {function} callback Should pass the rows
-   * @param {object} options Inform if first load
-   */
-  loadNotify(key) {
-    var self = this;
-    Net.getNotify(key).then((rows)=> {
-      var keys = Object.keys(rows)
-      var arr = []
-      keys.map((key)=>{      //key='car:lat,lng:time'  value='1|fb:email|content'
-	  var key_arr = key.split(':')
-	  var type   = key_arr[0]
-	  var latlng = key_arr[1]
-	  var time   = key_arr[2]
-	  var value_arr = rows[key].split('|')
-	  var status = value_arr[0]
-	  var user = value_arr[1]
-	  var content = value_arr[2]
-	  var obj = {type:type, latlng:latlng, time:time, status:status, user:user, content:content }
-          arr.push( obj )
-      })
-      self.setState({ 
-	      dataSource: self.ds.cloneWithRows(arr), 
-	      refresh:true,
-      });
-    })
-    /*.catch((e)=>{
-        alert('Network Problem!')
-    });
-    */
   }
   _onPress(rowData) {
-    alert(JSON.stringify(rowData))
-    /*this.props.navigator.push({
-        component: Detail,
-        passProps: { 
-            msg:rowData,
-        }
-    });*/
+      this.getMsg(rowData.type+':'+rowData.latlng)
   }
   _renderRowView(rowData) {
     var time = new Date(parseInt(rowData.time)).toLocaleString()
@@ -117,19 +63,19 @@ export default class NotifyList extends Component {
     );
   }
   render() {
-    if(this.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
+    let ds = this.ds.cloneWithRows(this.props.mails)
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
-            leftButton={
-                <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
-            }
+            //leftButton={
+            //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
+            //}
             //rightButton={
             //    <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
             //} 
 	/>
         <ListView 
-            dataSource={this.state.dataSource} 
+            dataSource={ds} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
       </View>
