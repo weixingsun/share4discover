@@ -11,7 +11,6 @@ module.exports = {
     TYPE_ICONS: {
       estate:'ion-ios-home',
       car:'ion-ios-car',
-      taxi:'ion-md-car',
       book:'ion-ios-book',
       help:'ion-ios-help-buoy',
       tool:'ion-md-hammer',
