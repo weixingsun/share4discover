@@ -6,9 +6,6 @@ import FIcon from 'react-native-vector-icons/FontAwesome'
 class Icon extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-          name: this.props.name,
-        };
     }
     /*getImageSource(name,size,color){
       //  if(name.startsWith('ion')) return IIcon.getImageSource(name.substring(4),size,color)

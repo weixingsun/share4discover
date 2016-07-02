@@ -16,11 +16,6 @@ export default class NotifyList extends Component {
   constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.state = {
-          filters: this.props.filters,
-          accessToken: false,
-          refresh: false,
-      };
   }
   getMsg(key){
       var self = this;
@@ -29,6 +24,7 @@ export default class NotifyList extends Component {
               component: Detail,
               passProps: {
                   msg:json,
+		  mainlogin:this.props.mainlogin,
               }
           });
       });

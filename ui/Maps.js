@@ -129,6 +129,7 @@ export default class Maps extends Component {
                   component: Detail,
                   passProps: {
                     msg:marker,
+		    mainlogin:this.props.mainlogin,
                   }
                 });
             }
@@ -306,6 +307,7 @@ export default class Maps extends Component {
             component: Detail,
             passProps: {
               msg: msg,
+	      mainlogin:this.props.mainlogin,
             }
         });
     }

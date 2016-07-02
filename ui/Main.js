@@ -25,6 +25,7 @@ export default class Main extends Component {
     super(props);
     this.types = ['car','taxi','estate']
     this.logins = '';
+    this.mainlogin = '';
     this.state = {
       page:this.props.page!=null?this.props.page: Store.msgTab,
       badge:'',
@@ -133,9 +134,10 @@ export default class Main extends Component {
     var self = this;
     Net.getNotify(key).then((rows)=> {
       var arr = self.Kv2Json(rows)
+      var unread = self.getUnread(arr)
       self.setState({
           mails:arr,
-	  badge:arr.length,
+	  badge:unread.length,
           refresh:true,
       });
     })
@@ -160,6 +162,11 @@ export default class Main extends Component {
       })
       return arr;
   }
+  getUnread(arr){
+      return arr.filter((json)=>{
+          return (json.status==='1')
+      })
+  }
   goBack(){
     this.props.navigator.pop();
   }
@@ -179,13 +186,13 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} mainlogin={this.state.mainlogin} mails={this.state.mails} />
+      return <NotifyList navigator={this.props.navigator} mainlogin={this.mainlogin} mails={this.state.mails} />
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} placeIcon={this.props.placeIcon} gps={this.state.gps} />
+      return <Maps navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} placeIcon={this.props.placeIcon} gps={this.state.gps} mainlogin={this.mainlogin} />
     } else if(this.state.page ===Store.confTab){
-      return <SettingsList navigator={this.props.navigator}/>
+      return <SettingsList navigator={this.props.navigator} logins={this.logins}/>
     }
   }
   gotoPage(name){ //ios-world
