@@ -169,10 +169,10 @@ module.exports = {
       shadowRadius: 3,
       flexDirection:'row',
   },
-  row: {
+  notify_row: {
     backgroundColor: 'rgba(255, 255, 255, 1.0)',
     padding: 2,
-    height: 68,
+    height: 58,
     //flex: 1,
     justifyContent: 'center',
     //alignItems: 'center'

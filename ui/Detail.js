@@ -147,7 +147,7 @@ export default class Detail extends Component {
             owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
-	        console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
+	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
                 return (
                     <View style={{flexDirection:'row'}} key={owner} >
                         <Icon
@@ -170,25 +170,30 @@ export default class Detail extends Component {
 	//fb:email|reply
 	return (
 	  replys.map((key)=>{
-            var str = this.props.msg[key];
-            let owner = str.split('|')[0]
-            let reply = str.split('|')[1]
-            let time  = new Date(parseInt(key.substring(1)))    //toLocaleString()
-	    let sns_type = owner.split(':')[0]
-	    let sns_user = owner.split(':')[1]
-	    console.log('----------showReplys():type:'+sns_type+', user:'+sns_user)
-	    return (
-	        <View style={{flexDirection:'row'}} key={key} >
+              var str = this.props.msg[key];
+              let owner = str.split('|')[0]
+              let reply = str.split('|')[1]
+              let time  = new Date(parseInt(key.substring(1)))    //toLocaleString()
+              let sns_type = owner.split(':')[0]
+	      let sns_user = owner.split(':')[1]
+	      if(sns_type==null || sns_type==''){
+                return (
+                    <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
+                )
+	      }else{
+	        return (
+	          <View style={{flexDirection:'row'}} key={key} >
                     <Icon
                         style={{marginLeft:30,marginRight:6}}
                         size={24}
                         color={'blue'}
                         name={Global.SNS_ICONS[sns_type]}
                     />
-		    <Text style={{flex:1,marginLeft:1}}>{ sns_user + ':  '+ reply }</Text>
+                    <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
                     <Text style={{marginRight:5,color:'gray'}}>{time.toLocaleString()}</Text>
-		</View>
-	    )
+                  </View>
+	        )
+              }
           })
 	)
     }

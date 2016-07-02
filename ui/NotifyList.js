@@ -35,17 +35,19 @@ export default class NotifyList extends Component {
   _renderRowView(rowData) {
     var time = new Date(parseInt(rowData.time)).toLocaleString()
     return (
-      <TouchableHighlight style={Style.row} underlayColor='#c8c7cc' 
+      <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
           <View >
-              <View style={{flexDirection: 'row', height: 48, justifyContent:'center' }}>
-                <Icon 
+              <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
+	        <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
+                  <Icon 
 		    style={{marginLeft:15,marginRight:6}}
 		    size={40}
 		    //color={this.props.msg.ask=='false'?'blue':'gray'}
 		    color={'gray'}
 		    name={Global.TYPE_ICONS[rowData.type]}
-		/>
+		  />
+	        </View>
 	        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
                     <Text>{rowData.content}</Text>
 		</View>

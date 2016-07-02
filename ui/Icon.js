@@ -12,6 +12,7 @@ class Icon extends Component {
       //  if(name.startsWith('fa')) return FIcon.getImageSource(name.substring(3),size,color)
     }*/
     renderIcon(){
+        if(this.props.name == null) throw new Error('Icon: Invalid Chars');
         if(this.props.name.substring(0,3) ==='ion')
             return <IIcon name={this.props.name.substring(4)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style} />
         if(this.props.name.substring(0,2)==='fa')

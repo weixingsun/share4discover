@@ -403,8 +403,6 @@ export default class Maps extends Component {
                 showsCompass={true}
                 //userLocationViewParams={{accuracyCircleFillColor:'blue', accuracyCircleStrokeColor:'red', image:this.state.userIcon }}
                 annotations={ this.markers }
-                //    {latitude: 39.832136, longitude: 116.34095, title: "start", subtile: "hello", image: this.state.markerIcon},
-                //    {latitude: 39.902136, longitude: 116.44095, title: "end",   subtile: "hello", image: this.state.markerIcon},
                 //overlays={ this.state.polylines }
                 onRegionChangeComplete={this.onRegionChange.bind(this)}
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
