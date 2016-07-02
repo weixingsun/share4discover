@@ -32,6 +32,7 @@
     "react-native-wechat": "^1.4.6",
     "react-native-weibo": "^1.0.5",
     "react-timer-mixin": "^0.13.3",
-    "tcomb-form-native": "^0.5.0"
+    "tcomb-form-native": "^0.5.0",
+    "window-size": "^0.2.0"
   }
 }

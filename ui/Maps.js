@@ -124,18 +124,8 @@ export default class Maps extends Component {
             var self=this
             var color='blue'
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
-            var clickFunc = function(){
-                self.props.navigator.push({
-                  component: Detail,
-                  passProps: {
-                    msg:marker,
-		    mainlogin:this.props.mainlogin,
-                  }
-                });
-            }
-            //if(this.msg!=null){
-            //    clickFunc = null
-            //}
+            let key = Global.getKeyFromMsg(marker)
+            var clickFunc = this.showMsgByKey(key)
             return (
               <GMapView.Marker
                   key={marker.ctime}
@@ -303,13 +293,8 @@ export default class Maps extends Component {
 	}else if(Platform.OS === 'android'){
           msg = e.nativeEvent.annotation
 	}
-        this.props.navigator.push({
-            component: Detail,
-            passProps: {
-              msg: msg,
-	      mainlogin:this.props.mainlogin,
-            }
-        });
+        let key = Global.getKeyFromMsg(msg)
+        this.showMsgByKey(key)
     }
     enableDownload(flag){
         this.download=flag
@@ -348,6 +333,18 @@ export default class Maps extends Component {
           circle]
       });
     } 
+    showMsgByKey(key){
+      var self = this;
+      Net.getMsg(key).then((json)=> {
+          self.props.navigator.push({
+              component: Detail,
+              passProps: {
+                  msg:json,
+                  mainlogin:this.props.mainlogin,
+              }
+          });
+      });
+    }
     render(){
         console.log('Maps.render() this.region='+JSON.stringify(this.region))
         return (

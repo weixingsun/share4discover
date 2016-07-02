@@ -50,4 +50,7 @@ module.exports = {
             if(wb!=null) return wb;
         }
     },
+    getKeyFromMsg(msg){
+        return msg.type+':'+msg.lat+','+msg.lng
+    },
 };
