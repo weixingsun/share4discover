@@ -23,7 +23,7 @@ export default class Detail extends Component {
         }
     }
     onReply() {
-        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
         var value={key:key, field:'#'+time, value:this.props.mainlogin+'|'+this.state.reply}
         var notify_value={key:'#'+Global.getMainLogin(this.props.msg.owner), field:key+':'+time, value:'1|'+this.props.mainlogin+'|'+this.state.reply}
@@ -42,7 +42,7 @@ export default class Detail extends Component {
         );
     }
     onClose() {
-        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        var key = Global.getKeyFromMsg(this.props.msg)
         var value={key:key, field:'close', value:this.props.mainlogin}
         var _this = this;
         Alert.alert(
@@ -60,7 +60,7 @@ export default class Detail extends Component {
     }
     onDelete() {
 	var _this = this;
-        var key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng
+        var key = Global.getKeyFromMsg(this.props.msg)
         Alert.alert(
             "Delete",
             "Do you want to delete this information ? ",
