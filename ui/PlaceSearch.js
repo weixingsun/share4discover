@@ -31,7 +31,7 @@ export default class PlaceSearch extends Component {
         autoFocus={false}
         fetchDetails={false}
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-          alert('data:'+JSON.stringify(data)+'\n\n details:'+JSON.stringify(details))
+          //alert('data:'+JSON.stringify(data)+'\n\n details:'+JSON.stringify(details))
           //if(typeof data.id === 'undefined') {
           //  var latlng = details.geometry.location;
           //  this.props.onSelect({latitude:latlng.lat,longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02,address:data.description});

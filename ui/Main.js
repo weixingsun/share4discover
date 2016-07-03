@@ -32,10 +32,6 @@ export default class Main extends Component {
       refresh:false,
       mails:[],
       //isLoading:true,
-      selectedMsg:this.props.msg,
-      //user: null,
-      markers: [],
-      circles: [],
       region: {
         latitude: 39.9042,
         longitude: 116.4074,
@@ -146,8 +142,9 @@ export default class Main extends Component {
     });
   }
   Kv2Json(kv){
-      var keys = Object.keys(kv)
       var arr = []
+      if(kv == null) return arr;
+      var keys = Object.keys(kv)
       keys.map((key)=>{      //key='car:lat,lng:time'  value='1|fb:email|content'
           var key_arr = key.split(':')
           var type   = key_arr[0]
@@ -190,7 +187,7 @@ export default class Main extends Component {
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} msg={this.state.selectedMsg} placeIcon={this.props.placeIcon} gps={this.state.gps} mainlogin={this.mainlogin} />
+      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={this.mainlogin} />
     } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator} logins={this.logins}/>
     }

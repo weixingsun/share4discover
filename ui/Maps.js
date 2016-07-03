@@ -125,13 +125,12 @@ export default class Maps extends Component {
             var color='blue'
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
             let key = Global.getKeyFromMsg(marker)
-            var clickFunc = this.showMsgByKey(key)
             return (
               <GMapView.Marker
                   key={marker.ctime}
                   coordinate={{latitude:parseFloat(marker.lat), longitude:parseFloat(marker.lng)}}
                   //image={ placeIcon }
-                  onPress={ clickFunc }
+                  onPress={ ()=> this.showMsgByKey(key) }
               >
                   <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={30} />
               </GMapView.Marker>
@@ -346,7 +345,7 @@ export default class Maps extends Component {
       });
     }
     render(){
-        console.log('Maps.render() this.region='+JSON.stringify(this.region))
+        //console.log('Maps.render() this.region='+JSON.stringify(this.region))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }

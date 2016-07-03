@@ -7,8 +7,7 @@
   },
   "dependencies": {
     "apsl-react-native-button": "^2.5.0",
-    "react": "latest",
-    "react-addons-shallow-compare": "^15.1.0",
+    "react": "^15.2.0",
     "react-native": "^0.28.0",
     "react-native-android-permissions": "0.0.3",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
@@ -21,7 +20,7 @@
     "react-native-image-picker": "^0.19.3",
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-localization": "^0.1.13",
-    "react-native-maps": "^0.4.2",
+    "react-native-maps": "^0.6.0",
     "react-native-navbar": "^1.5.0",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
     "react-native-slider": "^0.7.1",
