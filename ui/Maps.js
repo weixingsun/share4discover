@@ -45,10 +45,10 @@ export default class Maps extends Component {
     }
     loadIcons(name){
         var _this = this;
-        getImageSource(name, 30, 'blue').then((source) => {
+        getImageSource(name, 40, 'blue').then((source) => {
             this.bluePlaceIcon= source
         });
-        getImageSource(name, 30, 'gray').then((source) => {
+        getImageSource(name, 40, 'gray').then((source) => {
             this.grayPlaceIcon= source
         });
     }
@@ -395,7 +395,7 @@ export default class Maps extends Component {
                 region={ this.region }
                 showsUserLocation={this.state.gps}
                 rotateEnabled={false}
-                //pitchEnabled={false}
+                overlookEnabled={false}
                 showsCompass={true}
                 //userLocationViewParams={{accuracyCircleFillColor:'blue', accuracyCircleStrokeColor:'red', image:this.state.userIcon }}
                 annotations={ this.markers }
