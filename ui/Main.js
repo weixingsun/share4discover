@@ -3,8 +3,6 @@ import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navi
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
-import IconBadge from 'react-native-icon-badge';
-
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
 import Net from "../io/Net"
@@ -197,6 +195,9 @@ export default class Main extends Component {
     //if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
     this.setState({ page: name });
   }
+  getSelectedColor(id){
+    if(id === this.state.page) return 'blue';
+  }
   render() {
     //if(this.state.isLoading) return <Loading />
     //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
@@ -208,10 +209,10 @@ export default class Main extends Component {
           {this.pages()}
           <Tabs selected={this.state.page} style={Style.navBar}
               selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
-            <Icon size={40} name={Store.msgTab} style={{marginRight:10}} badge={this.state.badge} />
-            <Icon size={40} name={Store.userTab} />
-            <Icon size={40} name={Store.mapTab}  />
-            <Icon size={40} name={Store.confTab} />
+            <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} />
+            <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} />
+            <Icon size={40} color={this.getSelectedColor(Store.mapTab)} name={Store.mapTab}  />
+            <Icon size={40} color={this.getSelectedColor(Store.confTab)} name={Store.confTab} />
           </Tabs>
         </View>
     );

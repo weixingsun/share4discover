@@ -181,7 +181,7 @@ export default class Settings extends React.Component{
           <NavigationBar style={Style.navbar} title={{title: "Settings"}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-arrow-back"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
+                  <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                 </View>
              }
           />

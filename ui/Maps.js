@@ -132,7 +132,7 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={30} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
               </GMapView.Marker>
             )
         });

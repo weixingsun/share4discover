@@ -13,19 +13,33 @@ class Icon extends Component {
     }*/
     renderIcon(){
         if(this.props.name == null) throw new Error('Icon: Invalid Chars');
+	var margin = this.props.badge? {marginRight:10}:{};
+	//console.log("Icon["+this.props.name+"]color="+this.props.color+",margin="+JSON.stringify(margin))
         if(this.props.name.substring(0,3) ==='ion')
-            return <IIcon name={this.props.name.substring(4)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style} />
+            return <IIcon name={this.props.name.substring(4)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
         if(this.props.name.substring(0,2)==='fa')
-            return <FIcon name={this.props.name.substring(3)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style} />
+            return <FIcon name={this.props.name.substring(3)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
     }
     renderBadge(){
-        if(this.props.badge)
-        return (
-            <View style={[styles.badge, (this.props.IconBadgeStyle ? this.props.IconBadgeStyle : {})]}>
-                <Text style={{color:'#FFFFFF'}}>{this.props.badge}</Text>
+        //alert(this.props.color)
+        if(this.props.badge){
+          var styles={
+            position:'absolute',
+            top:1,
+            right:1,
+            width:this.props.size/2,
+            height:this.props.size/2,
+            borderRadius:this.props.size/2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: this.props.badge.color,
+          };
+          return (
+            <View style={styles}>
+                <Text style={{color:'#FFFFFF'}}>{this.props.badge.text}</Text>
             </View>
-        );
-	else return null;
+          );
+	}else return null;
     }
     render(){
 	return (
@@ -51,7 +65,7 @@ var styles = StyleSheet.create({
     borderRadius:15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FF0000'
+    //backgroundColor: '#FF0000'
   },
 });
 module.exports = {
