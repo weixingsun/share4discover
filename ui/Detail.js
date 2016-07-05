@@ -22,7 +22,7 @@ export default class Detail extends Component {
             isMyMsg:false,
         }
     }
-    //key='car:lat,lng:ctime#time'  value='1|fb:email|content'
+    //key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
     onReply() {
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();

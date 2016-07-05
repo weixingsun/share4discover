@@ -163,7 +163,7 @@ export default class Main extends Component {
           var user = value_arr[1]
           var content = value_arr[2]
           var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
-	  //alert('key='+key+'\nvalue='+kv[key])  ////key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
+	  //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
 	  //alert(JSON.stringify(obj))
           arr.push( obj )
       })
