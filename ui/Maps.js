@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, View } from 'react-native'
+import {AppState, DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -42,6 +42,8 @@ export default class Maps extends Component {
       this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
       this.msg = this.props.msg;
       this.watchID = (null: ?number);
+      this.turnOffGps = this.turnOffGps.bind(this)
+      this.turnOnGps = this.turnOnGps.bind(this)
     }
     loadIcons(name){
         var _this = this;
@@ -67,6 +69,10 @@ export default class Maps extends Component {
             this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
+    _handleAppStateChange(state){  //active -- inactive -- background
+	//if(state!=='active') this.turnOffGps();    //crash
+	//else if(this.state.gps) this.turnOnGps();
+    }
     componentWillMount(){
         this.permission();
         if(this.msg!=null){
@@ -75,6 +81,7 @@ export default class Maps extends Component {
           //autofit to multiple waypoints
         }
         this.loadIcons(Global.TYPE_ICONS[this.state.type]);
+	AppState.addEventListener('change', this._handleAppStateChange);
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -87,6 +94,7 @@ export default class Maps extends Component {
     }
     componentWillUnmount() { 
       this.turnOffGps();
+      AppState.removeEventListener('change', this._handleAppStateChange);
     }
     turnOnGps(){
       this.watchID = navigator.geolocation.watchPosition(

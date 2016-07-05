@@ -29,8 +29,12 @@ export default class NotifyList extends Component {
           });
       });
   }
+  readMsg(reply){
+      alert(JSON.stringify(reply))
+  }
   _onPress(rowData) {
-      this.getMsg(rowData.type+':'+rowData.latlng)
+      this.readMsg(rowData)
+      this.getMsg(Global.getKeyFromReply(rowData))
   }
   _renderRowView(rowData) {
     var time = new Date(parseInt(rowData.time)).toLocaleString()

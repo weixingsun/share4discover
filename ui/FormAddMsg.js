@@ -152,7 +152,7 @@ export default class PDF extends Component {
       }
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: '',}}
+                <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
@@ -163,7 +163,7 @@ export default class PDF extends Component {
                         <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
                      </View>
                    }
-                  />
+                />
                 <KeyboardAwareScrollView style={{
                         flexDirection: 'column',
                         flex: 1,
@@ -183,31 +183,3 @@ export default class PDF extends Component {
         );
     }
 }
-var styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 30,
-    alignSelf: 'center',
-    marginBottom: 30
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  }
-});

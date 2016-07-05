@@ -50,6 +50,9 @@ module.exports = {
         }
     },
     getKeyFromMsg(msg){
-        return msg.type+':'+msg.lat+','+msg.lng
+        return msg.type+':'+msg.lat+','+msg.lng+':'+msg.ctime
+    },
+    getKeyFromReply(reply){
+        return reply.type+':'+reply.latlng+':'+reply.ctime
     },
 };

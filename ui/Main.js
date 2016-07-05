@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+//import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
@@ -49,11 +50,13 @@ export default class Main extends Component {
       if(Platform.OS === 'android') {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
+      clearInterval(this.timer)
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
       //    this.setState({isLoading: false});
       //});
+      this.timer = setInterval(()=>this.timerFunction(),60000)
   }
   componentWillMount(){
       var _this = this;
@@ -120,6 +123,9 @@ export default class Main extends Component {
         Global.MAP = _this.map
       });
   }
+  timerFunction(){
+    this.loadNotifyByLogin()
+  }
   loadNotifyByLogin(){
       this.mainlogin = Global.getMainLogin(this.logins)
       this.loadNotify(this.mainlogin);
@@ -129,6 +135,7 @@ export default class Main extends Component {
     Net.getNotify(key).then((rows)=> {
       var arr = self.Kv2Json(rows)
       var unread = self.getUnread(arr)
+      //alert(unread.length)
       self.setState({
           mails:arr,
 	  badge:unread.length,
