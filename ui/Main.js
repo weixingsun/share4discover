@@ -135,7 +135,7 @@ export default class Main extends Component {
     Net.getNotify(key).then((rows)=> {
       var arr = self.Kv2Json(rows)
       var unread = self.getUnread(arr)
-      //alert(unread.length)
+      //alert('arr:'+arr.length+',unread:'+unread.length)
       self.setState({
           mails:arr,
 	  badge:unread.length,
@@ -150,16 +150,21 @@ export default class Main extends Component {
       var arr = []
       if(kv == null) return arr;
       var keys = Object.keys(kv)
-      keys.map((key)=>{      //key='car:lat,lng:time'  value='1|fb:email|content'
+      keys.map((key)=>{
           var key_arr = key.split(':')
           var type   = key_arr[0]
           var latlng = key_arr[1]
-          var time   = key_arr[2]
+	  var times   = key_arr[2]
+          var ctime   = times.split('#')[0]
+          var rtime   = times.split('#')[1]
           var value_arr = kv[key].split('|')
-          var status = value_arr[0]
+          var rtype = value_arr[0].substring(0,1);    //r
+          var status = value_arr[0].substring(1)      //1
           var user = value_arr[1]
           var content = value_arr[2]
-          var obj = {type:type, latlng:latlng, time:time, status:status, user:user, content:content }
+          var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
+	  //alert('key='+key+'\nvalue='+kv[key])  ////key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
+	  //alert(JSON.stringify(obj))
           arr.push( obj )
       })
       return arr;
