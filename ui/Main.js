@@ -135,10 +135,11 @@ export default class Main extends Component {
     Net.getNotify(key).then((rows)=> {
       var arr = self.Kv2Json(rows)
       var unread = self.getUnread(arr)
-      //alert('arr:'+arr.length+',unread:'+unread.length)
+      var badgeText = ''+unread.length;
+      //alert('arr:'+arr.length+',badgeText:'+badgeText)
       self.setState({
           mails:arr,
-	  badge:''+unread.length,
+	  badge:badgeText,
           refresh:true,
       });
     })
