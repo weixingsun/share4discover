@@ -24,8 +24,6 @@ export default class Maps extends Component {
     constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.markers = []
-      //this.region = this.props.region
       this.state = {
 	typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
@@ -39,6 +37,7 @@ export default class Maps extends Component {
         reload:false,
         showTypes:false,
 	showPlaceSearch: false,
+	markers:[],
       };
       this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
       this.msg = this.props.msg;
@@ -124,7 +123,7 @@ export default class Maps extends Component {
     }
     }*/
     renderPlaceMarkersGmap(){
-        return this.markers.map( (marker) => {
+        return this.state.markers.map( (marker) => {
             var self=this
             var color='blue'
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
@@ -303,27 +302,20 @@ export default class Maps extends Component {
         this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
     }*/
     clearMarkers(){
-        this.markers = []
-        this.setState({ reload: true });
+        this.setState({ markers: [] });
     }
     loadMarkers(rows){
-       rows.map((row)=>{
+       var markers = rows.map((row)=>{
          //row ={ lat,lng,type,title,content,ctime, }
-         //row['id']=row.ctime
          if(row.ask === 'true') row['image']=this.grayPlaceIcon
          else row['image']=this.bluePlaceIcon
+         //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+         //row['view']   = <Icon name={'ion-ios-navigate-outline'} color={'#222222'} size={40} />
          row['latitude']=parseFloat(row.lat)
          row['longitude']=parseFloat(row.lng)
-	 //row['leftCalloutView']=row.owner+':'+row.title
-         this.addMarker( row );
+         return row;
        })
-       this.setState({ reload: true });
-    }
-    addMarker(marker){
-      this.markers = 
-          [
-           ...this.markers,
-           marker]
+       this.setState({ markers: markers });
     }
     addCircle(circle){
       var {circles} = this.state;
@@ -347,7 +339,7 @@ export default class Maps extends Component {
     }
     render(){
         //console.log('Maps.render() region='+JSON.stringify(this.state.region))
-	//alert('region:'+JSON.stringify(this.state.region))
+	//alert('markers:'+JSON.stringify(this.state.markers))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -400,7 +392,7 @@ export default class Maps extends Component {
                 overlookEnabled={false}
                 showsCompass={true}
                 //userLocationViewParams={{accuracyCircleFillColor:'blue', accuracyCircleStrokeColor:'red', image:this.state.userIcon }}
-                annotations={ this.markers }
+                annotations={ this.state.markers }
                 //overlays={ this.state.polylines }
                 onRegionChangeComplete={this.onRegionChange.bind(this)}
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}

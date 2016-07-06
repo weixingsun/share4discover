@@ -45,6 +45,9 @@ export default class Main extends Component {
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
   }
+  funk = () => {
+      //auto binding function
+  }
   componentWillUnmount() {
       this.turnOffGps();
       if(Platform.OS === 'android') {
