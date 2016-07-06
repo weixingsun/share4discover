@@ -22,7 +22,9 @@ class Icon extends Component {
     }
     renderBadge(){
         //alert(this.props.color)
-        if(this.props.badge){
+	if(!this.props.badge || this.props.badge.text!=='' || this.props.badge.text!=='0'){
+            return null;
+	}else{
           var styles={
             position:'absolute',
             top:1,
@@ -39,7 +41,7 @@ class Icon extends Component {
                 <Text style={{color:'#FFFFFF'}}>{this.props.badge.text}</Text>
             </View>
           );
-	}else return null;
+	}
     }
     render(){
 	return (

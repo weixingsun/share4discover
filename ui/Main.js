@@ -138,7 +138,7 @@ export default class Main extends Component {
       //alert('arr:'+arr.length+',unread:'+unread.length)
       self.setState({
           mails:arr,
-	  badge:unread.length,
+	  badge:''+unread.length,
           refresh:true,
       });
     })
@@ -219,8 +219,8 @@ export default class Main extends Component {
     return (
         <View style={{flex:1}}>
           {this.pages()}
-          <Tabs selected={this.state.page} style={Style.navBar}
-              selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
+          <Tabs selected={this.state.page} style={Style.navBar} selectedStyle={{color:'blue'}}
+                onSelect={(e)=> this.gotoPage(e.props.name)} >
             <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} />
             <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} />
             <Icon size={40} color={this.getSelectedColor(Store.mapTab)} name={Store.mapTab}  />

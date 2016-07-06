@@ -25,8 +25,7 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.markers = []
-      this.region = this.props.region
-      this.download = true
+      //this.region = this.props.region
       this.state = {
 	typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
@@ -34,6 +33,8 @@ export default class Maps extends Component {
         circles: [],
         //initialPosition: null,
         //lastPosition: null,
+        region:this.props.region,
+	download:true,
         gps: this.props.gps,
         reload:false,
         showTypes:false,
@@ -75,11 +76,6 @@ export default class Maps extends Component {
     }
     componentWillMount(){
         this.permission();
-        if(this.msg!=null){
-          this.addMarker( this.msg );
-          this.region={latitude:parseFloat(this.msg.lat),longitude:parseFloat(this.msg.lng), latitudeDelta:0.02,longitudeDelta:0.02 }
-          //autofit to multiple waypoints
-        }
         this.loadIcons(Global.TYPE_ICONS[this.state.type]);
 	AppState.addEventListener('change', this._handleAppStateChange);
     }
@@ -118,7 +114,7 @@ export default class Maps extends Component {
       }
     }
     getRegion(lat,lng){
-        return {latitude:lat, longitude:lng, latitudeDelta:this.region.latitudeDelta,longitudeDelta:this.region.longitudeDelta }
+        return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
     }
     /*updateMyPos(position){
         this.myPosMarker = {id: 0, latlng: position, color:'#0000ff' };
@@ -160,22 +156,18 @@ export default class Maps extends Component {
     pointInBBox(position){
         var latIn=false,lngIn=false;
         //alert(JSON.stringify(position))
-        if(this.between(position.latitude,  this.region.latitude,  this.region.latitudeDelta))
+        if(this.between(position.latitude,  this.state.region.latitude,  this.state.region.latitudeDelta))
             latIn=true
-        if(this.between(position.longitude, this.region.longitude, this.region.longitudeDelta))
+        if(this.between(position.longitude, this.state.region.longitude, this.state.region.longitudeDelta))
             lngIn=true
         return latIn && lngIn;
     }
-    moveOrNot(position){
-        if(!this.pointInBBox(position))
-        this.move(this.getRegion(position.latitude,position.longitude));
-    }
     downloadMsg() {
-      if(!this.download) return
+      if(!this.state.download) return
       var self = this;
-      var range = this.distance(this.region.latitudeDelta,this.region.longitudeDelta)
-      //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.region))
-      Net.rangeMsg(this.state.type, this.region, range).then((rows)=> {
+      var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
+      //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
+      Net.rangeMsg(this.state.type, this.state.region, range).then((rows)=> {
           self.clearMarkers();
           self.loadMarkers(rows);
           //alert(rows.length)
@@ -222,7 +214,7 @@ export default class Maps extends Component {
             }
             rightButton={
               <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.download)} size={36} onPress={this.downloadMsg.bind(this)} />
+                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={36} onPress={this.downloadMsg.bind(this)} />
                 <View style={{width:40}} />
                 <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
               </View>
@@ -288,10 +280,11 @@ export default class Maps extends Component {
           return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
     }
     onRegionChange(r) {
-      this.region= r;
+      this.setState({region: r});
       Store.save('region', r);
       this.enableDownload(true);
       //alert(JSON.stringify(r))
+      //console.log('onRegionChange...................')
     }
     onMarkerClickBmap(e) {
 	var msg = {}
@@ -304,7 +297,7 @@ export default class Maps extends Component {
         this.showMsgByKey(key)
     }
     enableDownload(flag){
-        this.download=flag
+        this.setState({download:flag});
     }
     /*onLongPress(event) {
         this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
@@ -353,7 +346,8 @@ export default class Maps extends Component {
       });
     }
     render(){
-        //console.log('Maps.render() this.region='+JSON.stringify(this.region))
+        //console.log('Maps.render() region='+JSON.stringify(this.state.region))
+	//alert('region:'+JSON.stringify(this.state.region))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -384,7 +378,7 @@ export default class Maps extends Component {
               rotateEnabled={false} //showsCompass={true}
               showsScale={true}
               onRegionChangeComplete={this.onRegionChange.bind(this)}
-              initialRegion={this.region}
+              initialRegion={this.state.region}
               //region={this.state.region}
               //mapType=standard,satellite,hybrid
               //onLongPress={this.onLongPress.bind(this)}
@@ -395,12 +389,12 @@ export default class Maps extends Component {
          );
     }
     renderBmap(){
-      if(this.region.zoom == null || this.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
+      //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
       return (
             <BMapView
                 style={Style.map}
                 ref="bmap"
-                region={ this.region }
+                initialRegion={ this.state.region }
                 showsUserLocation={this.state.gps}
                 rotateEnabled={false}
                 overlookEnabled={false}
