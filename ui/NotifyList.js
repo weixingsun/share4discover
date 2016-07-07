@@ -10,7 +10,7 @@ import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormAddMsg from './FormAddMsg'
+import FormMsg from './FormMsg'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -77,7 +77,7 @@ export default class NotifyList extends Component {
             //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             //}
             //rightButton={
-            //    <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
+            //    <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormMsg}) }/>
             //} 
 	/>
         <ListView 

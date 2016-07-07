@@ -13,7 +13,7 @@ import Net from "../io/Net"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormAddMsg from "./FormAddMsg"
+import FormMsg from "./FormMsg"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
 import SearchAddr from './SearchAddr'
@@ -233,7 +233,7 @@ export default class Maps extends Component {
               <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                 <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={36} onPress={this.downloadMsg.bind(this)} />
                 <View style={{width:40}} />
-                <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormAddMsg}) }/>
+                <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormMsg}) }/>
               </View>
             }
           />

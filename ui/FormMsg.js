@@ -15,18 +15,22 @@ import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import PlaceSearch from './PlaceSearch'
  
-export default class PDF extends Component {
+export default class FormMsg extends Component {
     constructor(props) {
         super(props);
-        this.old_value = {};
+        this.old_value = this.props.msg? this.props.msg: {owner:'',ask:false,address:'',latlng:''};
+        this.old_value['ask']=false;
         this.state={ 
             content_height: 40,
-            value: {owner:'',ask:false,address:'',latlng:''},
+            value: this.old_value,
+	    init_address: this.props.msg? this.props.msg.address:'',
         }
         this.type= {
             type: t.enums(Net.MSG_TYPES),
-            owner: t.String,
             ask: t.Boolean,
+            owner: t.String,
+            phone: t.String,
+            price: t.maybe(t.Number),
             title: t.String,
             address: t.String,
             lat: t.Number,
@@ -40,7 +44,7 @@ export default class PDF extends Component {
         //this.refs.form.props.value;
 	//alert('place.latitude:'+parseFloat(place.latitude))
         var ctime = +new Date();
-        this.old_value['ctime']= ctime
+        if(!this.props.msg)  this.old_value['ctime']= ctime
         this.old_value['owner']= this.state.value.owner
         this.old_value['address']= place.address
         this.old_value['lat']= typeof place.latitude =='string'?parseFloat(place.latitude): place.latitude.toFixed(5)
@@ -71,7 +75,7 @@ export default class PDF extends Component {
     onChange(form){
         var ctime = +new Date();
         this.old_value = form
-        this.old_value['ctime']= ctime
+	if(!this.props.msg)  this.old_value['ctime']= ctime
         this.setState({
              value: this.old_value,
         })
@@ -94,7 +98,7 @@ export default class PDF extends Component {
             //content_height: event.nativeEvent.contentSize.height,
     }*/
     componentWillMount(){
-        //alert(Date.now())
+        //alert(JSON.stringify(this.old_value))
         this.checkLoginUser();
     }
     checkLoginUser(){
@@ -103,9 +107,11 @@ export default class PDF extends Component {
             if(fb != null){
                 var name = fb.type+':'+fb.email
                 if(self.state.value.owner !== '') name += ','+self.state.value.owner
-                self.setState({
+		if(!self.props.msg){
+                  self.setState({
                     value: {owner:name,address:'',latlng:''},
-                });
+                  });
+		}
             }
         });
         Store.get('user_gg').then(function(gg){
@@ -113,17 +119,20 @@ export default class PDF extends Component {
                 //alert('Please login to publish information.')
                 var name = gg.type+':'+gg.email
                 if(self.state.value.owner !== '') name += ','+self.state.value.owner
-                self.setState({
+		if(!self.props.msg){
+                  self.setState({
                     value: {owner:name,address:'',latlng:''},
-                });
+                  });
+		}
             }
         });
     }
     render(){
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
       const options = {
+	auto: 'placeholders',
         fields: {
-          owner:{editable:false},
+          owner:{hidden:true},
           address:{hidden:true},
           lat:{hidden:true},
           lng:{hidden:true},
@@ -152,7 +161,7 @@ export default class PDF extends Component {
       }
         return (
             <View style={{flex:1}}>
-                  <NavigationBar style={Style.navbar} title={{title: '',}}
+                <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
@@ -163,14 +172,14 @@ export default class PDF extends Component {
                         <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
                      </View>
                    }
-                  />
+                />
                 <KeyboardAwareScrollView style={{
                         flexDirection: 'column',
                         flex: 1,
                         marginTop: 50,
                         margin: 15,
                 }}>
-                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)}/>
+                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)} value={this.state.init_address} />
                     <Form
                         ref="form"
                         type={t.struct(this.type)}
@@ -183,31 +192,3 @@ export default class PDF extends Component {
         );
     }
 }
-var styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 30,
-    alignSelf: 'center',
-    marginBottom: 30
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  }
-});

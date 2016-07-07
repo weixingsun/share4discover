@@ -26,7 +26,7 @@ export default class PlaceSearch extends Component {
 
     return (
       <BaiduPlaceTip
-        placeholder='Search Place in Baidu'
+        placeholder='Input address'   //'Baidu'
         minLength={2} // minimum length of text to search
         autoFocus={false}
         fetchDetails={false}
@@ -40,7 +40,7 @@ export default class PlaceSearch extends Component {
           //}
         }}
         getDefaultValue={() => {
-          return ''; // text input default value
+          return this.props.value; // text input default value
         }}
         // available options: http://lbsyun.baidu.com/index.php?title=webapi/place-suggestion-api
         // http://api.map.baidu.com/place/v2/suggestion?query=tiananmen&region=131&output=json&ak=xxxxxx
@@ -75,7 +75,7 @@ export default class PlaceSearch extends Component {
   renderGaode() {
     return (
       <GaodePlaceTip
-        placeholder='Search Place in GaoDe'
+        placeholder='Input address'  //'GaoDe'
         minLength={2} // minimum length of text to search
         autoFocus={false}
         fetchDetails={false}
@@ -89,7 +89,7 @@ export default class PlaceSearch extends Component {
 	  //}
         }}
         getDefaultValue={() => {
-          return ''; // text input default value
+          return this.props.value; // text input default value
         }}
 	// available options: http://lbs.amap.com/api/webservice/reference/search
 	// http://restapi.amap.com/v3/assistant/inputtips?key=308284158ecae3fe85cfcee5d1322d03keywords=
@@ -127,7 +127,7 @@ export default class PlaceSearch extends Component {
   renderGoogle() {
     return (
       <GooglePlaceTip
-        placeholder='Search Place in Google'
+        placeholder='Input address'  //'Google'
         minLength={2} // minimum length of text to search
         autoFocus={false}
         fetchDetails={true}
@@ -138,7 +138,7 @@ export default class PlaceSearch extends Component {
             this.props.onSelect({latitude:latlng.lat,longitude:latlng.lng, latitudeDelta:0.02,longitudeDelta:0.02,address:data.description});
         }}
         getDefaultValue={() => {
-          return ''; // text input default value
+          return this.props.value; // text input default value
         }}
         query={{
           key: 'AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A',

@@ -10,7 +10,7 @@ import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
-import FormEditMsg from "./FormEditMsg"
+import FormMsg from "./FormMsg"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -77,7 +77,7 @@ export default class Detail extends Component {
         );
     }
     onEdit(){
-        this.props.navigator.push({component: FormEditMsg, passProps: { msg:this.props.msg } })
+        this.props.navigator.push({component: FormMsg, passProps: { msg:this.props.msg } })
     }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
@@ -243,6 +243,7 @@ export default class Detail extends Component {
                       <View style={Style.detail_card} >
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text>  {_ctime.toLocaleString()}</Text>
 			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Asking :  </Text>  {this.props.msg.ask}</Text>
+			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Price :  </Text>  {this.props.msg.price}</Text>
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
 			<Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
                       </View>
