@@ -1,5 +1,4 @@
 module.exports = {
-    CALL:'ion-ios-call-outline',
     KEY: '',
     URL: '',
     COLOR: {
@@ -22,6 +21,7 @@ module.exports = {
       gg:'fa-google-plus-square',
       wx:'fa-weixin',
       wb:'fa-weibo',
+      tel:'ion-ios-call-outline',
     },
     getMainLogin(logins){
         //fb > wx > gg > wb

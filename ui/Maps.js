@@ -140,6 +140,24 @@ export default class Maps extends Component {
             )
         });
     }
+    /*renderPlaceMarkersBmap(){
+        return this.state.markers.map( (marker) => {
+            var self=this
+            var color='blue'
+            if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
+            let key = Global.getKeyFromMsg(marker)
+            return (
+              <BMapView.Marker
+                  key={marker.ctime}
+                  coordinate={{latitude:parseFloat(marker.lat), longitude:parseFloat(marker.lng)}}
+                  //image={ placeIcon }
+                  onPress={ ()=> this.showMsgByKey(key) }
+              >
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+              </BMapView.Marker>
+            )
+        });
+    }*/
     back(){
       this.props.navigator.pop();
     }

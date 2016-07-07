@@ -146,13 +146,14 @@ export default class Detail extends Component {
     }
     showOwners(){
 	var owners = this.props.msg.owner.split(',')
+        owners.push('tel:'+this.props.msg.phone)
         return (
             owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
 	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
                 return (
-                    <View style={{flexDirection:'row'}} key={owner} >
+                    <View style={{flexDirection:'row',marginLeft:20}} key={owner} >
                         <Icon
                             style={{marginLeft:23,marginRight:6}}
                             size={24}
@@ -221,30 +222,23 @@ export default class Detail extends Component {
                       style={{flex:8}}
                     >
                       {this.showSlides()}
-                      <View style={Style.title_card} >
-                        <Icon
-                            style={{marginLeft:15,marginRight:6}}
+                      <View style={Style.detail_card} >
+                        <View style={{flexDirection:'row',marginLeft:20}} >
+                          <Icon
+                            style={{marginLeft:15,marginRight:15}}
                             size={44}
                             color={this.props.msg.ask=='false'?'blue':'gray'}
                             name={Global.TYPE_ICONS[this.props.msg.type]}
-                        />
-                        <View style={{flex:1,marginLeft:10}}>
+                          />
+                          <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
                             <Text>Time   : {_ctime.toLocaleString()}</Text>
                             <Text>Address: {this.props.msg.address}</Text>
+                          </View>
                         </View>
                       </View>
                       <View style={Style.detail_card} >
 			{ this.showOwners() }
-                        <View style={{flexDirection:'row'}}>
-                          <Icon
-                            style={{marginLeft:23,marginRight:6}}
-                            size={24}
-                            color={'green'}
-                            name={Global.CALL}
-                          />
-                          <Text style={{marginLeft:21}}>{this.props.msg.phone}</Text>
-                        </View>
                       </View>
                       <View style={Style.detail_card} >
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text>  {_ctime.toLocaleString()}</Text>
