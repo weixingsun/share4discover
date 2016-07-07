@@ -15,6 +15,15 @@ var {
 
 var FBLoginMock = React.createClass({
   propTypes: {
+    user: React.PropTypes.shape({
+        type:   React.PropTypes.string,  //.isRequired,
+        id:     React.PropTypes.string,  //.isRequired,
+        name:   React.PropTypes.string,
+        email:  React.PropTypes.string,
+        gender: React.PropTypes.string,
+        token:  React.PropTypes.string,
+        expire: React.PropTypes.string,
+    }),
     style: View.propTypes.style,
     onPress: React.PropTypes.func,
     onLogin: React.PropTypes.func,
@@ -25,6 +34,8 @@ var FBLoginMock = React.createClass({
     //if(FBLoginManager == null) FBLoginManager=NativeModules.FBLoginManager
     return {
       user: null,
+      gray: '#dddddd',
+      blue: '#425bb4',
     };
   },
 
@@ -54,7 +65,7 @@ var FBLoginMock = React.createClass({
   },
 
   onPress: function(){
-    this.state.user
+    this.props.user
       ? this.handleLogout()
       : this.handleLogin();
 
@@ -62,16 +73,18 @@ var FBLoginMock = React.createClass({
   },
 
   componentWillMount: function(){
-    var _this = this;
-    FBLoginManager.getCredentials(function(error, data){
-      if (!error) {
-        _this.setState({ user : data})
-      }
-    });
+//    var _this = this;
+//    FBLoginManager.getCredentials(function(error, data){
+//      if (!error) {
+//        _this.setState({ user : data})
+//      }
+//    });
   },
 
   render: function() {
-    var color = this.state.user ? "#425bb4" : "#dddddd" ;
+    //alert(JSON.stringify(this.props.user))
+    var color = this.props.user? this.state.blue : this.state.gray ;
+    //color = this.state.user!==null ? this.state.blue : this.state.gray ;
     return (
         <Icon name={'fa-facebook-official'} size={35} color={color} onPress={this.onPress} />
     );

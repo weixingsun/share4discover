@@ -131,7 +131,8 @@ export default class Main extends Component {
   }
   loadNotifyByLogin(){
       this.mainlogin = Global.getMainLogin(this.logins)
-      this.loadNotify(this.mainlogin);
+      if(this.mainlogin!=='')
+          this.loadNotify(this.mainlogin);
   }
   loadNotify(key) {
     var self = this;
