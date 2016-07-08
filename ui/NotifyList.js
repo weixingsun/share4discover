@@ -41,7 +41,7 @@ export default class NotifyList extends Component {
       this.getMsg(Global.getKeyFromReply(rowData))
   }
   _renderRowView(rowData) {
-    var time = new Date(parseInt(rowData.ctime)).toLocaleString()
+    var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
     return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >

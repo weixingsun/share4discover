@@ -137,7 +137,7 @@ export default class Main extends Component {
   loadNotify(key) {
     var self = this;
     Net.getNotify(key).then((rows)=> {
-      var arr = self.Kv2Json(rows)
+      var arr = self.Kv2Json(rows).reverse()
       var unread = self.getUnread(arr)
       var badgeText = ''+unread.length;
       //alert('arr:'+arr.length+',badgeText:'+badgeText)

@@ -55,4 +55,13 @@ module.exports = {
     getKeyFromReply(reply){
         return reply.type+':'+reply.latlng+':'+reply.ctime
     },
+    getDateTimeFormat(datetimeInt){
+        let now = +new Date();
+	let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+	if(now-datetimeInt<86400000){
+            return datetimeStr.split(' ')[1]
+	}else{
+	    return datetimeStr.split(' ')[0]
+	}
+    },
 };

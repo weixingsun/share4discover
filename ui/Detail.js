@@ -170,14 +170,14 @@ export default class Detail extends Component {
         var keys = Object.keys(this.props.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
-	})
+	}).reverse()
 	//fb:email|reply
 	return (
 	  replys.map((key)=>{
               var str = this.props.msg[key];
               let owner = str.split('|')[0]
               let reply = str.split('|')[1]
-              let time  = new Date(parseInt(key.substring(1)))    //toLocaleString()
+              let time  = parseInt(key.substring(1))    //Global.getDateTimeFormat(Int)
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
 	      if(sns_type==null || sns_type==''){
@@ -194,7 +194,7 @@ export default class Detail extends Component {
                         name={Global.SNS_ICONS[sns_type]}
                     />
                     <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
-                    <Text style={{marginRight:5,color:'gray'}}>{time.toLocaleString()}</Text>
+                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
                   </View>
 	        )
               }
@@ -202,7 +202,7 @@ export default class Detail extends Component {
 	)
     }
     render(){
-        var _ctime = new Date(parseInt(this.props.msg.ctime));
+	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
 
         return (
@@ -232,7 +232,7 @@ export default class Detail extends Component {
                           />
                           <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Time   : {_ctime.toLocaleString()}</Text>
+                            <Text>Time   : {_ctime}</Text>
                             <Text>Address: {this.props.msg.address}</Text>
                           </View>
                         </View>
@@ -241,7 +241,7 @@ export default class Detail extends Component {
 			{ this.showOwners() }
                       </View>
                       <View style={Style.detail_card} >
-                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text>  {_ctime.toLocaleString()}</Text>
+                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text> {_ctime} </Text>
 			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Asking :  </Text>  {this.props.msg.ask}</Text>
 			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Price :  </Text>  {this.props.msg.price}</Text>
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
