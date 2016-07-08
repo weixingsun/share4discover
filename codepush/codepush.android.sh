@@ -8,7 +8,9 @@
 ###code-push deployment list Share --format json
 #code-push deployment ls Share -k
 
-react-native bundle --platform android --entry-file index.android.js --bundle-output ./release/index.android.bundle --dev true    //--assets-dest ./release 
+react-native bundle --platform android --entry-file index.android.js --bundle-output ./release/index.android.bundle --dev true
+//--assets-dest ./release 
+react-native bundle --platform ios     --entry-file index.ios.js     --bundle-output ./release/main.jsbundle     --dev true
 
 code-push release Share ./release 1.0.0  
 ##--description "release v1.0.0" --mandatory true    

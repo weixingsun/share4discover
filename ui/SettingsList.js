@@ -36,6 +36,9 @@ export default class SettingsList extends React.Component {
     componentWillMount(){
         this.getUserDB();
     }
+    componentDidMount(){
+        CodePush.notifyApplicationReady();
+    }
     getUserDB() {
         Store.get('user_fb').then((value) => {
             this.setState({ user_fb:value });
@@ -53,26 +56,30 @@ export default class SettingsList extends React.Component {
     checkUpdate(){
         CodePush.checkForUpdate().then( (update) =>{
             if( !update ){
-                console.log("app is latest version:"+JSON.stringify(update));
 		alert('This is the latest version')
             }else {
-                console.log("there is an update:"+JSON.stringify(update));
-		//alert('need to update to latest version:'+JSON.stringify(update))
-                CodePush.sync({ updateDialog: true, installMode: CodePush.InstallMode.IMMEDIATE });
+                var dev_key = 'ZplJqL1U5atxj36CLDKSEzzVmCGq4yG-vGnJ-'
+                var prd_key = 'eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-'
+                let CODEPUSH_KEY = (__DEV__) ? dev_key: prd_key;
+		CodePush.sync({ 
+                    updateDialog: true, 
+		    installMode: CodePush.InstallMode.IMMEDIATE,
+		    deploymentKey: CODEPUSH_KEY,
+		});
 		//CodePush.sync()
             }
         });
     }
     about(){
-        CodePush.getCurrentPackage().then((update) => {
+        //CodePush.getCurrentPackage().then((update) => {
            // If the current app "session" represents the first time
            // this update has run, and it had a description provided
            // with it upon release, let's show it to the end user
-           console.log("current app version:"+JSON.stringify(update));
-           if (update.isFirstRun && update.description) {
-               // Display a "what's new?" modal
-           }
-        });
+           // console.log("current app version:"+JSON.stringify(update));
+           //if (update.isFirstRun && update.description) {
+           //    // Display a "what's new?" modal
+           //}
+        //});
     }
 
     componentDidMount(){
