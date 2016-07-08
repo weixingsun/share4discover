@@ -148,7 +148,7 @@ export default class Main extends Component {
       });
     })
     .catch((e)=>{
-        alert('Network Problem!')
+        alert('Network Problem!'+JSON.stringify(e))
     });
   }
   Kv2Json(kv){

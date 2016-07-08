@@ -3,14 +3,13 @@ package com.share;
 import cn.reactnative.modules.weibo.WeiboPackage;
 import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
-//import com.AirMaps.AirPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
 //import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactPackage;
@@ -46,8 +45,8 @@ public class MainActivity extends ReactActivity {
     }
   @Override 
   protected List<ReactPackage> getPackages() {
-    String stagingKey = "2ssnSG7sskaaELPFLIHjvusA9Og14yG-vGnJ-";
-    String productionKey = "ATk9f1lkC3zpmIqebUPi8GHGeOWE4yG-vGnJ-";
+    String stagingKey = "ZplJqL1U5atxj36CLDKSEzzVmCGq4yG-vGnJ-";
+    String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
       new ImagePickerPackage(),

@@ -55,9 +55,12 @@ export default class SettingsList extends React.Component {
         CodePush.checkForUpdate().then( (update) =>{
             if( !update ){
                 console.log("app is latest version:"+JSON.stringify(update));
+		alert('app is latest version:'+JSON.stringify(update))
             }else {
                 console.log("there is an update:"+JSON.stringify(update));
-                //CodePush.sync({ updateDialog: true, installMode: CodePush.InstallMode.IMMEDIATE });
+		alert('need to update to latest version:'+JSON.stringify(update))
+                CodePush.sync({ updateDialog: true, installMode: CodePush.InstallMode.IMMEDIATE });
+		//CodePush.sync()
             }
         });
     }

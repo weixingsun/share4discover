@@ -11,7 +11,7 @@
     "react-native": "^0.28.0",
     "react-native-android-permissions": "0.0.3",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
-    "react-native-code-push": "^1.12.0-beta",
+    "react-native-code-push": "^1.13.2-beta",
     "react-native-datetime": "^0.1.2",
     "react-native-drawer": "^2.2.2",
     "react-native-facebook-login": "^1.2.0",
