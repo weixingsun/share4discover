@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 module.exports = {
     KEY: '',
     URL: '',
@@ -56,12 +58,13 @@ module.exports = {
         return reply.type+':'+reply.latlng+':'+reply.ctime
     },
     getDateTimeFormat(datetimeInt){
-        let now = +new Date();
-	let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
-	if(now-datetimeInt<86400000){
-            return datetimeStr.split(' ')[1]
+        let now = +new Date();   //date.getTimezoneOffset() / 60
+	//let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+	let momentDate = moment(datetimeInt) //.format("YYYY-MM-DD hh:MM:ss");
+	if(now-datetimeInt<86400000){        //1 day
+            return momentDate.fromNow()
 	}else{
-	    return datetimeStr.split(' ')[0]
+	    return momentDate.format('YYYY-MM-DD')
 	}
     },
 };

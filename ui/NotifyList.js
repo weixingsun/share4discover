@@ -34,14 +34,14 @@ export default class NotifyList extends Component {
       var key = Global.getKeyFromReply(reply)
       var notify_value={key:'#'+this.props.mainlogin, field:key+'#'+reply.rtime, value:'r0|'+this.props.mainlogin+'|'+reply.content}
       Net.putMsg(notify_value)
-      //alert(JSON.stringify(notify_value))
   }
   _onPress(rowData) {
-      this.readMsg(rowData)
+      if(rowData.status==='1')this.readMsg(rowData)
       this.getMsg(Global.getKeyFromReply(rowData))
   }
   _renderRowView(rowData) {
     var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
+    var bold = rowData.status==='1'? {fontWeight:'bold',color:'black'}: {}
     return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
@@ -57,7 +57,7 @@ export default class NotifyList extends Component {
 		  />
 	        </View>
 	        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                    <Text>{rowData.content}</Text>
+                    <Text style={ bold }>{rowData.content}</Text>
 		</View>
 		<View style={{marginRight:10,justifyContent:'center'}}>
                     <Text>{time}</Text>

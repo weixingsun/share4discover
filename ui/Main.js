@@ -137,10 +137,9 @@ export default class Main extends Component {
   loadNotify(key) {
     var self = this;
     Net.getNotify(key).then((rows)=> {
-      var arr = self.Kv2Json(rows).reverse()
+      var arr = self.Kv2Json(rows)
       var unread = self.getUnread(arr)
       var badgeText = ''+unread.length;
-      //alert('arr:'+arr.length+',badgeText:'+badgeText)
       self.setState({
           mails:arr,
 	  badge:badgeText,
@@ -151,10 +150,11 @@ export default class Main extends Component {
         alert('Network Problem!'+JSON.stringify(e))
     });
   }
+  //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
   Kv2Json(kv){
       var arr = []
       if(kv == null) return arr;
-      var keys = Object.keys(kv)
+      var keys = Object.keys(kv)  //.reverse()
       keys.map((key)=>{
           var key_arr = key.split(':')
           var type   = key_arr[0]
@@ -171,6 +171,9 @@ export default class Main extends Component {
 	  //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
 	  //alert(JSON.stringify(obj))
           arr.push( obj )
+      })
+      arr.sort(function(a,b){
+          return parseInt(b.rtime)-parseInt(a.rtime)
       })
       return arr;
   }

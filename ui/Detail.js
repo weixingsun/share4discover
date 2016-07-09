@@ -167,11 +167,11 @@ export default class Detail extends Component {
         );
     }
     showReplys(){
+        //id:#rtime  key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
         var keys = Object.keys(this.props.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
-	}).reverse()
-	//fb:email|reply
+	}).sort()
 	return (
 	  replys.map((key)=>{
               var str = this.props.msg[key];
