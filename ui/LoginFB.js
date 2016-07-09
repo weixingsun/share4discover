@@ -9,6 +9,7 @@ import Style from "./Style"
 import Store from "../io/Store"
 //import FBLoginView from "./FBLoginView"
 import FBLoginButton from './LoginFBButton'
+import I18n from 'react-native-i18n'
 
 var Login = React.createClass({
   updateView(data){
@@ -73,7 +74,7 @@ var Login = React.createClass({
 */
   renderLoginName() {
     //console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
-    var name = 'Login in Facebook'
+    var name = I18n.t('login')+' '+I18n.t('fb');
     if(this.props.user !== null ){ //&& this.props.user.type === 'fb'){
          name = this.props.user.name;
     }
@@ -85,11 +86,11 @@ var Login = React.createClass({
   },
   logout(){
     Alert.alert(
-        "Logout",
-        "Do you want to logout from Facebook?",
+        I18n.t('logout'),
+        I18n.t('ask_logout')+I18n.t('fb')+'?',
         [
-          {text:"Cancel", onPress:()=>console.log("")},
-          {text:"OK", onPress:()=>{
+          {text:I18n.t('cancel'), onPress:()=>console.log("")},
+          {text:I18n.t('ok'), onPress:()=>{
               Store.delete('user_fb');
               this.props.logout()
           }},

@@ -7,6 +7,7 @@ import {GoogleSignin} from 'react-native-google-signin' //GoogleSigninButton
 import Style from "./Style"
 import Store from "../io/Store"
 //import FBLoginView from "./FBLoginView"
+import I18n from 'react-native-i18n';
 
 var Login = React.createClass({
   renderLoginButton() {
@@ -20,7 +21,7 @@ var Login = React.createClass({
   },
   renderLoginName() {
     //console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
-    var name = 'Login in Google'; //this.props.user.name;
+    var name = I18n.t('login')+' '+I18n.t('gg'); //this.props.user.name;
     if(this.props.user !== null ){
        name=this.props.user.name;
     }
@@ -51,11 +52,11 @@ var Login = React.createClass({
   },
   _googleSignOut() {
     Alert.alert(
-        "Logout",
-        "Do you want to logout from Google?",
+        I18n.t('logout'),
+        I18n.t('ask_logout')+I18n.t('gg')+'?',
         [
-          {text:"Cancel", onPress:()=>console.log("")},
-          {text:"OK", onPress:()=>{
+          {text:I18n.t('cancel'), onPress:()=>console.log("")},
+          {text:I18n.t('ok'), onPress:()=>{
               GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
                 this.logout()
               }).done();

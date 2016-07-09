@@ -1,7 +1,8 @@
 'use strict';
 import React, { Component } from 'react'
+import {NativeModules, ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
+import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
-import {ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
 import Net from "../io/Net"
 import Global from "../io/Global"
 import Store from "../io/Store"
@@ -15,7 +16,11 @@ import FormMsg from './FormMsg'
 export default class NotifyList extends Component {
   constructor(props) {
       super(props);
+      this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()  //zh_CN  -> zh-cn
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  }
+  componentWillMount(){
+      //alert(NativeModules.RNI18n.locale)
   }
   getMsg(key){
       var self = this;
@@ -40,7 +45,7 @@ export default class NotifyList extends Component {
       this.getMsg(Global.getKeyFromReply(rowData))
   }
   _renderRowView(rowData) {
-    var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
+    var time = Global.getDateTimeFormat(parseInt(rowData.rtime),this.lang)
     var bold = rowData.status==='1'? {fontWeight:'bold',color:'black'}: {}
     return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 

@@ -6,6 +6,7 @@ import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
+import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
 //import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
@@ -49,6 +50,7 @@ public class MainActivity extends ReactActivity {
     String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
     return Arrays.<ReactPackage>asList(
       new MainReactPackage(),
+      new ReactNativeI18n(),
       new ImagePickerPackage(),
       new CodePush(stagingKey, this, BuildConfig.DEBUG),
       new ReactNativeLocalizationPackage(),

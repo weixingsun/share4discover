@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Dimensions, Picker, StyleSheet,View, ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
+import {Alert, Dimensions,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
 import {Icon} from './Icon'
 import t from 'tcomb-form-native'
 var Form = t.form.Form;
@@ -16,6 +16,7 @@ var {height, width} = Dimensions.get('window');
 export default class Detail extends Component {
     constructor(props) {
         super(props);
+        this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.state={ 
             reply: '',
             reply_height: 35,
@@ -194,7 +195,7 @@ export default class Detail extends Component {
                         name={Global.SNS_ICONS[sns_type]}
                     />
                     <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
-                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
+                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time,this.lang)}</Text>
                   </View>
 	        )
               }
@@ -202,7 +203,7 @@ export default class Detail extends Component {
 	)
     }
     render(){
-	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
+	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
 
         return (

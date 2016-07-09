@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {Dimensions, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import {Dimensions, NativeModules, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
@@ -14,6 +14,7 @@ import Global from '../io/Global'
 import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 import {Icon} from './Icon'
+import I18n from 'react-native-i18n';
 
 export default class SettingsList extends React.Component {
     constructor(props) {
@@ -32,9 +33,12 @@ export default class SettingsList extends React.Component {
       this.logout_wx = this.logout_wx.bind(this);
       this.login_wb  = this.login_wb.bind(this);
       this.logout_wb = this.logout_wb.bind(this);
+      //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
         this.getUserDB();
+        //I18n.locale = I18n.locale    //en-US, not compatible with json key format
+        I18n.locale = NativeModules.RNI18n.locale  //en_US
     }
     componentDidMount(){
         CodePush.notifyApplicationReady();
@@ -124,14 +128,14 @@ export default class SettingsList extends React.Component {
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
-                      <Text>Update</Text>
+                      <Text>{I18n.t('update')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'fa-info-circle'} size={30}/>
                       </View>
-                      <Text>About</Text>
+                      <Text>{I18n.t('about')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                       component: Settings,
@@ -141,7 +145,7 @@ export default class SettingsList extends React.Component {
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-cog-outline'} size={35}/>
                       </View>
-                      <Text>Settings</Text>
+                      <Text>{I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                       component: APIList,
@@ -151,7 +155,7 @@ export default class SettingsList extends React.Component {
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'fa-plug'} size={30}/>
                       </View>
-                      <Text>API List</Text>
+                      <Text>{I18n.t('plugin')}</Text>
                   </TouchableOpacity>
                   <View style={Style.left_card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
