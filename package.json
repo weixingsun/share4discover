@@ -18,7 +18,7 @@
     "react-native-google-signin": "^0.6.1",
     "react-native-i18n": "0.0.8",
     "react-native-icon-badge": "^1.1.0",
-    "react-native-image-picker": "^0.19.3",
+    "react-native-image-picker": "^0.20.1",
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-localization": "^0.1.15",
     "react-native-maps": "latest",

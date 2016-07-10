@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Picker, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {Alert, Image, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon} from './Icon'
 //import Form from 'react-native-tableview-form';
 //import Form from './Form';
@@ -14,6 +14,7 @@ import Net from '../io/Net'
 import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import PlaceSearch from './PlaceSearch'
+import ImagePicker from 'react-native-image-picker'
  
 export default class FormMsg extends Component {
     constructor(props) {
@@ -23,26 +24,51 @@ export default class FormMsg extends Component {
         this.state={ 
             content_height: 40,
             value: this.old_value,
-	    init_address: this.props.msg? this.props.msg.address:'',
+            init_address: this.props.msg? this.props.msg.address:'',
+            pics:[],
+            add_fields:{
+              Price:   'Price',
+              Auction: 'Auction',
+              Destination: 'Destination',
+            },
+            all_fields:{
+              type: t.enums(Net.MSG_TYPES),
+              ask: t.Boolean,
+              owner: t.String,
+              phone: t.String,
+              title: t.String,
+              address: t.String,
+              lat: t.Number,
+              lng: t.Number,
+              ctime: t.Number,
+              content: t.String,
+            },
         }
-        this.type= {
-            type: t.enums(Net.MSG_TYPES),
-            ask: t.Boolean,
-            owner: t.String,
-            phone: t.String,
-            price: t.maybe(t.Number),
-            title: t.String,
-            address: t.String,
-            lat: t.Number,
-            lng: t.Number,
-            ctime: t.Number,
-            content: t.String,
-        }
-        //this.onChangeNative=this.onChangeNative.bind(this)
+        // price: t.maybe(t.Number),
+    }
+    addField(name){
+        let add_fields = this.state.add_fields
+        let all_fields = this.state.all_fields
+        all_fields[name] = t.maybe(t.String)
+        delete add_fields[name];
+        this.setState({
+            add_fields: add_fields,
+            all_fields: all_fields,
+            //all_fields: {...this.state.all_fields, name:t.maybe(t.String), },
+        })
+    }
+    removeField(name){
+        let add_fields = this.state.add_fields
+        let all_fields = this.state.all_fields
+        add_fields[name] = all_fields[name];
+        delete all_fields[name];
+        this.setState({
+            add_fields: add_fields,
+            all_fields: all_fields,
+        })
     }
     changePlace(place){
         //this.refs.form.props.value;
-	//alert('place.latitude:'+parseFloat(place.latitude))
         var ctime = +new Date();
         if(!this.props.msg)  this.old_value['ctime']= ctime
         this.old_value['owner']= this.state.value.owner
@@ -55,9 +81,8 @@ export default class FormMsg extends Component {
     }
     onSubmit () {
         var value = this.refs.form.getValue();
-        //alert(JSON.stringify(value))
         if (value) { // if validation fails, value will be null
-            //value['pics']=[]                             ////////ctime undefined
+            //value['pics']=[]
             var _this = this;
             Alert.alert(
               "Publish",
@@ -70,6 +95,8 @@ export default class FormMsg extends Component {
                 }},
               ]
            );
+       }else{
+
        }
     }
     onChange(form){
@@ -80,26 +107,50 @@ export default class FormMsg extends Component {
              value: this.old_value,
         })
     }
-    /*onChangeNative(event){
-        this.content_height= event.nativeEvent.contentSize.height
-        this.multilineStyle = this.immutableMap.mergeDeep({textbox: {normal: {height: this.content_height}}}).toJS();
-        this.setState({
-            options:{
-                fields:{
-                    owner:{editable:false},
-                    content:{multiline:true,stylesheet: this.multilineStyle, onChange:this.onChangeNative},
-                    address:{hidden:true},
-                    lat:{hidden:true},
-                    lng:{hidden:true},
-                }
-            },
-        });
-            //text: event.nativeEvent.text,
-            //content_height: event.nativeEvent.contentSize.height,
-    }*/
     componentWillMount(){
-        //alert(JSON.stringify(this.old_value))
         this.checkLoginUser();
+    }
+    openImagePicker(){
+        const options = {
+          title: 'Add a field',
+          quality: 0.5,
+          maxWidth: 300,
+          maxHeight: 300,
+          allowsEditing: false,
+          storageOptions: {
+            skipBackup: true
+          },
+          customButtons: this.state.add_fields,
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+          if (response.didCancel) {
+            //alert('User cancelled image picker');
+          }else if (response.error) {
+            alert('ImagePicker Error: ', JSON.stringify(response.error));
+          }else if (response.customButton) {
+            //alert('User tapped custom button: '+response.customButton);
+            this.addField(response.customButton)
+          }else {
+            //{type,fileName,fileSize,path,data,uri,height,width,isVertical}
+            //const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+            const source = {uri: response.uri, isStatic: true};
+            //const source = {uri: response.uri.replace('file://', ''), isStatic: true};
+            alert(JSON.stringify(source))
+            this.setState({
+              pics: [...this.state.pics, source]
+            });
+         }
+       });
+       /*ImagePicker.launchCamera(options, (response)  => {
+           // Same code as in above section!
+       });*/
+    }
+    showPics(){
+        return (
+            this.state.pics.map((pic,id)=>{
+                return <Image key={id} source={pic} style={{width:150,height:150}} />
+            })
+        )
     }
     checkLoginUser(){
         var self = this
@@ -107,7 +158,7 @@ export default class FormMsg extends Component {
             if(fb != null){
                 var name = fb.type+':'+fb.email
                 if(self.state.value.owner !== '') name += ','+self.state.value.owner
-		if(!self.props.msg){
+                if(!self.props.msg){
                   self.setState({
                     value: {owner:name,address:'',latlng:''},
                   });
@@ -119,18 +170,27 @@ export default class FormMsg extends Component {
                 //alert('Please login to publish information.')
                 var name = gg.type+':'+gg.email
                 if(self.state.value.owner !== '') name += ','+self.state.value.owner
-		if(!self.props.msg){
+                if(!self.props.msg){
                   self.setState({
                     value: {owner:name,address:'',latlng:''},
                   });
-		}
+                }
             }
         });
     }
+    showActionIcons(){
+        return (
+            <View style={{flexDirection:'row',}}>
+                <Icon name={'ion-ios-add'} size={50} onPress={this.openImagePicker.bind(this) } />
+                <View style={{width:50}} />
+                <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
+            </View>
+        )
+    }
     render(){
-        //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
+      //alert(JSON.stringify(this.state.pics))
       const options = {
-	auto: 'placeholders',
+        auto: 'placeholders',
         fields: {
           owner:{hidden:true},
           address:{hidden:true},
@@ -167,11 +227,7 @@ export default class FormMsg extends Component {
                        <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
-                   rightButton={
-                     <View style={{flexDirection:'row',}}>
-                        <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
-                     </View>
-                   }
+                   rightButton={ this.showActionIcons() }
                 />
                 <KeyboardAwareScrollView style={{
                         flexDirection: 'column',
@@ -180,9 +236,12 @@ export default class FormMsg extends Component {
                         margin: 15,
                 }}>
                     <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)} value={this.state.init_address} />
+                    <ScrollView horizontal={true}>
+                        {this.showPics()}
+                    </ScrollView>
                     <Form
                         ref="form"
-                        type={t.struct(this.type)}
+                        type={t.struct(this.state.all_fields)}
                         value={this.state.value}
                         options={options}
                         onChange={this.onChange.bind(this)}
@@ -192,3 +251,23 @@ export default class FormMsg extends Component {
         );
     }
 }
+//<Image source={this.state.} style={{}} />
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF'
+  },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
+  }
+});

@@ -32,6 +32,10 @@ import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
 
   private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+  private static final int RECORD_PERMISSION_REQUEST_CODE = 2;
+  private static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3;
+  private static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
+
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     protected String getJSBundleFile() {
