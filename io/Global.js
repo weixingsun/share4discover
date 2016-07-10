@@ -65,12 +65,12 @@ function loadLang(lang){
       case 'en_US':
       case 'en-GB':
       case 'en_GB':
-         require('moment/locale/en');
+         require('moment/locale/en-gb');
          break;
       default:
          //require('moment/locale/en');
   }
-  require('moment/locale/zh-cn')
+  //require('moment/locale/zh-cn')
 }
 module.exports = {
     KEY: '',
