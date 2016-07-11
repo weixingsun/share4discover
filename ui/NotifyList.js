@@ -11,7 +11,7 @@ import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormMsg from './FormMsg'
+import FormInfo from './FormInfo'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -81,9 +81,17 @@ export default class NotifyList extends Component {
             //leftButton={
             //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             //}
-            //rightButton={
-            //    <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormMsg}) }/>
-            //} 
+            rightButton={
+                <Icon 
+                    name={'ion-ios-add'} 
+                    size={50} 
+                    onPress={() => 
+                      this.props.navigator.push({
+                          component: FormInfo,
+                          passProps: {navigator:this.props.navigator,},
+                      }) 
+                    }/>
+            } 
 	/>
         <ListView 
             dataSource={ds} 

@@ -18,16 +18,18 @@ export default class Nav extends Component {
        //   return <Main navigator={navigator} {...route.passProps} />
        //   return <Detail navigator={navigator} {...route.passProps} />
        //   return <Filter navigator={navigator} {...route.passProps} />
+      if(route.giftedForm == true) return route.renderScene(navigator)
       return <route.component route={route} navigator={navigator} {...route.passProps} />
     }
-    /*
+    
     _configureScene(route) {
-      if(route.type == 'Modal') {
-        return Navigator.SceneConfigs.FloatFromBottom
-      }
+      if(route.giftedForm) 
+          return route.configureScene();
+      if(route.type == 'Modal')
+          return Navigator.SceneConfigs.FloatFromBottom
       return Navigator.SceneConfigs.PushFromRight 
         //return CustomSceneConfig;
-    },*/
+    }
     render(){
         return (
             <Navigator 
