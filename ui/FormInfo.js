@@ -7,14 +7,14 @@ import ExNavigator from '@exponent/react-native-navigator';
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
-//import Global from '../io/Global';
+import Global from '../io/Global';
 import Net from '../io/Net'
 import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import PlaceSearch from './PlaceSearch'
 import ImagePicker from 'react-native-image-picker'
  
-export default class FormMsg extends Component {
+export default class FormInfo extends Component {
     constructor(props) {
         super(props);
         this.old_value = this.props.msg? this.props.msg: {owner:'',ask:false,address:'',latlng:''};
@@ -34,9 +34,34 @@ export default class FormMsg extends Component {
             form: {
               title:   '',
               content: '',
+              address: '',
+              type: '',
+              ask: '',
+              owner: '',
+              phone: '',
+              ctime: '',
+              time: '',
+              lat: '',
+              lng: '',
+              price: '',
+              dest: '',
             },
         }
         // price: t.maybe(t.Number),
+    }
+    initKeys(){
+        this.map=Global.MAP
+        this.mcode = 'com.share.2016';    //ios mcode
+        this.ak = 'Cyq8AKxGeAVNZSzV0Dk74dGpRsImpIHu';    //ios ak
+        var rel_and_mcode = 'F9:F3:46:15:55:59:22:6A:FB:75:92:FF:23:B4:75:AF:20:E7:22:D6;com.share'
+        var dev_and_mcode = '81:1E:3F:40:F6:F6:4F:68:D7:6E:79:BC:18:CA:AC:26:84:14:1C:F7;com.share'
+        var demo_mcode = 'DA:4C:B6:A9:55:62:1D:AD:12:29:DD:7B:69:31:67:47:C5:B2:4E:E1;szj.com.ditu'
+        if (Platform.OS === 'android') {
+            this.ak='6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L';    //android ak
+            //ak='VRMNc7QoiSM5ar5at5g3lRQD';          //android demo ak
+            this.mcode=(__DEV__) ? dev_and_mcode : rel_and_mcode
+        }
+        this.ggkey='AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A'
     }
     getFieldType(value){
         let type = value.split(':')[1]
@@ -113,6 +138,7 @@ export default class FormMsg extends Component {
         })
     }
     componentWillMount(){
+        this.initKeys();
         this.checkLoginUser();
         //alert(JSON.stringify(this.props.navigator))
     }
@@ -152,6 +178,8 @@ export default class FormMsg extends Component {
        });*/
     }
     showPics(){
+      if(this.state.pics.length==0)  return null;
+      else
         return (
             <ScrollView style={{height:102}} horizontal={true}>
                 {
@@ -199,11 +227,12 @@ export default class FormMsg extends Component {
     }
     handleValueChange(values) {
         //console.log('handleValueChange', values)
-        alert('handleValueChange:'+ JSON.stringify(values))
+        //alert('handleValueChange:'+ JSON.stringify(values))
         this.setState({ form: values })
     }
     render(){
         //alert(JSON.stringify(this.state.pics))
+        //alert('map='+this.map+'\nak='+this.ak+'\nmcode='+this.mcode+'\nggkey='+this.ggkey)
         let self = this;
         const { type, ask, owner, phone, title, address, lat,lng, time, content } = this.state.form
         return (
@@ -219,7 +248,7 @@ export default class FormMsg extends Component {
                 {this.showPics()}
                 <GiftedForm
                     formName='signupForm'
-                    style={{height:Style.DEVICE_HEIGHT-300}}   //flex:1
+                    style={{height:Style.DEVICE_HEIGHT-300,margin:10}}   //flex:1
                     openModal={(route) => { route.giftedForm = true; self.props.navigator.push(route) }}
                     onValueChange={self.handleValueChange.bind(self)}
                     >
@@ -248,12 +277,19 @@ export default class FormMsg extends Component {
                                 <GiftedForm.OptionWidget title='Offer' value='false'/>
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        <GiftedForm.GooglePlacesWidget
+                        <GiftedForm.PlaceSearchWidget
                             name='address'
                             title='Address'
-                            placeholder='Enter address'
+                            //placeholder='Enter address'
                             clearButtonMode='while-editing'
                             value={address}
+                            map={this.map}
+                            query={{
+                                ak:this.ak,mcode:this.mcode,
+                                //gdkey:gdkey,
+                                key:this.ggkey
+                            }}
+                            onClose={ (loc)=> this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }}) }
                         />
 
                         <GiftedForm.ModalWidget
@@ -266,6 +302,7 @@ export default class FormMsg extends Component {
                                 name='content'
                                 autoFocus={true}
                                 placeholder='Detail information'
+                                style={{flex:1}}
                             />
                         </GiftedForm.ModalWidget>
                         <GiftedForm.HiddenWidget name='lat' value={lat} />
@@ -273,7 +310,7 @@ export default class FormMsg extends Component {
                         <GiftedForm.HiddenWidget name='owner' value={owner} />
 
                         <GiftedForm.SubmitWidget
-                            title='Sign up'
+                            title='Publish'
                             widgetStyles={{
                                 submitButton: {
                                     backgroundColor: 'gray',
@@ -300,9 +337,6 @@ export default class FormMsg extends Component {
 }
 /*
 <PlaceSearch style={{height:50}} onSelect={self.changePlace.bind(self)} value={self.state.init_address} />
-                <ScrollView orizontal={true}>
-                    {self.showPics()}
-                </ScrollView>
 */
 const styles = StyleSheet.create({
   container: {
