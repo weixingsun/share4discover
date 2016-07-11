@@ -27,9 +27,9 @@ export default class FormMsg extends Component {
             init_address: this.props.msg? this.props.msg.address:'',
             pics:[],
             add_fields:{
-              Price:   'Price',
-              Auction: 'Auction',
-              Destination: 'Destination',
+              Price:   'Price:num',
+              Time:    'Time:date',
+              Destination: 'Destination:str',
             },
             all_fields:{
               type: t.enums(Net.MSG_TYPES),
@@ -46,10 +46,23 @@ export default class FormMsg extends Component {
         }
         // price: t.maybe(t.Number),
     }
-    addField(name){
+    getFieldType(value){
+        let type = value.split(':')[1]
+        let form_type = t.String
+        switch(type){
+            case 'num':  form_type = t.Number; break;
+            case 'date': form_type = t.Date;   break;
+            case 'bool': form_type = t.Boolean;   break;
+            case 'sex':  form_type = t.enums({m:'Male',f:'Female'});   break;
+            default:  form_type = t.String;
+        }
+        return form_type;
+    }
+    addField(value){  //value = field:type
         let add_fields = this.state.add_fields
         let all_fields = this.state.all_fields
-        all_fields[name] = t.maybe(t.String)
+        let name = value.split(':')[0]
+        all_fields[name] = this.getFieldType(value)
         delete add_fields[name];
         this.setState({
             add_fields: add_fields,
@@ -117,6 +130,7 @@ export default class FormMsg extends Component {
           maxWidth: 300,
           maxHeight: 300,
           allowsEditing: false,
+          //allowsEditing: true,
           storageOptions: {
             skipBackup: true
           },
@@ -232,13 +246,13 @@ export default class FormMsg extends Component {
                 <KeyboardAwareScrollView style={{
                         flexDirection: 'column',
                         flex: 1,
-                        marginTop: 50,
+                        //marginTop: 50,
                         margin: 15,
                 }}>
-                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)} value={this.state.init_address} />
-                    <ScrollView horizontal={true}>
+                    <ScrollView style={{marginBottom:10}} horizontal={true}>
                         {this.showPics()}
                     </ScrollView>
+                    <PlaceSearch style={{flex:1}} onSelect={this.changePlace.bind(this)} value={this.state.init_address} />
                     <Form
                         ref="form"
                         type={t.struct(this.state.all_fields)}
