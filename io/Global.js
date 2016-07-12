@@ -73,6 +73,8 @@ function loadLang(lang){
   //require('moment/locale/zh-cn')
 }
 module.exports = {
+    mainlogin: '',
+    logins: {},
     KEY: '',
     URL: '',
     COLOR: {
@@ -97,30 +99,24 @@ module.exports = {
       wb:'fa-weibo',
       tel:'ion-ios-call-outline',
     },
+    getLoginStr(loginObj){
+        let arrKey = Object.keys(loginObj)
+        let str = ''
+        arrKey.map((k)=>{
+            str += ','+k+':'+loginObj[k]
+        })
+        return str.substring(1);
+    },
     getMainLogin(logins){
         //fb > wx > gg > wb
-        var arr = logins.split(',')
-        if(arr.length===0){
+        //{fb:email,wx:email,gg:email,wb:email}
+        if(Object.keys(logins).length===0){
             return '';
-        //}else if(arr.length===1){
-        //    return logins;
         }else{
-            var fb = arr.filter((user)=>{
-                return (user.substring(0,2)==='fb')
-            })
-            if(fb!=null) return fb;
-            var wx = arr.filter((user)=>{
-                return (user.substring(0,2)==='wx')
-            })
-            if(wx!=null) return wx;
-            var gg = arr.filter((user)=>{
-                return (user.substring(0,2)==='gg')
-            })
-            if(gg!=null) return gg;
-            var wb = arr.filter((user)=>{
-                return (user.substring(0,2)==='wb')
-            })
-            if(wb!=null) return wb;
+            if(logins.fb)  return 'fb:'+logins.fb
+            if(logins.wx)  return 'wx:'+logins.wx
+            if(logins.gg)  return 'gg:'+logins.gg
+            if(logins.wb)  return 'wb:'+logins.wb
         }
     },
     getKeyFromMsg(msg){

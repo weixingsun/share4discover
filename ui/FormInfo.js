@@ -35,16 +35,16 @@ export default class FormInfo extends Component {
               title:   '',
               content: '',
               address: '',
-              type: '',
-              ask: '',
-              owner: '',
+              type:  '',
+              ask:   true,
+              owner: Global.getLoginStr(Global.logins),
               phone: '',
-              ctime: '',
-              time: '',
-              lat: '',
-              lng: '',
-              price: '',
-              dest: '',
+              ctime: 0,
+              time:  '',
+              lat:   '',
+              lng:   '',
+              price: 0,
+              dest:  '',
             },
         }
         // price: t.maybe(t.Number),
@@ -181,10 +181,10 @@ export default class FormInfo extends Component {
       if(this.state.pics.length==0)  return null;
       else
         return (
-            <ScrollView style={{height:102}} horizontal={true}>
+            <ScrollView style={{height:Style.THUMB_HEIGHT+4}} horizontal={true}>
                 {
                   this.state.pics.map((pic,id)=>{
-                    return <Image key={id} source={pic} style={{width:100,height:100}} />
+                    return <Image key={id} source={pic} style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}} />
                   })
                 }
             </ScrollView>
@@ -234,7 +234,7 @@ export default class FormInfo extends Component {
         //alert(JSON.stringify(this.state.pics))
         //alert('map='+this.map+'\nak='+this.ak+'\nmcode='+this.mcode+'\nggkey='+this.ggkey)
         let self = this;
-        const { type, ask, owner, phone, title, address, lat,lng, time, content } = this.state.form
+        const { type, ask, owner, phone, title, address, lat,lng, time, ctime, content, price, dest } = this.state.form
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -247,11 +247,33 @@ export default class FormInfo extends Component {
                 />
                 {this.showPics()}
                 <GiftedForm
-                    formName='signupForm'
-                    style={{height:Style.DEVICE_HEIGHT-300,margin:10}}   //flex:1
+                    formName='newInfoForm'
+                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:10}}   //flex:1  //height:Style.DEVICE_HEIGHT-300
                     openModal={(route) => { route.giftedForm = true; self.props.navigator.push(route) }}
                     onValueChange={self.handleValueChange.bind(self)}
                     >
+                        <GiftedForm.ModalWidget
+                            title='Ask/Offer'
+                            displayValue='true'
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='ask' title='Ask/Offer' multiple={false}>
+                                <GiftedForm.OptionWidget title='Ask' value='true'/>
+                                <GiftedForm.OptionWidget title='Offer' value='false'/>
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+                        <GiftedForm.ModalWidget
+                            title='Type'
+                            displayValue='Car'
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
+                                <GiftedForm.OptionWidget title='Car'    value='car'/>
+                                <GiftedForm.OptionWidget title='Estate' value='estate'/>
+                                <GiftedForm.OptionWidget title='Tool'   value='tool'/>
+                                <GiftedForm.OptionWidget title='Help'   value='help'/>
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
                         <GiftedForm.TextInputWidget
                             name='title'
                             title='Title'
@@ -266,17 +288,13 @@ export default class FormInfo extends Component {
                             clearButtonMode='while-editing'
                             value={phone}
                         />
-                        <GiftedForm.ModalWidget
-                            title='Ask/Offer'
-                            displayValue='true'
-                            //image={require('./icons/color/gender.png')}
-                        >
-                            <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='ask' title='Ask/Offer' multiple={false}>
-                                <GiftedForm.OptionWidget title='Ask' value='true'/>
-                                <GiftedForm.OptionWidget title='Offer' value='false'/>
-                            </GiftedForm.SelectWidget>
-                        </GiftedForm.ModalWidget>
+                        <GiftedForm.TextInputWidget
+                            name='price'
+                            title='Price'
+                            placeholder='Enter price'
+                            clearButtonMode='while-editing'
+                            value={price}
+                        />
                         <GiftedForm.PlaceSearchWidget
                             name='address'
                             title='Address'
@@ -291,7 +309,6 @@ export default class FormInfo extends Component {
                             }}
                             onClose={ (loc)=> this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }}) }
                         />
-
                         <GiftedForm.ModalWidget
                             title='Content'
                             displayValue='content'
@@ -308,7 +325,6 @@ export default class FormInfo extends Component {
                         <GiftedForm.HiddenWidget name='lat' value={lat} />
                         <GiftedForm.HiddenWidget name='lng' value={lng} />
                         <GiftedForm.HiddenWidget name='owner' value={owner} />
-
                         <GiftedForm.SubmitWidget
                             title='Publish'
                             widgetStyles={{
@@ -318,8 +334,10 @@ export default class FormInfo extends Component {
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
                                 if (isValid === true) {
-                                  // prepare object
+                                  values.ctime = +new Date();
                                   alert(JSON.stringify(values))
+                                  //this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})
+                                  //
                                   //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
                                   /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
                                   ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
@@ -329,7 +347,6 @@ export default class FormInfo extends Component {
                                 }
                             }}
                         />
-
                 </GiftedForm>
             </View>
         );

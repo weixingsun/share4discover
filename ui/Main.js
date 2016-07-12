@@ -23,8 +23,6 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.types = ['car','taxi','estate']
-    this.logins = '';
-    this.mainlogin = '';
     this.state = {
       page:this.props.page!=null?this.props.page: Store.msgTab,
       badge:'',
@@ -40,6 +38,7 @@ export default class Main extends Component {
       },
       //drawerPanEnabled:false,
       gps:false,
+      
     }; 
     //this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
@@ -63,12 +62,13 @@ export default class Main extends Component {
   }
   componentWillMount(){
       var _this = this;
-      this.checkLogin('user_fb')
-      this.checkLogin('user_gg')
-      this.checkMapSettings()
+      //this.checkLogin('user_fb')
+      //this.checkLogin('user_gg')
+      //this.checkMapSettings()
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
+      this.checkSettingsChange();
   }
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
@@ -83,19 +83,22 @@ export default class Main extends Component {
       ToastAndroid.show('Double press to exit!',ToastAndroid.SHORT);
       return true;
   }
-  componentWillUpdate() {
-      /*var _this = this;
-      Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
-        if(map_value == null) _this.map = "BaiduMap";
-        else _this.map = map_value;
-      });*/
-  }
   checkLogin(type){
       var self = this
       Store.get(type).then(function(user){  //{type,email}
-          if(user != null){
-              self.logins = self.logins===''? user.type+':'+user.email:self.logins+','+user.type+':'+user.email
-              self.setState({refresh:false})
+          if(user != null && Global.logins[user.type]==null) {
+              Global.logins[user.type]=user.email;
+              Global.mainlogin = Global.getMainLogin(Global.logins)
+              //if(Global.mainlogin!=self.state.mainlogin){
+              //    self.setState({mainlogin:Global.mainlogin }) 
+              //}
+          }else if(user == null && Global.logins !== ''){
+              let look_type = type.substring(5)
+              delete Global.logins[look_type]
+              Global.mainlogin = Global.getMainLogin(Global.logins)
+              //if(Global.mainlogin!=self.state.mainlogin){
+              //    self.setState({ mainlogin:Global.mainlogin })
+              //}
           }
       });
   }
@@ -127,24 +130,28 @@ export default class Main extends Component {
       });
   }
   timerFunction(){
-    this.loadNotifyByLogin()
+      this.loadNotifyByLogin()
   }
   loadNotifyByLogin(){
-      this.mainlogin = Global.getMainLogin(this.logins)
-      if(this.mainlogin!=='')
-          this.loadNotify(this.mainlogin);
+      //alert('mainlogin:'+mainlogin+'\nlogins:'+this.state.logins)
+      if(Global.mainlogin.length>0) this.loadNotify(Global.mainlogin);
   }
   loadNotify(key) {
+    //alert('loadNotify('+key+') length:'+key.length)
     var self = this;
     Net.getNotify(key).then((rows)=> {
-      var arr = self.Kv2Json(rows)
-      var unread = self.getUnread(arr)
-      var badgeText = ''+unread.length;
-      self.setState({
+      if(rows==null) { return }
+      else{
+        var arr = self.Kv2Json(rows)
+        var unread = self.getUnread(arr)
+        var badgeText = ''+unread.length;
+        self.setState({
           mails:arr,
-	  badge:badgeText,
+          badge:badgeText,
           refresh:true,
-      });
+          //mainlogin:key,
+        });
+      }
     })
     .catch((e)=>{
         alert('Network Problem!'+JSON.stringify(e))
@@ -201,19 +208,24 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} mainlogin={this.mainlogin} mails={this.state.mails} />
+      return <NotifyList navigator={this.props.navigator} mainlogin={Global.mainlogin} mails={this.state.mails} />
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={this.mainlogin} />
+      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={Global.mainlogin} />
     } else if(this.state.page ===Store.confTab){
-      return <SettingsList navigator={this.props.navigator} logins={this.logins}/>
+      return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
     }
   }
-  gotoPage(name){ //ios-world
-    //var drawerEnabled=false
-    //if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
-    this.setState({ page: name });
+  checkSettingsChange(){
+      this.checkLogin('user_fb')
+      this.checkLogin('user_gg')
+      this.checkMapSettings()
+      if(Global.mainlogin.length===0) this.setState({mails:[]})
+  }
+  gotoPage(name){
+      this.checkSettingsChange()
+      this.setState({ page: name });
   }
   getSelectedColor(id){
     if(id === this.state.page) return 'blue';
@@ -223,7 +235,7 @@ export default class Main extends Component {
     //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
     //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     //>
-    if(this.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
+    if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>
           {this.pages()}

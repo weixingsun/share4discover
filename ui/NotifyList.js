@@ -73,25 +73,30 @@ export default class NotifyList extends Component {
       </TouchableHighlight>
     );
   }
+  getAddIcon(){
+    //alert(this.props.mainlogin)
+    if(this.props.mainlogin==='') 
+      return (
+          <Icon name={'ion-ios-add'} size={50} color={'gray'} />
+      )
+    else{
+      return (
+          <Icon name={'ion-ios-add'} size={50} color={'black'} 
+              onPress={() => this.props.navigator.push({ component: FormInfo, passProps: {navigator:this.props.navigator} })}
+          />
+      )
+    }
+  }
   render() {
-    let ds = this.ds.cloneWithRows(this.props.mails)
+    let ds=this.ds.cloneWithRows([])
+    if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             //leftButton={
             //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             //}
-            rightButton={
-                <Icon 
-                    name={'ion-ios-add'} 
-                    size={50} 
-                    onPress={() => 
-                      this.props.navigator.push({
-                          component: FormInfo,
-                          passProps: {navigator:this.props.navigator,},
-                      }) 
-                    }/>
-            } 
+            rightButton= {this.getAddIcon()}
 	/>
         <ListView 
             dataSource={ds} 

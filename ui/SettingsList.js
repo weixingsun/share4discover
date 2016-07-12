@@ -91,27 +91,43 @@ export default class SettingsList extends React.Component {
     }
     login_gg(user){
         this.setState({user_gg:user});
+        Global.logins.gg = user.email
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_gg(user){
         this.setState({user_gg:null});
+        delete Global.logins.gg
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_fb(user){
         this.setState({user_fb:user});
+        Global.logins.fb = user.email
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_fb(user){
         this.setState({user_fb:null});
+        delete Global.logins.fb
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wx(user){
         this.setState({user_wx:user});
+        Global.logins.wx = user.email
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_wx(user){
         this.setState({user_wx:null});
+        delete Global.logins.wx
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wb(user){
         this.setState({user_wb:user});
+        Global.logins.wb = user.email
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_wb(user){
         this.setState({user_wb:null});
+        delete Global.logins.wb
+        Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width

@@ -23,6 +23,8 @@ module.exports = {
   RATIO_Y:ratioY,
   UNIT:em(1),
   PADDING: em(1.25),
+  NAVBAR_HEIGHT:66,
+  THUMB_HEIGHT:100,
   
   //Card
   CARD_WIDTH: x-em(1.25)*2,
