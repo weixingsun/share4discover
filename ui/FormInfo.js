@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Image, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {ActivityIndicator, Alert, Image, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import ExNavigator from '@exponent/react-native-navigator';
@@ -20,16 +20,12 @@ export default class FormInfo extends Component {
         this.old_value = this.props.msg? this.props.msg: {owner:'',ask:false,address:'',latlng:''};
         this.old_value['ask']=false;
         this.state={ 
-            content_height: 40,
-            value: this.old_value,
-            init_address: this.props.msg? this.props.msg.address:'',
             pics:[],
+            uploading:[],
             add_fields:{
               Price:   'Price:num',
               Time:    'Time:date',
               Destination: 'Destination:str',
-            },
-            all_fields:{
             },
             form: {
               title:   '',
@@ -43,8 +39,70 @@ export default class FormInfo extends Component {
               time:  '',
               lat:   '',
               lng:   '',
-              price: 0,
+              price: '',
               dest:  '',
+            },
+            validators:{
+              title:{
+                title:'Title',
+                validate:[{
+                  validator:'isLength',
+                  arguments:[2,20],
+                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
+                }]
+              },
+              content:{
+                title:'Content',
+                validate:[{
+                  validator:'isLength',
+                  arguments:[20,1024],
+                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
+                }]
+              },
+              phone:{
+                title:'Phone number',
+                validate:[{
+                  validator:'isLength',
+                  arguments:[6,20],
+                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
+                }]
+              },
+              type:{
+                title:'Type',
+                validate:[{
+                  validator:(...args) => {
+                      if (args[0] === undefined) {
+                         return false;
+                      }
+                      return true;
+                  },
+                  message:'{TITLE} is required'
+                }]
+              },
+              ask:{
+                title:'Ask/Offer',
+                validate:[{
+                  validator:(...args) => {
+                      if (args[0] === undefined) {
+                         return false;
+                      }
+                      return true;
+                  },
+                  message:'{TITLE} is required'
+                }]
+              },
+              lat:{
+                title:'Address',
+                validate:[{
+                  validator:(...args) => {
+                      if (args === undefined) {
+                         return false;
+                      }
+                      return true;
+                  },
+                  message:'{TITLE} is invalid'
+                }]
+              },
             },
         }
         // price: t.maybe(t.Number),
@@ -63,17 +121,12 @@ export default class FormInfo extends Component {
         }
         this.ggkey='AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A'
     }
-    getFieldType(value){
-        let type = value.split(':')[1]
-        let form_type = t.String
-        switch(type){
-            case 'num':  break;
-            case 'date': break;
-            case 'bool': break;
-            case 'sex':  break;
-            default: 
-        }
-        return form_type;
+    validateAll(){
+        var fields = Object.keys(this.state.validators)
+        fields.map((field_name)=>{
+            let obj = this.state.validators[field_name]
+            if(obj.validate[0].arguments !== undefined) alert(JSON.stringify(obj.validate[0].arguments))
+        })
     }
     addField(value){  //value = field:type
         let add_fields = this.state.add_fields
@@ -97,54 +150,43 @@ export default class FormInfo extends Component {
             all_fields: all_fields,
         })
     }
-    changePlace(place){
-        //this.refs.form.props.value;
-        var ctime = +new Date();
-        if(!this.props.msg)  this.old_value['ctime']= ctime
-        this.old_value['owner']= this.state.value.owner
-        this.old_value['address']= place.address
-        this.old_value['lat']= typeof place.latitude =='string'?parseFloat(place.latitude): place.latitude.toFixed(5)
-        this.old_value['lng']= typeof place.longitude =='string'?parseFloat(place.longitude): place.longitude.toFixed(5)
-        this.setState({
-             value: this.old_value,
-        })
-    }
-    onSubmit () {
-        var value = this.refs.form.getValue();
-        if (value) { // if validation fails, value will be null
-            //value['pics']=[]
-            var _this = this;
-            Alert.alert(
-              "Publish",
-              "Do you want to publish this information ? ",
-              [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.setMsg(value)
-                    _this.props.navigator.pop();
-                }},
-              ]
-           );
-       }else{
+    onSubmit(values) {
+        var self = this;
+        //values['pics']=[]
+        this.validateAll();
+        values.ctime = +new Date();
+        if(values.ask)
+        values.ask = values.ask[0]
+        if(values.type)
+        values.type = values.type[0]
+        //alert(JSON.stringify(values))
+        //this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})
+        //
+        //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
+        /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
+        ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
+        ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
+        */
 
-       }
-    }
-    onChange(form){
-        var ctime = +new Date();
-        this.old_value = form
-	if(!this.props.msg)  this.old_value['ctime']= ctime
-        this.setState({
-             value: this.old_value,
-        })
+        Alert.alert(
+            "Publish",
+            "Do you want to publish this information ? ",
+            [
+              {text:"Cancel" },
+              {text:"OK", onPress:()=>{
+                  Net.setMsg(values)
+                  self.props.navigator.pop();
+              }},
+            ]
+        );
     }
     componentWillMount(){
         this.initKeys();
-        this.checkLoginUser();
-        //alert(JSON.stringify(this.props.navigator))
+        //this.checkLoginUser();
     }
     openImagePicker(){
         const options = {
-          title: 'Add a field in this form',
+          title: 'Add photo into this form',
           //quality: 0.5,
           //maxWidth: 300,
           //maxHeight: 300,
@@ -152,7 +194,7 @@ export default class FormInfo extends Component {
           storageOptions: {
             skipBackup: true
           },
-          customButtons: this.state.add_fields,
+          //customButtons: this.state.add_fields,
         };
         ImagePicker.showImagePicker(options, (response) => {
           if (response.didCancel) {
@@ -161,13 +203,14 @@ export default class FormInfo extends Component {
             alert('ImagePicker Error: ', JSON.stringify(response.error));
           }else if (response.customButton) {
             //alert('User tapped custom button: '+response.customButton);
-            this.addField(response.customButton)
+            //this.addField(response.customButton)
           }else {
             //{type,fileName,fileSize,path,data,uri,height,width,isVertical}
             //const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
             const source = {uri: response.uri, isStatic: true};
             //const source = {uri: response.uri.replace('file://', ''), isStatic: true};
-            alert(JSON.stringify(source))
+            //alert(JSON.stringify(source))  // {uri}
+            this._upload(source)
             this.setState({
               pics: [...this.state.pics, source]
             });
@@ -184,49 +227,76 @@ export default class FormInfo extends Component {
             <ScrollView style={{height:Style.THUMB_HEIGHT+4}} horizontal={true}>
                 {
                   this.state.pics.map((pic,id)=>{
-                    return <Image key={id} source={pic} style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}} />
+                    return (
+                        <Image key={id} source={pic} 
+                            style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}>
+                            {
+                              this.state.uploading[id]<100 ? 
+                              <View style={styles.progress}> 
+                                  <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text> 
+                                  <ActivityIndicator style={{marginLeft:5}} />
+                              </View> :
+                              <View style={styles.progress}>
+                                  <Icon style={{padding:0}} name={'ion-ios-checkmark-circle'} color={'green'} size={33} />
+                              </View>
+                            }
+                        </Image>
+                    )
                   })
                 }
             </ScrollView>
         )
     }
-    checkLoginUser(){
-        var self = this
-        Store.get('user_fb').then(function(fb){
-            if(fb != null){
-                var name = fb.type+':'+fb.email
-                if(self.state.value.owner !== '') name += ','+self.state.value.owner
-                if(!self.props.msg){
-                  self.setState({
-                    value: {owner:name,address:'',latlng:''},
-                  });
-		}
-            }
-        });
-        Store.get('user_gg').then(function(gg){
-            if(gg != null) {
-                //alert('Please login to publish information.')
-                var name = gg.type+':'+gg.email
-                if(self.state.value.owner !== '') name += ','+self.state.value.owner
-                if(!self.props.msg){
-                  self.setState({
-                    value: {owner:name,address:'',latlng:''},
-                  });
-                }
-            }
-        });
+    _upload(file) {
+      var index = this.state.pics.length;
+      var filename = index+'.jpg'
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://posttestserver.com/post.php');
+      xhr.onload = () => {
+        let uploadingJson = this.state.uploading
+        uploadingJson[index]=100
+        this.setState({uploading:uploadingJson });
+        if (xhr.status !== 200) {
+          alert('Upload failed: Expected HTTP 200 OK response, got ' + xhr.status)
+          return;
+        }
+        if (!xhr.responseText) {
+          alert('Upload failed: No response payload. ')
+          return;
+        }
+        var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
+        if (index === -1) {
+            alert('Upload failed: Invalid response payload.')
+            return;
+        }
+        var url = xhr.responseText.slice(index).split('\n')[0];
+        alert('Upload successful: '+url);
+      };
+      var formdata = new FormData();
+      formdata.append('image', {uri:file.uri, type:'image/jpg', name:filename });
+      xhr.upload.onprogress = (event) => {
+        //console.log('upload onprogress', event);
+        if (event.lengthComputable) {
+          let uploadingJson = this.state.uploading
+          uploadingJson[index]=100*(event.loaded / event.total)
+          this.setState({uploading: uploadingJson});
+        }
+      };
+      xhr.send(formdata);
+      let uploadingJson = this.state.uploading
+      uploadingJson[index]=0
+      this.setState({uploading:uploadingJson });
     }
     showActionIcons(){
         return (
             <View style={{flexDirection:'row',}}>
                 <Icon name={'ion-ios-add'} size={50} onPress={this.openImagePicker.bind(this) } />
-                <View style={{width:50}} />
-                <Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
+                <View style={{width:20}} />
             </View>
         )
     }
+    //<Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
     handleValueChange(values) {
-        //console.log('handleValueChange', values)
         //alert('handleValueChange:'+ JSON.stringify(values))
         this.setState({ form: values })
     }
@@ -248,9 +318,10 @@ export default class FormInfo extends Component {
                 {this.showPics()}
                 <GiftedForm
                     formName='newInfoForm'
-                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:10}}   //flex:1  //height:Style.DEVICE_HEIGHT-300
+                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:20}}   //flex:1  //height:Style.DEVICE_HEIGHT-300
                     openModal={(route) => { route.giftedForm = true; self.props.navigator.push(route) }}
                     onValueChange={self.handleValueChange.bind(self)}
+                    validators={ this.state.validators }
                     >
                         <GiftedForm.ModalWidget
                             title='Ask/Offer'
@@ -319,7 +390,7 @@ export default class FormInfo extends Component {
                                 name='content'
                                 autoFocus={true}
                                 placeholder='Detail information'
-                                style={{flex:1}}
+                                //style={{flex:1}}
                             />
                         </GiftedForm.ModalWidget>
                         <GiftedForm.HiddenWidget name='lat' value={lat} />
@@ -334,15 +405,7 @@ export default class FormInfo extends Component {
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
                                 if (isValid === true) {
-                                  values.ctime = +new Date();
-                                  alert(JSON.stringify(values))
-                                  //this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})
-                                  //
-                                  //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
-                                  /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
-                                  ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
-                                  ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
-                                  */
+                                  self.onSubmit(values)
                                   postSubmit();
                                 }
                             }}
@@ -352,9 +415,6 @@ export default class FormInfo extends Component {
         );
     }
 }
-/*
-<PlaceSearch style={{height:50}} onSelect={self.changePlace.bind(self)} value={self.state.init_address} />
-*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -372,5 +432,14 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     width: 150,
     height: 150
-  }
+  },
+  progress: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    //alignItems: 'flex-end',
+    //justifyContent: 'flex-end',
+    //flexDirection: 'row',
+    //width: 100
+  },
 });
