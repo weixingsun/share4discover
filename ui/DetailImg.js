@@ -29,7 +29,7 @@ var TopScreen = React.createClass({
     var dataSource = new ViewPager.DataSource({
       pageHasChanged: (p1, p2) => p1 !== p2,
     });
-    let IMGS = this.props.msg.pics
+    let IMGS = this.props.msg.pics.split(',')
     let key = this.props.msg.type+':'+this.props.msg.lat+','+this.props.msg.lng+':'+this.props.msg.ctime
     return {
       dataSource: dataSource.cloneWithPages(IMGS),

@@ -57,7 +57,7 @@ export default class FormInfo extends Component {
                 title:'Content',
                 validate:[{
                   validator:'isLength',
-                  arguments:[20,1024],
+                  arguments:[10,512],
                   message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
                 }]
               },
@@ -160,7 +160,8 @@ export default class FormInfo extends Component {
         values.ask = values.ask[0]
         if(values.type)
         values.type = values.type[0]
-        //alert(JSON.stringify(values))
+        if(values.pics)
+        values.pics = values.pics.join(',')
         //this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})
         //
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
@@ -168,13 +169,13 @@ export default class FormInfo extends Component {
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-
         Alert.alert(
             "Publish",
             "Do you want to publish this information ? ",
             [
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
+                  if(values.pics.length===0) delete values.pics
                   Net.setMsg(values)
                   self.props.navigator.pop();
               }},
@@ -317,7 +318,7 @@ export default class FormInfo extends Component {
         //alert(JSON.stringify(this.state.pics))
         //alert('map='+this.map+'\nak='+this.ak+'\nmcode='+this.mcode+'\nggkey='+this.ggkey)
         let self = this;
-        const { type, ask, owner, phone, title, address, lat,lng, time, ctime, content, price, dest } = this.state.form
+        const { type, ask, owner, phone, title, address, lat,lng, time, ctime, content, price, dest, pics } = this.state.form
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -410,6 +411,7 @@ export default class FormInfo extends Component {
                         <GiftedForm.HiddenWidget name='lng' value={lng} />
                         <GiftedForm.HiddenWidget name='owner' value={owner} />
                         <GiftedForm.HiddenWidget name='ctime' value={ctime} />
+                        <GiftedForm.HiddenWidget name='pics' value={pics} />
                         <GiftedForm.SubmitWidget
                             title='Publish'
                             widgetStyles={{
