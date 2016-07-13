@@ -140,7 +140,7 @@ export default class Detail extends Component {
         if(this.props.msg.pics != null) {
             return (
               <View style={{height:height/3}} >
-                <DetailImg />
+                <DetailImg msg={this.props.msg} />
               </View>
             )
         }

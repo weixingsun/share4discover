@@ -19,9 +19,10 @@ export default class FormInfo extends Component {
         super(props);
         this.old_value = this.props.msg? this.props.msg: {owner:'',ask:false,address:'',latlng:''};
         this.old_value['ask']=false;
+        this.ctime = +new Date();
         this.state={ 
-            pics:[],
             uploading:[],
+            localpics:[],
             add_fields:{
               Price:   'Price:num',
               Time:    'Time:date',
@@ -35,12 +36,13 @@ export default class FormInfo extends Component {
               ask:   true,
               owner: Global.getLoginStr(Global.logins),
               phone: '',
-              ctime: 0,
+              ctime: this.ctime,
               time:  '',
               lat:   '',
               lng:   '',
               price: '',
               dest:  '',
+              pics:  [],
             },
             validators:{
               title:{
@@ -153,8 +155,7 @@ export default class FormInfo extends Component {
     onSubmit(values) {
         var self = this;
         //values['pics']=[]
-        this.validateAll();
-        values.ctime = +new Date();
+        //this.validateAll();
         if(values.ask)
         values.ask = values.ask[0]
         if(values.type)
@@ -185,6 +186,10 @@ export default class FormInfo extends Component {
         //this.checkLoginUser();
     }
     openImagePicker(){
+        if(!this.key){
+            alert('Please select type, ask/offer and address')
+            return
+        }
         const options = {
           title: 'Add photo into this form',
           //quality: 0.5,
@@ -211,9 +216,6 @@ export default class FormInfo extends Component {
             //const source = {uri: response.uri.replace('file://', ''), isStatic: true};
             //alert(JSON.stringify(source))  // {uri}
             this._upload(source)
-            this.setState({
-              pics: [...this.state.pics, source]
-            });
          }
        });
        /*ImagePicker.launchCamera(options, (response)  => {
@@ -221,12 +223,12 @@ export default class FormInfo extends Component {
        });*/
     }
     showPics(){
-      if(this.state.pics.length==0)  return null;
+      if(this.state.localpics.length==0)  return null;  //local pics
       else
         return (
             <ScrollView style={{height:Style.THUMB_HEIGHT+4}} horizontal={true}>
                 {
-                  this.state.pics.map((pic,id)=>{
+                  this.state.localpics.map((pic,id)=>{
                     return (
                         <Image key={id} source={pic} 
                             style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}>
@@ -248,32 +250,38 @@ export default class FormInfo extends Component {
         )
     }
     _upload(file) {
-      var index = this.state.pics.length;
-      var filename = index+'.jpg'
+      //alert('uri:'+file.uri)
+      var index = this.state.localpics.length;
+      var filename = this.key+'-'+index+'.jpg'
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://posttestserver.com/post.php');
+      //xhr.open('POST', 'http://posttestserver.com/post.php');
+      xhr.open('POST', 'http://nzmessengers.co.nz/service/upload.php');
       xhr.onload = () => {
         let uploadingJson = this.state.uploading
         uploadingJson[index]=100
         this.setState({uploading:uploadingJson });
         if (xhr.status !== 200) {
-          alert('Upload failed: Expected HTTP 200 OK response, got ' + xhr.status)
-          return;
+            alert('Upload error: ' + xhr.status)
+            return;  //redo upload
         }
         if (!xhr.responseText) {
-          alert('Upload failed: No response payload. ')
-          return;
+            alert('Upload failed: No response payload. ')
+            return;  //redo upload
         }
-        var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
-        if (index === -1) {
-            alert('Upload failed: Invalid response payload.')
-            return;
+        if (xhr.responseText.indexOf('OK:') < 0) {
+            alert('Upload failed: '+xhr.responseText)
+            return;  //redo upload
         }
-        var url = xhr.responseText.slice(index).split('\n')[0];
-        alert('Upload successful: '+url);
+        // http://nzmessengers.co.nz/service/info/car:39.915814,116.478772:1468417311586/2.jpg
+        let photos = this.state.form.pics? this.state.form.pics: [];
+        photos.push(index+'.jpg')
+        this.setState({
+            form:{ ...this.state.form, pics:photos },
+        })
       };
       var formdata = new FormData();
       formdata.append('image', {uri:file.uri, type:'image/jpg', name:filename });
+      //key= car:lat,lng:ctime
       xhr.upload.onprogress = (event) => {
         //console.log('upload onprogress', event);
         if (event.lengthComputable) {
@@ -285,7 +293,10 @@ export default class FormInfo extends Component {
       xhr.send(formdata);
       let uploadingJson = this.state.uploading
       uploadingJson[index]=0
-      this.setState({uploading:uploadingJson });
+      this.setState({
+          uploading:uploadingJson,
+          localpics: [...this.state.localpics, file],
+      });
     }
     showActionIcons(){
         return (
@@ -297,7 +308,9 @@ export default class FormInfo extends Component {
     }
     //<Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
     handleValueChange(values) {
-        //alert('handleValueChange:'+ JSON.stringify(values))
+        if( values.type && values.lat && values.lng && values.ctime ){
+          this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
+        }
         this.setState({ form: values })
     }
     render(){
@@ -396,6 +409,7 @@ export default class FormInfo extends Component {
                         <GiftedForm.HiddenWidget name='lat' value={lat} />
                         <GiftedForm.HiddenWidget name='lng' value={lng} />
                         <GiftedForm.HiddenWidget name='owner' value={owner} />
+                        <GiftedForm.HiddenWidget name='ctime' value={ctime} />
                         <GiftedForm.SubmitWidget
                             title='Publish'
                             widgetStyles={{
