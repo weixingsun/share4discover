@@ -135,10 +135,7 @@ export default class FormInfo extends Component {
             all_fields: all_fields,
         })
     }
-    onSubmit(values) {
-        var self = this;
-        //values['pics']=[]
-        //this.validateAll();
+    fixFormData(){
         if(values.ask  && typeof values.ask ==='object')   values.ask = values.ask[0]
         if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
         else values.ask = false
@@ -148,25 +145,29 @@ export default class FormInfo extends Component {
         if(values.askTitle) delete values.askTitle
         if(values.typeTitle) delete values.typeTitle
         if(values.dest && values.dest.length===0) delete values.dest
-        //
+        if(values.pics && values.pics.length===0) delete values.pics
+    }
+    onSubmit(values) {
+        var self = this;
+        //this.validateAll();
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
         /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-        alert(JSON.stringify(values))
-        /*Alert.alert(
+        //alert(JSON.stringify(values))
+        Alert.alert(
             "Publish",
-            "Do you want to publish this info ? ",
+            "Do you want to publish this form ? ",
             [
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
-                  if(values.pics.length===0) delete values.pics
+                  self.fixFormData(values);
                   Net.setMsg(values)
                   self.props.navigator.pop();
               }},
             ]
-        )*/
+        )
     }
     componentWillMount(){
         this.initKeys();
