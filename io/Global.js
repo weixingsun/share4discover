@@ -107,6 +107,16 @@ module.exports = {
         })
         return str.substring(1);
     },
+    getLogins(ownersStr){
+        let arr = ownersStr.split(',')
+        let obj = {}
+        arr.map((userStr)=>{   //fb:email
+            let type = userStr.split(':')[0]
+            let email = userStr.split(':')[1]
+            obj[type]=email
+        })
+        return obj;
+    },
     getMainLogin(logins){
         //fb > wx > gg > wb
         //{fb:email,wx:email,gg:email,wb:email}

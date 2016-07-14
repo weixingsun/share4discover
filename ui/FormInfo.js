@@ -17,8 +17,6 @@ import ImagePicker from 'react-native-image-picker'
 export default class FormInfo extends Component {
     constructor(props) {
         super(props);
-        this.old_value = this.props.msg? this.props.msg: {owner:'',ask:false,address:'',latlng:''};
-        this.old_value['ask']=false;
         this.ctime = +new Date();
         this.state={ 
             uploading:[],
@@ -28,23 +26,9 @@ export default class FormInfo extends Component {
               Time:    'Time:date',
               Destination: 'Destination:str',
             },
-            form: {
-              title:   '',
-              content: '',
-              address: '',
-              type:  '',
-              ask:   true,
-              owner: Global.getLoginStr(Global.logins),
-              phone: '',
-              ctime: this.ctime,
-              time:  '',
-              lat:   '',
-              lng:   '',
-              price: '',
-              dest:  '',
-              pics:  [],
-            },
-            validators:{
+            form:{},
+        };
+        this.validators={
               title:{
                 title:'Title',
                 validate:[{
@@ -105,7 +89,6 @@ export default class FormInfo extends Component {
                   message:'{TITLE} is invalid'
                 }]
               },
-            },
         }
         // price: t.maybe(t.Number),
     }
@@ -156,22 +139,22 @@ export default class FormInfo extends Component {
         var self = this;
         //values['pics']=[]
         //this.validateAll();
-        if(values.ask)
-        values.ask = values.ask[0]
-        if(values.type)
-        values.type = values.type[0]
-        if(values.pics)
-        values.pics = values.pics.join(',')
-        //this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})
+        if(values.ask  && typeof values.ask ==='object')   values.ask = values.ask[0]
+        if(values.type && typeof values.type ==='object')  values.type = values.type[0]
+        if(values.pics && typeof values.pics ==='object')  values.pics = values.pics.join(',')
+        if(values.askTitle) delete values.askTitle
+        if(values.typeTitle) delete values.typeTitle
+        if(values.dest && values.dest.length===0) delete values.dest
         //
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
         /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-        Alert.alert(
+        alert(JSON.stringify(values))
+        /*Alert.alert(
             "Publish",
-            "Do you want to publish this information ? ",
+            "Do you want to publish this info ? ",
             [
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
@@ -180,11 +163,38 @@ export default class FormInfo extends Component {
                   self.props.navigator.pop();
               }},
             ]
-        );
+        )*/
     }
     componentWillMount(){
         this.initKeys();
-        //this.checkLoginUser();
+        this.processProps();
+    }
+    processProps(){
+        if(!this.props.msg){
+            //alert('processProps(null)')
+            var myDefaults = {
+              title: '', content: '', address: '',
+              type:  '',  ask: 'true',
+              owner: Global.getLoginStr(Global.logins),
+              phone: '',  ctime: this.ctime, time:  '',
+              lat:   '',  lng:   '',  price: '',
+              dest:  '', pics:  [],
+            };
+            this.setState({form:myDefaults})
+        }else{
+            //alert('processProps(msg)')
+            var myDefaults=this.props.msg;
+            //var typekey = 'type{'+this.props.msg.type+'}';
+            //var askkey  = 'ask{' +this.props.msg.ask+'}';
+            //myDefaults[typekey] = true;
+            //myDefaults[askkey]  = true;
+            myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
+            myDefaults['askTitle'] = this.props.msg.ask?'Ask':'Offer'
+            this.setState({ form:myDefaults })
+        }
+    }
+    capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
     openImagePicker(){
         if(!this.key){
@@ -312,44 +322,48 @@ export default class FormInfo extends Component {
         if( values.type && values.lat && values.lng && values.ctime ){
           this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
         }
-        this.setState({ form: values })
+        //this.setState({ form: values })
+        //alert(JSON.stringify(values))
     }
     render(){
-        //alert(JSON.stringify(this.state.pics))
-        //alert('map='+this.map+'\nak='+this.ak+'\nmcode='+this.mcode+'\nggkey='+this.ggkey)
-        let self = this;
-        const { type, ask, owner, phone, title, address, lat,lng, time, ctime, content, price, dest, pics } = this.state.form
+        //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
+        //let {}
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => self.props.navigator.pop() } />
+                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
-                   rightButton={ self.showActionIcons() }
+                   rightButton={ this.showActionIcons() }
                 />
                 {this.showPics()}
                 <GiftedForm
                     formName='newInfoForm'
-                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:20}}   //flex:1  //height:Style.DEVICE_HEIGHT-300
-                    openModal={(route) => { route.giftedForm = true; self.props.navigator.push(route) }}
-                    onValueChange={self.handleValueChange.bind(self)}
-                    validators={ this.state.validators }
+                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:20}}
+                    openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
+                    onValueChange={this.handleValueChange.bind(this)}
+                    validators={ this.validators }
+                    defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
                             title='Ask/Offer'
-                            displayValue='true'
+                            name='ask'
+                            displayValue='askTitle'
+                            value={this.state.form.askTitle}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='ask' title='Ask/Offer' multiple={false}>
-                                <GiftedForm.OptionWidget title='Ask' value='true'/>
-                                <GiftedForm.OptionWidget title='Offer' value='false'/>
+                                <GiftedForm.OptionWidget title='Ask'   value='true' />
+                                <GiftedForm.OptionWidget title='Offer' value='false' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
                             title='Type'
-                            displayValue='Car'
+                            name='type'
+                            displayValue='typeTitle'
+                            value={this.state.form.typeTitle}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
@@ -364,28 +378,32 @@ export default class FormInfo extends Component {
                             title='Title'
                             placeholder='Enter title'
                             clearButtonMode='while-editing'
-                            value={title}
+                            displayValue='title'
+                            value={this.state.form.title}
                         />
                         <GiftedForm.TextInputWidget
                             name='phone'
                             title='Phone'
                             placeholder='Enter phone'
                             clearButtonMode='while-editing'
-                            value={phone}
+                            displayValue='phone'
+                            value={this.state.form.phone}
                         />
                         <GiftedForm.TextInputWidget
                             name='price'
                             title='Price'
                             placeholder='Enter price'
                             clearButtonMode='while-editing'
-                            value={price}
+                            displayValue='price'
+                            value={this.state.form.price}
                         />
                         <GiftedForm.PlaceSearchWidget
                             name='address'
                             title='Address'
                             //placeholder='Enter address'
                             clearButtonMode='while-editing'
-                            value={address}
+                            displayValue='address'
+                            value={this.state.form.address}
                             map={this.map}
                             query={{
                                 ak:this.ak,mcode:this.mcode,
@@ -395,33 +413,36 @@ export default class FormInfo extends Component {
                             onClose={ (loc)=> this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }}) }
                         />
                         <GiftedForm.ModalWidget
+                            name='content'
                             title='Content'
                             displayValue='content'
-                            scrollEnabled={true}
+                            //scrollEnabled={true}
+                            value={this.state.form.content}
                         >
                             <GiftedForm.SeparatorWidget/>
                             <GiftedForm.TextAreaWidget
                                 name='content'
                                 autoFocus={true}
                                 placeholder='Detail information'
+                                //value={this.state.form.content}
                                 //style={{flex:1}}
                             />
                         </GiftedForm.ModalWidget>
-                        <GiftedForm.HiddenWidget name='lat' value={lat} />
-                        <GiftedForm.HiddenWidget name='lng' value={lng} />
-                        <GiftedForm.HiddenWidget name='owner' value={owner} />
-                        <GiftedForm.HiddenWidget name='ctime' value={ctime} />
-                        <GiftedForm.HiddenWidget name='pics' value={pics} />
+                        <GiftedForm.HiddenWidget name='lat' displayValue='lat' value={this.state.form.lat} />
+                        <GiftedForm.HiddenWidget name='lng' displayValue='lng' value={this.state.form.lng} />
+                        <GiftedForm.HiddenWidget name='owner' displayValue='owner' value={this.state.form.owner} />
+                        <GiftedForm.HiddenWidget name='ctime' displayValue='ctime' value={this.state.form.ctime} />
+                        <GiftedForm.HiddenWidget name='pics' displayValue='pics' value={this.state.form.pics} />
                         <GiftedForm.SubmitWidget
                             title='Publish'
                             widgetStyles={{
                                 submitButton: {
-                                    backgroundColor: 'gray',
+                                    backgroundColor: '#6495ED',
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
                                 if (isValid === true) {
-                                  self.onSubmit(values)
+                                  this.onSubmit(values)
                                   postSubmit();
                                 }
                             }}
