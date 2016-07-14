@@ -302,7 +302,7 @@ export default class FormInfo extends Component {
     showActionIcons(){
         return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-add'} size={50} onPress={this.openImagePicker.bind(this) } />
+                <Icon name={'ion-ios-images-outline'} size={40} onPress={this.openImagePicker.bind(this) } />
                 <View style={{width:20}} />
             </View>
         )

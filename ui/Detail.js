@@ -2,15 +2,13 @@
 import React, { Component } from 'react';
 import {Alert, Dimensions,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
 import {Icon} from './Icon'
-import t from 'tcomb-form-native'
-var Form = t.form.Form;
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
-import FormMsg from "./FormMsg"
+import FormInfo from "./FormInfo"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -25,14 +23,20 @@ export default class Detail extends Component {
     }
     //key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
     onReply() {
+        if(this.state.reply.length<5) {
+            alert('Please reply with more characters.')
+            return;
+        }
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
         var value={key:key, field:'#'+time, value:this.props.mainlogin+'|'+this.state.reply}
-        var notify_value={key:'#'+Global.getMainLogin(this.props.msg.owner), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
+        let loginsObj = Global.getLogins(this.props.msg.owner)
+        var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
             "Do you want to reply this information ? ",
+            //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
@@ -47,7 +51,8 @@ export default class Detail extends Component {
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
         var value={key:key, field:'close', value:this.props.mainlogin+'|'+time}
-	var notify_value={key:'#'+Global.getMainLogin(this.props.msg.owner), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
+        let loginsObj = Global.getLogins(this.props.msg.owner)
+	var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
         var _this = this;
         Alert.alert(
             "Complete",
@@ -78,7 +83,7 @@ export default class Detail extends Component {
         );
     }
     onEdit(){
-        this.props.navigator.push({component: FormMsg, passProps: { msg:this.props.msg } })
+        this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
     }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
