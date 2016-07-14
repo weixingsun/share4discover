@@ -140,7 +140,10 @@ export default class FormInfo extends Component {
         //values['pics']=[]
         //this.validateAll();
         if(values.ask  && typeof values.ask ==='object')   values.ask = values.ask[0]
+        if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
+        else values.ask = false
         if(values.type && typeof values.type ==='object')  values.type = values.type[0]
+        values.type=values.type.toLowerCase()
         if(values.pics && typeof values.pics ==='object')  values.pics = values.pics.join(',')
         if(values.askTitle) delete values.askTitle
         if(values.typeTitle) delete values.typeTitle
