@@ -85,6 +85,9 @@ export default class Detail extends Component {
     onEdit(){
         this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
     }
+    onZoomPics(msg){
+        this.props.navigator.push({component: DetailImg, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
+    }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
 	this.checkMyMsg(this.props.msg)
@@ -105,6 +108,12 @@ export default class Detail extends Component {
 	  return (
             <View style={{flexDirection:'row',}}>
               <Icon
+                name={'ion-ios-expand'}
+                color={'aqua'}
+                size={40}
+                onPress={this.onZoomPics.bind(this) } />
+              <View style={{width:50}} />
+              <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
                 size={40}
@@ -114,6 +123,12 @@ export default class Detail extends Component {
         }else{
           return (
             <View style={{flexDirection:'row',}}>
+              <Icon
+                name={'ion-ios-expand'}
+                color={'aqua'}
+                size={40}
+                onPress={this.onZoomPics.bind(this) } />
+              <View style={{width:50}} />
               <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
@@ -144,7 +159,7 @@ export default class Detail extends Component {
     showSlides(){
         if(this.props.msg.pics != null) {
             return (
-              <View style={{height:height/3}} >
+              <View style={{height:height/2}} >
                 <DetailImg msg={this.props.msg} />
               </View>
             )

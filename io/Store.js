@@ -9,7 +9,7 @@ var deviceStorage = {
         GPS_POS:"gps:position",
         
         msgTab:'ion-md-chatboxes',
-        userTab:'ion-ios-people',
+        userTab:'ion-ios-person',
         emailTab:'ion-ios-mail',
         mapTab:'ion-ios-globe',
         confTab:'ion-md-settings',

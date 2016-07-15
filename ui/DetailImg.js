@@ -52,7 +52,7 @@ var TopScreen = React.createClass({
     return (
           <Image
               source={{uri: this.state.host+data}}
-              //resizeMode={'cover'}
+              resizeMode={'contain'}
               style={styles.page} />
     );
   },

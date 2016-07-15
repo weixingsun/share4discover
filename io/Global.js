@@ -73,6 +73,8 @@ function loadLang(lang){
   //require('moment/locale/zh-cn')
 }
 module.exports = {
+    host_image: 'http://nzmessengers.co.nz/service/',
+    host_image_info: 'http://nzmessengers.co.nz/service/info/',
     mainlogin: '',
     logins: {},
     KEY: '',
@@ -130,7 +132,7 @@ module.exports = {
         }
     },
     getKeyFromMsg(msg){
-        return msg.type+':'+msg.lat+','+msg.lng+':'+msg.ctime
+        return msg.type+':'+msg.lat+','+msg.lng+':'+msg.ctime.toLowerCase();
     },
     getKeyFromReply(reply){
         return reply.type+':'+reply.latlng+':'+reply.ctime

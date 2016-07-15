@@ -20,7 +20,6 @@ export default class FormInfo extends Component {
         this.ctime = +new Date();
         this.state={ 
             uploading:[],
-            localpics:[],
             add_fields:{
               Price:   'Price:num',
               Time:    'Time:date',
@@ -135,7 +134,7 @@ export default class FormInfo extends Component {
             all_fields: all_fields,
         })
     }
-    fixFormData(){
+    fixFormData(values){
         if(values.ask  && typeof values.ask ==='object')   values.ask = values.ask[0]
         if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
         else values.ask = false
@@ -146,6 +145,9 @@ export default class FormInfo extends Component {
         if(values.typeTitle) delete values.typeTitle
         if(values.dest && values.dest.length===0) delete values.dest
         if(values.pics && values.pics.length===0) delete values.pics
+        //alert(JSON.stringify(values))
+        values.lat = parseFloat(values.lat).toFixed(6)
+        values.lng = parseFloat(values.lng).toFixed(6)
     }
     onSubmit(values) {
         var self = this;
@@ -175,7 +177,6 @@ export default class FormInfo extends Component {
     }
     processProps(){
         if(!this.props.msg){
-            //alert('processProps(null)')
             var myDefaults = {
               title: '', content: '', address: '',
               type:  '',  ask: 'true',
@@ -186,15 +187,17 @@ export default class FormInfo extends Component {
             };
             this.setState({form:myDefaults})
         }else{
-            //alert('processProps(msg)')
+            //alert('processProps:'+JSON.stringify(this.props.msg))
             var myDefaults=this.props.msg;
             //var typekey = 'type{'+this.props.msg.type+'}';
             //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[typekey] = true;
             //myDefaults[askkey]  = true;
             myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
-            myDefaults['askTitle'] = this.props.msg.ask?'Ask':'Offer'
-            this.setState({ form:myDefaults })
+            myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
+            if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
+            //alert('processProps:'+JSON.stringify(myDefaults))
+            this.setState({ form: myDefaults })
         }
     }
     capitalizeFirstLetter(str) {
@@ -237,20 +240,19 @@ export default class FormInfo extends Component {
            // Same code as in above section!
        });*/
     }
-    showPics(){
-      if(this.state.localpics.length==0)  return null;  //local pics
-      else
+    showImages(list){
+        //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
         return (
             <ScrollView style={{height:Style.THUMB_HEIGHT+4}} horizontal={true}>
                 {
-                  this.state.localpics.map((pic,id)=>{
+                  list.map((pic,id)=>{
                     return (
-                        <Image key={id} source={pic} 
+                        <Image key={pic.uri} source={pic}
                             style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}>
                             {
-                              this.state.uploading[id]<100 ? 
-                              <View style={styles.progress}> 
-                                  <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text> 
+                              this.state.uploading[id]<100 ?
+                              <View style={styles.progress}>
+                                  <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> :
                               <View style={styles.progress}>
@@ -264,13 +266,24 @@ export default class FormInfo extends Component {
             </ScrollView>
         )
     }
+    showPics(){
+        if(this.state.form.pics && this.state.form.pics.length>0){
+            let key = Global.getKeyFromMsg(this.state.form)
+            let url = Global.host_image_info+key+'/'
+            let list = this.state.form.pics.map((pic)=>{
+                return {uri: url+pic}
+            })
+            //alert(JSON.stringify(list))
+            return this.showImages(list)
+        }
+    }
     _upload(file) {
       //alert('uri:'+file.uri)
-      var index = this.state.localpics.length;
-      var filename = this.key+'-'+index+'.jpg'
+      let time = new Date().getTime()
+      var index = this.state.form.pics?this.state.form.pics.length:0;
+      var filename = Global.getKeyFromMsg(this.state.form)+'-'+time+'.jpg'
       var xhr = new XMLHttpRequest();
-      //xhr.open('POST', 'http://posttestserver.com/post.php');
-      xhr.open('POST', 'http://nzmessengers.co.nz/service/upload.php');
+      xhr.open('POST', Global.host_image+'/upload.php');
       xhr.onload = () => {
         let uploadingJson = this.state.uploading
         uploadingJson[index]=100
@@ -288,11 +301,12 @@ export default class FormInfo extends Component {
             return;  //redo upload
         }
         // http://nzmessengers.co.nz/service/info/car:39.915814,116.478772:1468417311586/2.jpg
-        let photos = this.state.form.pics? this.state.form.pics: [];
-        photos.push(index+'.jpg')
-        this.setState({
-            form:{ ...this.state.form, pics:photos },
-        })
+        //let photos = this.state.form.pics? this.state.form.pics: [];
+        //photos.push(index+'.jpg')
+        //alert('pics:'+JSON.stringify(photos))
+        //this.setState({
+        //    form:{ ...this.state.form, pics:photos },
+        //})
       };
       var formdata = new FormData();
       formdata.append('image', {uri:file.uri, type:'image/jpg', name:filename });
@@ -308,9 +322,10 @@ export default class FormInfo extends Component {
       xhr.send(formdata);
       let uploadingJson = this.state.uploading
       uploadingJson[index]=0
+      let pics_arr = this.state.form.pics?this.state.form.pics:[]
       this.setState({
           uploading:uploadingJson,
-          localpics: [...this.state.localpics, file],
+          form: { ...this.state.form, pics: [...pics_arr, time+'.jpg'],}
       });
     }
     showActionIcons(){
@@ -331,7 +346,9 @@ export default class FormInfo extends Component {
     }
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
-        //let {}
+        let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
+        let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
+        //alert('form.askTitle:'+this.state.form.askTitle+'\nask:'+this.state.form.ask+'\ntype:'+typeof this.props.msg.ask)
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -345,7 +362,7 @@ export default class FormInfo extends Component {
                 {this.showPics()}
                 <GiftedForm
                     formName='newInfoForm'
-                    style={{height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.THUMB_HEIGHT-50,margin:20}}
+                    style={{height:form_height,marginLeft:20,marginRight:20}}
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
                     validators={ this.validators }
