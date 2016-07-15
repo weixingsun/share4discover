@@ -9,10 +9,10 @@
 ###code-push deployment list Share --format json
 #code-push deployment ls Share -k
 
-react-native bundle --platform android --entry-file index.android.js --bundle-output ./release/index.android.bundle --dev true
-//--assets-dest ./release 
-react-native bundle --platform ios     --entry-file index.ios.js     --bundle-output ./release/main.jsbundle     --dev true
+react-native bundle --platform android --entry-file index.android.js --bundle-output ./codepush/index.android.bundle --dev true
+#--assets-dest ./release 
+react-native bundle --platform ios  --entry-file index.ios.js  --bundle-output ./codepush/main.jsbundle  --dev true
 
-code-push release Share ./release 1.0.0  
+code-push release Share ./codepush 1.0.0  
 ##--description "release v1.0.0" --mandatory true    
 ##last parameter: same as android/app/build.gradle: versionName  =  Info.plist: bundleVersion

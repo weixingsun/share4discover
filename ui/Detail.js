@@ -159,9 +159,7 @@ export default class Detail extends Component {
     showSlides(){
         if(this.props.msg.pics != null) {
             return (
-              <View style={{height:height/2}} >
-                <DetailImg msg={this.props.msg} />
-              </View>
+                <DetailImg msg={this.props.msg} style={{backgroundColor:'transparent',height:height/2}} />
             )
         }
     }

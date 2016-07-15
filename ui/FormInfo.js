@@ -32,7 +32,7 @@ export default class FormInfo extends Component {
                 title:'Title',
                 validate:[{
                   validator:'isLength',
-                  arguments:[2,20],
+                  arguments:[2,50],
                   message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
                 }]
               },
@@ -362,7 +362,7 @@ export default class FormInfo extends Component {
                 {this.showPics()}
                 <GiftedForm
                     formName='newInfoForm'
-                    style={{height:form_height,marginLeft:20,marginRight:20}}
+                    style={{height:form_height,marginLeft:10,marginRight:10}}
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
                     validators={ this.validators }
