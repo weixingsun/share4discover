@@ -252,4 +252,20 @@ module.exports = {
   },
   contentSection:{
   },
+  closeZoomButton:{
+     backgroundColor: '#ccc',
+     borderRadius: 5,
+     padding: 10,
+     position: 'absolute',
+     right: 10,
+     top: 10,
+     backgroundColor: 'red',
+  },
+  modalZoom:{
+     position: 'absolute',
+     padding:10,
+     top: 66,
+     width:x-20,
+     height:y-80
+  },
 };

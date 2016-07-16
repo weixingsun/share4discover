@@ -1,8 +1,9 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Dimensions,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
+import {Alert, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
 import {Icon} from './Icon'
 import NavigationBar from 'react-native-navbar';
+import Modal from 'react-native-root-modal'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -15,11 +16,16 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
         this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+        this.images = this.props.msg.pics.split(',')
         this.state={ 
             reply: '',
             reply_height: 35,
             isMyMsg:false,
+            image_modal_name:this.images[0],
+            show_pic_modal:false,
         }
+        this.openZoom=this.openZoom.bind(this)
+        this.closeZoom=this.closeZoom.bind(this)
     }
     //key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
     onReply() {
@@ -85,8 +91,12 @@ export default class Detail extends Component {
     onEdit(){
         this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
     }
-    onZoomPics(msg){
-        this.props.navigator.push({component: DetailImg, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
+    openZoom(){
+        this.setState({show_pic_modal:true})
+    }
+    closeZoom(){
+        this.setState({show_pic_modal:false})
+        
     }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
@@ -110,9 +120,9 @@ export default class Detail extends Component {
               <Icon
                 name={'ion-ios-expand'}
                 color={'aqua'}
-                size={40}
-                onPress={this.onZoomPics.bind(this) } />
-              <View style={{width:50}} />
+                size={33}
+                onPress={this.openZoom } />
+              <View style={{width:40}} />
               <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
@@ -123,11 +133,12 @@ export default class Detail extends Component {
         }else{
           return (
             <View style={{flexDirection:'row',}}>
+              {this.renderModal()}
               <Icon
                 name={'ion-ios-expand'}
                 color={'aqua'}
                 size={40}
-                onPress={this.onZoomPics.bind(this) } />
+                onPress={this.openZoom } />
               <View style={{width:50}} />
               <Icon
                 name={'ion-ios-mail-outline'}
@@ -159,7 +170,14 @@ export default class Detail extends Component {
     showSlides(){
         if(this.props.msg.pics != null) {
             return (
-                <DetailImg msg={this.props.msg} style={{backgroundColor:'transparent',height:height/2}} />
+                <DetailImg 
+                    msg={this.props.msg} 
+                    style={{backgroundColor:'transparent',height:height/2}} 
+                    openModal={this.openZoom} 
+                    onChange={(currName)=>{
+                        //alert('pic:'+currName)
+                        this.setState({image_modal_name:currName})
+                    }} />
             )
         }
     }
@@ -219,6 +237,28 @@ export default class Detail extends Component {
               }
           })
 	)
+    }
+    renderModal(){
+      let key = Global.getKeyFromMsg(this.props.msg);
+      let uri = Global.host_image_info+key+'/'+this.state.image_modal_name;
+      //alert('uri:'+uri)
+      return (
+        <Modal 
+            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
+                //transform: [{scale: this.state.scaleAnimation}]
+            visible={this.state.show_pic_modal}
+          >
+            <View>
+                <View style={{width:width,}}>
+                    <Icon 
+                      name={'ion-ios-close-circle-outline'} 
+                      size={50} color={'red'} style={ Style.closeZoomButton} 
+                      onPress={this.closeZoom}/>
+                </View>
+                <Image resizeMode={'contain'} style={Style.modalZoom} source={{ uri:uri }} />
+            </View>
+        </Modal>
+      )
     }
     render(){
 	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)

@@ -11,9 +11,11 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   TouchableNativeFeedback,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import Swiper from 'react-native-swiper'
+import Modal from 'react-native-modalbox'
 //import ViewPager from 'react-native-viewpager';
 import Global from '../io/Global'
 var {H, W} = Dimensions.get('window');
@@ -24,33 +26,58 @@ var TopScreen = React.createClass({
     //alert(Global.host_image_info+key+'\n'+this.props.msg.pics+'\ntype:'+typeof this.props.msg.pics)
     let IMGS = this.props.msg.pics.split(',')
     return {
+      index:0,
       image_names:IMGS,
       host: Global.host_image_info+key+'/',
     };
+  },
+  handlePressIn(e){
+      this.setState({
+          StartTime:e.nativeEvent.timeStamp,
+          X:e.nativeEvent.pageX,
+          Y:e.nativeEvent.pageY,
+      })
+  },
+  handlePressOut(e){
+      let end = e.nativeEvent.timeStamp
+      let time = end - this.state.StartTime
+      let moveX = Math.abs(e.nativeEvent.pageX-this.state.X)
+      let moveY = Math.abs(e.nativeEvent.pageY-this.state.Y)
+      let move = moveX+moveY;
+      //alert('time:'+time+' move:'+move)  //time<80000000 move<40
+      if(move<40) {
+          //alert('index:'+this.state.index+' file:'+this.state.image_names[this.state.index]+' time:'+time+' move:'+move)
+          this.openPicModal();
+      }
   },
   renderPages(){
       return (
           this.state.image_names.map((name,id)=>{
               return (
-                  <View key={id} style={styles.slide} title={<Text numberOfLines={1}>{name}</Text>}>
+                <TouchableWithoutFeedback key={id} onPressIn={this.handlePressIn}  onPressOut={this.handlePressOut} >
+                  <View style={styles.slide} title={<Text numberOfLines={1}>{name}</Text>}>
                     <Image resizeMode={'contain'} style={styles.image} source={{uri: this.state.host+name}} />
                   </View>
+                </TouchableWithoutFeedback>
               )
           })
       )
+  },
+  openPicModal() {
+    if(this.props.openModal) this.props.openModal();
   },
   render() {
     //loop={true}
     return (
       <View>
-        <Swiper style={styles.wrapper} height={300}
-          //onMomentumScrollEnd={function(e, state, context){console.log('index:', state.index)}}
+        <Swiper style={styles.wrapper} height={300} //loop={true}
+          onMomentumScrollEnd={(e, state, context)=>{ this.setState({ index:state.index}); this.props.onChange(this.state.image_names[state.index]) }}
           dot={<View style={{backgroundColor:'rgba(0,0,0,.2)', width: 5, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
           activeDot={<View style={{backgroundColor: '#000', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
           paginationStyle={{
             bottom: 3, left: null, right: 10,
           }} >
-          { this.renderPages() }
+            { this.renderPages() }
         </Swiper>
       </View>
     )
@@ -77,6 +104,14 @@ var styles = StyleSheet.create({
   },
   image: {
     flex: 1
+  },
+  modal: {
+    //flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    left:     0,
+    top:      0,
   },
 });
 
