@@ -9,6 +9,7 @@ import Style from "./Style"
 import Store from "../io/Store"
 //import FBLoginView from "./FBLoginView"
 import FBLoginButton from './LoginFBButton'
+import I18n from 'react-native-i18n'
 
 var Login = React.createClass({
   updateView(data){
@@ -40,39 +41,40 @@ var Login = React.createClass({
             console.log("FBLoginMock logged out.");
             _this.logout();
           }}
+	  user={this.props.user}
         />
       );
   },
 /*
-              <FBLogin
-                buttonView={<FBLoginView user={this.props.user} />}
-                permissions={["email","user_friends"]}
-                loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Native}
-                //loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Web}
-                onLogin={function(data){
-                  _this._facebookSignIn(data);
-                }}
-                onLoginFound={function(data){
-                  console.log('FB:onLoginFound:'+JSON.stringify(data));
-                  //_this.setState({user: null });
-                }}
-                onLoginNotFound={function(data){
-                  //console.log('FB:onLoginNotFound:'+JSON.stringify(data));
-                  //_this.setState({user: null });
-                }}
-                onLogout={function(data){
-                  _this.logout();
-                }}
-                onCancel={function(e){console.log(e)}}
-                onPermissionsMissing={function(e){
-                  console.log("onPermissionsMissing:")
-                  console.log(e)
-                }}
-              />
+      <FBLogin
+          buttonView={<FBLoginView user={this.props.user} />}
+          permissions={["email","user_friends"]}
+          loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Native}
+          //loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Web}
+          onLogin={function(data){
+              _this._facebookSignIn(data);
+          }}
+          onLoginFound={function(data){
+              console.log('FB:onLoginFound:'+JSON.stringify(data));
+              //_this.setState({user: null });
+          }}
+          onLoginNotFound={function(data){
+              //console.log('FB:onLoginNotFound:'+JSON.stringify(data));
+              //_this.setState({user: null });
+          }}
+          onLogout={function(data){
+              _this.logout();
+          }}
+          onCancel={function(e){console.log(e)}}
+          onPermissionsMissing={function(e){
+              console.log("onPermissionsMissing:")
+              console.log(e)
+          }}
+      />
 */
   renderLoginName() {
     //console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
-    var name = 'Login in Facebook'
+    var name = I18n.t('login')+' '+I18n.t('fb');
     if(this.props.user !== null ){ //&& this.props.user.type === 'fb'){
          name = this.props.user.name;
     }
@@ -84,11 +86,11 @@ var Login = React.createClass({
   },
   logout(){
     Alert.alert(
-        "Logout",
-        "Do you want to logout from Facebook?",
+        I18n.t('logout'),
+        I18n.t('ask_logout')+I18n.t('fb')+'?',
         [
-          {text:"Cancel", onPress:()=>console.log("")},
-          {text:"OK", onPress:()=>{
+          {text:I18n.t('cancel'), onPress:()=>console.log("")},
+          {text:I18n.t('ok'), onPress:()=>{
               Store.delete('user_fb');
               this.props.logout()
           }},
@@ -102,12 +104,18 @@ var Login = React.createClass({
     //console.log('facebook login:')
     //console.log(data)
     if(data.hasOwnProperty('profile')){ //Android get all info in 1 time
+        //alert('android:'+JSON.stringify(data))
         var profile = data.profile
         var token = data.profile.token
+        var expire = data.profile.tokenExpirationDate
         if(typeof data.profile === "string"){
             profile = JSON.parse(data.profile);
             token = profile.token
-            if(token == null) token = data.credentials.token
+            expire = profile.tokenExpirationDate
+            if(token == null){
+                token = data.credentials.token
+                expire= data.credentials.tokenExpirationDate
+            }
         }
         var _user={
             id: profile.id,
@@ -116,6 +124,7 @@ var Login = React.createClass({
             gender: profile.gender,
             type: 'fb',
             token: token,
+            expire: expire,
         };
         this.setState({ user: _user, });
         this.saveUserDB(this.state.user);
@@ -123,6 +132,7 @@ var Login = React.createClass({
         console.log('facebook_user:'+JSON.stringify(_user)); //this.state.user
     }else{      //iOS need fetch manually
       var _this = this;
+      alert('ios:'+JSON.stringify(data))
       var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
       fetch(api)
         .then((response) => response.json())
@@ -135,6 +145,7 @@ var Login = React.createClass({
               gender: responseData.gender,
               type: 'fb',
               token: data.credentials.token,
+	      expire: data.credentials.tokenExpirationDate,
             };
             _this.setState({ user : _user });
             _this.saveUserDB(_user);

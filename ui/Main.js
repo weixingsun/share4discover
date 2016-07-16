@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+//import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import {Icon} from './Icon'
@@ -22,8 +23,6 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.types = ['car','taxi','estate']
-    this.logins = '';
-    this.mainlogin = '';
     this.state = {
       page:this.props.page!=null?this.props.page: Store.msgTab,
       badge:'',
@@ -39,30 +38,37 @@ export default class Main extends Component {
       },
       //drawerPanEnabled:false,
       gps:false,
+      
     }; 
     //this.changeFilter=this.changeFilter.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
+  }
+  funk = () => {
+      //auto binding function
   }
   componentWillUnmount() {
       this.turnOffGps();
       if(Platform.OS === 'android') {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
+      clearInterval(this.timer)
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
       //    this.setState({isLoading: false});
       //});
+      this.timer = setInterval(()=>this.timerFunction(),60000)
   }
   componentWillMount(){
       var _this = this;
-      this.checkLogin('user_fb')
-      this.checkLogin('user_gg')
-      this.checkMapSettings()
+      //this.checkLogin('user_fb')
+      //this.checkLogin('user_gg')
+      //this.checkMapSettings()
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
+      this.checkSettingsChange();
   }
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
@@ -77,19 +83,22 @@ export default class Main extends Component {
       ToastAndroid.show('Double press to exit!',ToastAndroid.SHORT);
       return true;
   }
-  componentWillUpdate() {
-      /*var _this = this;
-      Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
-        if(map_value == null) _this.map = "BaiduMap";
-        else _this.map = map_value;
-      });*/
-  }
   checkLogin(type){
       var self = this
       Store.get(type).then(function(user){  //{type,email}
-          if(user != null){
-              self.logins = self.logins===''? user.type+':'+user.email:self.logins+','+user.type+':'+user.email
-              self.setState({refresh:false})
+          if(user != null && Global.logins[user.type]==null) {
+              Global.logins[user.type]=user.email;
+              Global.mainlogin = Global.getMainLogin(Global.logins)
+              //if(Global.mainlogin!=self.state.mainlogin){
+              //    self.setState({mainlogin:Global.mainlogin }) 
+              //}
+          }else if(user == null && Global.logins !== ''){
+              let look_type = type.substring(5)
+              delete Global.logins[look_type]
+              Global.mainlogin = Global.getMainLogin(Global.logins)
+              //if(Global.mainlogin!=self.state.mainlogin){
+              //    self.setState({ mainlogin:Global.mainlogin })
+              //}
           }
       });
   }
@@ -120,40 +129,58 @@ export default class Main extends Component {
         Global.MAP = _this.map
       });
   }
+  timerFunction(){
+      this.loadNotifyByLogin()
+  }
   loadNotifyByLogin(){
-      this.mainlogin = Global.getMainLogin(this.logins)
-      this.loadNotify(this.mainlogin);
+      //alert('mainlogin:'+mainlogin+'\nlogins:'+this.state.logins)
+      if(Global.mainlogin.length>0) this.loadNotify(Global.mainlogin);
   }
   loadNotify(key) {
+    //alert('loadNotify('+key+') length:'+key.length)
     var self = this;
     Net.getNotify(key).then((rows)=> {
-      var arr = self.Kv2Json(rows)
-      var unread = self.getUnread(arr)
-      self.setState({
+      if(rows==null) { return }
+      else{
+        var arr = self.Kv2Json(rows)
+        var unread = self.getUnread(arr)
+        var badgeText = ''+unread.length;
+        self.setState({
           mails:arr,
-	  badge:unread.length,
+          badge:badgeText,
           refresh:true,
-      });
+          //mainlogin:key,
+        });
+      }
     })
     .catch((e)=>{
-        alert('Network Problem!')
+        alert('Network Problem!'+JSON.stringify(e))
     });
   }
+  //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
   Kv2Json(kv){
       var arr = []
       if(kv == null) return arr;
-      var keys = Object.keys(kv)
-      keys.map((key)=>{      //key='car:lat,lng:time'  value='1|fb:email|content'
+      var keys = Object.keys(kv)  //.reverse()
+      keys.map((key)=>{
           var key_arr = key.split(':')
           var type   = key_arr[0]
           var latlng = key_arr[1]
-          var time   = key_arr[2]
+	  var times   = key_arr[2]
+          var ctime   = times.split('#')[0]
+          var rtime   = times.split('#')[1]
           var value_arr = kv[key].split('|')
-          var status = value_arr[0]
+          var rtype = value_arr[0].substring(0,1);    //r
+          var status = value_arr[0].substring(1)      //1
           var user = value_arr[1]
           var content = value_arr[2]
-          var obj = {type:type, latlng:latlng, time:time, status:status, user:user, content:content }
+          var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
+	  //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
+	  //alert(JSON.stringify(obj))
           arr.push( obj )
+      })
+      arr.sort(function(a,b){
+          return parseInt(b.rtime)-parseInt(a.rtime)
       })
       return arr;
   }
@@ -181,19 +208,24 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} mainlogin={this.mainlogin} mails={this.state.mails} />
+      return <NotifyList navigator={this.props.navigator} mainlogin={Global.mainlogin} mails={this.state.mails} />
     } else if(this.state.page ===Store.userTab){
       return <FriendList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={this.mainlogin} />
+      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={Global.mainlogin} />
     } else if(this.state.page ===Store.confTab){
-      return <SettingsList navigator={this.props.navigator} logins={this.logins}/>
+      return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
     }
   }
-  gotoPage(name){ //ios-world
-    //var drawerEnabled=false
-    //if(name===Store.msgTab || name===Store.mapTab) drawerEnabled=true;
-    this.setState({ page: name });
+  checkSettingsChange(){
+      this.checkLogin('user_fb')
+      this.checkLogin('user_gg')
+      this.checkMapSettings()
+      if(Global.mainlogin.length===0) this.setState({mails:[]})
+  }
+  gotoPage(name){
+      this.checkSettingsChange()
+      this.setState({ page: name });
   }
   getSelectedColor(id){
     if(id === this.state.page) return 'blue';
@@ -203,12 +235,12 @@ export default class Main extends Component {
     //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
     //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     //>
-    if(this.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
+    if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>
           {this.pages()}
-          <Tabs selected={this.state.page} style={Style.navBar}
-              selectedStyle={{color:'blue'}} onSelect={(e)=> this.gotoPage(e.props.name)}>
+          <Tabs selected={this.state.page} style={Style.navBar} selectedStyle={{color:'blue'}}
+                onSelect={(e)=> this.gotoPage(e.props.name)} >
             <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} />
             <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} />
             <Icon size={40} color={this.getSelectedColor(Store.mapTab)} name={Store.mapTab}  />

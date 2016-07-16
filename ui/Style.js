@@ -23,6 +23,8 @@ module.exports = {
   RATIO_Y:ratioY,
   UNIT:em(1),
   PADDING: em(1.25),
+  NAVBAR_HEIGHT:66,
+  THUMB_HEIGHT:100,
   
   //Card
   CARD_WIDTH: x-em(1.25)*2,
@@ -220,56 +222,21 @@ module.exports = {
   slideSection:{
     //
   },
-  title_card: {
-      //height: 110,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      backgroundColor: '#fff',
-      borderColor: 'rgba(0,0,0,0.1)',
-      marginTop: 5,
-      //padding: 15,
-      shadowColor: '#ccc',
-      //shadowOffset: { width: 2, height: 2, },
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-      flexDirection:'row',
-      paddingTop:5,
-      paddingBottom:5,
-  },
-  contact_card: {
-      //height: 130,
-      justifyContent: 'center',
-      //alignItems: 'center',
-      borderWidth: 1,
-      backgroundColor: '#fff',
-      borderColor: 'rgba(0,0,0,0.1)',
-      marginTop: 5,
-      //padding: 15,
-      shadowColor: '#ccc',
-      //shadowOffset: { width: 2, height: 2, },
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-      //flexDirection:'row',
-      paddingTop:5,
-      paddingBottom:5,
-  },
   detail_card: {
-      //height: 250,
       justifyContent: 'center',
       //alignItems: 'center',
       borderWidth: 1,
       backgroundColor: '#fff',
       borderColor: 'rgba(0,0,0,0.1)',
       marginTop: 5,
-      //padding: 15,
       shadowColor: '#ccc',
       //shadowOffset: { width: 2, height: 2, },
       shadowOpacity: 0.5,
       shadowRadius: 3,
       //flexDirection:'row',
-      paddingTop:5,
-      paddingBottom:5,
+      padding: 15,
+      //paddingTop:5,
+      //paddingBottom:5,
   },
   typeIcon:{
     //
@@ -284,5 +251,21 @@ module.exports = {
   ownerSection:{
   },
   contentSection:{
+  },
+  closeZoomButton:{
+     backgroundColor: '#ccc',
+     borderRadius: 5,
+     padding: 10,
+     position: 'absolute',
+     right: 10,
+     top: 10,
+     backgroundColor: 'red',
+  },
+  modalZoom:{
+     position: 'absolute',
+     padding:10,
+     top: 66,
+     width:x-20,
+     height:y-80
   },
 };

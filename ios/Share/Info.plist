@@ -64,7 +64,9 @@
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>1.0</string>
+    <string>1.0.0</string>
+    <key>CodePushDeploymentKey</key>
+    <string>$(CODEPUSH_KEY)</string>
     <key>FacebookAppID</key>
     <string>1682496612023647</string>
     <key>LSApplicationQueriesSchemes</key>

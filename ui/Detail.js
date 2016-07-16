@@ -1,41 +1,53 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, Dimensions, Picker, StyleSheet,View, ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
+import {Alert, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
 import {Icon} from './Icon'
-import t from 'tcomb-form-native'
-var Form = t.form.Form;
 import NavigationBar from 'react-native-navbar';
+import Modal from 'react-native-root-modal'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
-import FormEditMsg from "./FormEditMsg"
+import FormInfo from "./FormInfo"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
     constructor(props) {
         super(props);
+        this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+        this.images = this.props.msg.pics.split(',')
         this.state={ 
             reply: '',
             reply_height: 35,
             isMyMsg:false,
+            image_modal_name:this.images[0],
+            show_pic_modal:false,
         }
+        this.openZoom=this.openZoom.bind(this)
+        this.closeZoom=this.closeZoom.bind(this)
     }
+    //key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
     onReply() {
+        if(this.state.reply.length<5) {
+            alert('Please reply with more characters.')
+            return;
+        }
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
         var value={key:key, field:'#'+time, value:this.props.mainlogin+'|'+this.state.reply}
-        var notify_value={key:'#'+Global.getMainLogin(this.props.msg.owner), field:key+':'+time, value:'1|'+this.props.mainlogin+'|'+this.state.reply}
+        let loginsObj = Global.getLogins(this.props.msg.owner)
+        var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
             "Do you want to reply this information ? ",
+            //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.putMsg(value)
-		    Net.putMsg(notify_value)
+                    Net.putMsg(notify_value)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -43,7 +55,10 @@ export default class Detail extends Component {
     }
     onClose() {
         var key = Global.getKeyFromMsg(this.props.msg)
-        var value={key:key, field:'close', value:this.props.mainlogin}
+	var time = +new Date();
+        var value={key:key, field:'close', value:this.props.mainlogin+'|'+time}
+        let loginsObj = Global.getLogins(this.props.msg.owner)
+	var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
         var _this = this;
         Alert.alert(
             "Complete",
@@ -52,7 +67,7 @@ export default class Detail extends Component {
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.putMsg(value)
-                    //Net.emailOwner(value)
+                    //Net.putMsg(notify_value)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -74,7 +89,14 @@ export default class Detail extends Component {
         );
     }
     onEdit(){
-        this.props.navigator.push({component: FormEditMsg, passProps: { msg:this.props.msg } })
+        this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
+    }
+    openZoom(){
+        this.setState({show_pic_modal:true})
+    }
+    closeZoom(){
+        this.setState({show_pic_modal:false})
+        
     }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
@@ -96,6 +118,12 @@ export default class Detail extends Component {
 	  return (
             <View style={{flexDirection:'row',}}>
               <Icon
+                name={'ion-ios-expand'}
+                color={'aqua'}
+                size={33}
+                onPress={this.openZoom } />
+              <View style={{width:40}} />
+              <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
                 size={40}
@@ -105,6 +133,13 @@ export default class Detail extends Component {
         }else{
           return (
             <View style={{flexDirection:'row',}}>
+              {this.renderModal()}
+              <Icon
+                name={'ion-ios-expand'}
+                color={'aqua'}
+                size={40}
+                onPress={this.openZoom } />
+              <View style={{width:50}} />
               <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
@@ -135,21 +170,27 @@ export default class Detail extends Component {
     showSlides(){
         if(this.props.msg.pics != null) {
             return (
-              <View style={{height:height/3}} >
-                <DetailImg />
-              </View>
+                <DetailImg 
+                    msg={this.props.msg} 
+                    style={{backgroundColor:'transparent',height:height/2}} 
+                    openModal={this.openZoom} 
+                    onChange={(currName)=>{
+                        //alert('pic:'+currName)
+                        this.setState({image_modal_name:currName})
+                    }} />
             )
         }
     }
     showOwners(){
 	var owners = this.props.msg.owner.split(',')
+        owners.push('tel:'+this.props.msg.phone)
         return (
             owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
 	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
                 return (
-                    <View style={{flexDirection:'row'}} key={owner} >
+                    <View style={{flexDirection:'row',marginLeft:20}} key={owner} >
                         <Icon
                             style={{marginLeft:23,marginRight:6}}
                             size={24}
@@ -163,17 +204,17 @@ export default class Detail extends Component {
         );
     }
     showReplys(){
+        //id:#rtime  key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
         var keys = Object.keys(this.props.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
-	})
-	//fb:email|reply
+	}).sort()
 	return (
 	  replys.map((key)=>{
               var str = this.props.msg[key];
               let owner = str.split('|')[0]
               let reply = str.split('|')[1]
-              let time  = new Date(parseInt(key.substring(1)))    //toLocaleString()
+              let time  = parseInt(key.substring(1))    //Global.getDateTimeFormat(Int)
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
 	      if(sns_type==null || sns_type==''){
@@ -190,15 +231,37 @@ export default class Detail extends Component {
                         name={Global.SNS_ICONS[sns_type]}
                     />
                     <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
-                    <Text style={{marginRight:5,color:'gray'}}>{time.toLocaleString()}</Text>
+                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time,this.lang)}</Text>
                   </View>
 	        )
               }
           })
 	)
     }
+    renderModal(){
+      let key = Global.getKeyFromMsg(this.props.msg);
+      let uri = Global.host_image_info+key+'/'+this.state.image_modal_name;
+      //alert('uri:'+uri)
+      return (
+        <Modal 
+            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
+                //transform: [{scale: this.state.scaleAnimation}]
+            visible={this.state.show_pic_modal}
+          >
+            <View>
+                <View style={{width:width,}}>
+                    <Icon 
+                      name={'ion-ios-close-circle-outline'} 
+                      size={50} color={'red'} style={ Style.closeZoomButton} 
+                      onPress={this.closeZoom}/>
+                </View>
+                <Image resizeMode={'contain'} style={Style.modalZoom} source={{ uri:uri }} />
+            </View>
+        </Modal>
+      )
+    }
     render(){
-        var _ctime = new Date(parseInt(this.props.msg.ctime));
+	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
 
         return (
@@ -218,34 +281,28 @@ export default class Detail extends Component {
                       style={{flex:8}}
                     >
                       {this.showSlides()}
-                      <View style={Style.title_card} >
-                        <Icon
-                            style={{marginLeft:15,marginRight:6}}
+                      <View style={Style.detail_card} >
+                        <View style={{flexDirection:'row',marginLeft:20}} >
+                          <Icon
+                            style={{marginLeft:15,marginRight:15}}
                             size={44}
                             color={this.props.msg.ask=='false'?'blue':'gray'}
                             name={Global.TYPE_ICONS[this.props.msg.type]}
-                        />
-                        <View style={{flex:1,marginLeft:10}}>
+                          />
+                          <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Time   : {_ctime.toLocaleString()}</Text>
+                            <Text>Time   : {_ctime}</Text>
                             <Text>Address: {this.props.msg.address}</Text>
+                          </View>
                         </View>
                       </View>
                       <View style={Style.detail_card} >
 			{ this.showOwners() }
-                        <View style={{flexDirection:'row'}}>
-                          <Icon
-                            style={{marginLeft:23,marginRight:6}}
-                            size={24}
-                            color={'green'}
-                            name={Global.CALL}
-                          />
-                          <Text style={{marginLeft:21}}>{this.props.msg.phone}</Text>
-                        </View>
                       </View>
                       <View style={Style.detail_card} >
-                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text>  {_ctime.toLocaleString()}</Text>
+                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text> {_ctime} </Text>
 			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Asking :  </Text>  {this.props.msg.ask}</Text>
+			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Price :  </Text>  {this.props.msg.price}</Text>
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
 			<Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
                       </View>

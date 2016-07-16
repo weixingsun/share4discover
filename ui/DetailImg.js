@@ -8,59 +8,110 @@ import {
   View,
   Dimensions,
   Image,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
-import ViewPager from 'react-native-viewpager';
-//var ViewPager = require('./ViewPager');
-var deviceWidth = Dimensions.get('window').width;
-
-var IMGS = [
-  'https://images.unsplash.com/photo-1441742917377-57f78ee0e582?h=1024',
-  'https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?h=1024',
-  'https://images.unsplash.com/photo-1441448770220-76743f9e6af6?h=1024',
-  'https://images.unsplash.com/photo-1441260038675-7329ab4cc264?h=1024',
-  'https://images.unsplash.com/photo-1441126270775-739547c8680c?h=1024',
-  'https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?h=1024',
-  'https://images.unsplash.com/photo-1440847899694-90043f91c7f9?h=1024'
-];
+import Swiper from 'react-native-swiper'
+import Modal from 'react-native-modalbox'
+//import ViewPager from 'react-native-viewpager';
+import Global from '../io/Global'
+var {H, W} = Dimensions.get('window');
 
 var TopScreen = React.createClass({
   getInitialState: function() {
-    var dataSource = new ViewPager.DataSource({
-      pageHasChanged: (p1, p2) => p1 !== p2,
-    });
-
+    let key = Global.getKeyFromMsg(this.props.msg)
+    //alert(Global.host_image_info+key+'\n'+this.props.msg.pics+'\ntype:'+typeof this.props.msg.pics)
+    let IMGS = this.props.msg.pics.split(',')
     return {
-      dataSource: dataSource.cloneWithPages(IMGS),
+      index:0,
+      image_names:IMGS,
+      host: Global.host_image_info+key+'/',
     };
   },
-
-  render: function() {
-    return (
-      <ViewPager
-        style={this.props.style}
-        dataSource={this.state.dataSource}
-        renderPage={this._renderPage}
-        isLoop={true}
-        //autoPlay={true}
-      />
-    );
+  handlePressIn(e){
+      this.setState({
+          StartTime:e.nativeEvent.timeStamp,
+          X:e.nativeEvent.pageX,
+          Y:e.nativeEvent.pageY,
+      })
   },
-
-  _renderPage: function(
-    data: Object,
-    pageID: number | string,) {
-    return (
-      <Image
-        source={{uri: data}}
-        style={styles.page} />
-    );
+  handlePressOut(e){
+      let end = e.nativeEvent.timeStamp
+      let time = end - this.state.StartTime
+      let moveX = Math.abs(e.nativeEvent.pageX-this.state.X)
+      let moveY = Math.abs(e.nativeEvent.pageY-this.state.Y)
+      let move = moveX+moveY;
+      //alert('time:'+time+' move:'+move)  //time<80000000 move<40
+      if(move<40) {
+          //alert('index:'+this.state.index+' file:'+this.state.image_names[this.state.index]+' time:'+time+' move:'+move)
+          this.openPicModal();
+      }
   },
+  renderPages(){
+      return (
+          this.state.image_names.map((name,id)=>{
+              return (
+                <TouchableWithoutFeedback key={id} onPressIn={this.handlePressIn}  onPressOut={this.handlePressOut} >
+                  <View style={styles.slide} title={<Text numberOfLines={1}>{name}</Text>}>
+                    <Image resizeMode={'contain'} style={styles.image} source={{uri: this.state.host+name}} />
+                  </View>
+                </TouchableWithoutFeedback>
+              )
+          })
+      )
+  },
+  openPicModal() {
+    if(this.props.openModal) this.props.openModal();
+  },
+  render() {
+    //loop={true}
+    return (
+      <View>
+        <Swiper style={styles.wrapper} height={300} //loop={true}
+          onMomentumScrollEnd={(e, state, context)=>{ this.setState({ index:state.index}); this.props.onChange(this.state.image_names[state.index]) }}
+          dot={<View style={{backgroundColor:'rgba(0,0,0,.2)', width: 5, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
+          activeDot={<View style={{backgroundColor: '#000', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
+          paginationStyle={{
+            bottom: 3, left: null, right: 10,
+          }} >
+            { this.renderPages() }
+        </Swiper>
+      </View>
+    )
+  },
+/*
+  _onPressButton:function(id){
+    alert("id:"+id)
+  },
+*/
 });
 
 var styles = StyleSheet.create({
+  wrapper: {
+  },
+
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
   page: {
-    width: deviceWidth,
+    width: W,
+    //opacity:0,
+  },
+  image: {
+    flex: 1
+  },
+  modal: {
+    //flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    left:     0,
+    top:      0,
   },
 });
 
