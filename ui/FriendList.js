@@ -140,10 +140,10 @@ export default class ShareList extends Component {
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'',}} 
             leftButton={
-                <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
+                <Icon name={'ion-ios-search'} size={40} onPress={()=>{} }/>
             }
             rightButton={
-                <Icon name={'ion-ios-add'} size={48} onPress={() => alert('new!')}/>
+                <Icon name={'ion-ios-add'} size={48} onPress={()=>{}}/>
             } />
         <ListView 
             dataSource={this.dataSource} 

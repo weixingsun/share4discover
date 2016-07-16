@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 
 import Swiper from 'react-native-swiper'
-import Modal from 'react-native-modalbox'
 //import ViewPager from 'react-native-viewpager';
 import Global from '../io/Global'
 var {H, W} = Dimensions.get('window');

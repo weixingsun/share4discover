@@ -255,8 +255,11 @@ export default class FormInfo extends Component {
                                   <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> :
-                              <View style={styles.progress}>
-                                  <Icon style={{padding:0}} name={'ion-ios-checkmark-circle'} color={'green'} size={33} />
+                              <View style={styles.close,{flexDirection:'row'}}>
+                              <View style={{flex:1}}/>
+                              <View style={{ width:30,height:30,backgroundColor:'red',alignItems:'center',justifyContent:'center' }}>
+                                  <Icon style={{padding:0}} name={'ion-ios-close'} color={'white'} size={50} onPress={()=>this.deletePic(id)} />
+                              </View>
                               </View>
                             }
                         </Image>
@@ -276,6 +279,13 @@ export default class FormInfo extends Component {
             //alert(JSON.stringify(list))
             return this.showImages(list)
         }
+    }
+    deletePic(id){
+        let filename = this.state.form.pics[id]
+        //delete file from server
+        let pictures = this.state.form.pics
+        pictures.splice(id,1)
+        this.setState({form:{...this.state.form, pics:pictures}});
     }
     _upload(file) {
       //alert('uri:'+file.uri)
@@ -495,9 +505,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    //alignItems: 'flex-end',
-    //justifyContent: 'flex-end',
     //flexDirection: 'row',
     //width: 100
+  },
+  close: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    //backgroundColor: 'red',
+    //marginRight:2,
+    //width:20,
+    //height:20,
   },
 });

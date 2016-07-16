@@ -117,11 +117,6 @@ export default class Detail extends Component {
         if(!this.state.isMyMsg){
 	  return (
             <View style={{flexDirection:'row',}}>
-              <Icon
-                name={'ion-ios-expand'}
-                color={'aqua'}
-                size={33}
-                onPress={this.openZoom } />
               <View style={{width:40}} />
               <Icon
                 name={'ion-ios-mail-outline'}
@@ -134,30 +129,25 @@ export default class Detail extends Component {
           return (
             <View style={{flexDirection:'row',}}>
               {this.renderModal()}
-              <Icon
-                name={'ion-ios-expand'}
-                color={'aqua'}
-                size={40}
-                onPress={this.openZoom } />
-              <View style={{width:50}} />
+              <View style={{width:40}} />
               <Icon
                 name={'ion-ios-mail-outline'}
                 color={'orange'}
                 size={40}
                 onPress={this.onReply.bind(this) } />
-              <View style={{width:50}} />
+              <View style={{width:40}} />
               <Icon
                 name={'ion-ios-create-outline'}
                 color={'blue'}
                 size={40}
                 onPress={this.onEdit.bind(this) } />
-	      <View style={{width:50}} />
+	      <View style={{width:40}} />
               <Icon
                 name={'ion-ios-trash-outline'}
                 color={'red'}
                 size={40}
                 onPress={this.onDelete.bind(this) } />
-              <View style={{width:50}} />
+              <View style={{width:40}} />
               <Icon
                 name={'ion-ios-checkmark-circle-outline'}
                 color={'green'}
@@ -252,7 +242,7 @@ export default class Detail extends Component {
                 <View style={{width:width,}}>
                     <Icon 
                       name={'ion-ios-close-circle-outline'} 
-                      size={50} color={'red'} style={ Style.closeZoomButton} 
+                      size={40} color={'red'} style={ Style.closeZoomButton} 
                       onPress={this.closeZoom}/>
                 </View>
                 <Image resizeMode={'contain'} style={Style.modalZoom} source={{ uri:uri }} />
