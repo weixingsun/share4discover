@@ -257,8 +257,8 @@ export default class FormInfo extends Component {
                               </View> :
                               <View style={styles.close,{flexDirection:'row'}}>
                               <View style={{flex:1}}/>
-                              <View style={{ width:30,height:30,backgroundColor:'red',alignItems:'center',justifyContent:'center' }}>
-                                  <Icon style={{padding:0}} name={'ion-ios-close'} color={'white'} size={50} onPress={()=>this.deletePic(id)} />
+                              <View style={{ width:24,height:24,backgroundColor:'red',alignItems:'center',justifyContent:'center' }}>
+                                  <Icon style={{padding:0}} name={'ion-ios-close'} color={'white'} size={40} onPress={()=>this.deletePic(id)} />
                               </View>
                               </View>
                             }
@@ -270,7 +270,8 @@ export default class FormInfo extends Component {
         )
     }
     showPics(){
-        if(this.state.form.pics && this.state.form.pics.length>0){
+        //alert(JSON.stringify(this.state.form.pics))
+        if(this.state.form.pics && this.state.form.pics.length>0 && this.state.form.pics[0].length>0){
             let key = Global.getKeyFromMsg(this.state.form)
             let url = Global.host_image_info+key+'/'
             let list = this.state.form.pics.map((pic)=>{
@@ -281,11 +282,31 @@ export default class FormInfo extends Component {
         }
     }
     deletePic(id){
-        let filename = this.state.form.pics[id]
-        //delete file from server
         let pictures = this.state.form.pics
-        pictures.splice(id,1)
-        this.setState({form:{...this.state.form, pics:pictures}});
+        let filename = pictures[id]
+        let key = Global.getKeyFromMsg(this.state.form)
+        let self=this
+        Alert.alert(
+            "Delete",
+            "Do you want to delete this picture ? ",
+            [
+              {text:"Cancel" },
+              {text:"OK", onPress:()=>{
+                  //delete file from server
+                  self._deletePic(key,filename)
+                  pictures.splice(id,1)
+                  self.setState({form:{...self.state.form, pics:pictures}});
+              }},
+            ]
+        )
+    }
+    _deletePic(key,filename){
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', Global.host_image+'/svc.php');
+        //var formdata = new FormData();
+        //formdata.append('to_delete', filename);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("to_delete="+filename+"&key="+key);
     }
     _upload(file) {
       //alert('uri:'+file.uri)
@@ -293,7 +314,7 @@ export default class FormInfo extends Component {
       var index = this.state.form.pics?this.state.form.pics.length:0;
       var filename = Global.getKeyFromMsg(this.state.form)+'-'+time+'.jpg'
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', Global.host_image+'/upload.php');
+      xhr.open('POST', Global.host_image+'/svc.php');
       xhr.onload = () => {
         let uploadingJson = this.state.uploading
         uploadingJson[index]=100
@@ -332,7 +353,9 @@ export default class FormInfo extends Component {
       xhr.send(formdata);
       let uploadingJson = this.state.uploading
       uploadingJson[index]=0
-      let pics_arr = this.state.form.pics?this.state.form.pics:[]
+      let pics_arr = this.state.form.pics
+      if(pics_arr==null) pics_arr=[]
+      else if(pics_arr[0].length===0) pics_arr=[]
       this.setState({
           uploading:uploadingJson,
           form: { ...this.state.form, pics: [...pics_arr, time+'.jpg'],}

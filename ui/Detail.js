@@ -158,7 +158,7 @@ export default class Detail extends Component {
         }
     }
     showSlides(){
-        if(this.props.msg.pics != null) {
+        if(this.props.msg.pics != null && this.props.msg.pics.length>0 ) {
             return (
                 <DetailImg 
                     msg={this.props.msg} 
