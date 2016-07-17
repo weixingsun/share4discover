@@ -158,10 +158,14 @@ export default class Detail extends Component {
         }
     }
     showSlides(){
-        if(this.props.msg.pics != null && this.props.msg.pics.length>0 ) {
+        //alert(JSON.stringify(this.props.msg.pics))
+        if(this.props.msg.pics != null) {
+            let cond1 = (typeof this.props.msg.pics === 'string' && this.props.msg.pics.length>0)
+            let cond2 = (typeof this.props.msg.pics === 'object' && this.props.msg.pics[0].length>0)
+            if(cond1 || cond2)
             return (
                 <DetailImg 
-                    msg={this.props.msg} 
+                    msg={this.props.msg}
                     style={{backgroundColor:'transparent',height:height/2}} 
                     openModal={this.openZoom} 
                     onChange={(currName)=>{
