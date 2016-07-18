@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -56,6 +57,7 @@
 		6756CC43DDD145E6913D283D /* libRCTFBLogin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60FA7DB5926E467B8E9A702E /* libRCTFBLogin.a */; };
 		6C4E7798496A4B35BC5F42E9 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1228FFA492834439A23B40E6 /* FontAwesome.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9CB2CC3879F74B3D8DB95463 /* libRNGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F697FF3CD01428BAAC78C9A /* libRNGL.a */; };
 		A43A9855F2594823AEE5CE21 /* libRCTWeChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14833533DEAE4CE0BD2CD35A /* libRCTWeChat.a */; };
 		A57F3A3352FA45F08D586574 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E06EA3AB22D045CA9B68E8C1 /* Octicons.ttf */; };
 		A7FC4B9BFDAC4A0489EA80E9 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8C4D778226407FA5A6495D /* libRNI18n.a */; };
@@ -102,6 +104,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
+		};
+		030441531D3C50B6000A810A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 59E478140360434687258B76 /* RNGL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
+			remoteInfo = RNGL;
 		};
 		030487E01C94313F00AA2D90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -277,7 +286,9 @@
 		3ED6BB23709942E1BE36BCF6 /* libAirMaps.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAirMaps.a; sourceTree = "<group>"; };
 		40995B11D3DA48D2AF5496E5 /* RCTWeChat.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTWeChat.xcodeproj; path = "../node_modules/react-native-wechat/ios/RCTWeChat.xcodeproj"; sourceTree = "<group>"; };
 		4D04A9734ECC49849E7925EC /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		4F697FF3CD01428BAAC78C9A /* libRNGL.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGL.a; sourceTree = "<group>"; };
 		567DD0EA77294195BD789AFE /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		59E478140360434687258B76 /* RNGL.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGL.xcodeproj; path = "../node_modules/gl-react-native/ios/RNGL.xcodeproj"; sourceTree = "<group>"; };
 		5B0299193E924A8F9EF60BAC /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBLogin.xcodeproj; path = "../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; };
 		5DDC3EC57E7C4BE296BD8578 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		60FA7DB5926E467B8E9A702E /* libRCTFBLogin.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBLogin.a; sourceTree = "<group>"; };
@@ -347,6 +358,7 @@
 				B66AAC42A26F450EAD9F7D8D /* libRCTWeiboAPI.a in Frameworks */,
 				CE2590FA63724672859F8343 /* libRNImagePicker.a in Frameworks */,
 				A7FC4B9BFDAC4A0489EA80E9 /* libRNI18n.a in Frameworks */,
+				9CB2CC3879F74B3D8DB95463 /* libRNGL.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +401,14 @@
 			isa = PBXGroup;
 			children = (
 				00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0304413E1D3C50B6000A810A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				030441541D3C50B6000A810A /* libRNGL.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -563,6 +583,7 @@
 				965A3544CB674EE5AABE484C /* RCTBaiduMap.xcodeproj */,
 				AF54472551F448F38ACFC52A /* RNImagePicker.xcodeproj */,
 				A7C09B83E06B4D54839E592F /* RNI18n.xcodeproj */,
+				59E478140360434687258B76 /* RNGL.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -754,6 +775,10 @@
 					ProjectRef = B35CC15329FE49FCACF24682 /* ReactNativeLocalization.xcodeproj */;
 				},
 				{
+					ProductGroup = 0304413E1D3C50B6000A810A /* Products */;
+					ProjectRef = 59E478140360434687258B76 /* RNGL.xcodeproj */;
+				},
+				{
 					ProductGroup = 0348C8401D3121670008E022 /* Products */;
 					ProjectRef = A7C09B83E06B4D54839E592F /* RNI18n.xcodeproj */;
 				},
@@ -807,6 +832,13 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		030441541D3C50B6000A810A /* libRNGL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGL.a;
+			remoteRef = 030441531D3C50B6000A810A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		030487E11C94313F00AA2D90 /* libAirMaps.a */ = {
@@ -1042,6 +1074,7 @@
 					"$(SRCROOT)/../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/RNI18n",
+					"$(SRCROOT)/../node_modules/gl-react-native/ios",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1049,6 +1082,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"\"$(SRCROOT)/Share\"",
 					"\"$(SRCROOT)/Share\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
@@ -1092,6 +1126,7 @@
 					"$(SRCROOT)/../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/RNI18n",
+					"$(SRCROOT)/../node_modules/gl-react-native/ios",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1099,6 +1134,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"\"$(SRCROOT)/Share\"",
 					"\"$(SRCROOT)/Share\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
@@ -1162,6 +1198,7 @@
 					"$(SRCROOT)/../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/RNI18n",
+					"$(SRCROOT)/../node_modules/gl-react-native/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1215,6 +1252,7 @@
 					"$(SRCROOT)/../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-i18n/RNI18n",
+					"$(SRCROOT)/../node_modules/gl-react-native/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

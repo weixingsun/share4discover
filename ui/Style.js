@@ -263,9 +263,12 @@ module.exports = {
   },
   modalZoom:{
      position: 'absolute',
-     padding:10,
-     top: 66,
-     width:x-20,
-     height:y-80
+     //padding:10,
+     //width:x,
+     //height:y,
+  },
+  close: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
   },
 };

@@ -16,6 +16,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
 import com.keyee.datetime.*;
+import com.projectseptember.RNGL.RNGLPackage;
 
 import android.app.Application;
 import android.util.Log;
@@ -64,6 +65,7 @@ public class MainApplication extends Application implements ReactApplication {
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),
+        new RNGLPackage(),
         new ReactMapPackage(),  //BaiduMap
         new MapsPackage()   //GoogleMap
       );

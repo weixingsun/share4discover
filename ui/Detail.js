@@ -1,9 +1,11 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
 import {Alert, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
-import {Icon} from './Icon'
+import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
+import {ImageCrop} from 'react-native-image-cropper'
+//import ZoomableImage from './ZoomableImage2';
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -100,6 +102,9 @@ export default class Detail extends Component {
     }
     componentWillMount(){
         //alert(JSON.stringify(this.props.msg))
+        getImageSource('ion-ios-close', 40, 'white').then((source) => {
+            this.setState({close_image:source})
+        });
 	this.checkMyMsg(this.props.msg)
     }
     checkMyMsg(msg){
@@ -128,7 +133,6 @@ export default class Detail extends Component {
         }else{
           return (
             <View style={{flexDirection:'row',}}>
-              {this.renderModal()}
               <View style={{width:40}} />
               <Icon
                 name={'ion-ios-mail-outline'}
@@ -158,7 +162,6 @@ export default class Detail extends Component {
         }
     }
     showSlides(){
-        //alert(JSON.stringify(this.props.msg.pics))
         if(this.props.msg.pics != null) {
             let cond1 = (typeof this.props.msg.pics === 'string' && this.props.msg.pics.length>0)
             let cond2 = (typeof this.props.msg.pics === 'object' && this.props.msg.pics[0].length>0)
@@ -235,21 +238,30 @@ export default class Detail extends Component {
     renderModal(){
       let key = Global.getKeyFromMsg(this.props.msg);
       let uri = Global.host_image_info+key+'/'+this.state.image_modal_name;
-      //alert('uri:'+uri)
       return (
         <Modal 
-            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
-                //transform: [{scale: this.state.scaleAnimation}]
+            //style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
+            //transform: [{scale: this.state.scaleAnimation}]
             visible={this.state.show_pic_modal}
-          >
+        >
             <View>
-                <View style={{width:width,}}>
-                    <Icon 
-                      name={'ion-ios-close-circle-outline'} 
-                      size={40} color={'red'} style={ Style.closeZoomButton} 
-                      onPress={this.closeZoom}/>
-                </View>
-                <Image resizeMode={'contain'} style={Style.modalZoom} source={{ uri:uri }} />
+                <ImageCrop ref={'cropper'}
+                    image={uri}
+                    cropHeight={Style.DEVICE_HEIGHT}
+                    cropWidth={Style.DEVICE_WIDTH}
+                    zoom={0} maxZoom={80} minZoom={0}
+                    panToMove={true} pinchToZoom={true}
+                    //onClose={this.closeZoom}
+                />
+                <TouchableHighlight
+                    onPress={this.closeZoom}
+                    style={{ 
+                             width:40,height:40,position:'absolute', top:15,right:5,
+                             alignItems:'center',justifyContent:'center', backgroundColor: 'black' 
+                    }}
+                >
+                        <Image style={{width:20,height:20,margin:5}} source={this.state.close_image} />
+                </TouchableHighlight>
             </View>
         </Modal>
       )
@@ -260,6 +272,7 @@ export default class Detail extends Component {
 
         return (
             <View style={{flex:1}}>
+                {this.renderModal()}
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>

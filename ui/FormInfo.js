@@ -1,7 +1,7 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
 import {ActivityIndicator, Alert, Image, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import {Icon} from './Icon'
+import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import ExNavigator from '@exponent/react-native-navigator';
 import NavigationBar from 'react-native-navbar';
@@ -174,6 +174,9 @@ export default class FormInfo extends Component {
     componentWillMount(){
         this.initKeys();
         this.processProps();
+        getImageSource('ion-ios-close', 40, 'white').then((source) => {
+            this.setState({close_image:source})
+        });
     }
     processProps(){
         if(!this.props.msg){
@@ -255,11 +258,13 @@ export default class FormInfo extends Component {
                                   <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> :
-                              <View style={styles.close,{flexDirection:'row'}}>
+                              <View style={Style.close,{height:25,flexDirection:'row'}}>
                               <View style={{flex:1}}/>
-                              <View style={{ width:24,height:24,backgroundColor:'red',alignItems:'center',justifyContent:'center' }}>
-                                  <Icon style={{padding:0}} name={'ion-ios-close'} color={'white'} size={40} onPress={()=>this.deletePic(id)} />
-                              </View>
+                              <TouchableHighlight 
+                                  onPress={()=>this.deletePic(id)}
+                                  style={{ width:25,height:25,backgroundColor:'black',alignItems:'center',justifyContent:'center' }}>
+                                  <Image style={{width:16,height:16,margin:5}} source={this.state.close_image} />
+                              </TouchableHighlight>
                               </View>
                             }
                         </Image>
@@ -312,7 +317,7 @@ export default class FormInfo extends Component {
       //alert('uri:'+file.uri)
       let time = new Date().getTime()
       var index = this.state.form.pics?this.state.form.pics.length:0;
-      var filename = Global.getKeyFromMsg(this.state.form)+'-'+time+'.jpg'
+      var filename = Global.getKeyFromMsg(this.state.form)+'-'+time+'.png'
       var xhr = new XMLHttpRequest();
       xhr.open('POST', Global.host_image+'/svc.php');
       xhr.onload = () => {
@@ -340,7 +345,7 @@ export default class FormInfo extends Component {
         //})
       };
       var formdata = new FormData();
-      formdata.append('image', {uri:file.uri, type:'image/jpg', name:filename });
+      formdata.append('image', {uri:file.uri, type:'image/png', name:filename });
       //key= car:lat,lng:ctime
       xhr.upload.onprogress = (event) => {
         //console.log('upload onprogress', event);
@@ -358,7 +363,7 @@ export default class FormInfo extends Component {
       else if(pics_arr[0].length===0) pics_arr=[]
       this.setState({
           uploading:uploadingJson,
-          form: { ...this.state.form, pics: [...pics_arr, time+'.jpg'],}
+          form: { ...this.state.form, pics: [...pics_arr, time+'.png'],}
       });
     }
     showActionIcons(){
@@ -530,13 +535,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //flexDirection: 'row',
     //width: 100
-  },
-  close: {
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-    //backgroundColor: 'red',
-    //marginRight:2,
-    //width:20,
-    //height:20,
   },
 });

@@ -6,6 +6,7 @@ import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
+import com.projectseptember.RNGL.RNGLPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
