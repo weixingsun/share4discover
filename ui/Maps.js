@@ -25,21 +25,22 @@ export default class Maps extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
-	typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
+        typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
         ccid:0,
         circles: [],
         //initialPosition: null,
         //lastPosition: null,
         region:this.props.region,
-	download:true,
+        download:true,
         gps: this.props.gps,
         reload:false,
         showTypes:false,
-	showPlaceSearch: false,
-	markers:[],
+        showPlaceSearch: false,
+        markers:[],
+        grantedPermissions:{},
       };
-      this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION'];
+      this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION'];
       this.msg = this.props.msg;
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
@@ -57,16 +58,17 @@ export default class Maps extends Component {
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
           //console.log(name+" Granted!", result);
-          // now you can set the listenner to watch the user geo location
+          let perm = this.state.grantedPermissions;
+          perm[name] = true
+          this.setState({grantedPermissions:perm})
         }, (result) => {
-          console.log(name+" Not Granted!");
-          console.log(result);
+          //alert('Please grant location permission in settings')
         });
     }
     permission(){ 
         if(Platform.OS === 'android' && Platform.Version > 22){
             this.singlePermission('ACCESS_FINE_LOCATION')
-            this.singlePermission('ACCESS_COARSE_LOCATION')
+            //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
     _handleAppStateChange(state){  //active -- inactive -- background
@@ -368,6 +370,9 @@ export default class Maps extends Component {
         );
     }
     renderMap(){
+      let perm_nbr = Object.keys(this.state.grantedPermissions).length
+      //alert('Permission# '+perm_nbr)
+      if(perm_nbr < this.permissions.length) return null
       switch(Global.MAP) {
           case 'GoogleMap':
               return this.renderGmap()
