@@ -203,10 +203,7 @@ export default class FormInfo extends Component {
     }
     processProps(){
         let logins = Global.getLoginStr(Global.logins)
-        //if(logins.length<1) {
-        //    alert('Please login to publish')
-        //    this.props.navigator.pop()
-        //}
+        GiftedFormManager.reset('newInfoForm');
         if(!this.props.msg){
             var myDefaults = {
               title: '', content: '', address: '',
@@ -221,8 +218,8 @@ export default class FormInfo extends Component {
             //alert('processProps:'+JSON.stringify(this.props.msg))
             var myDefaults=this.props.msg;
             //var typekey = 'type{'+this.props.msg.type+'}';
-            //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[typekey] = true;
+            //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[askkey]  = true;
             myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
             myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
@@ -421,7 +418,7 @@ export default class FormInfo extends Component {
         //alert(JSON.stringify(this.state.form))
     }
     render(){
-        alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
+        //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         //alert('form.askTitle:'+this.state.form.askTitle+'\nask:'+this.state.form.ask+'\ntype:'+typeof this.props.msg.ask)
@@ -453,7 +450,7 @@ export default class FormInfo extends Component {
                         <GiftedForm.ModalWidget
                             title='Ask/Offer'
                             name='ask'
-                            displayValue='askTitle'
+                            display={this.state.form.askTitle}
                             value={this.state.form.ask}
                             validationResults={this.state.validationResults}
                         >
@@ -466,7 +463,8 @@ export default class FormInfo extends Component {
                         <GiftedForm.ModalWidget
                             title='Type'
                             name='type'
-                            displayValue='typeTitle'
+                            //displayValue='typeTitle'
+                            display={this.state.form.typeTitle}
                             value={this.state.form.type}
                             validationResults={this.state.validationResults}
                         >
@@ -555,7 +553,7 @@ export default class FormInfo extends Component {
                                   this.onSubmit(values)
                                   postSubmit();
                                 }else{
-                                  //alert(JSON.stringify(validationResults.results))
+                                  alert(JSON.stringify(validationResults.results))
                                 }
                             }}
                         />
