@@ -21,7 +21,8 @@ var {H, W} = Dimensions.get('window');
 
 var TopScreen = React.createClass({
   getInitialState: function() {
-    let key = Global.getKeyFromMsg(this.props.msg)
+    //let key = Global.getKeyFromMsg(this.props.msg)
+    let key = this.props.msg.ctime
     //alert(Global.host_image_info+key+'\n'+this.props.msg.pics+'\ntype:'+typeof this.props.msg.pics)
     let IMGS = this.props.msg.pics.split(',')
     return {

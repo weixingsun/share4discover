@@ -18,7 +18,7 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
         this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
-        this.images = this.props.msg.pics.split(',')
+        this.images = this.props.msg.pics?this.props.msg.pics.split(','):[]
         this.state={ 
             reply: '',
             reply_height: 35,
@@ -164,7 +164,7 @@ export default class Detail extends Component {
     showSlides(){
         if(this.props.msg.pics != null) {
             let cond1 = (typeof this.props.msg.pics === 'string' && this.props.msg.pics.length>0)
-            let cond2 = (typeof this.props.msg.pics === 'object' && this.props.msg.pics[0].length>0)
+            let cond2 = (typeof this.props.msg.pics === 'object' && this.props.msg.pics[0]!=null && this.props.msg.pics[0].length>0)
             if(cond1 || cond2)
             return (
                 <DetailImg 
@@ -236,8 +236,8 @@ export default class Detail extends Component {
 	)
     }
     renderModal(){
-      let key = Global.getKeyFromMsg(this.props.msg);
-      let uri = Global.host_image_info+key+'/'+this.state.image_modal_name;
+      //let key = Global.getKeyFromMsg(this.props.msg);
+      let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
       return (
         <Modal 
             //style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 

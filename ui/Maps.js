@@ -405,6 +405,7 @@ export default class Maps extends Component {
     }
     renderBmap(){
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
+      //alert(JSON.stringify(this.state.markers))
       return (
             <BMapView
                 style={Style.map}

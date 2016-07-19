@@ -19,6 +19,7 @@ export default class FormInfo extends Component {
         super(props);
         this.ctime = +new Date();
         this.state={ 
+            pics_changed:false,
             uploading:[],
             add_fields:{
               Price:   'Price:num',
@@ -26,7 +27,9 @@ export default class FormInfo extends Component {
               Destination: 'Destination:str',
             },
             form:{},
+            grantedPermissions:{},
         };
+        this.permissions=['CAMERA']
         this.validators={
               title:{
                 title:'Title',
@@ -91,6 +94,22 @@ export default class FormInfo extends Component {
         }
         // price: t.maybe(t.Number),
     }
+    singlePermission(name){
+        requestPermission('android.permission.'+name).then((result) => {
+          //console.log(name+" Granted!", result);
+          let perm = this.state.grantedPermissions;
+          perm[name] = true
+          this.setState({grantedPermissions:perm})
+        }, (result) => {
+          //alert('Please grant location permission in settings')
+        });
+    }
+    permission(){
+        if(Platform.OS === 'android' && Platform.Version > 22){
+            this.singlePermission('CAMERA')
+            this.singlePermission('WRITE_EXTERNAL_STORAGE')
+        }
+    }
     initKeys(){
         this.map=Global.MAP
         this.mcode = 'com.share.2016';    //ios mcode
@@ -135,19 +154,24 @@ export default class FormInfo extends Component {
         })
     }
     fixFormData(values){
-        if(values.ask  && typeof values.ask ==='object')   values.ask = values.ask[0]
+        if(values.owner == null) {
+          alert('Please login to publish, go to settings')
+          return
+        }
+        if(values.hasOwnProperty('ask')  && typeof values.ask ==='object')   values.ask = values.ask[0]
         if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
         else values.ask = false
-        if(values.type && typeof values.type ==='object')  values.type = values.type[0]
+        if(values.hasOwnProperty('type') && typeof values.type ==='object')  values.type = values.type[0]
         values.type=values.type.toLowerCase()
-        if(values.pics && typeof values.pics ==='object')  values.pics = values.pics.join(',')
-        if(values.askTitle) delete values.askTitle
-        if(values.typeTitle) delete values.typeTitle
-        if(values.dest && values.dest.length===0) delete values.dest
-        if(values.pics && values.pics.length===0) delete values.pics
-        //alert(JSON.stringify(values))
+        if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
+        if(values.hasOwnProperty('askTitle')) delete values.askTitle
+        if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
+        //if(values.hasOwnProperty('dest') && values.dest.length===0) delete values.dest
+        //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
+        //alert('dest:'+values.dest+'len:'+values.dest.length+'\npics:'+values.pics+'len:'+values.pics.length)
+        //alert(JSON.stringify(values))
     }
     onSubmit(values) {
         var self = this;
@@ -157,7 +181,7 @@ export default class FormInfo extends Component {
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-        //alert(JSON.stringify(values))
+        //self.fixFormData(values);
         Alert.alert(
             "Publish",
             "Do you want to publish this form ? ",
@@ -174,16 +198,22 @@ export default class FormInfo extends Component {
     componentWillMount(){
         this.initKeys();
         this.processProps();
+        //alert('componentWillMount()'+JSON.stringify(this.state.form.pics))
         getImageSource('ion-ios-close', 40, 'white').then((source) => {
             this.setState({close_image:source})
         });
     }
     processProps(){
+        let logins = Global.getLoginStr(Global.logins)
+        if(logins.length<1) {
+            alert('Please login to publish')
+            this.props.navigator.pop()
+        }
         if(!this.props.msg){
             var myDefaults = {
               title: '', content: '', address: '',
               type:  '',  ask: 'true',
-              owner: Global.getLoginStr(Global.logins),
+              owner: logins,
               phone: '',  ctime: this.ctime, time:  '',
               lat:   '',  lng:   '',  price: '',
               dest:  '', pics:  [],
@@ -200,6 +230,7 @@ export default class FormInfo extends Component {
             myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
             //alert('processProps:'+JSON.stringify(myDefaults))
+            this.ctime=parseInt(this.props.msg.ctime)
             this.setState({ form: myDefaults })
         }
     }
@@ -207,10 +238,14 @@ export default class FormInfo extends Component {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     openImagePicker(){
-        if(!this.key){
-            alert('Please select type, ask/offer and address')
-            return
-        }
+        //if(!this.key){  //type:lat,lng:ctime
+        //    alert('Please select type, ask/offer and address')
+        //    return
+        //}
+        //let perm_nbr = Object.keys(this.state.grantedPermissions).length
+        //if(perm_nbr< this.permissions.length) {
+            
+        //}
         const options = {
           title: 'Add photo into this form',
           //quality: 0.5,
@@ -277,8 +312,8 @@ export default class FormInfo extends Component {
     showPics(){
         //alert(JSON.stringify(this.state.form.pics))
         if(this.state.form.pics && this.state.form.pics.length>0 && this.state.form.pics[0].length>0){
-            let key = Global.getKeyFromMsg(this.state.form)
-            let url = Global.host_image_info+key+'/'
+            //let key = Global.getKeyFromMsg(this.state.form)
+            let url = Global.host_image_info+this.ctime+'/'
             let list = this.state.form.pics.map((pic)=>{
                 return {uri: url+pic}
             })
@@ -289,7 +324,7 @@ export default class FormInfo extends Component {
     deletePic(id){
         let pictures = this.state.form.pics
         let filename = pictures[id]
-        let key = Global.getKeyFromMsg(this.state.form)
+        //let key = Global.getKeyFromMsg(this.state.form)
         let self=this
         Alert.alert(
             "Delete",
@@ -298,9 +333,9 @@ export default class FormInfo extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   //delete file from server
-                  self._deletePic(key,filename)
+                  //self._deletePic(this.ctime,filename)
                   pictures.splice(id,1)
-                  self.setState({form:{...self.state.form, pics:pictures}});
+                  self.setState({pics_changed:true, form:{...self.state.form, pics:pictures}});
               }},
             ]
         )
@@ -317,7 +352,8 @@ export default class FormInfo extends Component {
       //alert('uri:'+file.uri)
       let time = new Date().getTime()
       var index = this.state.form.pics?this.state.form.pics.length:0;
-      var filename = Global.getKeyFromMsg(this.state.form)+'-'+time+'.png'
+      var filename = this.ctime+'-'+time+'.png'
+      //alert('filename='+filename+'\ntype='+this.state.form.type)
       var xhr = new XMLHttpRequest();
       xhr.open('POST', Global.host_image+'/svc.php');
       xhr.onload = () => {
@@ -346,7 +382,6 @@ export default class FormInfo extends Component {
       };
       var formdata = new FormData();
       formdata.append('image', {uri:file.uri, type:'image/png', name:filename });
-      //key= car:lat,lng:ctime
       xhr.upload.onprogress = (event) => {
         //console.log('upload onprogress', event);
         if (event.lengthComputable) {
@@ -360,9 +395,12 @@ export default class FormInfo extends Component {
       uploadingJson[index]=0
       let pics_arr = this.state.form.pics
       if(pics_arr==null) pics_arr=[]
-      else if(pics_arr[0].length===0) pics_arr=[]
+      else if(typeof pics_arr==='string' && pics_arr==='') pics_arr=[]
+      else if(typeof pics_arr==='object' && pics_arr.length===1 && pics_arr[0].length===0) pics_arr=[]
+      //alert('pics_arr:'+JSON.stringify(pics_arr)+'\nnew_pic: '+this.ctime+'/'+time+'.png')
       this.setState({
           uploading:uploadingJson,
+          //pics_changed:true,      new pic will consistent if not submit/publish
           form: { ...this.state.form, pics: [...pics_arr, time+'.png'],}
       });
     }
@@ -376,11 +414,11 @@ export default class FormInfo extends Component {
     }
     //<Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
     handleValueChange(values) {
-        if( values.type && values.lat && values.lng && values.ctime ){
+        if( typeof values.type==='string'&&values.type && values.lat && values.lng && values.ctime ){
           this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
         }
         //this.setState({ form: values })
-        //alert(JSON.stringify(values))
+        //alert(JSON.stringify(this.state.form))
     }
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
@@ -392,7 +430,13 @@ export default class FormInfo extends Component {
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                       <Icon 
+                           name={"ion-ios-arrow-round-back"} 
+                           color={'#333333'} size={46} 
+                           onPress={() => {
+                               if(this.state.pics_changed) alert('Please submit your changes')
+                               else this.props.navigator.pop() 
+                           }} />
                      </View>
                    }
                    rightButton={ this.showActionIcons() }
