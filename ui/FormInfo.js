@@ -59,36 +59,35 @@ export default class FormInfo extends Component {
                 title:'Type',
                 validate:[{
                   validator:(...args) => {
-                      if (args[0] === undefined) {
+                      //console.log('type.validator.args_type=object:'+JSON.stringify(args))
+                      if (args[0] === '') {
                          return false;
                       }
                       return true;
                   },
-                  message:'{TITLE} is required'
+                  message:'Type is required'
                 }]
               },
               ask:{
                 title:'Ask/Offer',
                 validate:[{
                   validator:(...args) => {
-                      if (args[0] === undefined) {
+                      //if (args[0] === undefined) {
+                      //console.log('ask.validator.args_type=object:'+JSON.stringify(args))
+                      if (args[0] === '') {
                          return false;
                       }
                       return true;
                   },
-                  message:'{TITLE} is required'
+                  message:'Ask/Offer is required'
                 }]
               },
-              lat:{
+              address:{
                 title:'Address',
                 validate:[{
-                  validator:(...args) => {
-                      if (args === undefined) {
-                         return false;
-                      }
-                      return true;
-                  },
-                  message:'{TITLE} is invalid'
+                  validator:'isLength',
+                  arguments:[10,255],
+                  message:'Address is invalid'
                 }]
               },
         }
@@ -198,7 +197,6 @@ export default class FormInfo extends Component {
     componentWillMount(){
         this.initKeys();
         this.processProps();
-        //alert('componentWillMount()'+JSON.stringify(this.state.form.pics))
         getImageSource('ion-ios-close', 40, 'white').then((source) => {
             this.setState({close_image:source})
         });
@@ -212,7 +210,7 @@ export default class FormInfo extends Component {
         if(!this.props.msg){
             var myDefaults = {
               title: '', content: '', address: '',
-              type:  '',  ask: 'true',
+              type:  '',  ask: '',
               owner: logins,
               phone: '',  ctime: this.ctime, time:  '',
               lat:   '',  lng:   '',  price: '',
@@ -228,6 +226,8 @@ export default class FormInfo extends Component {
             //myDefaults[askkey]  = true;
             myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
             myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
+            //myDefaults['type'] = [this.props.msg.type]
+            //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
             //alert('processProps:'+JSON.stringify(myDefaults))
             this.ctime=parseInt(this.props.msg.ctime)
@@ -421,7 +421,7 @@ export default class FormInfo extends Component {
         //alert(JSON.stringify(this.state.form))
     }
     render(){
-        //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
+        alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         //alert('form.askTitle:'+this.state.form.askTitle+'\nask:'+this.state.form.ask+'\ntype:'+typeof this.props.msg.ask)
@@ -454,7 +454,8 @@ export default class FormInfo extends Component {
                             title='Ask/Offer'
                             name='ask'
                             displayValue='askTitle'
-                            value={this.state.form.askTitle}
+                            value={this.state.form.ask}
+                            validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='ask' title='Ask/Offer' multiple={false}>
@@ -466,7 +467,8 @@ export default class FormInfo extends Component {
                             title='Type'
                             name='type'
                             displayValue='typeTitle'
-                            value={this.state.form.typeTitle}
+                            value={this.state.form.type}
+                            validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
@@ -483,6 +485,7 @@ export default class FormInfo extends Component {
                             clearButtonMode='while-editing'
                             displayValue='title'
                             value={this.state.form.title}
+                            validationResults={this.state.validationResults}
                         />
                         <GiftedForm.TextInputWidget
                             name='phone'
@@ -491,6 +494,7 @@ export default class FormInfo extends Component {
                             clearButtonMode='while-editing'
                             displayValue='phone'
                             value={this.state.form.phone}
+                            validationResults={this.state.validationResults}
                         />
                         <GiftedForm.TextInputWidget
                             name='price'
@@ -507,6 +511,7 @@ export default class FormInfo extends Component {
                             clearButtonMode='while-editing'
                             displayValue='address'
                             value={this.state.form.address}
+                            validationResults={this.state.validationResults}
                             map={this.map}
                             query={{
                                 ak:this.ak,mcode:this.mcode,
@@ -521,6 +526,7 @@ export default class FormInfo extends Component {
                             displayValue='content'
                             //scrollEnabled={true}
                             value={this.state.form.content}
+                            validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget/>
                             <GiftedForm.TextAreaWidget
@@ -544,9 +550,12 @@ export default class FormInfo extends Component {
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
+                                this.setState({ validationResults:validationResults.results })
                                 if (isValid === true) {
                                   this.onSubmit(values)
                                   postSubmit();
+                                }else{
+                                  //alert(JSON.stringify(validationResults.results))
                                 }
                             }}
                         />
