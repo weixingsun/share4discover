@@ -233,7 +233,9 @@ export default class Maps extends Component {
             }
             rightButton={
               <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={40} onPress={this.downloadMsg.bind(this)} />
+                {this.renderGpsIcon()}
+                <View style={{width:40}} />
+                {this.renderDownloadIcon()}
                 <View style={{width:40}} />
                 {this.renderAddIcon()}
                 <View style={{width:10}} />
@@ -242,6 +244,17 @@ export default class Maps extends Component {
           />
         );
       }
+    }
+    renderDownloadIcon(){
+        let c = '#dddddd'
+        if(this.state.download) c = '#3B3938'
+        return <Icon name={'ion-ios-cloud-download-outline'} color={c} size={40} onPress={this.downloadMsg.bind(this)} />
+    }
+    renderGpsIcon(){
+      let c = '#222222'
+      if(!this.state.gps)
+          c = '#CCCCCC'
+      return (<Icon name={"ion-ios-navigate-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
       if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
@@ -288,21 +301,11 @@ export default class Maps extends Component {
         this.enableDownload(true)
         this.clearMarkers()
     }
-    getDownloadIcon(flag){
-        if(flag) return '#3B3938'
-        else return '#dddddd'
-    }
-    renderDetailOverlay() {
+    /*renderDetailOverlay() {
       if(this.msg!=null){
         return ( <Overlay style={Style.detail} msg={this.msg}/>  );
       }
-    }
-    renderGpsIcon(){
-      if(this.state.gps) 
-          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#222222'} size={40} onPress={this.switchGps.bind(this)} />);
-      else 
-          return (<Icon style={Style.gpsIcon} name={"ion-ios-navigate-outline"} color={'#CCCCCC'} size={40} onPress={this.switchGps.bind(this)} />);
-    }
+    }*/
     onRegionChange(r) {
       this.setState({region: r});
       Store.save('region', r);
@@ -369,8 +372,6 @@ export default class Maps extends Component {
           <View style={{flex:1}}>
             { this.renderNavBar() }
             { this.renderMap() }
-            { this.renderGpsIcon() }
-            { this.renderDetailOverlay() }
           </View>
         );
     }
