@@ -521,7 +521,7 @@ export default class FormInfo extends Component {
                         <GiftedForm.ModalWidget
                             name='content'
                             title='Content'
-                            displayValue='content'
+                            display={this.state.form.content}
                             //scrollEnabled={true}
                             value={this.state.form.content}
                             validationResults={this.state.validationResults}
@@ -553,7 +553,7 @@ export default class FormInfo extends Component {
                                   this.onSubmit(values)
                                   postSubmit();
                                 }else{
-                                  alert(JSON.stringify(validationResults.results))
+                                  //alert(JSON.stringify(validationResults.results))
                                 }
                             }}
                         />
