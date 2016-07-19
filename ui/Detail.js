@@ -159,6 +159,7 @@ export default class Detail extends Component {
                 color={'green'}
                 size={40}
                 onPress={this.onClose.bind(this) } />
+              <View style={{width:10}} />
             </View>
           )
         }

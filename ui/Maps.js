@@ -212,7 +212,7 @@ export default class Maps extends Component {
         return (
           <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
             leftButton={
-                <Icon name={"ion-ios-arrow-round-back"} color={'#3B3938'} size={40} onPress={this.back.bind(this)} />
+                <Icon name={"ion-ios-arrow-round-back"} color={'#3B3938'} size={44} onPress={this.back.bind(this)} />
             }
           />);
       }else{
@@ -220,7 +220,7 @@ export default class Maps extends Component {
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row'}}>
-                <Icon name={Global.TYPE_ICONS[this.state.type]} color={'#3B3938'} size={36} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={Global.TYPE_ICONS[this.state.type]} color={'#3B3938'} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Icon name={'ion-ios-arrow-down'} color={'#3B3938'} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Modal 
                     //style={{top:0,bottom:50,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
@@ -233,14 +233,19 @@ export default class Maps extends Component {
             }
             rightButton={
               <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={36} onPress={this.downloadMsg.bind(this)} />
+                <Icon name={'ion-ios-cloud-download-outline'} color={this.getDownloadIcon(this.state.download)} size={40} onPress={this.downloadMsg.bind(this)} />
                 <View style={{width:40}} />
-                <Icon name={'ion-ios-add'} size={50} onPress={() => this.props.navigator.push({component: FormInfo}) }/>
+                {this.renderAddIcon()}
+                <View style={{width:10}} />
               </View>
             }
           />
         );
       }
+    }
+    renderAddIcon(){
+      if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
+      else return <Icon name={'ion-ios-add'} size={50} color={'black'} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
     }
     renderTypesModal(){
         return (

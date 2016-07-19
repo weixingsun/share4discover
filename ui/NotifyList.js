@@ -73,7 +73,7 @@ export default class NotifyList extends Component {
       </TouchableHighlight>
     );
   }
-  getAddIcon(){
+  renderActionIcon(){
     //alert(this.props.mainlogin)
     if(this.props.mainlogin==='') 
       return (
@@ -85,7 +85,7 @@ export default class NotifyList extends Component {
     else{
       return (
             <View style={{flexDirection:'row',}}>
-                <Icon style={{marginRight:40}} name={'ion-ios-add'} size={50} color={'black'} 
+                <Icon name={'ion-ios-add'} size={50} color={'black'} 
                     onPress={() => this.props.navigator.push({ component: FormInfo, passProps: {navigator:this.props.navigator} })}
                 />
                 <View style={{width:20}} />
@@ -102,7 +102,7 @@ export default class NotifyList extends Component {
             //leftButton={
             //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
             //}
-            rightButton= {this.getAddIcon()}
+            rightButton= {this.renderActionIcon()}
 	/>
         <ListView 
             dataSource={ds} 
