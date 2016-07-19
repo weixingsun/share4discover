@@ -109,16 +109,18 @@ export default class Detail extends Component {
     }
     checkMyMsg(msg){
         this.checkSns(this.props.mainlogin, msg.owner)
+        //alert('owner:'+msg.owner+'\nmainlogin:'+this.props.mainlogin)
     }
     checkSns(mainlogin,owner){
         var self = this
-        if(owner.indexOf(mainlogin) > -1)
+        if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
             self.setState({isMyMsg:true})
     }
     getSNSIcon(type){
         return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
     }
     showActionIcons(){
+        //alert('isMyMsg:'+this.state.isMyMsg)
         if(!this.state.isMyMsg){
 	  return (
             <View style={{flexDirection:'row',}}>

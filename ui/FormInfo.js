@@ -205,10 +205,10 @@ export default class FormInfo extends Component {
     }
     processProps(){
         let logins = Global.getLoginStr(Global.logins)
-        if(logins.length<1) {
-            alert('Please login to publish')
-            this.props.navigator.pop()
-        }
+        //if(logins.length<1) {
+        //    alert('Please login to publish')
+        //    this.props.navigator.pop()
+        //}
         if(!this.props.msg){
             var myDefaults = {
               title: '', content: '', address: '',
