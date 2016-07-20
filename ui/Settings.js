@@ -57,7 +57,7 @@ export default class Settings extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.map_list = ['GoogleMap','BaiduMap'];
+        this.map_list = [Global.GoogleMap,Global.BaiduMap];
         this.place_list = [];
         this.state = {
             isLoading:true,

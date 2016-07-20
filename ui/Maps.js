@@ -4,6 +4,7 @@ import {AppState, DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSh
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
+import KKLocation from 'react-native-baidumap/KKLocation';
 import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
@@ -24,6 +25,7 @@ export default class Maps extends Component {
     constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.pos = null;
       this.state = {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
@@ -94,13 +96,21 @@ export default class Maps extends Component {
       AppState.removeEventListener('change', this._handleAppStateChange);
     }
     turnOnGps(){
-      this.watchID = navigator.geolocation.watchPosition(
-        (position) => {
-          //this.updateMyPos(position.coords);
-        },
-        (error) => console.log(error.message),
-        {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
-      );
+      let self=this
+      if(Global.MAP===Global.GoogleMap){
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+            self.pos=position.coords
+          },
+          (error) => console.log(error.message),
+          {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
+        );
+      }else if(Global.MAP===Global.BaiduMap){
+        this.watchID = KKLocation.watchPosition((position) => {
+          //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+          self.pos=position.coords
+        });
+      }
       this.setState({gps:true});
     }
     turnOffGps(){
@@ -168,8 +178,9 @@ export default class Maps extends Component {
       this.refs.gmap.animateToRegion(p);
     }
     moveToMe(){
-      //move(p)
-      alert('moveToMe')
+      //bmap:{timestamp,{coords:{heading,accuracy,longitude,latitude}}}
+      if(this.pos!=null)
+        this.refs.bmap.zoomToLocs([[this.pos.latitude, this.pos.longitude]]);
     }
     moveBmap(p){
       this.refs.bmap.animateTo(p);
@@ -371,7 +382,7 @@ export default class Maps extends Component {
       });
     }
     renderFocusIcon(){
-      if(Global.MAP==='BaiduMap'){
+      if(Global.MAP===Global.BaiduMap && this.state.gps){
         return (
           <Icon name={"ion-ios-locate-outline"} style={Style.gpsIcon} color={'black'} size={40} onPress={this.moveToMe.bind(this)} />
         )
@@ -393,10 +404,10 @@ export default class Maps extends Component {
       //alert('Permission# '+perm_nbr)
       if(perm_nbr < this.permissions.length) return null
       switch(Global.MAP) {
-          case 'GoogleMap':
+          case Global.GoogleMap:
               return this.renderGmap()
               break;
-          case 'BaiduMap':
+          case Global.BaiduMap:
               return this.renderBmap()
               break;
           default:

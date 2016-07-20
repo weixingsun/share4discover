@@ -73,6 +73,9 @@ function loadLang(lang){
   //require('moment/locale/zh-cn')
 }
 module.exports = {
+    GoogleMap:'GoogleMap',
+    BaiduMap:'BaiduMap',
+    GaodeMap:'GaodeMap',
     host_image: 'http://nzmessengers.co.nz/service/',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     mainlogin: '',

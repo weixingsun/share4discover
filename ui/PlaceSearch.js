@@ -163,13 +163,13 @@ export default class PlaceSearch extends Component {
 
   renderSearchBar(){
       switch(Global.MAP) {
-          case 'GoogleMap':
+          case Global.GoogleMap:
               return this.renderGoogle()
               break;
-          case 'BaiduMap':
+          case Global.BaiduMap:
               return this.renderBaidu()
               break;
-          case 'GaodeMap':
+          case Global.GaodeMap:
               return this.renderGaode()
               break;
           default:
