@@ -20,10 +20,10 @@ export default class SettingsList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          user_fb:null,
-          user_gg:null,
-          user_wx:null,
-          user_wb:null,
+          user_fb:Global.user_fb,
+          user_gg:Global.user_gg,
+          user_wx:Global.user_wx,
+          user_wb:Global.user_wb,
       };
       this.login_fb  = this.login_fb.bind(this);
       this.logout_fb = this.logout_fb.bind(this);
@@ -36,26 +36,11 @@ export default class SettingsList extends React.Component {
       //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
-        this.getUserDB();
         //I18n.locale = I18n.locale    //en-US, not compatible with json key format
         I18n.locale = NativeModules.RNI18n.locale  //en_US
     }
     componentDidMount(){
         CodePush.notifyApplicationReady();
-    }
-    getUserDB() {
-        Store.get('user_fb').then((value) => {
-            this.setState({ user_fb:value });
-           //console.log('getFBUserDB:'+JSON.stringify(value));
-        });
-        Store.get('user_gg').then((value) => {
-            this.setState({ user_gg:value });
-           //console.log('getGGUserDB:'+JSON.stringify(value));
-        });
-        Store.get('user_wx').then((value) => {
-            this.setState({ user_wx:value });
-           //console.log('getWXUserDB:'+JSON.stringify(value));
-        });
     }
     checkUpdate(){
         CodePush.checkForUpdate().then( (update) =>{
@@ -91,41 +76,49 @@ export default class SettingsList extends React.Component {
     }
     login_gg(user){
         this.setState({user_gg:user});
+        Global.user_gg = user
         Global.logins.gg = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_gg(user){
         this.setState({user_gg:null});
+        Global.user_gg = null
         delete Global.logins.gg
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_fb(user){
         this.setState({user_fb:user});
+        Global.user_fb = user
         Global.logins.fb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_fb(user){
         this.setState({user_fb:null});
+        Global.user_fb = null
         delete Global.logins.fb
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wx(user){
         this.setState({user_wx:user});
+        Global.user_wx = user
         Global.logins.wx = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_wx(user){
         this.setState({user_wx:null});
+        Global.user_wx = null
         delete Global.logins.wx
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wb(user){
         this.setState({user_wb:user});
+        Global.user_wb = user
         Global.logins.wb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     logout_wb(user){
         this.setState({user_wb:null});
+        Global.user_wx = null
         delete Global.logins.wb
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }

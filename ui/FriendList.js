@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
 import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
 import JsonAPI from "../io/Net"
+import Global from "../io/Global"
 import {Icon} from './Icon'
 import Filter from "./Filter"
 import Style from "./Style"
@@ -35,21 +36,22 @@ export default class ShareList extends Component {
     return b;
   }*/
 
-  //componentWillMount() {
-    //NetInfo.isConnected.addEventListener('change', this.handleConnectivityChange)
-    //NetInfo.isConnected.fetch().done((data) => {
-    //  this.isConnected= data
-    //})
-  //}
-  //componentDidMount() {
+  componentWillMount() {
+      this.requestFBfriends()
+  }
+  componentDidMount() {
   //  this.setState({firstLoad:false,})
   //}
   //componentWillUnmount() {
     //NetInfo.isConnected.removeEventListener('change', this.handleConnectivityChange );
-  //}
-  //handleConnectivityChange(change) {
-    //this.setState({isConnected: change});
-  //}
+  }
+  requestFBfriends(){
+      if(Global.logins.fb != null){  //login with fb
+          let u = Global.user_fb
+          let fb_url = 'https://graph.facebook.com/'+u.id+'/friends?access_token='+u.token;
+          alert('url='+fb_url)
+      }
+  }
   componentDidUpdate(prevProps, prevState){
      this.firstLoad=false
   }
@@ -82,10 +84,6 @@ export default class ShareList extends Component {
     //});
   }
   
-  /**
-   * When a row is touched
-   * @param {object} rowData Row data
-   */
   _onPress(rowData) {
     //alert('rowData='+rowData);
     this.props.navigator.push({
@@ -96,10 +94,6 @@ export default class ShareList extends Component {
         }
     });
   }
-  /**
-   * Render a row  // customize this function for prettier view for each row.
-   * @param {object} rowData Row data
-   */
   _renderRowView(rowData) {
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.png';
     return (

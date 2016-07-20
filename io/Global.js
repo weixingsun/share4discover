@@ -80,6 +80,10 @@ module.exports = {
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     mainlogin: '',
     logins: {},
+    user_fb:{},
+    user_gg:{},
+    user_wb:{},
+    user_wx:{},
     KEY: '',
     URL: '',
     COLOR: {

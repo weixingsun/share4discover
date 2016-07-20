@@ -62,9 +62,6 @@ export default class Main extends Component {
   }
   componentWillMount(){
       var _this = this;
-      //this.checkLogin('user_fb')
-      //this.checkLogin('user_gg')
-      //this.checkMapSettings()
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
@@ -89,6 +86,7 @@ export default class Main extends Component {
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;
               Global.mainlogin = Global.getMainLogin(Global.logins)
+              Global[type]=user
               //if(Global.mainlogin!=self.state.mainlogin){
               //    self.setState({mainlogin:Global.mainlogin }) 
               //}
@@ -96,6 +94,7 @@ export default class Main extends Component {
               let look_type = type.substring(5)
               delete Global.logins[look_type]
               Global.mainlogin = Global.getMainLogin(Global.logins)
+              Global[type]=null
               //if(Global.mainlogin!=self.state.mainlogin){
               //    self.setState({ mainlogin:Global.mainlogin })
               //}
