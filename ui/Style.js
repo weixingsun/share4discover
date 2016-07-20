@@ -112,10 +112,10 @@ module.exports = {
       position: 'absolute',
       width: 50,
       height: 50,
-      paddingLeft:12,
-      paddingTop:10,
+      //paddingRight:12,
+      //paddingTop:10,
       top: 76,
-      left: 10,
+      left: 20,
   },
   separator: {
     height: 1,

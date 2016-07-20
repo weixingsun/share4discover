@@ -1,4 +1,5 @@
 cp tools/google-services-release.json android/app/google-services.json
+#keytool -v -list -keystore android/app/wxsun-release-key.keystore
 cd android && ./gradlew clean && ./gradlew assembleRelease
 sleep 5
 cd ..

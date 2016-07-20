@@ -130,6 +130,7 @@ export default class Maps extends Component {
             var color='blue'
             if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
             let key = Global.getKeyFromMsg(marker)
+            let T = marker.type.substring(0,1).toUpperCase()
             return (
               <GMapView.Marker
                   key={marker.ctime}
@@ -137,7 +138,7 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:T,color:'gray'}} />
               </GMapView.Marker>
             )
         });
@@ -165,6 +166,10 @@ export default class Maps extends Component {
     }
     move(p){
       this.refs.gmap.animateToRegion(p);
+    }
+    moveToMe(){
+      //move(p)
+      alert('moveToMe')
     }
     moveBmap(p){
       this.refs.bmap.animateTo(p);
@@ -365,6 +370,13 @@ export default class Maps extends Component {
           });
       });
     }
+    renderFocusIcon(){
+      if(Global.MAP==='BaiduMap'){
+        return (
+          <Icon name={"ion-ios-locate-outline"} style={Style.gpsIcon} color={'black'} size={40} onPress={this.moveToMe.bind(this)} />
+        )
+      }
+    }
     render(){
         //console.log('Maps.render() region='+JSON.stringify(this.state.region))
 	//alert('markers:'+JSON.stringify(this.state.markers))
@@ -372,6 +384,7 @@ export default class Maps extends Component {
           <View style={{flex:1}}>
             { this.renderNavBar() }
             { this.renderMap() }
+            { this.renderFocusIcon() }
           </View>
         );
     }
