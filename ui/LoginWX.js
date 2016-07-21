@@ -7,19 +7,20 @@ import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
 import FBLoginView from "./FBLoginView"
+import I18n from 'react-native-i18n';
 
 var Login = React.createClass({
   renderLoginButton() {
     if(this.props.user !== null){
-        return <Icon name={'fa-weixin'} size={30} color="#dddddd" onPress={this._googleSignOut} />
+        return <Icon name={'fa-weixin'} size={30} color="#4ddb39" onPress={this._googleSignOut} />
     }else{
         //return (<GoogleSigninButton style={{width: 44, height: 44}} size={GoogleSigninButton.Size.Icon} color={GoogleSigninButton.Color.Dark} onPress={this._googleSignIn}/> );
-        return <Icon name={'fa-weixin'} size={30} color="#4ddb39" onPress={this._googleSignIn} />
+        return <Icon name={'fa-weixin'} size={30} color="#dddddd" onPress={this._googleSignIn} />
     }
   },
   renderLoginName() {
     //console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
-    var name = 'Login in Wechat';
+    var name = I18n.t('login')+' '+I18n.t('wx');
     if(this.props.user !== null ){
        name=this.props.user.name;
     }

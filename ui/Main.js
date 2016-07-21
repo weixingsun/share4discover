@@ -81,7 +81,7 @@ export default class Main extends Component {
       return true;
   }
   checkLogin(type){
-      var self = this
+      //var self = this
       Store.get(type).then(function(user){  //{type,email}
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;
@@ -112,7 +112,8 @@ export default class Main extends Component {
               region_value['latitudeDelta'] = 0.01
               region_value['longitudeDelta'] = 0.01
           }
-          _this.setState({ region:region_value,  });
+          if(this.state.region.latitude != region_value.latitude)
+              _this.setState({ region:region_value,  });
         }
       });
       //Store.get('user').then((user_value) => {
@@ -234,6 +235,7 @@ export default class Main extends Component {
     //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
     //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     //>
+    //alert('main.render()')
     if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>

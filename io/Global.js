@@ -25,7 +25,7 @@ I18n.translations = {
     about: '关于',
     settings: '设置',
     plugin: '插件',
-    login: '登陆',
+    login: '登录',
     logout: '退出',
     ask_logout: '确认退出',
     gg: '谷歌',

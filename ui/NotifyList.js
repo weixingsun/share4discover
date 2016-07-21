@@ -25,6 +25,7 @@ export default class NotifyList extends Component {
   getMsg(key){
       var self = this;
       Net.getMsg(key).then((json)=> {
+          if(json!=null)
           self.props.navigator.push({
               component: Detail,
               passProps: {
@@ -32,6 +33,8 @@ export default class NotifyList extends Component {
 		  mainlogin:this.props.mainlogin,
               }
           });
+          else
+            alert('This share has been deleted.')
       });
   }
   readMsg(reply){
@@ -75,7 +78,7 @@ export default class NotifyList extends Component {
   }
   renderActionIcon(){
     //alert(this.props.mainlogin)
-    if(this.props.mainlogin==='') 
+    /*if(this.props.mainlogin==='') 
       return (
             <View style={{flexDirection:'row',}}>
                 <Icon name={'ion-ios-add'} size={50} color={'gray'} />
@@ -91,18 +94,16 @@ export default class NotifyList extends Component {
                 <View style={{width:20}} />
             </View>
       )
-    }
+    }*/
   }
   render() {
     let ds=this.ds.cloneWithRows([])
     if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     return (
       <View style={Style.absoluteContainer}>
-        <NavigationBar style={Style.navbar} title={{title:'',}} 
-            //leftButton={
-            //    <Icon name={'ion-ios-search'} size={40} onPress={() => this.props.drawer.open()}/>
-            //}
-            rightButton= {this.renderActionIcon()}
+        <NavigationBar style={Style.navbar} title={{title:'My Messages',}} 
+            //leftButton={}
+            //rightButton= {this.renderActionIcon()}
 	/>
         <ListView 
             dataSource={ds} 

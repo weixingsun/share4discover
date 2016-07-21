@@ -5,6 +5,7 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
 import * as WeiboAPI from 'react-native-weibo'
+import I18n from 'react-native-i18n';
 
 var Login = React.createClass({
   renderLoginButton() {
@@ -15,7 +16,7 @@ var Login = React.createClass({
     }
   },
   renderLoginName() {
-    var name = 'Login in Weibo';
+    var name = I18n.t('login')+' '+I18n.t('wb');
     if(this.props.user !== null ){
        name=this.props.user.name;
     }
