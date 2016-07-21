@@ -133,7 +133,7 @@ var Login = React.createClass({
     }else{      //iOS need fetch manually
       var _this = this;
       //alert('ios:'+JSON.stringify(data))
-      var api = `https://graph.facebook.com/v2.3/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
+      var api = `https://graph.facebook.com/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
       fetch(api)
         .then((response) => response.json())
         .then((responseData) => {

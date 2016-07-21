@@ -14,7 +14,8 @@ var Net = {
         'estate':'Real Estate',
         'help':'Help',
     },
-    HOST:'http://45.32.83.93',
+    //HOST:'http://45.32.83.93',
+    HOST:'http://nzmessengers.co.nz/service/node.php?path=',
     async netCmd(url, data) {
       try {
         let response = await fetch(url, data);
@@ -45,32 +46,32 @@ var Net = {
       });
     },
     getMsgTypes(){
-      var url = HOST+'/api/msg_types';
+      var url = HOST+'api/msg_types';
       return this._get(url);
     },
     rangeMsg(type,pos,dist){
       var strLatlng = pos.latitude+','+pos.longitude
-      var url = this.HOST+'/api/msgs/'+type+'&'+strLatlng+'&'+dist;
+      var url = this.HOST+'api/msgs/'+type+'&'+strLatlng+'&'+dist;
       return this._get(url);
     },
     getMsg(key){
-      var url = this.HOST+'/api/msg/'+key;
+      var url = this.HOST+'api/msg/'+key;
       return this._get(url);
     },
     getNotify(key){
-      var url = this.HOST+'/api/notify/'+key;  //#fb:email
+      var url = this.HOST+'api/notify/'+key;  //#fb:email
       return this._get(url);
     },
     setMsg(json){
-      var url = this.HOST+'/api/msg/';
+      var url = this.HOST+'api/msg/';
       return this._post(url, json);
     },
     putMsg(json){
-      var url = this.HOST+'/api/msg/';
+      var url = this.HOST+'api/msg/';
       return this._put(url, json);
     },
     delMsg(key){
-      var url = this.HOST+'/api/msg/'+key;
+      var url = this.HOST+'api/msg/'+key;
       return this._del(url);
     },
 };

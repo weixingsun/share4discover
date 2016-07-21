@@ -36,6 +36,12 @@ export default class SettingsList extends React.Component {
       //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
+        //alert(
+        //  'fb:'+JSON.stringify(Global.user_fb) +
+        //  '\n\ngg:'+JSON.stringify(Global.user_gg) +
+        //  '\n\nwx:'+JSON.stringify(Global.user_wx) +
+        //  '\n\nwb:'+JSON.stringify(Global.user_wb)
+        //)
         //I18n.locale = I18n.locale    //en-US, not compatible with json key format
         I18n.locale = NativeModules.RNI18n.locale  //en_US
     }

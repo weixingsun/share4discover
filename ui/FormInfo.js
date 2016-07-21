@@ -169,7 +169,6 @@ export default class FormInfo extends Component {
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
-        //alert('dest:'+values.dest+'len:'+values.dest.length+'\npics:'+values.pics+'len:'+values.pics.length)
         //alert(JSON.stringify(values))
     }
     onSubmit(values) {
@@ -180,7 +179,6 @@ export default class FormInfo extends Component {
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-        //self.fixFormData(values);
         Alert.alert(
             "Publish",
             "Do you want to publish this form ? ",

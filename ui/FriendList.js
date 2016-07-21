@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
 import {ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
-import JsonAPI from "../io/Net"
+import Net from "../io/Net"
 import Global from "../io/Global"
 import {Icon} from './Icon'
 import Filter from "./Filter"
@@ -14,14 +14,15 @@ import Main from "./Main"
 export default class ShareList extends Component {
   constructor(props) {
       super(props);
+      this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
           filters: this.props.filters,
           accessToken: false,
           isConnected: false,
+          dataSource:this.ds.cloneWithRows([]),
       };
-      this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.dataSource= this.ds.cloneWithRows([]);
-      this.firstLoad=true
+      //this.dataSource= this.ds.cloneWithRows([]);
+      //this.firstLoad=true
   }
   //componentWillReceiveProps (nextProps) {
     //if(JSON.stringify(nextProps.filters) !==JSON.stringify(this.state.filters)){
@@ -35,9 +36,8 @@ export default class ShareList extends Component {
     var b = this.isConnected
     return b;
   }*/
-
   componentWillMount() {
-      this.requestFBfriends()
+      //this.requestFBfriends()
   }
   componentDidMount() {
   //  this.setState({firstLoad:false,})
@@ -47,18 +47,18 @@ export default class ShareList extends Component {
   }
   requestFBfriends(){
       if(Global.logins.fb != null){  //login with fb
-          let u = Global.user_fb
-          let fb_url = 'https://graph.facebook.com/'+u.id+'/friends?access_token='+u.token;
-          alert('url='+fb_url)
+          let fb_url = 'https://graph.facebook.com/me/friends?access_token='+Global.user_fb.token;
+          //let fb_url = 'https://graph.facebook.com/me/invitable_friends?limit=5000&access_token='+Global.user_fb.token;
+          //let fb_url = 'https://graph.facebook.com/me/taggable_friends?limit=5000&access_token='+Global.user_fb.token;
+          //let fb_url = 'https://graph.facebook.com/me/invitable_friends?limit=50&access_token='+Global.user_fb.token;
+          let self=this;
+          Net._get(fb_url).then((json)=> {
+              //self.setState({dataSource:self.ds.cloneWithRows(json.data)})
+          })
       }
   }
   componentDidUpdate(prevProps, prevState){
      this.firstLoad=false
-  }
-  comparefilters(){
-    //alert('first:'+this.firstLoad+'\nstate:'+JSON.stringify(this.state.filters)+'\nprops:'+JSON.stringify(this.props.filters))
-    if(this.props.filters === this.state.filters) return true;
-    else return false;
   }
   /**
    * refreshing
@@ -72,7 +72,6 @@ export default class ShareList extends Component {
     //JsonAPI.friends(filters.type,filters.position,filters.range).then((rows)=> {
       //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
       //self.dataSource= self.ds.cloneWithRows(rows);
-      //if(!self.comparefilters() || self.firstLoad) self.setState({filters:self.props.filters})
     //})
     //.catch((e)=>{
       //_this.isConnected = false
@@ -85,14 +84,7 @@ export default class ShareList extends Component {
   }
   
   _onPress(rowData) {
-    //alert('rowData='+rowData);
-    this.props.navigator.push({
-        component: Main,
-        passProps: { 
-            page:'globe', 
-            msg:rowData,
-        }
-    });
+    alert('rowData='+rowData);
   }
   _renderRowView(rowData) {
     var URL = 'http://nzmessengers.co.nz/nz/full/'+rowData.type+'_'+rowData.thumbnail+'.png';
@@ -132,7 +124,7 @@ export default class ShareList extends Component {
     this.reload(this.props.filters);
     return (
       <View style={Style.absoluteContainer}>
-        <NavigationBar style={Style.navbar} title={{title:'',}} 
+        <NavigationBar style={Style.navbar} title={{title:'My shares',}} 
             leftButton={
                 <Icon name={'ion-ios-search'} size={40} onPress={()=>{} }/>
             }
@@ -140,7 +132,7 @@ export default class ShareList extends Component {
                 <Icon name={'ion-ios-add'} size={48} onPress={()=>{}}/>
             } />
         <ListView 
-            dataSource={this.dataSource} 
+            dataSource={this.state.dataSource} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
       </View>
