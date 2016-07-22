@@ -53,7 +53,14 @@ module.exports = {
       right: 0,
       bottom: 50,
   },  
-  map:{
+  map_ios:{
+      position: 'absolute',
+      top: 70,
+      left: 0,
+      right: 0,
+      bottom: 50,
+  },
+  map_android:{
       position: 'absolute',
       top: 66,
       left: 0,

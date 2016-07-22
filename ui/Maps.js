@@ -425,10 +425,12 @@ export default class Maps extends Component {
       }
     }
     renderGmap(){
+      let map_style = Style.map_android
+      if(Platform.OS === 'ios') map_style=Style.map_ios
       return (
             <GMapView
               ref='gmap'
-              style={Style.map}
+              style={map_style}
               showsUserLocation={this.state.gps}
               rotateEnabled={false} //showsCompass={true}
               showsScale={true}
@@ -446,9 +448,11 @@ export default class Maps extends Component {
     renderBmap(){
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
       //alert(JSON.stringify(this.state.markers))
+      let map_style = Style.map_android
+      if(Platform.OS === 'ios') map_style=Style.map_ios
       return (
             <BMapView
-                style={Style.map}
+                style={map_style}
                 ref="bmap"
                 initialRegion={ this.state.region }
                 showsUserLocation={this.state.gps}
