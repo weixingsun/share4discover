@@ -4,6 +4,7 @@ import {Alert, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,
 import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
+import Button from 'apsl-react-native-button'
 import {ImageCrop} from 'react-native-image-cropper'
 //import ZoomableImage from './ZoomableImage2';
 import Style from './Style';
@@ -19,10 +20,12 @@ export default class Detail extends Component {
         super(props);
         this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = this.props.msg.pics?this.props.msg.pics.split(','):[]
+        this.isLogin = (this.props.mainlogin.length>0)
+        this.isMyMsg = this.checkSns(this.props.mainlogin, this.props.msg.owner)
+        this.close_image = null;
         this.state={ 
             reply: '',
             reply_height: 35,
-            isMyMsg:false,
             image_modal_name:this.images[0],
             show_pic_modal:false,
         }
@@ -101,47 +104,24 @@ export default class Detail extends Component {
         
     }
     componentWillMount(){
-        //alert(JSON.stringify(this.props.msg))
+        let self = this;
         getImageSource('ion-ios-close', 40, 'white').then((source) => {
-            this.setState({close_image:source})
+            self.close_image=source
         });
-	this.checkMyMsg(this.props.msg)
-    }
-    checkMyMsg(msg){
-        this.checkSns(this.props.mainlogin, msg.owner)
-        //alert('owner:'+msg.owner+'\nmainlogin:'+this.props.mainlogin)
     }
     checkSns(mainlogin,owner){
-        var self = this
         if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
-            self.setState({isMyMsg:true})
+          return true
+        else
+          return false
     }
     getSNSIcon(type){
         return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
     }
     showActionIcons(){
-        //alert('isMyMsg:'+this.state.isMyMsg)
-        if(!this.state.isMyMsg){
-	  return (
-            <View style={{flexDirection:'row',}}>
-              <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-mail-outline'}
-                color={'orange'}
-                size={40}
-                onPress={this.onReply.bind(this) } />
-            </View>
-          )
-        }else{
+        if(this.isMyMsg){
           return (
             <View style={{flexDirection:'row',}}>
-              <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-mail-outline'}
-                color={'orange'}
-                size={40}
-                onPress={this.onReply.bind(this) } />
-              <View style={{width:40}} />
               <Icon
                 name={'ion-ios-create-outline'}
                 color={'blue'}
@@ -203,7 +183,7 @@ export default class Detail extends Component {
             })
         );
     }
-    showReplys(){
+    renderReplyItems(){
         //id:#rtime  key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
         var keys = Object.keys(this.props.msg)
 	var replys = keys.filter((key) => {
@@ -238,6 +218,15 @@ export default class Detail extends Component {
           })
 	)
     }
+    renderReplySection(){
+        if(this.isLogin)
+            return (
+                <View style={Style.detail_card} >
+                    <Text style={{marginLeft:21,fontWeight:'bold'}}>Replys :  </Text>
+                    {this.renderReplyItems()}
+                </View>
+            )
+    }
     renderModal(){
       //let key = Global.getKeyFromMsg(this.props.msg);
       let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
@@ -263,11 +252,35 @@ export default class Detail extends Component {
                              alignItems:'center',justifyContent:'center', backgroundColor: 'black' 
                     }}
                 >
-                        <Image style={{width:20,height:20,margin:5}} source={this.state.close_image} />
+                        <Image style={{width:20,height:20,margin:5}} source={this.close_image} />
                 </TouchableHighlight>
             </View>
         </Modal>
       )
+    }
+    renderReplyInput(){
+        //alert('isLogin='+this.isLogin+'\nmainlogin='+this.props.mainlogin)
+        if(this.isLogin)
+            return (
+                <View style={Style.detail_card} >
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{marginLeft:21,fontWeight:'bold'}}>Your Reply:  </Text>
+                        <View style={{flex:1}} />
+                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#2ecc71',borderColor:'#27ae60'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>Reply</Button>
+                    </View>
+                        <TextInput
+                            style={{marginLeft:20,height:this.state.reply_height}}
+                            multiline={true}
+                            value={this.state.reply}
+                            onChange={(event) => {
+                                this.setState({
+                                    reply: event.nativeEvent.text,
+                                    reply_height: event.nativeEvent.contentSize.height,
+                                });
+                            }}
+                        />
+                    </View>
+            )
     }
     render(){
 	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)
@@ -316,24 +329,8 @@ export default class Detail extends Component {
                         <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
 			<Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
                       </View>
-                      <View style={Style.detail_card} >
-                        <Text style={{marginLeft:21,fontWeight:'bold'}}>Replys :  </Text>
-			{this.showReplys()}
-                      </View>
-                      <View style={Style.detail_card} >
-		        <Text style={{marginLeft:21,fontWeight:'bold'}}>Your Reply:  </Text>
-			<TextInput 
-			    style={{marginLeft:20,height:this.state.reply_height}} 
-			    multiline={true} 
-			    value={this.state.reply}
-		            onChange={(event) => {
-		                this.setState({
-		                    reply: event.nativeEvent.text,
-                                    reply_height: event.nativeEvent.contentSize.height,
-	                        });
-                            }}
-		        />
-                      </View>
+                      {this.renderReplySection()}
+                      {this.renderReplyInput()}
                     </ScrollView>
 		</View>
             </View>
