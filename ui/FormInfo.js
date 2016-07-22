@@ -429,8 +429,8 @@ export default class FormInfo extends Component {
                            name={"ion-ios-arrow-round-back"} 
                            color={'#333333'} size={46} 
                            onPress={() => {
-                               if(this.state.pics_changed) alert('Please submit your changes')
-                               else this.props.navigator.pop() 
+                               //if(this.state.pics_changed) alert('Please submit your changes')
+                               this.props.navigator.pop() 
                            }} />
                      </View>
                    }
