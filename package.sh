@@ -1,4 +1,6 @@
-cp tools/google-services-release.json android/app/google-services.json
+#cp android/app/google-services-debug.json android/app/google-services.json
+cp android/app/google-services-release.json android/app/google-services.json
+
 #keytool -v -list -keystore android/app/wxsun-release-key.keystore
 #keytool -genkey -v -keystore share-release-key.keystore -alias share-key-alias -keyalg RSA -keysize 2048 -validity 10000
 #CN=Weixing Sun, OU=Dev, O=DaBo, L=Beijing, ST=BJ, C=CN

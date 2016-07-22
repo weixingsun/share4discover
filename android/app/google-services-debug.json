@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "stone-botany-480",
+    "project_number": "840928054415",
+    "name": "Botany"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840928054415:android:e1d4dfa09e71e5d1",
+        "client_id": "android:com.share",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.share",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.share",
+            "certificate_hash": "9710C84B9F9CED7B9285CB95D6D825FB9B4A661B"
+          }
+        },
+        {
+          "client_id": "840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
