@@ -203,9 +203,9 @@ export default class Detail extends Component {
                 )
 	      }else{
 	        return (
-	          <View style={{flexDirection:'row'}} key={key} >
+	          <View style={{flexDirection:'row',marginLeft:30}} key={key} >
                     <Icon
-                        style={{marginLeft:30,marginRight:6}}
+                        //style={{marginRight:6}}
                         size={24}
                         color={'blue'}
                         name={Global.SNS_ICONS[sns_type]}
@@ -266,7 +266,7 @@ export default class Detail extends Component {
                     <View style={{flexDirection:'row'}}>
                         <Text style={{marginLeft:21,fontWeight:'bold'}}>Your Reply:  </Text>
                         <View style={{flex:1}} />
-                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#2ecc71',borderColor:'#27ae60'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>Reply</Button>
+                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#3498db',borderColor:'#2980b9'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>Reply</Button>
                     </View>
                         <TextInput
                             style={{marginLeft:20,height:this.state.reply_height}}
