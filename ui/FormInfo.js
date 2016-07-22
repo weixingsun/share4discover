@@ -165,6 +165,7 @@ export default class FormInfo extends Component {
         if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
         if(values.hasOwnProperty('askTitle')) delete values.askTitle
         if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
+        //if(values.hasOwnProperty('contentTitle')) delete values.contentTitle
         //if(values.hasOwnProperty('dest') && values.dest.length===0) delete values.dest
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.lat = parseFloat(values.lat).toFixed(6)
@@ -419,7 +420,6 @@ export default class FormInfo extends Component {
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
-        //alert('form.askTitle:'+this.state.form.askTitle+'\nask:'+this.state.form.ask+'\ntype:'+typeof this.props.msg.ask)
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -523,6 +523,7 @@ export default class FormInfo extends Component {
                             //scrollEnabled={true}
                             value={this.state.form.content}
                             validationResults={this.state.validationResults}
+                            displayValue='content'
                         >
                             <GiftedForm.SeparatorWidget/>
                             <GiftedForm.TextAreaWidget
