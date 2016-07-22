@@ -409,9 +409,10 @@ export default class Maps extends Component {
         );
     }
     renderMap(){
-      let perm_nbr = Object.keys(this.state.grantedPermissions).length
-      //alert('Permission# '+perm_nbr)
-      if(perm_nbr < this.permissions.length) return null
+      if(Platform.OS==='android' && Platform.Version > 22){
+        let perm_nbr = Object.keys(this.state.grantedPermissions).length
+        if(perm_nbr < this.permissions.length) return null
+      }
       switch(Global.MAP) {
           case Global.GoogleMap:
               return this.renderGmap()
