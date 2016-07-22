@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {AppState, DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, View } from 'react-native'
+import {AppState, DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -384,7 +384,16 @@ export default class Maps extends Component {
     renderFocusIcon(){
       if(Global.MAP===Global.BaiduMap && this.state.gps){
         return (
-          <Icon name={"ion-ios-locate-outline"} style={Style.gpsIcon} color={'black'} size={40} onPress={this.moveToMe.bind(this)} />
+          <View style={{flexDirection:'row'}}>
+             <View style={{flex:1}}/>
+             <TouchableOpacity 
+                style={{backgroundColor:'white',width:40,height:40,alignItems:'center',justifyContent:'center',opacity:0.5}}
+                onPress={this.moveToMe.bind(this)}
+             >
+               <Icon name={"ion-ios-locate-outline"} style={Style.gpsIcon} size={24} />
+             </TouchableOpacity>
+             <View style={{width:10}}/>
+          </View>
         )
       }
     }
