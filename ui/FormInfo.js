@@ -189,7 +189,7 @@ export default class FormInfo extends Component {
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
                   Net.setMsg(values)
-                  //if(this.props.msg!=null) self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
+                  if(this.props.msg!=null) self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
                   self.props.navigator.pop();
               }},
             ]
@@ -206,11 +206,10 @@ export default class FormInfo extends Component {
                 let key_arr = field.split('#')
                 if(old_key==key_arr[0]){
                     let json = {key:'#'+mainlogin, oldfield:old_key+'#'+key_arr[1], newfield:new_key+'#'+key_arr[1]}
+                    //alert('json='+JSON.stringify(json))
                     Net.renameHashKey(json)
                 }
               })
-              //let json = {key:'#'+mainlogin, oldfield:old_key, newfield:new_key}
-              //Net.renameHashKey(json)
             });
         }
     }
