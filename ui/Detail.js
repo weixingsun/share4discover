@@ -32,7 +32,7 @@ export default class Detail extends Component {
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
     }
-    //key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
+    //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     onReply() {
         if(this.state.reply.length<5) {
             alert('Please reply with more characters.')

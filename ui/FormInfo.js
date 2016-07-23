@@ -180,6 +180,7 @@ export default class FormInfo extends Component {
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
         ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
+        //alert('props.msg='+JSON.stringify(this.props.msg)+'\nstate.form='+JSON.stringify(values))
         Alert.alert(
             "Publish",
             "Do you want to publish this form ? ",
@@ -188,10 +189,30 @@ export default class FormInfo extends Component {
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
                   Net.setMsg(values)
+                  //if(this.props.msg!=null) self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
                   self.props.navigator.pop();
               }},
             ]
         )
+    }
+    changeReply(old_key,new_key){
+        if(old_key != new_key){
+            Net.delMsg(Global.getKeyFromMsg(this.props.msg))
+            let logins = Global.getLogins(this.props.msg.owner)
+            let mainlogin = Global.getMainLogin(logins);
+            Net.getNotify(mainlogin).then((rows)=> {
+              //alert('all notifies='+JSON.stringify(rows))
+              Object.keys(rows).map((field)=>{
+                let key_arr = field.split('#')
+                if(old_key==key_arr[0]){
+                    let json = {key:'#'+mainlogin, oldfield:old_key+'#'+key_arr[1], newfield:new_key+'#'+key_arr[1]}
+                    Net.renameHashKey(json)
+                }
+              })
+              //let json = {key:'#'+mainlogin, oldfield:old_key, newfield:new_key}
+              //Net.renameHashKey(json)
+            });
+        }
     }
     componentWillMount(){
         this.initKeys();
@@ -437,6 +458,7 @@ export default class FormInfo extends Component {
                    rightButton={ this.showActionIcons() }
                 />
                 {this.showPics()}
+                <KeyboardAwareScrollView>
                 <GiftedForm
                     formName='newInfoForm'
                     style={{height:form_height,marginLeft:10,marginRight:10}}
@@ -499,6 +521,7 @@ export default class FormInfo extends Component {
                             clearButtonMode='while-editing'
                             displayValue='price'
                             value={this.state.form.price}
+                            //scrollEnabled={true}
                         />
                         <GiftedForm.PlaceSearchWidget
                             name='address'
@@ -557,6 +580,7 @@ export default class FormInfo extends Component {
                             }}
                         />
                 </GiftedForm>
+                </KeyboardAwareScrollView>
             </View>
         );
     }

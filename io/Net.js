@@ -74,6 +74,18 @@ var Net = {
       var url = this.HOST+'api/msg/'+key;
       return this._del(url);
     },
+    getHKeys(key){
+      var url = this.HOST+'api/hash/'+key;
+      alert('Net.getHKeys() url='+url)
+      return this._get(url);
+    },
+    putHash(url,json){
+      return this._put(url,json);
+    },
+    renameHashKey(json){  //{key,oldfield,newfield}
+      var url = this.HOST+'api/hash/rename';
+      return this._put(url,json);
+    },
 };
 
 module.exports = Net;
