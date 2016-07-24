@@ -6,6 +6,8 @@ import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
 import {ImageCrop} from 'react-native-image-cropper'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 //import ZoomableImage from './ZoomableImage2';
 import Style from './Style';
 import Store from '../io/Store';
@@ -298,7 +300,7 @@ export default class Detail extends Component {
                    rightButton={ this.showActionIcons() }
                 />
                 <View style={{flex:8,backgroundColor: '#DDDDDD',}}>
-                    <ScrollView
+                    <KeyboardAwareScrollView
                       automaticallyAdjustContentInsets={false}
                       scrollEventThrottle={200}
                       style={{flex:8}}
@@ -331,7 +333,7 @@ export default class Detail extends Component {
                       </View>
                       {this.renderReplySection()}
                       {this.renderReplyInput()}
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
 		</View>
             </View>
         );

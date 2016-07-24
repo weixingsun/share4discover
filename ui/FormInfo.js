@@ -10,7 +10,8 @@ import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import Immutable from 'immutable'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import PlaceSearch from './PlaceSearch'
 import ImagePicker from 'react-native-image-picker'
  
@@ -297,7 +298,8 @@ export default class FormInfo extends Component {
     showImages(list){
         //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
         return (
-            <ScrollView style={{height:Style.THUMB_HEIGHT+4}} horizontal={true}>
+          <View style={{height:Style.THUMB_HEIGHT}}>
+            <ScrollView style={{height:Style.THUMB_HEIGHT}} horizontal={true}>
                 {
                   list.map((pic,id)=>{
                     return (
@@ -323,6 +325,7 @@ export default class FormInfo extends Component {
                   })
                 }
             </ScrollView>
+          </View>
         )
     }
     showPics(){
@@ -439,7 +442,7 @@ export default class FormInfo extends Component {
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
-        let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
+        //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         return (
             <View >
                 <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -456,11 +459,11 @@ export default class FormInfo extends Component {
                    }
                    rightButton={ this.showActionIcons() }
                 />
+                <KeyboardAwareScrollView style={{height:h}}>
                 {this.showPics()}
-                <KeyboardAwareScrollView>
                 <GiftedForm
                     formName='newInfoForm'
-                    style={{height:form_height,marginLeft:10,marginRight:10}}
+                    style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
                     validators={ this.validators }
