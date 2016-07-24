@@ -28,6 +28,7 @@
     "react-native-navbar": "^1.5.0",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
     "react-native-slider": "^0.7.1",
+    "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",
     "react-native-swiper": "^1.4.6",
     "react-native-tableview-simple": "^0.10.1",
     "react-native-tabs": "^1.0.8",

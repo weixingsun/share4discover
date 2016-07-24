@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {NativeModules, ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
 import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
+import Swipeout from 'react-native-swipeout';
 import Net from "../io/Net"
 import Global from "../io/Global"
 import Store from "../io/Store"
@@ -46,6 +47,32 @@ export default class NotifyList extends Component {
   _onPress(rowData) {
       if(rowData.status==='1')this.readMsg(rowData)
       this.getMsg(Global.getKeyFromReply(rowData))
+  }
+  _renderSwipeoutRow(rowData){
+    let rightButton = [{
+          text:'Delete',
+          backgroundColor:'#ff6f00',
+          onPress:()=>{
+            let json = {key:'@'+rowData.user,field:Global.getKeyFromReply(rowData)+'#'+rowData.rtime}
+            alert(JSON.stringify(json))
+            Net.delHash(json);
+          }
+        }]
+    return (
+      <Swipeout
+        //left={rowData.left}
+        right={rightButton}
+        rowID={rowData.rtime}
+        //sectionID={sectionID}
+        autoClose={true}
+        //backgroundColor={rowData.backgroundColor}
+        //close={!rowData.active}
+        //onOpen={(sectionID, rowID) => this._handleSwipeout(sectionID, rowID) }
+        //scroll={event => this._allowScroll(event)}
+      >
+          {this._renderRowView(rowData)}
+      </Swipeout>
+    )
   }
   _renderRowView(rowData) {
     var time = Global.getDateTimeFormat(parseInt(rowData.rtime),this.lang)
@@ -107,7 +134,8 @@ export default class NotifyList extends Component {
 	/>
         <ListView 
             dataSource={ds} 
-            renderRow={this._renderRowView.bind(this)} 
+            //renderRow={this._renderRowView.bind(this)} 
+            renderRow={this._renderSwipeoutRow.bind(this)} 
             enableEmptySections={true} />
       </View>
     );

@@ -8,6 +8,14 @@ chmod a+x certbot-auto
 #./certbot-auto renew --dry-run  //manually
 ./certbot-auto renew --quiet --no-self-upgrade  //cron
 */
+function isJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
 var Net = {
     MSG_TYPES:{
         'car':'Car',
@@ -30,6 +38,13 @@ var Net = {
     },
     _del(url) {
       return this.netCmd(url,{method:'delete'});
+    },
+    _del_body(url,data) {
+      return this.netCmd(url,{
+            method:'delete',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+            body: JSON.stringify(data)
+        });
     },
     _put(url,data) {
         return this.netCmd(url,{
@@ -76,11 +91,15 @@ var Net = {
     },
     getHKeys(key){
       var url = this.HOST+'api/hash/'+key;
-      alert('Net.getHKeys() url='+url)
+      //alert('Net.getHKeys() url='+url)
       return this._get(url);
     },
     putHash(url,json){
       return this._put(url,json);
+    },
+    delHash(data){
+      var url = this.HOST+'api/hashkey';
+      return this._del_body(url,data);
     },
     renameHashKey(json){  //{key,oldfield,newfield}
       var url = this.HOST+'api/hash/rename';

@@ -133,29 +133,41 @@ export default class Main extends Component {
       this.loadNotifyByLogin()
   }
   loadNotifyByLogin(){
-      //alert('mainlogin:'+mainlogin+'\nlogins:'+this.state.logins)
-      if(Global.mainlogin.length>0) this.loadNotify(Global.mainlogin);
+      if(Global.mainlogin.length>0) this.loadNotify('@'+Global.mainlogin);
+  }
+  isJsonString(str) {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
   }
   loadNotify(key) {
     //alert('loadNotify('+key+') length:'+key.length)
     var self = this;
     Net.getNotify(key).then((rows)=> {
-      if(rows==null) { return }
-      else{
-        var arr = self.Kv2Json(rows)
-        var unread = self.getUnread(arr)
-        var badgeText = ''+unread.length;
-        self.setState({
-          mails:arr,
-          badge:badgeText,
-          refresh:true,
-          //mainlogin:key,
-        });
+      if( typeof rows === 'string' && !self.isJsonString(rows) ){
+        //alert('Main.loadNotify:'+rows)
+      }else{
+        //alert('Main.loadNotify:valid json')
+        if(rows==null) { return }
+        else{
+          var arr = self.Kv2Json(rows)
+          var unread = self.getUnread(arr)
+          var badgeText = ''+unread.length;
+          self.setState({
+            mails:arr,
+            badge:badgeText,
+            refresh:true,
+            //mainlogin:key,
+          });
+        }
       }
     })
-    .catch((e)=>{
+    /*.catch((e)=>{
         alert('Network Problem!'+JSON.stringify(e))
-    });
+    });*/
   }
   //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
   Kv2Json(kv){
@@ -166,7 +178,7 @@ export default class Main extends Component {
           var key_arr = key.split(':')
           var type   = key_arr[0]
           var latlng = key_arr[1]
-	  var times   = key_arr[2]
+          var times   = key_arr[2]
           var ctime   = times.split('#')[0]
           var rtime   = times.split('#')[1]
           var value_arr = kv[key].split('|')
@@ -175,8 +187,8 @@ export default class Main extends Component {
           var user = value_arr[1]
           var content = value_arr[2]
           var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
-	  //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-	  //alert(JSON.stringify(obj))
+          //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
+          //alert(JSON.stringify(obj))
           arr.push( obj )
       })
       arr.sort(function(a,b){
@@ -235,7 +247,7 @@ export default class Main extends Component {
     //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
     //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     //>
-    console.log('main.render()')
+    //alert('main.render() mails='+ JSON.stringify(this.state.mails))
     if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>

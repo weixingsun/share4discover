@@ -42,7 +42,7 @@ export default class Detail extends Component {
 	var time = +new Date();
         var value={key:key, field:'#'+time, value:this.props.mainlogin+'|'+this.state.reply}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-        var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
+        var notify_value={key:'@'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -63,7 +63,7 @@ export default class Detail extends Component {
 	var time = +new Date();
         var value={key:key, field:'close', value:this.props.mainlogin+'|'+time}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'#'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
+	var notify_value={key:'@'+Global.getMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
         var _this = this;
         Alert.alert(
             "Complete",
