@@ -77,6 +77,7 @@ module.exports = {
     BaiduMap:'BaiduMap',
     GaodeMap:'GaodeMap',
     host_image: 'http://nzmessengers.co.nz/service/',
+    empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     mainlogin: '',
     logins: {},

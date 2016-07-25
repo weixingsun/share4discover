@@ -297,18 +297,21 @@ export default class FormInfo extends Component {
     }
     showImages(list){
         //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
+        //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
         return (
           <View style={{height:Style.THUMB_HEIGHT}}>
             <ScrollView style={{height:Style.THUMB_HEIGHT}} horizontal={true}>
                 {
                   list.map((pic,id)=>{
+                    let source = pic
+                    if(this.state.uploading[id] <100) source={uri:Global.empty_image}
                     return (
-                        <Image key={pic.uri} source={pic}
+                        <Image key={pic.uri} source={source}
                             style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}>
                             {
                               this.state.uploading[id]<100 ?
                               <View style={styles.progress}>
-                                  <Text style={{fontWeight: 'bold',color:'white'}}>{Math.floor(this.state.uploading[id])}%</Text>
+                                  <Text style={{fontWeight: 'bold',color:'blue'}}>{Math.floor(this.state.uploading[id])}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> :
                               <View style={Style.close,{height:25,flexDirection:'row'}}>
