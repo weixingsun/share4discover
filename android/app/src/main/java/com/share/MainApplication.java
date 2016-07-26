@@ -1,5 +1,6 @@
 package com.share;
 
+import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
 import cn.reactnative.modules.weibo.WeiboPackage;
 import co.apptailor.googlesignin.RNGoogleSigninModule;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -55,6 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
         new ReactNativeI18n(),
+        new ReactNativeOneSignalPackage(),
         new ImagePickerPackage(),
         new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
         new ReactNativeLocalizationPackage(),

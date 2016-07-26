@@ -27,6 +27,7 @@
     "react-native-localization": "^0.1.15",
     "react-native-maps": "^0.7.1",
     "react-native-navbar": "^1.5.0",
+    "react-native-onesignal": "^1.2.0",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
     "react-native-slider": "^0.7.1",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",
