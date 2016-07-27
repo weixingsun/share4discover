@@ -18,6 +18,7 @@ import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
 import com.keyee.datetime.*;
 import com.projectseptember.RNGL.RNGLPackage;
+import com.wxsun.usbserial.UsbReactPackage;
 
 import android.app.Application;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
         new ImagePickerPackage(),
         new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
         new ReactNativeLocalizationPackage(),
+        new UsbReactPackage(),
         //new RCTDateTimePickerPackage(this),
         new RNGoogleSigninPackage(),
         new RNPermissionsPackage(),  //Android 6.0 permission

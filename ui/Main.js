@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+import {DeviceEventEmitter,ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import OneSignal from 'react-native-onesignal';
+import UsbSerial from 'react-native-usbserial';
 import {Icon} from './Icon'
 import EventEmitter from 'EventEmitter'
 import Store from "../io/Store"
@@ -19,6 +20,7 @@ import SettingsList   from "./SettingsList"
 import NotifyList from './NotifyList'
 import FriendList from './FriendList'
 
+const serial = new UsbSerial();
 export default class Main extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +55,7 @@ export default class Main extends Component {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
       clearInterval(this.timer)
+      serial.close();
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -64,6 +67,7 @@ export default class Main extends Component {
       var _this = this;
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+          this.checkUsbDevice();
       }
       this.checkSettingsChange();
       this.notification();
@@ -80,6 +84,14 @@ export default class Main extends Component {
       this.lastBackPressed = Date.now();
       ToastAndroid.show('Double press to exit!',ToastAndroid.SHORT);
       return true;
+  }
+  checkUsbDevice(){
+      //UsbSerial.open(9600);
+      //UsbSerial.write('test');
+      //UsbSerial.close();
+      serial.listen(9600, (e)=>{
+        alert('received:'+e.data)
+      });
   }
   notification(){
       OneSignal.configure({

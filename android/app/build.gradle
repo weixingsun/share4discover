@@ -138,10 +138,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-usbserial')
     compile project(':react-native-onesignal')
     compile project(':react-native-android-permissions')
     compile project(':gl-react-native')
-    compile project(':react-native-maps')
     compile project(':react-native-i18n')
     compile project(':react-native-image-picker')
     compile project(':react-native-code-push')
@@ -151,7 +151,7 @@ dependencies {
     compile project(':react-native-wechat')
     compile project(':react-native-facebook-login')
     compile project(':react-native-vector-icons')
-    //compile project(':react-native-maps')
+    compile project(':react-native-maps')
     compile project(':react-native-baidumap')
     compile project(':react-native-datetime')
     compile fileTree(dir: "libs", include: ["*.jar"])

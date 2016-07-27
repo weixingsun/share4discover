@@ -34,6 +34,7 @@
     "react-native-swiper": "^1.4.6",
     "react-native-tableview-simple": "^0.10.1",
     "react-native-tabs": "^1.0.8",
+    "react-native-usbserial": "git+https://github.com/weixingsun/react-native-usbserial.git",
     "react-native-vector-icons": "^2.0.3",
     "react-native-viewpager": "^0.2.11",
     "react-native-wechat": "^1.4.7",
