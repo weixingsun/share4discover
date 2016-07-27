@@ -1,10 +1,11 @@
 'use strict';
 import React, { Component } from 'react'
-import {AppState, DeviceEventEmitter, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {AppState, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
 import KKLocation from 'react-native-baidumap/KKLocation';
+//import UsbSerial from 'react-native-usbserial';
 import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
@@ -21,6 +22,7 @@ import SearchAddr from './SearchAddr'
 import Modal from 'react-native-root-modal';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
+//const serial = new UsbSerial();
 export default class Maps extends Component {
     constructor(props) {
       super(props);
@@ -77,10 +79,20 @@ export default class Maps extends Component {
 	//if(state!=='active') this.turnOffGps();    //crash
 	//else if(this.state.gps) this.turnOnGps();
     }
+    /*checkUsbDevice(){
+      //UsbSerial.open(9600);
+      //UsbSerial.write('test');
+      //UsbSerial.close();
+      alert('checkUsbDevice')
+      serial.listen(9600, '\n', (e)=>{
+        alert('received:'+e.data)
+      });
+    }*/
     componentWillMount(){
         this.permission();
+        //this.checkUsbDevice();
         this.loadIcons(Global.TYPE_ICONS[this.state.type]);
-	AppState.addEventListener('change', this._handleAppStateChange);
+	//AppState.addEventListener('change', this._handleAppStateChange);
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -93,7 +105,8 @@ export default class Maps extends Component {
     }
     componentWillUnmount() { 
       this.turnOffGps();
-      AppState.removeEventListener('change', this._handleAppStateChange);
+      //AppState.removeEventListener('change', this._handleAppStateChange);
+      //serial.close();
     }
     turnOnGps(){
       let self=this
