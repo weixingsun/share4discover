@@ -5,7 +5,7 @@ import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
 import KKLocation from 'react-native-baidumap/KKLocation';
-//import UsbSerial from 'react-native-usbserial';
+import UsbSerial from 'react-native-usbserial';
 import {Icon,getImageSource} from './Icon'
 //import MapGL from 'react-native-mapbox-gl'
 import Store from "../io/Store"
@@ -88,6 +88,9 @@ export default class Maps extends Component {
         alert('received:'+e.data)
       });
     }*/
+    sendDataToUsbSerialDevice(data){
+        UsbSerial.write(data);
+    }
     componentWillMount(){
         this.permission();
         //this.checkUsbDevice();
@@ -114,6 +117,7 @@ export default class Maps extends Component {
         this.watchID = navigator.geolocation.watchPosition((position) => {
             //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
             self.pos=position.coords
+            self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
           (error) => console.log(error.message),
           {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
@@ -122,6 +126,7 @@ export default class Maps extends Component {
         this.watchID = KKLocation.watchPosition((position) => {
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           self.pos=position.coords
+          self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
         });
       }
       this.setState({gps:true});
