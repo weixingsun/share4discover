@@ -23,12 +23,18 @@ export default class USBList extends React.Component {
     }
     componentWillMount(){
         //Store.insertExampleData();
-        //this.load();
         let self=this;
         UsbSerial.listDevices().then((list)=>{
             self.setState({
-                dataSource:this.ds.cloneWithRows(list),
+                dataSource:self.ds.cloneWithRows(list),
             });
+        })
+        UsbSerial.monitor((e)=>{
+            //alert(typeof e.attached)
+            if(e.attached != null) 
+                this.setState({
+                    dataSource:this.ds.cloneWithRows(e.attached),
+                });
         })
     }
     openChatWindow(device){
