@@ -18,6 +18,7 @@ I18n.translations = {
     wb: 'Weibo',
     ok: 'OK',
     cancel: 'Cancel',
+    usb: 'USB',
   },
   zh_CN: {
     hi: '你好',
@@ -34,6 +35,7 @@ I18n.translations = {
     wb: '微博',
     ok: '确定',
     cancel: '取消',
+    usb: 'USB',
   },
   fr: {
     hi: 'Bonjour',
@@ -50,6 +52,7 @@ I18n.translations = {
     wb: 'Weibo',
     ok: 'OK',
     cancel: 'Cancel',
+    usb: 'USB',
   },
 }
 function loadLang(lang){

@@ -4,7 +4,7 @@ import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navi
 import Tabs from 'react-native-tabs'
 import Drawer from 'react-native-drawer'
 import OneSignal from 'react-native-onesignal';
-import UsbSerial from 'react-native-usbserial';
+//import UsbSerial from 'react-native-usbserial';
 import {Icon} from './Icon'
 import Store from "../io/Store"
 import Net from "../io/Net"
@@ -67,16 +67,16 @@ export default class Main extends Component {
       }
       this.checkSettingsChange();
       this.notification();
-      this.checkUsbDevice();
+      //this.checkUsbDevice();
   }
-  checkUsbDevice(){
+  //checkUsbDevice(){
       //UsbSerial.open(9600);
       //UsbSerial.write('test');
       //UsbSerial.close();
-      UsbSerial.listen(9600, '\n', (e)=>{
-        alert('received:'+e.data)
-      });
-  }
+      //UsbSerial.listen(9600, '\n', (e)=>{
+      //  alert('received:'+e.data)
+      //});
+  //}
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
       if (routers.length > 1) {

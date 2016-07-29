@@ -7,6 +7,7 @@ import LoginWX from './LoginWX'
 import LoginWB from './LoginWB'
 import Style from './Style'
 import APIList from './APIList'
+import UsbList from './UsbList'
 import Settings from './Settings'
 //import MapSettings from './MapSettings'
 import Store from '../io/Store'
@@ -171,6 +172,16 @@ export default class SettingsList extends React.Component {
                           <Icon name={'fa-plug'} size={30}/>
                       </View>
                       <Text>{I18n.t('plugin')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: UsbList,
+                      passProps: {navigator:this.props.navigator,},
+                  })}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'fa-usb'} size={30}/>
+                      </View>
+                      <Text>{I18n.t('usb')}</Text>
                   </TouchableOpacity>
                   <View style={Style.left_card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
