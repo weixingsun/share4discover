@@ -1,10 +1,11 @@
 'use strict';
 import React, {Component} from 'react'
-import {ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import {ListView, View, Text,TextInput, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 import {Icon} from './Icon'
 import Style from './Style'
 import NavigationBar from 'react-native-navbar'
 import UsbSerial from 'react-native-usbserial';
+import Button from 'apsl-react-native-button'
 
 export default class APIList extends React.Component {
     constructor(props) {
@@ -14,43 +15,45 @@ export default class APIList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
-          //dataSource:this.ds.cloneWithRows(this.api_list),
-          readList:[],
-          //dataSource:this.ds.cloneWithRows(this.state.readList),
+          msgList:[],
       };
     }
     componentWillMount(){
-        //UsbSerial.listDevices().then((list)=>{ ... })
         UsbSerial.listen(this.props.usb.device, 9600, '\n', (e)=>{
-            //alert('received:'+JSON.stringify(e))
             if(e.read){
-                let arr = this.state.readList
-                arr.push(e.read)
-                this.setState({readList:arr})
+                let arr = this.state.msgList
+                let newMsg = {send:0,data:e.read}
+                arr.push(newMsg)
+                this.setState({msgList:arr})
+            }else if(e.attached){
+                //alert(JSON.stringify(e.attached))
             }
         });
     }
     componentWillUnmount(){
         UsbSerial.close();
     }
-    sendDataToUsbSerialDevice(data){
-        UsbSerial.write(data);
-    }
-    openChatWindow(){
-        this.props.navigator.push({
-            component: ListWeb,
-            //passProps: {url:'https://kyfw.12306.cn/otn/leftTicket/init',},
-            passProps: {navigator:this.props.navigator,},
-        });
+    sendMsgToUsb(){
+        if(this.state.text.length>0)
+            UsbSerial.write(this.state.text);
+        let arr = this.state.msgList
+        let newMsg = {send:1,data:this.state.text}
+        arr.push(newMsg)
+        this.setState({msgList:arr,text:''})
     }
     _renderRow(data, sectionID, rowID) {
-        //this.incSeq();
-        //UsbSerial  {device,serialNumber,product,vendor,productId,vendorId}
+        let alignTo = 'flex-start'
+        if(data.send==1) alignTo = 'flex-end'
         return (
-          <View style={Style.card}>
-              <View style={{flexDirection:'row'}}>
-                  <Text>{ data }</Text>
-              </View>
+          <View style={{
+              alignItems:alignTo,
+              flexDirection: 'row',
+              padding: 12,
+              height: 44,
+              borderWidth: 1,
+              borderColor: '#AAAAAA',
+              }}>
+                  <Text>{ JSON.stringify(data) }</Text>
           </View>
         );
     }
@@ -70,13 +73,28 @@ export default class APIList extends React.Component {
           <ListView
               enableEmptySections={true}      //annoying warning
               style={styles.listViewContainer}
-              dataSource={ this.ds.cloneWithRows(this.state.readList) }
+              dataSource={ this.ds.cloneWithRows(this.state.msgList) }
               renderRow={this._renderRow.bind(this)}
               //renderHeader={this._renderHeader.bind(this)}
               //renderSectionHeader = {this._renderSectionHeader.bind(this)}
               automaticallyAdjustContentInsets={false}
               initialListSize={9}
           />
+          <View style={{padding:10,backgroundColor:'#d3d3d3',flexDirection:'row',height:Style.NAVBAR_HEIGHT+14}}>
+              <TextInput 
+                  style={{flex:1,height:Style.NAVBAR_HEIGHT-20}}
+                  onChange={(event) => {
+                      this.setState({
+                           text: event.nativeEvent.text,
+                      });
+                  }}
+                  value={this.state.text}
+              />
+              <Button 
+                  style={{backgroundColor:'#3498db',borderColor:'#2980b9',width:80,height:Style.NAVBAR_HEIGHT-30}}
+                  onPress={()=>this.sendMsgToUsb()}
+              >Send</Button>
+          </View>
       </View>
       );
     }
@@ -92,7 +110,8 @@ var styles = StyleSheet.create({
         padding: 15,
     },
     listViewContainer: {
-        flex: 1,
+        //flex: 1,
+        height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.NAVBAR_HEIGHT-14,
         flexDirection: 'column',
     },
     buttonContainer: {
