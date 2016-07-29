@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "RCTRootView.h"
 #import "CodePush.h"
+#import "RCTOneSignal.h"
 #import "RNGoogleSignin.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
@@ -19,10 +20,11 @@ BMKMapManager* mapManager;
 
 @implementation AppDelegate
 
+@synthesize oneSignal = _oneSignal;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
   /**
    * $ npm start
    */
@@ -45,6 +47,8 @@ BMKMapManager* mapManager;
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
 
+  self.oneSignal = [[RCTOneSignal alloc] initWithLaunchOptions:launchOptions
+                                                         appId:@"beed51f1-1763-4ab3-bcd2-da4364786ceb"];
     BMKMapManager *mapManager = [[BMKMapManager alloc] init];
     //BOOL ret = [mapManager start:@"6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L" generalDelegate:nil];
     BOOL ret = [mapManager start:@"Cyq8AKxGeAVNZSzV0Dk74dGpRsImpIHu" generalDelegate:nil];
@@ -87,4 +91,8 @@ BMKMapManager* mapManager;
   return YES;
 }
 
+// Required for the notification event.
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
+    [RCTOneSignal didReceiveRemoteNotification:notification];
+}
 @end
