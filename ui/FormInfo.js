@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {ActivityIndicator, Alert, Image, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import ExNavigator from '@exponent/react-native-navigator';
@@ -14,6 +14,9 @@ import Immutable from 'immutable'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import PlaceSearch from './PlaceSearch'
 import ImagePicker from 'react-native-image-picker'
+import Image from 'react-native-image-progress';
+//import Progress from 'react-native-progress';
+import ProgressBar from 'react-native-progress/Bar';
  
 export default class FormInfo extends Component {
     constructor(props) {
@@ -307,7 +310,9 @@ export default class FormInfo extends Component {
                     if(this.state.uploading[id] <100) source={uri:Global.empty_image}
                     return (
                         <Image key={pic.uri} source={source}
-                            style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}>
+                            style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}
+                            indicator={ProgressBar}
+                        >
                             {
                               this.state.uploading[id]<100 ?
                               <View style={styles.progress}>

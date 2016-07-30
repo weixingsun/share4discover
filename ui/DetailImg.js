@@ -7,13 +7,16 @@ import {
   Text,
   View,
   Dimensions,
-  Image,
+  //Image,
   TouchableHighlight,
   TouchableOpacity,
   TouchableNativeFeedback,
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import Image from 'react-native-image-progress';
+//import Progress from 'react-native-progress';
+import ProgressBar from 'react-native-progress/Bar';
 import Swiper from 'react-native-swiper'
 //import ViewPager from 'react-native-viewpager';
 import Global from '../io/Global'
@@ -56,7 +59,12 @@ var TopScreen = React.createClass({
               return (
                 <TouchableWithoutFeedback key={id} onPressIn={this.handlePressIn}  onPressOut={this.handlePressOut} >
                   <View style={styles.slide} title={<Text numberOfLines={1}>{name}</Text>}>
-                    <Image resizeMode={'contain'} style={styles.image} source={{uri: this.state.host+name}} />
+                    <Image 
+                        resizeMode={'contain'}
+                        style={styles.image}
+                        source={{uri: this.state.host+name}} 
+                        indicator={ProgressBar}
+                    />
                   </View>
                 </TouchableWithoutFeedback>
               )
