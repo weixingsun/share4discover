@@ -34,26 +34,37 @@ export default class APIList extends React.Component {
         UsbSerial.close();
     }
     sendMsgToUsb(){
-        if(this.state.text.length>0)
+        if(this.state.text.length>0){
             UsbSerial.write(this.state.text);
-        let arr = this.state.msgList
-        let newMsg = {send:1,data:this.state.text}
-        arr.push(newMsg)
-        this.setState({msgList:arr,text:''})
+            let arr = this.state.msgList
+            let newMsg = {send:1,data:this.state.text}
+            arr.push(newMsg)
+            this.setState({msgList:arr,text:''})
+        }
+    }
+    rowLeftBlankView(json){
+        if(json.send==1)
+            return <View style={{flex:1}}/>
+    }
+    rowRightBlankView(json){
+        if(json.send==0)
+            return <View style={{flex:1}}/>
     }
     _renderRow(data, sectionID, rowID) {
-        let alignTo = 'flex-start'
-        if(data.send==1) alignTo = 'flex-end'
         return (
-          <View style={{
-              alignItems:alignTo,
-              flexDirection: 'row',
-              padding: 12,
-              height: 44,
-              borderWidth: 1,
-              borderColor: '#AAAAAA',
-              }}>
-                  <Text>{ JSON.stringify(data) }</Text>
+          <View style={{height: 44,flexDirection:'row'}} >
+              {this.rowLeftBlankView(data)}
+              <View style={{
+                  padding: 6,
+                  height: 40,
+                  borderWidth: 1,
+                  borderColor: '#AAAAAA',
+                  backgroundColor:'#ef553a',
+                  borderRadius:10,
+                  }}>
+                  <Text style={{fontSize:18,color:'white'}}>{data.data}</Text>
+              </View>
+              {this.rowRightBlankView(data)}
           </View>
         );
     }
