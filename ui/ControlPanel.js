@@ -1,7 +1,7 @@
 import React, { Component,PropTypes } from 'react'
 import {ListView, Picker, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View,} from 'react-native'
 import {Icon} from './Icon'
-import Slider from 'react-native-slider'
+//import Slider from 'react-native-slider'
 import Style from './Style'
 import PlaceSearch from './PlaceSearch'
 
@@ -67,12 +67,6 @@ export default class ControlPanel extends Component {
             <View style={{flex:1}} />
             <Text style={{color:'white',marginRight:10}}>{(this.state.filters.range/1000).toFixed(1)} km</Text>
         </View>
-        <Slider 
-            trackStyle={iosStyles.track}
-            thumbStyle={iosStyles.thumb}
-            minimumTrackTintColor='#1073ff'
-            maximumTrackTintColor='#b7b7b7'
-            value={this.state.filters.range/this.radius} onValueChange={(value) => this.changeRange(value)} />
         <View style={{flex:1,flexDirection:'row',height:20,justifyContent:'center',}}>
             <Text style={{color:'white',marginLeft:5,}}>Types</Text>
             <View style={{flex:1}} />
@@ -94,6 +88,13 @@ export default class ControlPanel extends Component {
   }
 }
 /*
+        <Slider
+            trackStyle={iosStyles.track}
+            thumbStyle={iosStyles.thumb}
+            minimumTrackTintColor='#1073ff'
+            maximumTrackTintColor='#b7b7b7'
+            value={this.state.filters.range/this.radius} onValueChange={(value) => this.changeRange(value)} />
+
 <Icon name={'map-marker'} size={35} color={'#1faadb'} style={{marginLeft:10,marginRight:12,marginBottom:5}} />
         <ListView
           dataSource={this.state.typeSource}

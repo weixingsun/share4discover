@@ -13,8 +13,6 @@
     "react-native-android-permissions": "0.0.6",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
     "react-native-code-push": "^1.13.2-beta",
-    "react-native-datetime": "^0.1.2",
-    "react-native-drawer": "^2.2.2",
     "react-native-facebook-login": "^1.2.0",
     "react-native-gifted-form": "git+https://github.com/weixingsun/react-native-gifted-form.git",
     "react-native-google-signin": "^0.6.1",
@@ -26,21 +24,18 @@
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-keyboard-aware-scrollview": "^1.1.1",
     "react-native-localization": "^0.1.15",
-    "react-native-maps": "^0.7.1",
+    "react-native-maps": "latest",
     "react-native-navbar": "^1.5.0",
     "react-native-onesignal": "^1.2.0",
     "react-native-progress": "^3.0.1",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
-    "react-native-slider": "^0.7.1",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",
     "react-native-swiper": "^1.4.6",
-    "react-native-tableview-simple": "^0.10.1",
     "react-native-tabs": "^1.0.8",
     "react-native-usbserial": "git+https://github.com/weixingsun/react-native-usbserial.git",
     "react-native-vector-icons": "^2.0.3",
     "react-native-viewpager": "^0.2.11",
     "react-native-wechat": "^1.4.7",
-    "react-native-weibo": "^1.0.5",
-    "react-timer-mixin": "^0.13.3"
+    "react-native-weibo": "^1.0.5"
   }
 }

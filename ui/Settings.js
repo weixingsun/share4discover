@@ -6,7 +6,7 @@ import Store from '../io/Store'
 import Global from '../io/Global'
 import Style from './Style'
 import Loading from './Loading'
-import PlaceForm from './PlaceForm'
+//import PlaceForm from './PlaceForm'
 import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 //import YQL from 'yql' //sorry, react native is not nodejs

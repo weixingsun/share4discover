@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_id": "stone-botany-480",
-    "project_number": "840928054415",
-    "name": "Botany"
+    "project_id": "share-50667",
+    "project_number": "562005031552",
+    "name": "Share"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:840928054415:android:e1d4dfa09e71e5d1",
+        "mobilesdk_app_id": "1:562005031552:android:e1d4dfa09e71e5d1",
         "client_id": "android:com.share",
         "client_type": 1,
         "android_client_info": {
@@ -17,15 +17,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com",
+          "client_id": "562005031552-0c7t5d6m39g0pu50pibll1bdkr5aag9r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.share",
-            "certificate_hash": "9710C84B9F9CED7B9285CB95D6D825FB9B4A661B"
+            "certificate_hash": "F9F346155559226AFB7592FF23B475AF20E722D6"
           }
         },
         {
-          "client_id": "840928054415-nbk5fsk6n3sfrl3urj5bmpobhsq3ff42.apps.googleusercontent.com",
+          "client_id": "562005031552-0090s2j3muc1mkelqmokg2is1oqahajj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

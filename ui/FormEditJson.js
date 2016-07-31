@@ -4,7 +4,7 @@ import {Alert, Picker, StyleSheet, Text, View } from 'react-native';
 import Button from 'apsl-react-native-button';
 import {Icon} from './Icon'
 //import Form from 'react-native-tableview-form';
-import Form from './Form';
+//import Form from './Form';
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
@@ -128,6 +128,13 @@ export default class PDF extends Component {
     }
     render(){
         //console.log('rendering....yql:'+JSON.stringify(this.state.yql));
+/*
+                    <Form
+                        style={{flex:1}}
+                        ref={(frm)=> this.loginForm = frm}
+                        model={this.state.model}
+                    />
+*/
         return (
             <View style={{flex:1}}>
                   <NavigationBar style={Style.navbar} title={{title: '',}}
@@ -143,11 +150,6 @@ export default class PDF extends Component {
                    }
                   />
                 <View style={styles.container}>
-                    <Form
-                        style={{flex:1}}
-                        ref={(frm)=> this.loginForm = frm}
-                        model={this.state.model}
-                    />
                     <Button onPress={this.onSubmit.bind(this)}>
                        Save
                     </Button>

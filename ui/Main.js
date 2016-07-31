@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
-import Drawer from 'react-native-drawer'
+//import Drawer from 'react-native-drawer'
 import OneSignal from 'react-native-onesignal';
 //import UsbSerial from 'react-native-usbserial';
 import {Icon} from './Icon'

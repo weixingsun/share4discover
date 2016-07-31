@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
-import ExNavigator from '@exponent/react-native-navigator';
 import NavigationBar from 'react-native-navbar';
 import Style from './Style';
 import Store from '../io/Store';
@@ -23,7 +22,7 @@ export default class FormInfo extends Component {
         super(props);
         this.ctime = +new Date();
         this.state={ 
-            pics_changed:false,
+            //pics_changed:false,
             uploading:[],
             add_fields:{
               Price:   'Price:num',
@@ -192,7 +191,8 @@ export default class FormInfo extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
-                  Net.setMsg(values)
+                  Net.setMsg(values);
+                  //Net.setMyMsg();
                   if(this.props.msg!=null) self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
                   self.props.navigator.pop();
               }},
@@ -315,7 +315,7 @@ export default class FormInfo extends Component {
                         >
                             {
                               this.state.uploading[id]<100 ?
-                              <View style={styles.progress}>
+                              <View style={{flex: 1,alignItems: 'center',justifyContent: 'center',}}>
                                   <Text style={{fontWeight: 'bold',color:'blue'}}>{Math.floor(this.state.uploading[id])}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> :
@@ -362,7 +362,7 @@ export default class FormInfo extends Component {
                   //delete file from server
                   //self._deletePic(this.ctime,filename)
                   pictures.splice(id,1)
-                  self.setState({pics_changed:true, form:{...self.state.form, pics:pictures}});
+                  self.setState({ form:{...self.state.form, pics:pictures}});  //pics_changed:true,
               }},
             ]
         )
