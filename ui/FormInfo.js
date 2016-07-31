@@ -198,7 +198,11 @@ export default class FormInfo extends Component {
                           if(this.props.msg!=null){ //edit
                               self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
                           }else{
-                              var my_value={key:'*'+Global.mainlogin, field:Global.getKeyFromMsg(values), value:'owner'}
+                              var my_value={
+                                  key:'*'+Global.mainlogin, 
+                                  field:Global.getKeyFromMsg(values), 
+                                  value:'owner|open'
+                              }
                               Net.putHash(my_value);
                           }
                           self.props.navigator.pop();

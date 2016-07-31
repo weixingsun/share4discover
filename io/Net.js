@@ -60,6 +60,10 @@ var Net = {
           body: JSON.stringify(data)
       });
     },
+    getObjByKey(key){
+        var url = HOST+'api/key/'+key;  // not #
+        return this._get(url);
+    },
     getMsgTypes(){
       var url = HOST+'api/msg_types';
       return this._get(url);
@@ -73,8 +77,12 @@ var Net = {
       var url = this.HOST+'api/msg/'+key;
       return this._get(url);
     },
-    getNotify(key){
-      var url = this.HOST+'api/notify/'+key;  //#fb:email
+    getMyMsgs(key){    //*fb:email
+      var url = this.HOST+'api/mymsg/'+key;
+      return this._get(url);
+    },
+    getNotify(key){    //@fb:email
+      var url = this.HOST+'api/notify/'+key;
       return this._get(url);
     },
     setMsg(json){

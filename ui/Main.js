@@ -17,7 +17,7 @@ import ControlPanel from "./ControlPanel"
 import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import NotifyList from './NotifyList'
-import FriendList from './FriendList'
+import MyList from './MyList'
 
 export default class Main extends Component {
   constructor(props) {
@@ -254,7 +254,7 @@ export default class Main extends Component {
     if(this.state.page ===Store.msgTab){
       return <NotifyList navigator={this.props.navigator} mainlogin={Global.mainlogin} mails={this.state.mails} />
     } else if(this.state.page ===Store.userTab){
-      return <FriendList navigator={this.props.navigator} />
+      return <MyList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
       return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={Global.mainlogin} />
     } else if(this.state.page ===Store.confTab){

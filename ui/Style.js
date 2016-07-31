@@ -187,11 +187,11 @@ module.exports = {
     //alignItems: 'center'
   },
   rowThumbnail: {
-    width: 66,
-    height: 66,
+    width: 55,
+    height: 55,
   },
   rowTitleView:{
-    height: 66,
+    height: 56,
     //marginBottom: 10,
     justifyContent: 'center',
     //flex:1,
