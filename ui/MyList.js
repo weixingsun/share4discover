@@ -8,6 +8,7 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
+import FormInfo from "./FormInfo"
 //import Drawer from 'react-native-drawer'
 //import ControlPanel from './ControlPanel'
 
@@ -61,16 +62,17 @@ export default class MyList extends Component {
       </TouchableHighlight>
     );
   }
+  renderAddIcon(){
+      if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
+      else return <Icon name={'ion-ios-add'} size={50} color={'black'} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+  }
   render() {
     return (
       <View style={Style.absoluteContainer}>
-        <NavigationBar style={Style.navbar} title={{title:'My shares',}} 
-            leftButton={
-                <Icon name={'ion-ios-search'} size={40} onPress={()=>{} }/>
-            }
-            rightButton={
-                <Icon name={'ion-ios-add'} size={48} onPress={()=>{}}/>
-            } />
+        <NavigationBar style={Style.navbar} title={{title:'My Shares',}} 
+            //leftButton={}
+            rightButton={ this.renderAddIcon() }
+        />
         <ListView 
             dataSource={this.ds.cloneWithRows(this.state.myMsgList)} 
             renderRow={this._renderRowView.bind(this)} 
