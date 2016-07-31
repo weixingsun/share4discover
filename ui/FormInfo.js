@@ -191,10 +191,21 @@ export default class FormInfo extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
-                  Net.setMsg(values);
-                  //Net.setMyMsg();
-                  if(this.props.msg!=null) self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
-                  self.props.navigator.pop();
+                  Net.setMsg(values).then((ret)=> {
+                      //alert(JSON.stringify(ret));
+                      if(ret.phone == values.phone){
+                          alert('created successfully');
+                          if(this.props.msg!=null){ //edit
+                              self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
+                          }else{
+                              var my_value={key:'*'+Global.mainlogin, field:Global.getKeyFromMsg(values), value:'owner'}
+                              Net.putHash(my_value);
+                          }
+                          self.props.navigator.pop();
+                      }else{
+                          alert(ret)
+                      }
+                  })
               }},
             ]
         )

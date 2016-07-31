@@ -81,7 +81,11 @@ var Net = {
       var url = this.HOST+'api/msg/';
       return this._post(url, json);
     },
-    putMsg(json){
+    setMyMsg(json){
+      var url = this.HOST+'api/msg/';
+      return this._post(url, json);
+    },
+    putHash(json){
       var url = this.HOST+'api/msg/';
       return this._put(url, json);
     },
@@ -94,9 +98,9 @@ var Net = {
       //alert('Net.getHKeys() url='+url)
       return this._get(url);
     },
-    putHash(url,json){
-      return this._put(url,json);
-    },
+    //putHash(url,json){
+    //  return this._put(url,json);
+    //},
     delHash(data){
       var url = this.HOST+'api/hashkey';
       return this._del_body(url,data);

@@ -53,8 +53,8 @@ export default class Detail extends Component {
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    Net.putMsg(value)
-                    Net.putMsg(notify_value)
+                    Net.putHash(value)
+                    Net.putHash(notify_value)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -73,8 +73,8 @@ export default class Detail extends Component {
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    Net.putMsg(value)
-                    //Net.putMsg(notify_value)
+                    Net.putHash(value)
+                    //Net.putHash(notify_value)
                     _this.props.navigator.pop();
                 }},
             ]

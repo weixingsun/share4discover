@@ -84,6 +84,7 @@ module.exports = {
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     mainlogin: '',
     logins: {},
+    ALL_MSGS: '$allmsgs',
     user_fb:null,
     user_gg:null,
     user_wb:null,
