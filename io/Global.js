@@ -82,6 +82,7 @@ module.exports = {
     host_image: 'http://nzmessengers.co.nz/service/',
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
+    IP2LOC_HOST: 'http://freegeoip.net/json',
     mainlogin: '',
     logins: {},
     ALL_MSGS: '$allmsgs',

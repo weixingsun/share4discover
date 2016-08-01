@@ -154,12 +154,19 @@ export default class Main extends Component {
       if(Global.MAP == null)
       Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
         if(map_value != null){
-            _this.map = map_value;
+            Global.MAP = map_value
         }else{
-            _this.map = 'BaiduMap'
+            _this.getCountryCodeFromNetwork();
         }
-        Global.MAP = _this.map
       });
+  }
+  getCountryCodeFromNetwork(){
+      let _this=this
+      Net._get(Global.IP2LOC_HOST).then((result)=>{
+          if(result.country_code == 'CN') 
+               Global.MAP = 'BaiduMap';
+          else Global.MAP = 'GoogleMap';
+      })
   }
   timerFunction(){
       this.loadNotifyByLogin()
