@@ -9,6 +9,7 @@ import Style from './Style'
 import APIList from './APIList'
 import UsbList from './UsbList'
 import Settings from './Settings'
+import Help from './Help'
 //import MapSettings from './MapSettings'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -77,7 +78,12 @@ export default class SettingsList extends React.Component {
            //}
         //});
     }
-
+    help(){
+        this.props.navigator.push({
+            component: Help,
+            passProps: {navigator:this.props.navigator,},
+        })
+    }
     componentDidMount(){
         CodePush.notifyApplicationReady();
     }
@@ -145,6 +151,13 @@ export default class SettingsList extends React.Component {
                           <Icon name={'ion-ios-arrow-up'} size={35}/>
                       </View>
                       <Text>{I18n.t('update')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.help()}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'fa-question-circle'} size={30}/>
+                      </View>
+                      <Text>{I18n.t('help')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
                       <View style={{width:DEVICE_WIDTH/3}} />

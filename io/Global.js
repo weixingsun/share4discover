@@ -5,6 +5,7 @@ I18n.fallbacks = true;
 I18n.translations = {
   en: {
     hi: 'Hi',
+    help:'Help',
     update: 'Update',
     about: 'About',
     settings: 'Settings',
@@ -22,6 +23,7 @@ I18n.translations = {
   },
   zh_CN: {
     hi: '你好',
+    help: '帮助',
     update: '更新',
     about: '关于',
     settings: '设置',
@@ -39,6 +41,7 @@ I18n.translations = {
   },
   fr: {
     hi: 'Bonjour',
+    help: 'Help',
     update: 'Update',
     about: 'About',
     settings: 'Settings',
@@ -82,6 +85,7 @@ module.exports = {
     host_image: 'http://nzmessengers.co.nz/service/',
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
+    host_image_help: 'http://nzmessengers.co.nz/service/help/',
     IP2LOC_HOST: 'http://freegeoip.net/json',
     mainlogin: '',
     logins: {},
