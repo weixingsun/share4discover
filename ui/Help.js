@@ -19,13 +19,14 @@ import Image from 'react-native-image-progress';
 //import Progress from 'react-native-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import Swiper from 'react-native-swiper'
+import Button from 'apsl-react-native-button'
 //import ViewPager from 'react-native-viewpager';
 import Global from '../io/Global'
 var {H, W} = Dimensions.get('window');
 
 var TopScreen = React.createClass({
   getInitialState: function() {
-    let IMGS = ['help1.png','help2.png','help3.png']
+    let IMGS = ['iphone6_v_help1.png','iphone6_v_help2.png','iphone6_v_help3.png','iphone6_v_help4.png']
     return {
       index:0,
       image_names:IMGS,
@@ -55,13 +56,24 @@ var TopScreen = React.createClass({
       //<TouchableWithoutFeedback key={id}> // onPressIn={this.handlePressIn}  onPressOut={this.handlePressOut} >
       return (
           this.state.image_names.map((name,id)=>{
+              let text = 'Skip'
+              if(id>2) text = 'Start'
               return (
                     <Image key={id}
-                        resizeMode={'contain'}
+                        resizeMode={'cover'}  //cover,contain,repeat
                         style={styles.image}
                         source={{uri: this.state.host+name}} 
                         indicator={ProgressBar}
-                    />
+                    >
+                        <Button
+                            style={{
+                                backgroundColor:'#3498db',borderColor:'#2980b9',
+                                width:80,height:40,bottom:30,right:10,
+                                position: 'absolute',
+                            }}
+                            onPress={()=>this.props.navigator.pop()}
+                        >{text}</Button>
+                    </Image>
               )
           })
       )
@@ -69,11 +81,11 @@ var TopScreen = React.createClass({
   render() {
     return (
       <View>
-        <Swiper style={styles.wrapper}//loop={true}
+        <Swiper style={styles.wrapper} loop={false}
           dot={<View style={{backgroundColor:'rgba(0,0,0,.2)', width: 10, height: 10,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
           activeDot={<View style={{backgroundColor: '#000', width: 12, height: 12, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
           paginationStyle={{
-            bottom: 3, left: null, right: 10,
+            bottom: 30, //left: null, right: 10,
           }} >
             { this.renderPages() }
         </Swiper>
