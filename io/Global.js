@@ -90,6 +90,7 @@ module.exports = {
     mainlogin: '',
     logins: {},
     ALL_MSGS: '$allmsgs',
+    SHOW_ADS: 'ShowAds',
     user_fb:null,
     user_gg:null,
     user_wb:null,

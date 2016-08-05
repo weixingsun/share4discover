@@ -18,6 +18,7 @@ import APIList   from "./APIList"
 import SettingsList   from "./SettingsList"
 import NotifyList from './NotifyList'
 import MyList from './MyList'
+import Help from './Help'
 
 export default class Main extends Component {
   constructor(props) {
@@ -132,6 +133,15 @@ export default class Main extends Component {
               //}
           }
       });
+  }
+  checkFirstTime(){
+      let self=this
+      Store.get_string(Global.SHOW_ADS).then(function(user){
+          if(user == null){
+             Store.save_string(Global.SHOW_ADS,'no');
+             self.props.navigator.push({component:Help, passProps:{navigator:self.props.navigator} })
+          }
+      })
   }
   checkMapSettings(){
       var _this = this;
@@ -272,6 +282,7 @@ export default class Main extends Component {
       this.checkLogin('user_fb')
       this.checkLogin('user_gg')
       this.checkMapSettings()
+      this.checkFirstTime()
       if(Global.mainlogin.length===0) this.setState({mails:[]})
   }
   gotoPage(name){
