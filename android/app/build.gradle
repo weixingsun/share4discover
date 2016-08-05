@@ -93,7 +93,7 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         manifestPlaceholders = [
-            WB_APPID: "WB_APPID",
+            WB_APPID: "964503517",
             manifestApplicationId: "${applicationId}",
             onesignal_app_id: "beed51f1-1763-4ab3-bcd2-da4364786ceb",
             onesignal_google_project_number: "562005031552"
@@ -138,10 +138,11 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-photo-view')
     compile project(':react-native-usbserial')
     compile project(':react-native-onesignal')
     compile project(':react-native-android-permissions')
-    compile project(':gl-react-native')
+    //compile project(':gl-react-native')
     compile project(':react-native-i18n')
     compile project(':react-native-image-picker')
     compile project(':react-native-code-push')

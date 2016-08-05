@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "apsl-react-native-button": "^3.0.0",
-    "gl-react-native": "^2.28.3",
     "react": "^15.2.1",
     "react-native": "^0.29.2",
     "react-native-android-permissions": "0.0.6",
@@ -18,7 +17,6 @@
     "react-native-google-signin": "^0.6.1",
     "react-native-i18n": "0.0.8",
     "react-native-icon-badge": "^1.1.0",
-    "react-native-image-cropper": "0.0.2",
     "react-native-image-picker": "^0.20.1",
     "react-native-image-progress": "^0.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
@@ -27,6 +25,7 @@
     "react-native-maps": "latest",
     "react-native-navbar": "^1.5.0",
     "react-native-onesignal": "^1.2.0",
+    "react-native-photo-view": "^1.0.1",
     "react-native-progress": "^3.0.1",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",

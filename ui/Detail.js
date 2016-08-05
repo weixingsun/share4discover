@@ -5,7 +5,8 @@ import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
-import {ImageCrop} from 'react-native-image-cropper'
+//import {ImageCrop} from 'react-native-image-cropper'
+import PhotoView from 'react-native-photo-view';
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 //import ZoomableImage from './ZoomableImage2';
@@ -229,7 +230,7 @@ export default class Detail extends Component {
                 </View>
             )
     }
-    renderModal(){
+    /*renderModal(){
       //let key = Global.getKeyFromMsg(this.props.msg);
       let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
       return (
@@ -256,6 +257,29 @@ export default class Detail extends Component {
                 >
                         <Image style={{width:20,height:20,margin:5}} source={this.close_image} />
                 </TouchableHighlight>
+            </View>
+        </Modal>
+      )
+    }*/
+    renderModal(){
+      //let key = Global.getKeyFromMsg(this.props.msg);
+      let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
+      return (
+        <Modal 
+            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
+            //transform: [{scale: this.state.scaleAnimation}]
+            visible={this.state.show_pic_modal}
+        >
+            <View>
+                <PhotoView
+                  source={{uri: uri}}
+                  minimumZoomScale={0.5}
+                  maximumZoomScale={3}
+                  androidScaleType="center"
+                  //onLoad={() => alert("Image loaded!")}
+                  onTap={this.closeZoom}
+                  style={{width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}} 
+                />
             </View>
         </Modal>
       )

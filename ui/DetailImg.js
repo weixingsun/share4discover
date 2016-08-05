@@ -48,7 +48,7 @@ var TopScreen = React.createClass({
       let moveY = Math.abs(e.nativeEvent.pageY-this.state.Y)
       let move = moveX+moveY;
       //alert('time:'+time+' move:'+move)  //time<80000000 move<40
-      if(move<40) {
+      if(move<10) {
           //alert('index:'+this.state.index+' file:'+this.state.image_names[this.state.index]+' time:'+time+' move:'+move)
           this.openPicModal();
       }

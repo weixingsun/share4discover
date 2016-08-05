@@ -16,8 +16,9 @@ import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
-import com.projectseptember.RNGL.RNGLPackage;
+//import com.projectseptember.RNGL.RNGLPackage;
 import com.wxsun.usbserial.UsbReactPackage;
+import com.reactnative.photoview.PhotoViewPackage;
 
 import android.app.Application;
 import android.util.Log;
@@ -67,7 +68,8 @@ public class MainApplication extends Application implements ReactApplication {
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),
-        new RNGLPackage(),
+        new PhotoViewPackage(),
+        //new RNGLPackage(),
         new ReactMapPackage(),  //BaiduMap
         new MapsPackage()   //GoogleMap
       );
