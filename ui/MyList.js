@@ -30,12 +30,14 @@ export default class MyList extends Component {
   requestMyMsgs(){
       let list = []
       let self = this
-      Net.getMyMsgs('*'+Global.mainlogin).then((rows)=>{
-          //alert(JSON.stringify(rows))
-          self.setState({myMsgList:rows})
-      }).catch((e)=>{
-          alert('Network Problem!')
-      });
+      if(Global.mainlogin.length>0) {
+          Net.getMyMsgs('*'+Global.mainlogin).then((rows)=>{
+              //alert(JSON.stringify(rows))
+              self.setState({myMsgList:rows})
+          }).catch((e)=>{
+              alert('Network Problem!')
+          });
+      }
   }
   _onPress(rowData) {
       this.props.navigator.push({
@@ -63,7 +65,7 @@ export default class MyList extends Component {
     );
   }
   renderAddIcon(){
-      if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
+      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish your share') }/>
       else return <Icon name={'ion-ios-add'} size={50} color={'black'} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
   }
   render() {

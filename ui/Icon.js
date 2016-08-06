@@ -12,13 +12,15 @@ class Icon extends Component {
       //  if(name.startsWith('fa')) return FIcon.getImageSource(name.substring(3),size,color)
     }*/
     renderIcon(){
-        if(this.props.name == null) throw new Error('Icon: Invalid Chars');
+        let name = this.props.name
+        if(this.props.name == null) //throw new Error('Icon: Invalid Chars');
+            name = 'fa-circle-thin'
 	var margin = this.props.badge? {marginRight:10}:{};
 	//console.log("Icon["+this.props.name+"]color="+this.props.color+",margin="+JSON.stringify(margin))
-        if(this.props.name.substring(0,3) ==='ion')
-            return <IIcon name={this.props.name.substring(4)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
-        if(this.props.name.substring(0,2)==='fa')
-            return <FIcon name={this.props.name.substring(3)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
+        if(name.substring(0,3) ==='ion')
+            return <IIcon name={name.substring(4)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
+        if(name.substring(0,2)==='fa')
+            return <FIcon name={name.substring(3)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
     }
     renderBadge(){
 	if(!this.props.badge || this.props.badge.text==='' || this.props.badge.text==='0'){

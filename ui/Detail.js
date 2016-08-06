@@ -311,7 +311,7 @@ export default class Detail extends Component {
     render(){
 	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
-
+        let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
         return (
             <View style={{flex:1}}>
                 {this.renderModal()}
@@ -336,7 +336,7 @@ export default class Detail extends Component {
                             style={{marginLeft:15,marginRight:15}}
                             size={44}
                             color={this.props.msg.ask=='false'?'blue':'gray'}
-                            name={Global.TYPE_ICONS[this.props.msg.type]}
+                            name={typeIcon}
                           />
                           <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
