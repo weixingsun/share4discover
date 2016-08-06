@@ -15,11 +15,13 @@ export default class APIList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
+          to:'000000',
+          from:'000100',
           msgList:[],
       };
     }
     componentWillMount(){
-        UsbSerial.listen(this.props.usb.device, 9600, '\n', (e)=>{
+        UsbSerial.listen(this.props.usb.device, 9600, '}', (e)=>{ //0x means send in hex format: p2p mode
             if(e.read){
                 let arr = this.state.msgList
                 let newMsg = {send:0,data:e.read}
@@ -35,9 +37,9 @@ export default class APIList extends React.Component {
     }
     sendMsgToUsb(){
         if(this.state.text.length>0){
-            UsbSerial.write(this.state.text);
+            UsbSerial.write(this.state.to, this.state.from, '{'+this.state.text+'}');
             let arr = this.state.msgList
-            let newMsg = {send:1,data:this.state.text}
+            let newMsg = {send:1,to:this.state.to,data:this.state.text}
             arr.push(newMsg)
             this.setState({msgList:arr,text:''})
         }
@@ -139,5 +141,3 @@ var styles = StyleSheet.create({
         backgroundColor: "#387ef5",
     },
 });
-//<View style={{width:50}} />
-//<Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />
