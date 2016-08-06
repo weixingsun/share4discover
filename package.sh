@@ -12,7 +12,7 @@ date=`date +%Y%m%d`
 cp  android/app/build/outputs/apk/app-release.apk codepush/Share_$date.apk
 scp codepush/Share_$date.apk nzmesse1@nzmessengers.co.nz:~/www/share/
 #scp -P 8612 android/app/build/outputs/apk/app-release.apk root@nzmessengers.com:/root/www_apache/public_html/share/
-
+ssh nzmesse1@nzmessengers.co.nz "cd /home1/nzmesse1/www/share && rm -f latest.apk && ln -s Share_$date.apk latest.apk"
 #ios
 #build Share project for simulator
 #find build folder:  ios/build/Build/Products/Debug-iphonesimulator
