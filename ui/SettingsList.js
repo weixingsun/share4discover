@@ -135,6 +135,40 @@ export default class SettingsList extends React.Component {
         delete Global.logins.wb
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
+    renderAPI(){
+        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+            var DEVICE_WIDTH = Dimensions.get('window').width
+            return (
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: APIList,
+                      passProps: {navigator:this.props.navigator,},
+                  })}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'fa-plug'} size={30}/>
+                      </View>
+                      <Text>{I18n.t('plugin')}</Text>
+                  </TouchableOpacity>
+            )
+        }
+    }
+    renderUSB(){
+        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+            var DEVICE_WIDTH = Dimensions.get('window').width
+            return (
+                <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                    component: UsbList,
+                    passProps: {navigator:this.props.navigator,},
+                })}>
+                    <View style={{width:DEVICE_WIDTH/3}} />
+                    <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                        <Icon name={'fa-usb'} size={30}/>
+                    </View>
+                    <Text>{I18n.t('usb')}</Text>
+                </TouchableOpacity>
+            )
+        }
+    }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
 	//alert('w:'+DEVICE_WIDTH)
@@ -174,28 +208,10 @@ export default class SettingsList extends React.Component {
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-cog-outline'} size={35}/>
                       </View>
-                      <Text>{I18n.t('settings')}</Text>
+                      <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
-                      component: APIList,
-                      passProps: {navigator:this.props.navigator,},
-                  })}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-plug'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('plugin')}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
-                      component: UsbList,
-                      passProps: {navigator:this.props.navigator,},
-                  })}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-usb'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('usb')}</Text>
-                  </TouchableOpacity>
+                  {this.renderAPI()}
+                  {this.renderUSB()}
                   <View style={Style.left_card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>

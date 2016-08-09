@@ -169,6 +169,20 @@ export default class Main extends Component {
             _this.getCountryCodeFromNetwork();
         }
       });
+      Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
+        if(map_type != null){
+            Global.MAP_TYPE = map_type
+        }else{
+            Global.MAP_TYPE = 'standard'
+        }
+      });
+      Store.get_string(Store.SETTINGS_MAP_TRAFFIC).then((map_traffic) => {
+        if(map_traffic != null){
+            Global.MAP_TRAFFIC = map_traffic
+        }else{
+            Global.MAP_TRAFFIC = 'false'
+        }
+      });
   }
   getCountryCodeFromNetwork(){
       let _this=this

@@ -58,6 +58,7 @@ export default class Settings extends React.Component{
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
         this.map_list = [Global.GoogleMap,Global.BaiduMap];
+        this.map_type_list = [Global.MAP_TYPE_NORMAL,Global.MAP_TYPE_SATELLITE];
         this.place_list = [];
         this.state = {
             isLoading:true,
@@ -187,7 +188,7 @@ export default class Settings extends React.Component{
           />
           <View style={styles.container}>
              <TouchableOpacity style={styles.header} >
-                 <Text>Map & Search Engine</Text>
+                 <Text>Map & Search Engine Provider</Text>
              </TouchableOpacity>
              <Picker selectedValue={this.state.map} onValueChange={(value)=> {
                   this.setState({ map:value })
@@ -199,14 +200,24 @@ export default class Settings extends React.Component{
                  })}
              </Picker>
              <TouchableOpacity style={styles.header} >
-                 <Text>Places Settings</Text>
-                 <View style={{flex:1}} />
-                 <Icon name={"ion-ios-add"} color={'#333333'} size={30} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
-                 <View style={{width:40}} />
-                 <Icon name={this.getLockIcon()} size={30} onPress={() => this.switchEdit()} />
-                 <View style={{width:20}} />
+                 <Text>Map Settings</Text>
              </TouchableOpacity>
-             <ListView
+             <Picker selectedValue={this.state.map_type} onValueChange={(value)=> {
+                  this.setState({ map_type:value })
+                  Store.save_string(Store.SETTINGS_MAP_TYPE,value)
+                  Global.MAP_TYPE=value
+             }}>
+                 {this.map_type_list.map(function(item,n){
+                      return <Picker.Item key={item} label={item} value={item} />;
+                 })}
+             </Picker>
+          </View>
+        </View>
+        )
+    }
+};
+/*
+            <ListView
                 enableEmptySections={true}      //annoying warning
                 style={styles.listViewContainer}
                 dataSource={this.state.dataSource}
@@ -216,17 +227,4 @@ export default class Settings extends React.Component{
                 automaticallyAdjustContentInsets={false}
                 initialListSize={9}
             />
-          </View>
-        </View>
-        )
-    }
-};
-/*
-             rightButton={
-               <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-add"} color={'#333333'} size={48} onPress={() => this.props.navigator.push({component: FormAddJson, }) } />
-                  <View style={{width:50}} />
-                  <Icon name={this.getLockIcon()} size={40} onPress={() => this.switchEdit()} />
-                </View>
-             }
 */

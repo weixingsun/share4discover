@@ -6,6 +6,8 @@ var deviceStorage = {
         PLACE_LIST:"place_list",
         SETTINGS:"settings",
         SETTINGS_MAP:"settings:map",
+        SETTINGS_MAP_TYPE:"settings:map_type",
+        SETTINGS_MAP_TRAFFIC:"settings:map_traffic",
         GPS_POS:"gps:position",
         
         msgTab:'ion-md-chatboxes',

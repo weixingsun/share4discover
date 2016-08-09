@@ -444,6 +444,7 @@ export default class Maps extends Component {
     renderGmap(){
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
+      let map_traffic = Global.MAP_TRAFFIC=='false'?false:true
       return (
             <GMapView
               ref='gmap'
@@ -453,9 +454,8 @@ export default class Maps extends Component {
               showsScale={true}
               onRegionChangeComplete={this.onRegionChange.bind(this)}
               initialRegion={this.state.region}
-              //region={this.state.region}
-              //mapType=standard,satellite,hybrid
-              //onLongPress={this.onLongPress.bind(this)}
+              mapType={Global.MAP_TYPE} //{standard,satellite}
+              //showsTraffic={map_traffic}
               //onMarkerPress={(e)=> alert('Map.onMarkerPress')}
               >
                  {this.renderPlaceMarkersGmap()}
@@ -467,6 +467,7 @@ export default class Maps extends Component {
       //alert(JSON.stringify(this.state.markers))
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
+      let map_traffic = Global.MAP_TRAFFIC=='false'?false:true
       return (
             <BMapView
                 style={map_style}
@@ -481,6 +482,8 @@ export default class Maps extends Component {
                 //overlays={ this.state.polylines }
                 onRegionChangeComplete={this.onRegionChange.bind(this)}
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
+                mapType={Global.MAP_TYPE} //{standard,satellite}
+                //showsTraffic={map_traffic}
             />
 
       );

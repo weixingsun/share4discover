@@ -20,6 +20,7 @@ I18n.translations = {
     ok: 'OK',
     cancel: 'Cancel',
     usb: 'USB',
+    map: 'Map',
   },
   zh_CN: {
     hi: '你好',
@@ -38,6 +39,7 @@ I18n.translations = {
     ok: '确定',
     cancel: '取消',
     usb: 'USB',
+    map: '地图',
   },
   fr: {
     hi: 'Bonjour',
@@ -56,6 +58,7 @@ I18n.translations = {
     ok: 'OK',
     cancel: 'Cancel',
     usb: 'USB',
+    map: 'Map',
   },
 }
 function loadLang(lang){
@@ -82,6 +85,8 @@ module.exports = {
     GoogleMap:'GoogleMap',
     BaiduMap:'BaiduMap',
     GaodeMap:'GaodeMap',
+    MAP_TYPE_NORMAL:'standard',
+    MAP_TYPE_SATELLITE:'satellite',
     host_image: 'http://nzmessengers.co.nz/service/',
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',

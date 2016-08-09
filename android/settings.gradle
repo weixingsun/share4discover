@@ -29,8 +29,8 @@ include ':react-native-google-signin'
 project(':react-native-google-signin').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-signin/android')
 include ':react-native-localization'
 project(':react-native-localization').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-localization/android')
-//include ':react-native-datetime'
-//project(':react-native-datetime').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-datetime/android')
+include ':react-native-yunpeng-datetime'
+project(':react-native-yunpeng-datetime').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-yunpeng-datetime/android')
 include ':react-native-code-push'
 project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 include ':react-native-weibo'

@@ -19,6 +19,7 @@ import com.theweflex.react.WeChatPackage;
 //import com.projectseptember.RNGL.RNGLPackage;
 import com.wxsun.usbserial.UsbReactPackage;
 import com.reactnative.photoview.PhotoViewPackage;
+import com.keyee.datetime.*;
 
 import android.app.Application;
 import android.util.Log;
@@ -69,6 +70,7 @@ public class MainApplication extends Application implements ReactApplication {
         new WeiboPackage(),
         new VectorIconsPackage(),
         new PhotoViewPackage(),
+        new RCTDateTimePickerPackage(),
         //new RNGLPackage(),
         new ReactMapPackage(),  //BaiduMap
         new MapsPackage()   //GoogleMap
