@@ -1,20 +1,20 @@
 import { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
-        API_LIST:"api_list",
-        MAP_LIST:"map_list",
+        API_LIST:  "api_list",
+        MAP_LIST:  "map_list",
         PLACE_LIST:"place_list",
-        SETTINGS:"settings",
-        SETTINGS_MAP:"settings:map",
-        SETTINGS_MAP_TYPE:"settings:map_type",
-        SETTINGS_MAP_TRAFFIC:"settings:map_traffic",
-        GPS_POS:"gps:position",
+        SETTINGS:  "settings",
+        GPS_POS:   "gps:position",
+        SETTINGS_MAP:        "settings_map",
+        SETTINGS_MAP_TYPE:   "settings_map_type",
+        SETTINGS_MAP_TRAFFIC:"settings_map_traffic",
         
-        msgTab:'ion-md-chatboxes',
-        userTab:'ion-ios-person',
+        msgTab:  'ion-md-chatboxes',
+        userTab: 'ion-ios-person',
         emailTab:'ion-ios-mail',
-        mapTab:'ion-ios-globe',
-        confTab:'ion-md-settings',
+        mapTab:  'ion-ios-globe',
+        confTab: 'ion-md-settings',
 
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {

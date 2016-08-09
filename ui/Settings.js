@@ -9,6 +9,7 @@ import Loading from './Loading'
 //import PlaceForm from './PlaceForm'
 import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
+import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 //import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
@@ -40,7 +41,6 @@ var styles = StyleSheet.create({
     },
 });
 
-//title:'My Exchange Rates Watch List'
 //xchange: 'select * from yahoo.finance.xchange where pair in (' + items + ')'
 //weather: 'select * from weather.forecast where (location = 94089)'
 //stock:   'select * from yahoo.finance.quote where symbol in (' + items + ')'
@@ -58,66 +58,35 @@ export default class Settings extends React.Component{
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
         this.map_list = [Global.GoogleMap,Global.BaiduMap];
+        this.map_traffic_list = ['true','false'];
         this.map_type_list = [Global.MAP_TYPE_NORMAL,Global.MAP_TYPE_SATELLITE];
         this.place_list = [];
         this.state = {
-            isLoading:true,
-            map:null,
-            editable: false,
-            timerEnabled: false,
-            dataSource: this.ds.cloneWithRows(this.place_list),
+            //isLoading:true,
+            form: {
+                map:        Global.MAP,
+                map_type:   Global.MAP_TYPE,
+                map_traffic:Global.MAP_TRAFFIC,
+
+                mapTitle:       Global.MAP,
+                mapTypeTitle:   Global.MAP_TYPE,
+                mapTrafficTitle:Global.MAP_TRAFFIC,
+            }
+            //editable: false,
+            //timerEnabled: false,
+            //dataSource: this.ds.cloneWithRows(this.place_list),
         };
-        this.loaded=false;
-        this.seq=0;
-        this.reload=this.reload.bind(this);
+        //this.reload=this.reload.bind(this);
         //this._renderRow=this._renderRow.bind(this);
-        this.switchEdit=this.switchEdit.bind(this);
-        this.getLockIcon=this.getLockIcon.bind(this);
+        //this.switchEdit=this.switchEdit.bind(this);
+        //this.getLockIcon=this.getLockIcon.bind(this);
     }
     componentWillMount() {
-        var _this=this;
-        Store.get_string(Store.SETTINGS_MAP).then((value)=>{
-            _this.setState({map:value})
-        });
-        Store.get(Store.PLACE_LIST).then((value) => {
-          if(value !=null){
-              _this.place_list= value;
-          }else{
-              Store.save(Store.PLACE_LIST, ["Home:0,0","Work:0,0"] );
-              _this.place_list= ["Home:0,0","Work:0,0"];
-          }
-          _this.reload();
-        });
-        //this.reload();
     }
     componentDidMount() {
-        //this.loaded = true;
     }
     //componentWillUnmount() {}
-    getColor(enable){
-        if(enable) return '#3B3938';
-        else return '#D3D3D3';
-    }
-    //['USDCNY','USDNZD']
-    arrayToStr(array){
-        var str_items = '';
-        for (var i in array) {
-          str_items += '"'+array[i]+'",';
-        }
-        return str_items.slice(0, -1);
-    }
-    //shouldComponentUpdate(nextProps,nextState){
-    //    return (nextState.count !==this.state.editable);
-    //}
-    switchEdit(){
-        if(this.state.editable){
-          this.setState({editable: false})
-          this.reload();
-        }else{
-          this.setState({editable: true})
-        }
-    }
-    deleteItem(seq,name){
+    /*deleteItem(seq,name){
         Alert.alert(
           "Delete",
           "Do you want to delete "+name+" ?",
@@ -172,10 +141,32 @@ export default class Settings extends React.Component{
           <Text style={styles.sectionText}>{sectionID}</Text>
         </View>
       )
+    }*/
+
+    handleValueChange(form){
+        if(typeof form.map === 'object'){
+            if(form.map[0] !=null && typeof form.map[0] === 'string'){
+                Store.save_string(Store.SETTINGS_MAP,form.map[0])
+                Global.MAP=form.map[0]
+            }
+        }
+        if(typeof form.map_type === 'object'){
+            if(form.map_type[0] !=null && typeof form.map_type[0] === 'string'){
+                Store.save_string(Store.SETTINGS_MAP_TYPE,form.map_type[0])
+                Global.MAP_TYPE=form.map_type[0]
+            }
+        }
+        if(typeof form.map_traffic === 'object'){
+            if(form.map_traffic[0] !=null && typeof form.map_traffic[0] === 'string'){
+                Store.save_string(Store.SETTINGS_MAP_TRAFFIC,form.map_traffic[0])
+                Global.MAP_TRAFFIC=form.map_traffic[0]
+            }
+        }
+        //alert('form:'+JSON.stringify(form))
     }
     render() {
-        //alert('render.map:'+this.state.map)
-        if(this.state.isLoading) return <Loading />
+        //alert('render.map:'+this.state.map+'\nmap.type='+this.state.map_type+'\nmap.traffic='+this.state.map_traffic)
+        //if(this.state.isLoading) return <Loading />
         //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
         return(
         <View style={{flex:1}}>
@@ -190,6 +181,70 @@ export default class Settings extends React.Component{
              <TouchableOpacity style={styles.header} >
                  <Text>Map & Search Engine Provider</Text>
              </TouchableOpacity>
+                <GiftedForm
+                    formName='newInfoForm'
+                    style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
+                    openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
+                    onValueChange={this.handleValueChange.bind(this)}
+                    //validators={ this.validators }
+                    defaults={this.state.form}
+                    >
+                        <GiftedForm.ModalWidget
+                            title='Map Provider'
+                            name='map'
+                            display={this.state.form.mapTitle}
+                            value={this.state.form.map}
+                            //validationResults={this.state.validationResults}
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='map' title='Map' multiple={false}>
+                                <GiftedForm.OptionWidget title='Google Maps'   value='GoogleMap' />
+                                <GiftedForm.OptionWidget title='Baidu Maps' value='BaiduMap' />
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+                        <GiftedForm.ModalWidget
+                            title='Map Type'
+                            name='map_type'
+                            display={this.state.form.mapTypeTitle}
+                            value={this.state.form.mapType}
+                            //validationResults={this.state.validationResults}
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='map_type' title='Map Type' multiple={false}>
+                                <GiftedForm.OptionWidget title='Standard'   value='standard' />
+                                <GiftedForm.OptionWidget title='Satellite' value='satellite' />
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+                        <GiftedForm.ModalWidget
+                            title='Traffic on Map'
+                            name='map_traffic'
+                            display={this.state.form.mapTrafficTitle}
+                            value={this.state.form.mapTraffic}
+                            //validationResults={this.state.validationResults}
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='map_traffic' title='Real Time Traffic' multiple={false}>
+                                <GiftedForm.OptionWidget title='Yes' value='true' />
+                                <GiftedForm.OptionWidget title='No' value='false' />
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+                </GiftedForm>
+          </View>
+        </View>
+        )
+    }
+};
+/*
+            <ListView
+                enableEmptySections={true}      //annoying warning
+                style={styles.listViewContainer}
+                dataSource={this.state.dataSource}
+                renderRow={this._renderRow.bind(this)}
+                //renderHeader={this._renderHeader.bind(this)}
+                //renderSectionHeader = {this._renderSectionHeader.bind(this)}
+                automaticallyAdjustContentInsets={false}
+                initialListSize={9}
+            />
              <Picker selectedValue={this.state.map} onValueChange={(value)=> {
                   this.setState({ map:value })
                   Store.save_string(Store.SETTINGS_MAP,value)
@@ -211,20 +266,13 @@ export default class Settings extends React.Component{
                       return <Picker.Item key={item} label={item} value={item} />;
                  })}
              </Picker>
-          </View>
-        </View>
-        )
-    }
-};
-/*
-            <ListView
-                enableEmptySections={true}      //annoying warning
-                style={styles.listViewContainer}
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow.bind(this)}
-                //renderHeader={this._renderHeader.bind(this)}
-                //renderSectionHeader = {this._renderSectionHeader.bind(this)}
-                automaticallyAdjustContentInsets={false}
-                initialListSize={9}
-            />
+             <Picker selectedValue={this.state.map_traffic} onValueChange={(value)=> {
+                  this.setState({ map_traffic:value })
+                  Store.save_string(Store.SETTINGS_MAP_TRAFFIC,value)
+                  Global.MAP_TRAFFIC=value
+             }}>
+                 {this.map_traffic_list.map(function(item,n){
+                      return <Picker.Item key={item} label={item} value={item} />;
+                 })}
+             </Picker>
 */

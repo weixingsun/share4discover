@@ -430,6 +430,7 @@ export default class Maps extends Component {
         let perm_nbr = Object.keys(this.state.grantedPermissions).length
         if(perm_nbr < this.permissions.length) return null
       }
+      //alert('Global.MAP_TRAFFIC='+Global.MAP_TRAFFIC+'\nGlobal.MAP='+Global.MAP+'\nGlobal.MAP_TYPE='+Global.MAP_TYPE)
       switch(Global.MAP) {
           case Global.GoogleMap:
               return this.renderGmap()
@@ -445,6 +446,7 @@ export default class Maps extends Component {
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
       let map_traffic = Global.MAP_TRAFFIC=='false'?false:true
+      //alert('map_traffic='+map_traffic)
       return (
             <GMapView
               ref='gmap'
@@ -455,7 +457,7 @@ export default class Maps extends Component {
               onRegionChangeComplete={this.onRegionChange.bind(this)}
               initialRegion={this.state.region}
               mapType={Global.MAP_TYPE} //{standard,satellite}
-              //showsTraffic={map_traffic}
+              showsTraffic={map_traffic}
               //onMarkerPress={(e)=> alert('Map.onMarkerPress')}
               >
                  {this.renderPlaceMarkersGmap()}
@@ -483,7 +485,7 @@ export default class Maps extends Component {
                 onRegionChangeComplete={this.onRegionChange.bind(this)}
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
                 mapType={Global.MAP_TYPE} //{standard,satellite}
-                //showsTraffic={map_traffic}
+                trafficEnabled={map_traffic}
             />
 
       );
