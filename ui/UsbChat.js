@@ -7,6 +7,7 @@ import Global from '../io/Global'
 import NavigationBar from 'react-native-navbar'
 import UsbSerial from 'react-native-usbserial';
 import Button from 'apsl-react-native-button'
+import KKLocation from 'react-native-baidumap/KKLocation';
 
 export default class APIList extends React.Component {
     constructor(props) {
@@ -70,6 +71,7 @@ export default class APIList extends React.Component {
     }
     componentWillUnmount(){
         UsbSerial.close();
+        this.turnOffGps();
     }
     sendDataToUsb(data){
         UsbSerial.write(this.state.to, this.state.from, '{'+data+'}');
@@ -84,7 +86,7 @@ export default class APIList extends React.Component {
         }
     }
     sendGps(){
-        let latlng = this.pos.latitude.toFixed(6)+','+this.pos.longitude.toFixed(6)
+        let latlng = this.state.pos.latitude.toFixed(6)+','+this.state.pos.longitude.toFixed(6)
         UsbSerial.write(this.state.to, this.state.from, '{'+latlng+'}');
     }
     rowLeftBlankView(json){
