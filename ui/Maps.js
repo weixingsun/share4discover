@@ -287,7 +287,7 @@ export default class Maps extends Component {
       let c = '#222222'
       if(!this.state.gps)
           c = '#CCCCCC'
-      return (<Icon name={"ion-ios-navigate-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
+      return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
       if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>

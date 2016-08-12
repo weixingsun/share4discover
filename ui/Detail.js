@@ -7,9 +7,9 @@ import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
 //import {ImageCrop} from 'react-native-image-cropper'
 import PhotoView from 'react-native-photo-view';
+//import ZoomableImage from './ZoomableImage2';
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
-//import ZoomableImage from './ZoomableImage2';
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -260,7 +260,18 @@ export default class Detail extends Component {
             </View>
         </Modal>
       )
-    }*/
+    }
+                <ZoomableImage
+                  source={{uri: uri}}
+                  //minimumZoomScale={0.5}
+                  //maximumZoomScale={3}
+                  //androidScaleType="center"
+                  //onLoad={() => alert("Image loaded!")}
+                  //onTap={this.closeZoom}
+                  imageWidth={Style.DEVICE_WIDTH}
+                  imageHeight={Style.DEVICE_HEIGHT}
+                />
+*/
     renderModal(){
       //let key = Global.getKeyFromMsg(this.props.msg);
       let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
@@ -278,7 +289,7 @@ export default class Detail extends Component {
                   androidScaleType="center"
                   //onLoad={() => alert("Image loaded!")}
                   onTap={this.closeZoom}
-                  style={{width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}} 
+                  style={{width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}}
                 />
             </View>
         </Modal>

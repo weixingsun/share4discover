@@ -462,6 +462,24 @@ export default class FormInfo extends Component {
         //this.setState({ form: values })
         //alert(JSON.stringify(this.state.form))
     }
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    renderTypeOptions(){
+        let arr = Object.keys(Global.TYPE_ICONS)
+        return arr.map((key,i)=>{
+            return <GiftedForm.OptionWidget 
+                       key={i} 
+                       title={this.capitalizeFirstLetter(key)} 
+                       value={key} 
+                       image={(
+                           <View style={{width:80,alignItems:'center'}}>
+                               <Icon name={Global.TYPE_ICONS[key]} size={40} />
+                           </View>
+                       )} />
+        })
+        //<GiftedForm.OptionWidget title='Estate' value='estate'/>
+    }
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
@@ -515,10 +533,7 @@ export default class FormInfo extends Component {
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
-                                <GiftedForm.OptionWidget title='Car'    value='car'/>
-                                <GiftedForm.OptionWidget title='Estate' value='estate'/>
-                                <GiftedForm.OptionWidget title='Tool'   value='tool'/>
-                                <GiftedForm.OptionWidget title='Help'   value='help'/>
+                                {this.renderTypeOptions()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.TextInputWidget

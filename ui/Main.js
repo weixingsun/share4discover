@@ -196,7 +196,7 @@ export default class Main extends Component {
       this.loadNotifyByLogin()
   }
   loadNotifyByLogin(){
-      if(Global.mainlogin.length>0) this.loadNotify('@'+Global.mainlogin);
+      if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());
   }
   isJsonString(str) {
       try {

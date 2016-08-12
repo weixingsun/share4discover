@@ -158,7 +158,7 @@ export default class APIList extends React.Component {
                   style={{backgroundColor:'#3498db',borderColor:'#2980b9',width:80,height:Style.NAVBAR_HEIGHT-30}}
                   onPress={()=>this.sendGps()}
               >
-                  <Icon name={"ion-ios-navigate-outline"} color={gps_color} size={30} />
+                  <Icon name={"ion-ios-compass-outline"} color={gps_color} size={30} />
               </Button>
           </View>
       </View>

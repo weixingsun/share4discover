@@ -109,13 +109,20 @@ module.exports = {
       DARKGRAY: '#999',
     },
     TYPE_ICONS: {
-      estate:'ion-ios-home',
-      car:'ion-ios-car',
-      book:'ion-ios-book',
-      help:'ion-ios-help-buoy',
-      tool:'ion-md-hammer',
-      food:'ion-md-pizza',
-      medkit:'ion-md-medkit'
+      house: 'ion-ios-home',
+      car:   'ion-ios-car',
+      mail:  'ion-ios-mail',
+      ticket:'ion-ios-pricetags',
+      book:  'ion-ios-book',
+      tool:  'ion-ios-construct',
+      food:  'ion-ios-pizza',
+      help:  'ion-ios-help-buoy',
+      medkit:'ion-ios-medkit',
+      game:  'ion-ios-game-controller-b',
+      phone: 'ion-ios-phone-portrait',
+      pc:    'ion-ios-laptop',
+      school:'ion-ios-school',
+      music: 'ion-ios-musical-notes',
     },
     SNS_ICONS:{
       fb:'fa-facebook-square',
@@ -153,6 +160,9 @@ module.exports = {
             if(logins.gg)  return 'gg:'+logins.gg
             if(logins.wb)  return 'wb:'+logins.wb
         }
+    },
+    getNotifyKey(){
+        return '@'+this.mainlogin
     },
     getKeyFromMsg(msg){
         return msg.type.toLowerCase()+':'+msg.lat+','+msg.lng+':'+msg.ctime

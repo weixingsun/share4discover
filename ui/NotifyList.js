@@ -41,8 +41,9 @@ export default class NotifyList extends Component {
   readMsg(reply){
       //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
       var key = Global.getKeyFromReply(reply)
-      var notify_value={key:'#'+this.props.mainlogin, field:key+'#'+reply.rtime, value:'r0|'+this.props.mainlogin+'|'+reply.content}
+      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:'r0|'+this.props.mainlogin+'|'+reply.content}
       Net.putHash(notify_value)
+      alert(JSON.stringify(notify_value))
   }
   _onPress(rowData) {
       if(rowData.status==='1')this.readMsg(rowData)

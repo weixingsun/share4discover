@@ -89,7 +89,7 @@ class ZoomableImage extends Component {
             let touchZoom = distance / this.state.initialDistance;
             let zoom = touchZoom * this.state.initialZoom > this.state.minZoom
                 ? touchZoom * this.state.initialZoom : this.state.minZoom;
-            console.log('processPinch()zoom:'+zoom)
+            //console.log('processPinch()zoom:'+zoom+', touchZoom:'+touchZoom+', distance:'+distance+', initDistance:'+this.state.initialDistance)
             let offsetByZoom = calcOffsetByZoom(this.state.width, this.state.height,
                 this.props.imageWidth, this.props.imageHeight, zoom);
             let left = (this.state.initialLeftWithoutZoom * touchZoom) + offsetByZoom.left;
@@ -135,7 +135,7 @@ class ZoomableImage extends Component {
         }
         if(layout.width===0) return
         let zoom = layout.width / this.props.imageWidth;
-        alert('_onLayout()zoom:'+zoom+', layout:'+JSON.stringify(event.nativeEvent.layout))
+        //alert('_onLayout()zoom:'+zoom+', layout:'+JSON.stringify(event.nativeEvent.layout))
         console.log('_onLayout()zoom:'+zoom+', w:'+layout.width+', h:'+layout.height)
         let offsetTop = layout.height > this.props.imageHeight * zoom ?
             (layout.height - this.props.imageHeight * zoom) / 2
@@ -157,23 +157,30 @@ class ZoomableImage extends Component {
         })
         this._panResponder = PanResponder.create({
             onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+            //onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
             onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+            //onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
             onPanResponderGrant: (evt, gestureState) => {
-                console.log('onPanResponderGrant:'+evt.nativeEvent.touches.length)
+                //console.log('onPanResponderGrant:changedTouches:'+evt.nativeEvent.changedTouches.length)
+                //console.log('onPanResponderGrant:touchBank:'+evt.touchHistory.touchBank.length)
+                //let changedTouches = evt.nativeEvent.changedTouches
+                let touches = evt.touchHistory.touchBank
+                if (touches.length > 1) {
+                    //let touch1 = touches[0];
+                    //let touch2 = touches[1];
+                    //console.log('onPanResponderMove')
+                    this.processPinch(
+                        touches[0].pageX, 
+                        touches[0].pageY,
+                        touches[1].pageX, 
+                        touches[1].pageY);
+                }
             },
             onPanResponderMove: (evt, gestureState) => {
                 let touches = evt.nativeEvent.touches;
-                //alert('onPanResponderMove')
-                console.log('onPanResponderMove:'+touches.length)
-                if (touches.length == 2) {
-                    let touch1 = touches[0];
-                    let touch2 = touches[1];
-                    console.log('onPanResponderMove')
-                    this.processPinch(touches[0].pageX, touches[0].pageY,
-                        touches[1].pageX, touches[1].pageY);
-                } else if (touches.length == 1 && !this.state.isZooming) {
+                let changedTouches = evt.nativeEvent.changedTouches
+                //console.log('onPanResponderMove:'+touches.length +', changedTouches:'+changedTouches.length)
+                if (touches.length == 1 && !this.state.isZooming) {
                     this.processTouch(touches[0].pageX, touches[0].pageY);
                 }
             },
