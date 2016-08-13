@@ -219,9 +219,6 @@ export default class SettingsList extends React.Component {
                     <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
                   </View>
                   <View style={Style.left_card}>
-                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
-                  </View>
-                  <View style={Style.left_card}>
                     <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
                   </View>
               </ScrollView>
@@ -229,3 +226,8 @@ export default class SettingsList extends React.Component {
         );
     }
 }
+/*
+                  <View style={Style.left_card}>
+                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
+                  </View>
+*/

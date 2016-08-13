@@ -16,7 +16,7 @@ var Login = React.createClass({
     componentDidMount() {
         //this.permission();
     },
-    /*singlePermission(name){
+    singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
           //console.log(name+" Granted!", result);
           let perm = this.state.grantedPermissions;
@@ -29,9 +29,8 @@ var Login = React.createClass({
     permission(){
         if(Platform.OS === 'android' && Platform.Version > 22){
             this.singlePermission('READ_PHONE_STATE')
-            //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
-    },*/
+    },
   renderLoginButton() {
     if(this.props.user !== null){
         return <Icon name={'fa-weibo'} size={30} color="#dd4b39" onPress={this._signOut} />

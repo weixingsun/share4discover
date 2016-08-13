@@ -295,6 +295,8 @@ export default class Main extends Component {
   checkSettingsChange(){
       this.checkLogin('user_fb')
       this.checkLogin('user_gg')
+      this.checkLogin('user_wx')
+      this.checkLogin('user_wb')
       this.checkMapSettings()
       this.checkFirstTime()
       if(Global.mainlogin.length===0) this.setState({mails:[]})
