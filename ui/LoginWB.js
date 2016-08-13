@@ -5,6 +5,7 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
 import * as WeiboAPI from 'react-native-weibo'
+//UsersAPI
 import I18n from 'react-native-i18n';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
@@ -13,9 +14,9 @@ var Login = React.createClass({
         return {grantedPermissions:{} };
     },
     componentDidMount() {
-        this.permission();
+        //this.permission();
     },
-    singlePermission(name){
+    /*singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
           //console.log(name+" Granted!", result);
           let perm = this.state.grantedPermissions;
@@ -30,7 +31,7 @@ var Login = React.createClass({
             this.singlePermission('READ_PHONE_STATE')
             //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
-    },
+    },*/
   renderLoginButton() {
     if(this.props.user !== null){
         return <Icon name={'fa-weibo'} size={30} color="#dd4b39" onPress={this._signOut} />
@@ -56,14 +57,36 @@ var Login = React.createClass({
   deleteUserDB() {
     Store.delete('user_wb');
   },
+  showUser(uid,token){
+      var _this = this;
+      let api = 'https://api.weibo.com/users/show.json?access_token='+token+'&uid='+uid
+      let email_api = 'https://api.weibo.com/account/profile/email.json?access_token='+token+'&uid='+uid
+      fetch(api)
+        .then((response) => response.json())
+        .then((responseData) => {
+            //console.log(responseData)
+            var _user={
+              id : responseData.id,
+              name : responseData.name,
+              email: responseData.id,     //email
+              gender: responseData.gender,
+              type: 'wb',
+              token: token,
+              //expire: data.credentials.tokenExpirationDate,
+            };
+            //alert(JSON.stringify(_user))
+            _this.setState({ user : _user });
+            _this.saveUserDB(_user);
+            _this.props.login(_user);
+        }).done();
+  },
   _signIn() {
-    //READ_PHONE_STATE
+    let self=this
+    //let config = {scope:'all',redirectURI:'https://api.weibo.com/oauth2/default.html'}
     WeiboAPI.login().then((data) => {
-      console.log('loginWB:'+JSON.stringify(data));
-      //this.setState({user: {id:data.id, name:data.name, email:data.email, type:'gg', token:data.serverAuthCode}});
-      var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
-      this.saveUserDB(user);
-      this.props.login(user);
+      //alert('loginWB:'+JSON.stringify(data)); //{type,errCode,refreshToken,userID,expirationDate,accessToken}
+      //var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
+      self.showUser(data.userID,data.accessToken);
     }).catch((err) => {
       console.log('WRONG SIGNIN', err);
     }).done();
@@ -75,7 +98,7 @@ var Login = React.createClass({
         [
           {text:"Cancel", onPress:()=>console.log("")},
           {text:"OK", onPress:()=>{
-              //this.logout()
+              this.logout()
           }},
         ]
     );

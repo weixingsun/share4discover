@@ -43,7 +43,7 @@ export default class Maps extends Component {
         markers:[],
         grantedPermissions:{},
       };
-      this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION'];
+      this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION']
       this.msg = this.props.msg;
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
@@ -70,7 +70,10 @@ export default class Maps extends Component {
     }
     permission(){ 
         if(Platform.OS === 'android' && Platform.Version > 22){
-            this.singlePermission('ACCESS_FINE_LOCATION')
+            this.permissions.map((perm)=>{
+                this.singlePermission(perm)
+            })
+            //this.singlePermission('ACCESS_FINE_LOCATION')
             //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
