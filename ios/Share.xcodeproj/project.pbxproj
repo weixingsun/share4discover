@@ -12,6 +12,7 @@
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
+		0300B1851D608FA80076F71F /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0300B1841D608FA80076F71F /* WeiboSDK.bundle */; };
 		030488061C94472D00AA2D90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488051C94472D00AA2D90 /* SystemConfiguration.framework */; };
 		030488081C94477800AA2D90 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488071C94477800AA2D90 /* CoreTelephony.framework */; };
 		0304880A1C9447A000AA2D90 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488091C9447A000AA2D90 /* libsqlite3.0.tbd */; };
@@ -248,6 +249,7 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
+		0300B1841D608FA80076F71F /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = WeiboSDK.bundle; path = "../node_modules/react-native-weibo/ios/WeiboSDK.bundle"; sourceTree = "<group>"; };
 		030488051C94472D00AA2D90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		030488071C94477800AA2D90 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		030488091C9447A000AA2D90 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
@@ -622,6 +624,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				0300B1841D608FA80076F71F /* WeiboSDK.bundle */,
 				0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */,
 				03F77A771CFA5F51001D0743 /* mapapi.bundle */,
 				03F77A731CFA5E6B001D0743 /* libstdc++.6.0.9.tbd */,
@@ -1002,6 +1005,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0300B1851D608FA80076F71F /* WeiboSDK.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0304881B1C94EE7300AA2D90 /* GoogleSignIn.bundle in Resources */,

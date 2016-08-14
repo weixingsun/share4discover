@@ -15,6 +15,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 
 BMKMapManager* mapManager;
 
@@ -85,6 +86,14 @@ BMKMapManager* mapManager;
       NSLog(@"google url: %@", [url scheme]);
       return [RNGoogleSignin
                 application:application                openURL:url
+                sourceApplication:sourceApplication annotation:annotation];
+    }
+    // Weibo
+    else if ([[url scheme] hasPrefix:@"wb"])
+    {
+      NSLog(@"sina weibo url: %@", [url scheme]);
+      return [RCTLinkingManager 
+                application:application                openURL:url 
                 sourceApplication:sourceApplication annotation:annotation];
     }
     //NSLog([url scheme]);
