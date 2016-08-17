@@ -53,10 +53,12 @@ export default class MyList extends Component {
       <TouchableHighlight underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
           <View>
-              <View style={{flexDirection:'row',height:56,marginLeft:12}}>
-                <Icon name={Global.TYPE_ICONS[rowData.type]} size={50} />
+              <View style={{flexDirection: 'row',height:58}}>
+                <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
+                  <Icon name={Global.TYPE_ICONS[rowData.type]} size={40} />
+                </View>
                 <View style={{justifyContent: 'center',height:56}}>
-                    <Text style={{fontSize:20,marginLeft:10}}>{rowData.title}</Text>
+                    <Text style={{fontSize:16,marginLeft:10}}>{rowData.title}</Text>
                 </View>
               </View>
               <View style={Style.separator} />

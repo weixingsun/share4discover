@@ -8,6 +8,7 @@ import LoginWB from './LoginWB'
 import Style from './Style'
 import APIList from './APIList'
 import UsbList from './UsbList'
+import BleList from './BleList'
 import Settings from './Settings'
 import Help from './Help'
 //import MapSettings from './MapSettings'
@@ -169,6 +170,23 @@ export default class SettingsList extends React.Component {
             )
         }
     }
+    renderBLE(){
+        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+            var DEVICE_WIDTH = Dimensions.get('window').width
+            return (
+                <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                    component: BleList,
+                    passProps: {navigator:this.props.navigator,},
+                })}>
+                    <View style={{width:DEVICE_WIDTH/3}} />
+                    <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                        <Icon name={'fa-bluetooth'} size={30}/>
+                    </View>
+                    <Text>{I18n.t('ble')}</Text>
+                </TouchableOpacity>
+            )
+        }
+    }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
 	//alert('w:'+DEVICE_WIDTH)
@@ -212,6 +230,7 @@ export default class SettingsList extends React.Component {
                   </TouchableOpacity>
                   {this.renderAPI()}
                   {this.renderUSB()}
+                  {this.renderBLE()}
                   <View style={Style.left_card}>
                     <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>

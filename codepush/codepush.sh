@@ -16,3 +16,10 @@ react-native bundle --platform ios  --entry-file index.ios.js  --bundle-output .
 code-push release Share ./codepush 1.0.0  
 ##--description "release v1.0.0" --mandatory true    
 ##last parameter: same as android/app/build.gradle: versionName  =  Info.plist: bundleVersion
+
+#android/app/src/main/java/open/share/MainActivity.java
+#package open.share;
+#android/app/src/main/AndroidManifest.xml
+#package="open.share"
+#android/app/build.gradle:
+#applicationId "open.share"

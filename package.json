@@ -11,6 +11,7 @@
     "react-native": "^0.29.2",
     "react-native-android-permissions": "0.0.6",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
+    "react-native-ble-manager": "^1.1.0",
     "react-native-code-push": "^1.13.2-beta",
     "react-native-facebook-login": "^1.2.0",
     "react-native-gifted-form": "git+https://github.com/weixingsun/react-native-gifted-form.git",

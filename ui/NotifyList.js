@@ -77,7 +77,7 @@ export default class NotifyList extends Component {
   }
   _renderRowView(rowData) {
     var time = Global.getDateTimeFormat(parseInt(rowData.rtime),this.lang)
-    var bold = rowData.status==='1'? {fontWeight:'bold',color:'black'}: {}
+    var bold = rowData.status==='1'? {fontSize:16,fontWeight:'bold',color:'black'}: {fontSize:16}
     return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >

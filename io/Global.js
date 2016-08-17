@@ -20,6 +20,7 @@ I18n.translations = {
     ok: 'OK',
     cancel: 'Cancel',
     usb: 'USB',
+    ble: 'Bluetooth',
     map: 'Map',
   },
   zh_CN: {
@@ -39,6 +40,7 @@ I18n.translations = {
     ok: '确定',
     cancel: '取消',
     usb: 'USB',
+    ble: '蓝牙',
     map: '地图',
   },
   fr: {
@@ -58,6 +60,7 @@ I18n.translations = {
     ok: 'OK',
     cancel: 'Cancel',
     usb: 'USB',
+    ble: 'BLE',
     map: 'Map',
   },
 }

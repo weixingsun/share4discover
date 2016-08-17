@@ -1,4 +1,4 @@
-package com.share;
+package open.share;
 
 import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
 import cn.reactnative.modules.weibo.WeiboPackage;

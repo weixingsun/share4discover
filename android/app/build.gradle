@@ -84,6 +84,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
+        //applicationId "open.share"
         applicationId "com.share"
         minSdkVersion 16
         targetSdkVersion 23
@@ -138,6 +139,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-ble-manager')
     compile project(':react-native-photo-view')
     compile project(':react-native-usbserial')
     compile project(':react-native-onesignal')

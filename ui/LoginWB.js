@@ -87,7 +87,7 @@ var Login = React.createClass({
       //var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
       self.showUser(data.userID,data.accessToken);
     }).catch((err) => {
-      console.log('WRONG SIGNIN', err);
+      console.log('WeiboAPI.login() err:', err);
     }).done();
   },
   _signOut() {
