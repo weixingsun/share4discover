@@ -122,7 +122,7 @@ export default class BLEList extends React.Component {
     rssiToDistance(rssi){
         //10^((ABS(RSSI(dbm))-A)/(10*n))
         let p = (Math.abs(rssi)-59)/20
-        return Math.pow(10,p)
+        return Math.pow(10,p).toFixed(1)
     }
     componentDidMount() {
         /*Beacons.setForegroundScanPeriod(5000)
@@ -167,7 +167,7 @@ export default class BLEList extends React.Component {
                    this.openChatWindow(data) 
             } >
               <View style={{flexDirection:'row'}}>
-                  <Text>{ name+'   rssi:'+data.rssi+'   mac['+data.id+']   data:'+data.vendor.data }</Text>
+                  <Text>{ name+'\t\trssi:'+data.rssi+'  dist:'+this.rssiToDistance(data.rssi)+'m   mac['+data.id+']   data:'+data.vendor.data }</Text>
               </View>
             </TouchableOpacity>
           </View>
