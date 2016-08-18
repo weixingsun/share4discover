@@ -81,8 +81,8 @@ var Login = React.createClass({
   },
   _signIn() {
     let self=this
-    //let config = {scope:'all',redirectURI:'https://api.weibo.com/oauth2/default.html'}
-    WeiboAPI.login().then((data) => {
+    let config = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517'}
+    WeiboAPI.login(config).then((data) => {
       //alert('loginWB:'+JSON.stringify(data)); //{type,errCode,refreshToken,userID,expirationDate,accessToken}
       //var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
       self.showUser(data.userID,data.accessToken);

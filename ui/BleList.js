@@ -1,11 +1,12 @@
 'use strict';
 import React, {Component} from 'react'
-import {ActivityIndicator,NativeAppEventEmitter, Platform, ListView, View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
+import {ActivityIndicator,DeviceEventEmitter,NativeAppEventEmitter, Platform, ListView, View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
 import {Icon} from './Icon'
 import Style from './Style'
 import BleChat from './BleChat'
 import NavigationBar from 'react-native-navbar'
 import BleManager from 'react-native-ble-manager';
+//import Beacons from 'react-native-beacon'
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
@@ -26,7 +27,8 @@ export default class BLEList extends React.Component {
           scanning:false,
       };
       //this.dataSource = this.ds.cloneWithRows(this.state.devList),
-      this.permissions= ['BLUETOOTH','BLUETOOTH_ADMIN','ACCESS_FINE_LOCATION']
+      this.permissions= ['BLUETOOTH','BLUETOOTH_ADMIN'] //ACCESS_COARSE_LOCATION
+      this.uuid = 'd7db32aa-ff2d-58ca-a4f6-e7988b8637c6'
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
@@ -47,29 +49,107 @@ export default class BLEList extends React.Component {
             //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
+    //sortJsonArrayByProperty(results, 'attributes.OBJECTID');
+    //sortJsonArrayByProperty(results, 'attributes.OBJECTID', -1);
+    sortJsonArrayByProperty(objArray, prop, direction){
+        if (arguments.length<2) throw new Error("sortJsonArrayByProp requires 2 arguments");
+        var direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
+
+        if (objArray && objArray.constructor===Array){
+            var propPath = (prop.constructor===Array) ? prop : prop.split(".");
+            objArray.sort(function(a,b){
+                for (var p in propPath){
+                    if (a[propPath[p]] && b[propPath[p]]){
+                        a = a[propPath[p]];
+                        b = b[propPath[p]];
+                    }
+                }
+                // convert numeric strings to integers
+                a = a.match(/^\d+$/) ? +a : a;
+                b = b.match(/^\d+$/) ? +b : b;
+                return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
+            });
+        }
+    }
+    isInArray(arr,obj,key){
+        let arr2 = arr.filter( function(o){
+            return o[key] == obj[key]
+        })
+        return arr2.length >0?true:false
+    }
+    replaceDev(arr,obj,key){
+        return arr.map(function(item,i) { 
+                   console.log('old_value='+item[key] +', new_value'+ obj[key])
+                   return item[key] == obj[key] ? obj : item; 
+               });
+    }
     componentWillMount(){
         let self=this;
         this.permission()
         this.bleStopScan = NativeAppEventEmitter.addListener(
             'BleManagerStopScan',
             () => {
-                //alert('BleManagerStopScan')
                 self.setState({scanning:false})
             }
         );
         this.bleNewPeripheral = NativeAppEventEmitter.addListener(
             'BleManagerDiscoverPeripheral',
-            (args) => {
+            (dev) => {
                 // {rssi,id,name}   id=mac, name: optional
-                //alert(JSON.stringify(args))
-                self.setState({devList:[...self.state.devList,args]})
+                let devList = self.state.devList
+                let newDevList = []
+                if(self.isInArray(devList,dev,'id')){
+                    newDevList = self.replaceDev(devList,dev,'id')
+                }else{
+                    newDevList = [...self.state.devList,dev]
+                }
+                let sortedList = newDevList.sort(self.dynamicSort('-rssi')) // '-rssi'
+                self.setState({devList: sortedList})
             }
         );
+    }
+    dynamicSort(property) {
+        var sortOrder = 1;
+        if(property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a,b) {
+            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        }
+    }
+    rssiToDistance(rssi){
+        //10^((ABS(RSSI(dbm))-A)/(10*n))
+        let p = (Math.abs(rssi)-59)/20
+        return Math.pow(10,p)
+    }
+    componentDidMount() {
+        /*Beacons.setForegroundScanPeriod(5000)
+        Beacons.setBackgroundScanPeriod(5000)
+        Beacons.setBackgroundBetweenScanPeriod(2000)
+        this.beaconsDidRange = DeviceEventEmitter.addListener('beaconsDidRange',(data) => {
+            this.setState({devList:data.beacons})
+            //alert('data.beacons.size'+data.beacons.length)
+        });
+        this.regionDidEnter = DeviceEventEmitter.addListener('regionDidEnter', (region) => {
+            console.log('Entered new beacons region!', region) // Result of monitoring
+            alert('regionDidEnter')
+        })
+        this.regionDidExit  = DeviceEventEmitter.addListener('regionDidExit', (region) => {
+            console.log('Exited beacons region!', region) // Result of monitoring
+            alert('regionDidExit')
+        })*/
     }
     componentWillUnmount(){
         this.bleStopScan.remove()
         this.bleNewPeripheral.remove()
         BleManager.stop()
+        /*
+        this.beaconsDidRange = null;
+        this.regionDidEnter = null;
+        this.regionDidExit = null;
+        */
     }
     openChatWindow(device){
         /*this.props.navigator.push({
@@ -80,26 +160,43 @@ export default class BLEList extends React.Component {
         alert(JSON.stringify(device))
     }
     _renderRow(data, sectionID, rowID) {
+        let name = data.name==null?'Unamed':data.name
         return (
           <View style={Style.card}>
             <TouchableOpacity style={{flex:1}} onPress={()=> 
                    this.openChatWindow(data) 
             } >
               <View style={{flexDirection:'row'}}>
-                  <Text>{ 'rssi:'+data.rssi + ' id:' + data.id }</Text>
+                  <Text>{ name+'   rssi:'+data.rssi+'   mac['+data.id+']   data:'+data.vendor.data }</Text>
               </View>
             </TouchableOpacity>
           </View>
         );
     }
     scan(){
-        BleManager.scan([]) //, true);
+        /*
+        Beacons.scanIBeacons();
+        Beacons.scanEstimotes()
+        Beacons.startRangingBeaconsInRegion('REGION1',this.uuid)
+        Beacons.startMonitoringForRegion('REGION1',this.uuid)
+        .then(() => console.log(`Beacons ranging started succesfully!`))
+        .catch(error => alert(`Beacons ranging not started, error: ${error}`))
+        */
+        BleManager.scan([])
         this.setState({
             devList:[],
             scanning:true,
         })
     }
     stop(){
+        /*
+        Beacons.stopScanIBeacons();
+        Beacons.stopScanEstimotes();
+        Beacons.stopRangingBeaconsInRegion(this.uuid)
+        Beacons.stopMonitoringForRegion(this.uuid)
+        .then(() => console.log(`Beacons ranging stopped succesfully!`))
+        .catch(error => alert(`Beacons ranging not stopped, error: ${error}`))
+        */
         BleManager.stop()
         this.setState({
             scanning:false,
@@ -219,5 +316,3 @@ var styles = StyleSheet.create({
         backgroundColor: "#387ef5",
     },
 });
-//<View style={{width:50}} />
-//<Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />
