@@ -182,7 +182,7 @@ export default class BLEList extends React.Component {
     }
     _renderRow(data, sectionID, rowID) {
         let name = data.name==null?'Unamed':data.name
-        //<Text style={{fontSize:10,}}>{ data.id }</Text>
+        let rssi = data.rssi>0?data.rssi-128:data.rssi
         return (
           <View style={Style.card}>
             <TouchableOpacity style={{flex:1}} onPress={()=> {} }>
@@ -190,15 +190,15 @@ export default class BLEList extends React.Component {
                     <View style={{}}>
                         <Text style={{fontSize:20,}}>{ name }</Text>
                         <View style={{flexDirection:'row'}}>
-                            <Text style={{fontSize:10,color:'black',width:40}}>{ this.rssiToDistance(data.rssi) }m</Text>
+                            <Text style={{fontSize:10,color:'black',width:40}}>{ this.rssiToDistance(rssi) }m</Text>
                             <View style={{width:10}} />
-                            <Text style={{fontSize:10,}}>{ data.rssi }</Text>
+                            <Text style={{fontSize:10,}}>{ rssi }</Text>
                         </View>
                     </View>
                     <View style={{flex:1}} />
                     <View style={{flexDirection:'row'}}>
                         {this.renderServiceIcon(data.services)}
-                        {this.renderMfgIcon(data.vendor)}
+                        {this.renderMfgIcon(data.mfg)}
                         {this.renderRawIcon(data)}
                         <View style={{width:10}} />
                     </View>
