@@ -79,7 +79,7 @@ export default class BLEList extends React.Component {
     }
     replaceDev(arr,obj,key){
         return arr.map(function(item,i) { 
-                   console.log('old_value='+item[key] +', new_value'+ obj[key])
+                   //console.log('old_value='+item[key] +', new_value'+ obj[key])
                    return item[key] == obj[key] ? obj : item; 
                });
     }
@@ -159,16 +159,50 @@ export default class BLEList extends React.Component {
         });*/
         alert(JSON.stringify(device))
     }
+    renderServiceIcon(serviceArrayJson){
+        //if(serviceArrayJson && serviceArrayJson.length>0)
+        if(serviceArrayJson && serviceArrayJson.uuid)
+            return <View style={{flexDirection:'row'}}>
+                       <Icon name={'ion-ios-cog'} size={40} onPress={()=>{this.openChatWindow(serviceArrayJson)}} />
+                       <View style={{width:10}} />
+                   </View>
+    }
+    renderMfgIcon(mfgJson){
+        if(mfgJson && mfgJson.data)
+            return <View style={{flexDirection:'row'}}>
+                       <Icon name={'ion-ios-home'} size={40} onPress={()=>{this.openChatWindow(mfgJson)}} />
+                       <View style={{width:10}} />
+                   </View>
+    }
+    renderRawIcon(data){
+            return <View style={{flexDirection:'row'}}>
+                       <Icon name={'ion-ios-information-circle-outline'} size={40} onPress={()=>{this.openChatWindow(data)}} />
+                       <View style={{width:10}} />
+                   </View>
+    }
     _renderRow(data, sectionID, rowID) {
         let name = data.name==null?'Unamed':data.name
+        //<Text style={{fontSize:10,}}>{ data.id }</Text>
         return (
           <View style={Style.card}>
-            <TouchableOpacity style={{flex:1}} onPress={()=> 
-                   this.openChatWindow(data) 
-            } >
-              <View style={{flexDirection:'row'}}>
-                  <Text>{ name+'\t\trssi:'+data.rssi+'  dist:'+this.rssiToDistance(data.rssi)+'m   mac['+data.id+']   data:'+data.vendor.data }</Text>
-              </View>
+            <TouchableOpacity style={{flex:1}} onPress={()=> {} }>
+                <View style={{marginLeft:15,flexDirection:'row'}}>
+                    <View style={{}}>
+                        <Text style={{fontSize:20,}}>{ name }</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Text style={{fontSize:10,color:'black',width:40}}>{ this.rssiToDistance(data.rssi) }m</Text>
+                            <View style={{width:10}} />
+                            <Text style={{fontSize:10,}}>{ data.rssi }</Text>
+                        </View>
+                    </View>
+                    <View style={{flex:1}} />
+                    <View style={{flexDirection:'row'}}>
+                        {this.renderServiceIcon(data.services)}
+                        {this.renderMfgIcon(data.vendor)}
+                        {this.renderRawIcon(data)}
+                        <View style={{width:10}} />
+                    </View>
+                </View>
             </TouchableOpacity>
           </View>
         );

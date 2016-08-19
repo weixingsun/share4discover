@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -199,6 +200,13 @@
 			remoteGlobalIDString = 3245CDED1BFEE35C00EABF68;
 			remoteInfo = RCTOneSignal;
 		};
+		03AF5AA01D6609230070EC23 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EB3CC9415A1843D3A1D9B503 /* BleManager.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BleManager;
+		};
 		03F77A341CFA4784001D0743 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 03F77A301CFA4784001D0743 /* RCTBaiduMap.xcodeproj */;
@@ -305,6 +313,7 @@
 		5B0299193E924A8F9EF60BAC /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBLogin.xcodeproj; path = "../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; };
 		5DDC3EC57E7C4BE296BD8578 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		60FA7DB5926E467B8E9A702E /* libRCTFBLogin.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBLogin.a; sourceTree = "<group>"; };
+		6C7FB15B826E4000A6672205 /* libBleManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBleManager.a; sourceTree = "<group>"; };
 		6FC3E85C8F1F452B8CC60E24 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		709D0E9795584C0FAECFF75E /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		71C8ABAFB9A947B1A2805816 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -322,8 +331,7 @@
 		DCED42D2335F404E8CC8B315 /* libRCTWeiboAPI.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTWeiboAPI.a; sourceTree = "<group>"; };
 		E06EA3AB22D045CA9B68E8C1 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		E5BF1542DD5147CEA55A2F68 /* libReactNativeLocalization.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeLocalization.a; sourceTree = "<group>"; };
-		EB3CC9415A1843D3A1D9B503 /* BleManager.xcodeproj */ = {isa = PBXFileReference; name = "BleManager.xcodeproj"; path = "../node_modules/react-native-ble-manager/ios/BleManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		6C7FB15B826E4000A6672205 /* libBleManager.a */ = {isa = PBXFileReference; name = "libBleManager.a"; path = "libBleManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		EB3CC9415A1843D3A1D9B503 /* BleManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BleManager.xcodeproj; path = "../node_modules/react-native-ble-manager/ios/BleManager.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -533,6 +541,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		03AF5A9C1D6609230070EC23 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03AF5AA11D6609230070EC23 /* libBleManager.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		03F77A311CFA4784001D0743 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -736,6 +752,10 @@
 				{
 					ProductGroup = 030487D91C94313F00AA2D90 /* Products */;
 					ProjectRef = 5DDC3EC57E7C4BE296BD8578 /* AirMaps.xcodeproj */;
+				},
+				{
+					ProductGroup = 03AF5A9C1D6609230070EC23 /* Products */;
+					ProjectRef = EB3CC9415A1843D3A1D9B503 /* BleManager.xcodeproj */;
 				},
 				{
 					ProductGroup = 030F81BE1CFA40C600508D46 /* Products */;
@@ -958,6 +978,13 @@
 			fileType = archive.ar;
 			path = libRCTOneSignal.a;
 			remoteRef = 0383F6721D4B83D500FA3DE0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03AF5AA11D6609230070EC23 /* libBleManager.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBleManager.a;
+			remoteRef = 03AF5AA01D6609230070EC23 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		03F77A351CFA4784001D0743 /* libRCTBaiduMap.a */ = {
