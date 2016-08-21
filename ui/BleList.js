@@ -145,6 +145,7 @@ export default class BLEList extends React.Component {
         this.bleStopScan.remove()
         this.bleNewPeripheral.remove()
         BleManager.stop()
+        clearInterval(this.broadcastTimer)
         /*
         this.beaconsDidRange = null;
         this.regionDidEnter = null;
@@ -238,19 +239,40 @@ export default class BLEList extends React.Component {
     }
     renderScanIcon(){
         if(this.state.scanning) 
-            return <TouchableOpacity onPress={()=>this.stop()}>
-                       <ActivityIndicator 
-                           animating={this.state.scanning} 
-                           style={{alignItems:'center',justifyContent:'center',height: 50}} 
-                           size="small" 
-                       />
-                   </TouchableOpacity>
-        else return <Icon 
-                       name={"ion-ios-barcode-outline"} 
-                       color={'#333333'} 
-                       size={40} 
-                       onPress={() => this.scan() } 
-                    />
+            /*return <TouchableOpacity onPress={()=>this.stop()}>
+                       <ActivityIndicator animating={this.state.scanning} size="small"
+                           style={{alignItems:'center',justifyContent:'center',height: 50}} />
+                   </TouchableOpacity>*/
+            return <Icon name={"fa-wifi"} color={'#dd3333'} size={35} onPress={() => this.stop() } />
+        else return <Icon name={"fa-wifi"} color={'#333333'} size={35} onPress={() => this.scan() } />
+    }
+    broadcast(){
+        let self=this
+        let id = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63'
+        let data ='data'
+        BleManager.broadcast(id,data)
+        .then(()=>{
+            //self.switchBroadcast()
+        })
+        .catch((error) => {
+            self.stopBroadcast()
+            alert('broadcast.failed, maybe advertising not supported for your device') //JSON.stringify(error)
+        });
+    }
+    stopBroadcast(){
+        clearInterval(this.broadcastTimer)
+        this.setState({broadcasting:false})
+    }
+    startBroadcast(){
+        this.setState({broadcasting:true})
+        this.broadcastTimer = setInterval(()=>this.broadcast(),1000)
+    }
+    renderBroadcastIcon(){
+        if(this.state.broadcasting){
+            return <Icon name={'fa-heartbeat'} color={'#dd3333'} size={35} onPress={()=>this.stopBroadcast()} />
+        }else{
+            return <Icon name={'fa-heartbeat'} color={'#aaaaaa'} size={35} onPress={()=>this.startBroadcast()} />
+        }
     }
     connectDevice(MAC){
         BleManager.connect(MAC)
@@ -293,7 +315,7 @@ export default class BLEList extends React.Component {
       //<Icon name={'ion-ios-add'} size={50} onPress={()=>this.setState({showAddForm:true})}/>
       return (
       <View>
-          <NavigationBar style={Style.navbar} title={{title:'My Bluetooth Devices',}} 
+          <NavigationBar style={Style.navbar} title={{title:'BLE Devices',}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
                     <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
@@ -302,7 +324,9 @@ export default class BLEList extends React.Component {
               rightButton={
                  <View style={{flexDirection:'row',}}>
                      {this.renderScanIcon()}
-                     <View style={{width:20}}/>
+                     <View style={{width:10}}/>
+                     {this.renderBroadcastIcon()}
+                     <View style={{width:10}}/>
                  </View>
               }
           />

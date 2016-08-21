@@ -171,7 +171,7 @@ export default class SettingsList extends React.Component {
         }
     }
     renderBLE(){
-        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+        //if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
             var DEVICE_WIDTH = Dimensions.get('window').width
             return (
                 <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
@@ -185,7 +185,7 @@ export default class SettingsList extends React.Component {
                     <Text>{I18n.t('ble')}</Text>
                 </TouchableOpacity>
             )
-        }
+        //}
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
