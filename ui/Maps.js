@@ -43,7 +43,7 @@ export default class Maps extends Component {
         markers:[],
         grantedPermissions:{},
       };
-      this.permissions=['ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION']
+      this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION']
       this.msg = this.props.msg;
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
@@ -60,12 +60,13 @@ export default class Maps extends Component {
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
+          //alert('granted location permission')
           //console.log(name+" Granted!", result);
           let perm = this.state.grantedPermissions;
           perm[name] = true
           this.setState({grantedPermissions:perm})
-        }, (result) => {
-          //alert('Please grant location permission in settings')
+        }, (deny) => {
+          //alert('Denied location permission in settings')
         });
     }
     permission(){ 
@@ -431,7 +432,7 @@ export default class Maps extends Component {
     renderMap(){
       if(Platform.OS==='android' && Platform.Version > 22){
         let perm_nbr = Object.keys(this.state.grantedPermissions).length
-        if(perm_nbr < this.permissions.length) return null
+        if(perm_nbr < this.permissions.length) return null //<Loading />
       }
       //alert('Global.MAP_TRAFFIC='+Global.MAP_TRAFFIC+'\nGlobal.MAP='+Global.MAP+'\nGlobal.MAP_TYPE='+Global.MAP_TYPE)
       switch(Global.MAP) {

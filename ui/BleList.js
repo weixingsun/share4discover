@@ -243,8 +243,8 @@ export default class BLEList extends React.Component {
                        <ActivityIndicator animating={this.state.scanning} size="small"
                            style={{alignItems:'center',justifyContent:'center',height: 50}} />
                    </TouchableOpacity>*/
-            return <Icon name={"fa-wifi"} color={'#dd3333'} size={35} onPress={() => this.stop() } />
-        else return <Icon name={"fa-wifi"} color={'#333333'} size={35} onPress={() => this.scan() } />
+             return <Icon name={"ion-ios-radio"} color={'#dd3333'} size={45} onPress={() => this.stop() } />
+        else return <Icon name={"ion-ios-radio-outline"} color={'#333333'} size={45} onPress={() => this.scan() } />
     }
     broadcast(){
         let self=this
@@ -269,9 +269,9 @@ export default class BLEList extends React.Component {
     }
     renderBroadcastIcon(){
         if(this.state.broadcasting){
-            return <Icon name={'fa-heartbeat'} color={'#dd3333'} size={35} onPress={()=>this.stopBroadcast()} />
+            return <Icon name={'ion-ios-bulb'} color={'#ffc800'} size={45} onPress={()=>this.stopBroadcast()} />
         }else{
-            return <Icon name={'fa-heartbeat'} color={'#aaaaaa'} size={35} onPress={()=>this.startBroadcast()} />
+            return <Icon name={'ion-ios-bulb-outline'} color={'#aaaaaa'} size={45} onPress={()=>this.startBroadcast()} />
         }
     }
     connectDevice(MAC){
@@ -324,9 +324,9 @@ export default class BLEList extends React.Component {
               rightButton={
                  <View style={{flexDirection:'row',}}>
                      {this.renderScanIcon()}
-                     <View style={{width:10}}/>
+                     <View style={{width:15}}/>
                      {this.renderBroadcastIcon()}
-                     <View style={{width:10}}/>
+                     <View style={{width:15}}/>
                  </View>
               }
           />
