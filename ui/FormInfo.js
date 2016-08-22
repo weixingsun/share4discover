@@ -449,7 +449,7 @@ export default class FormInfo extends Component {
     showActionIcons(){
         return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-images-outline'} size={40} onPress={this.openImagePicker.bind(this) } />
+                <Icon name={'ion-ios-images-outline'} size={40} color={Style.font_colors.enabled} onPress={this.openImagePicker.bind(this) } />
                 <View style={{width:20}} />
             </View>
         )
@@ -484,9 +484,11 @@ export default class FormInfo extends Component {
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
+        if(this.props.msg!=null) title_nav = 'Edit this Share'
+        else title_nav = 'Create a Share'
         return (
             <View >
-                <NavigationBar style={Style.navbar} title={{title: '',}}
+                <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <Icon 

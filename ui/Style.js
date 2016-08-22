@@ -70,9 +70,11 @@ module.exports = {
   scrollview:{
       flex:1,
   },
+  font_colors:{disabled:'#777777',enabled:'#dddddd'},
   navbar: {
       flex:1,
-      backgroundColor: '#ebeef0',
+      //backgroundColor: '#ebeef0',
+      backgroundColor: '#5080ff',
       paddingLeft:12,
       paddingRight:12,
       paddingTop:8,
@@ -82,16 +84,18 @@ module.exports = {
       //justifyContent: 'center',
       height: 66,
   },
-  drawerBar:{
-      paddingRight:12,
-      paddingTop:8,
-  },
-  navBar:{
+  bottomBar:{
       backgroundColor: '#ebeef0',
       paddingBottom:10,
       paddingTop:10,
-      flexDirection:'row'
+      flexDirection:'row',
+      borderTopColor:'#666666',
+      borderTopWidth:0.3,
   },
+  /*drawerBar:{
+      paddingRight:12,
+      paddingTop:8,
+  },*/
   navButton:{
       width: 50,
       alignItems: 'center',

@@ -19,6 +19,7 @@ export default class MyList extends Component {
       this.state = {
           myMsgList:[],
       };
+      this.updateOnUI=true
   }
   componentWillMount() {
       this.requestMyMsgs()
@@ -26,6 +27,7 @@ export default class MyList extends Component {
   componentDidMount() {
   }
   componentWillUnmount() {
+      this.updateOnUI=false
   }
   requestMyMsgs(){
       let list = []
@@ -33,7 +35,8 @@ export default class MyList extends Component {
       if(Global.mainlogin.length>0) {
           Net.getMyMsgs('*'+Global.mainlogin).then((rows)=>{
               //alert(JSON.stringify(rows))
-              self.setState({myMsgList:rows})
+              if(this.updateOnUI)
+                  self.setState({myMsgList:rows})
           }).catch((e)=>{
               alert('Network Problem!')
           });
@@ -67,13 +70,13 @@ export default class MyList extends Component {
     );
   }
   renderAddIcon(){
-      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish your share') }/>
-      else return <Icon name={'ion-ios-add'} size={50} color={'black'} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} onPress={() => alert('Please login to publish your share') }/>
+      else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
   }
   render() {
     return (
       <View style={Style.absoluteContainer}>
-        <NavigationBar style={Style.navbar} title={{title:'My Shares',}} 
+        <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             rightButton={ this.renderAddIcon() }
         />

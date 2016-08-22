@@ -60,7 +60,7 @@ var TopScreen = React.createClass({
               if(id>2) text = 'Start'
               return (
                     <Image key={id}
-                        resizeMode={'cover'}  //cover,contain,repeat
+                        resizeMode={'contain'}  //cover,contain,repeat
                         style={styles.image}
                         source={{uri: this.state.host+name}} 
                         indicator={ProgressBar}

@@ -5,6 +5,7 @@ import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
 import LoginWB from './LoginWB'
+import Net from '../io/Net'
 import Style from './Style'
 import APIList from './APIList'
 import UsbList from './UsbList'
@@ -93,6 +94,7 @@ export default class SettingsList extends React.Component {
         Global.user_gg = user
         Global.logins.gg = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
+        Net.loginUser(user)
     }
     logout_gg(user){
         this.setState({user_gg:null});
@@ -105,6 +107,7 @@ export default class SettingsList extends React.Component {
         Global.user_fb = user
         Global.logins.fb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
+        Net.loginUser(user)
     }
     logout_fb(user){
         this.setState({user_fb:null});
@@ -117,6 +120,7 @@ export default class SettingsList extends React.Component {
         Global.user_wx = user
         Global.logins.wx = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
+        Net.loginUser(user)
     }
     logout_wx(user){
         this.setState({user_wx:null});
@@ -129,6 +133,7 @@ export default class SettingsList extends React.Component {
         Global.user_wb = user
         Global.logins.wb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
+        Net.loginUser(user)
     }
     logout_wb(user){
         this.setState({user_wb:null});
@@ -192,7 +197,7 @@ export default class SettingsList extends React.Component {
 	//alert('w:'+DEVICE_WIDTH)
         return (
           <View style={Style.main}>
-              <NavigationBar style={Style.navbar} title={{title:'Share',}} />
+              <NavigationBar style={Style.navbar} title={{title:'Settings',tintColor:Style.font_colors.enabled}} />
               <ScrollView
                   //automaticallyAdjustContentInsets={false}
                   //scrollEventThrottle={200}

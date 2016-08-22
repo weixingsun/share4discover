@@ -92,6 +92,12 @@ export default class BLEList extends React.Component {
                 self.setState({scanning:false})
             }
         );
+        this.bleState = NativeAppEventEmitter.addListener(
+            'BleManagerDidUpdateState',
+            (event) => {
+                alert('BleManagerDidUpdateState:'+event.state)
+            }
+        );
         this.bleNewPeripheral = NativeAppEventEmitter.addListener(
             'BleManagerDiscoverPeripheral',
             (dev) => {
@@ -256,7 +262,7 @@ export default class BLEList extends React.Component {
         })
         .catch((error) => {
             self.stopBroadcast()
-            alert('broadcast.failed, maybe advertising not supported for your device') //JSON.stringify(error)
+            alert('Advertising not supported for your device') //JSON.stringify(error)
         });
     }
     stopBroadcast(){

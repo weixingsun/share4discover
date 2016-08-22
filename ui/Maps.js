@@ -257,8 +257,8 @@ export default class Maps extends Component {
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row'}}>
-                <Icon name={Global.TYPE_ICONS[this.state.type]} color={'#3B3938'} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
-                <Icon name={'ion-ios-arrow-down'} color={'#3B3938'} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={Global.TYPE_ICONS[this.state.type]} color={Style.font_colors.enabled} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={'ion-ios-arrow-down'} color={Style.font_colors.enabled} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
                 <Modal 
                     //style={{top:0,bottom:50,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
                     visible={this.state.showTypes}
@@ -283,19 +283,19 @@ export default class Maps extends Component {
       }
     }
     renderDownloadIcon(){
-        let c = '#dddddd'
-        if(this.state.download) c = '#3B3938'
+        let c = Style.font_colors.disabled
+        if(this.state.download) c = Style.font_colors.enabled
         return <Icon name={'ion-ios-cloud-download-outline'} color={c} size={40} onPress={this.downloadMsg.bind(this)} />
     }
     renderGpsIcon(){
-      let c = '#222222'
+      let c = Style.font_colors.disabled
       if(!this.state.gps)
-          c = '#CCCCCC'
+          c = Style.font_colors.enabled
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
       if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
-      else return <Icon name={'ion-ios-add'} size={50} color={'black'} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+      else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
     }
     renderTypesModal(){
         return (
@@ -303,7 +303,7 @@ export default class Maps extends Component {
             <ListView
                 dataSource={ this.state.typeDataSource }
                 renderRow={ this.renderTypeRow.bind(this) }
-                renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{height: 1,backgroundColor: '#CCCCCC'}} />}
+                renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{height: 1,backgroundColor:Style.font_colors.enabled }} />}
             />
           </TouchableHighlight>
         );

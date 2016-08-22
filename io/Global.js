@@ -115,6 +115,7 @@ module.exports = {
       house: 'ion-ios-home',
       car:   'ion-ios-car',
       mail:  'ion-ios-mail',
+      human: 'ion-ios-person',
       ticket:'ion-ios-pricetags',
       book:  'ion-ios-book',
       tool:  'ion-ios-construct',

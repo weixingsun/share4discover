@@ -24,6 +24,7 @@ var Net = {
     },
     //HOST:'http://45.32.83.93',
     HOST:'http://nzmessengers.co.nz/service/node.php?path=',
+    USER_HOST:'http://nzmessengers.co.nz/service/user.php',
     async netCmd(url, data) {
       try {
         let response = await fetch(url, data);
@@ -116,6 +117,10 @@ var Net = {
     renameHashKey(json){  //{key,oldfield,newfield}
       var url = this.HOST+'api/hash/rename';
       return this._put(url,json);
+    },
+    loginUser(json){
+      var url = this.USER_HOST;
+      return this._post(url, json);
     },
 };
 

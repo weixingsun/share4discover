@@ -129,7 +129,7 @@ export default class NotifyList extends Component {
     if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     return (
       <View style={Style.absoluteContainer}>
-        <NavigationBar style={Style.navbar} title={{title:'My Messages',}} 
+        <NavigationBar style={Style.navbar} title={{title:'My Messages',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             //rightButton= {this.renderActionIcon()}
 	/>
