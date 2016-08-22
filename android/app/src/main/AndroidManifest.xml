@@ -62,6 +62,10 @@
         android:name="com.baidu.location.f"
         android:enabled="true" 
         android:process=":remote" />
+      <service
+        android:name="it.innove.AdvertiserService"
+        android:enabled="true"
+        android:process=":remote" />
     </application>
 
 </manifest>

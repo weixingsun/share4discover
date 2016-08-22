@@ -252,6 +252,14 @@ export default class BLEList extends React.Component {
              return <Icon name={"ion-ios-radio"} color={'#dd3333'} size={45} onPress={() => this.stop() } />
         else return <Icon name={"ion-ios-radio-outline"} color={'#333333'} size={45} onPress={() => this.scan() } />
     }
+    startAdvertisingService(){
+        BleManager.startAdvertisingService()
+        this.setState({broadcasting:true})
+    }
+    stopAdvertisingService(){
+        BleManager.stopAdvertisingService()
+        this.setState({broadcasting:false})
+    }
     broadcast(){
         let self=this
         let id = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63'
@@ -275,9 +283,11 @@ export default class BLEList extends React.Component {
     }
     renderBroadcastIcon(){
         if(this.state.broadcasting){
-            return <Icon name={'ion-ios-bulb'} color={'#ffc800'} size={45} onPress={()=>this.stopBroadcast()} />
+            //this.stopBroadcast()
+            return <Icon name={'ion-ios-bulb'} color={'#ffc800'} size={45} onPress={()=>this.stopAdvertisingService()} />
         }else{
-            return <Icon name={'ion-ios-bulb-outline'} color={'#aaaaaa'} size={45} onPress={()=>this.startBroadcast()} />
+            //this.startBroadcast()
+            return <Icon name={'ion-ios-bulb-outline'} color={'#aaaaaa'} size={45} onPress={()=>this.startAdvertisingService()} />
         }
     }
     connectDevice(MAC){
