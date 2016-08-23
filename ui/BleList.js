@@ -29,6 +29,7 @@ export default class BLEList extends React.Component {
       //this.dataSource = this.ds.cloneWithRows(this.state.devList),
       this.permissions= ['BLUETOOTH','BLUETOOTH_ADMIN'] //ACCESS_COARSE_LOCATION
       this.uuid = 'd7db32aa-ff2d-58ca-a4f6-e7988b8637c6'
+      this.unsupported = "Your device does not support Bluetooth Advertising"
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
@@ -95,7 +96,7 @@ export default class BLEList extends React.Component {
         this.bleState = NativeAppEventEmitter.addListener(
             'BleManagerDidUpdateState',
             (event) => {
-                alert('BleManagerDidUpdateState:'+event.state)
+                //alert('BleManagerDidUpdateState:'+event.state)
             }
         );
         this.bleNewPeripheral = NativeAppEventEmitter.addListener(
@@ -113,6 +114,12 @@ export default class BLEList extends React.Component {
                 self.setState({devList: sortedList})
             }
         );
+        BleManager.isAdvertisingSupported()
+        .then((value) =>{/*alert('enabled:'+value)*/ })
+        .catch((value) =>{
+            self.setState({bleDisabled:true});
+            alert(self.unsupported) 
+        })
     }
     dynamicSort(property) {
         var sortOrder = 1;
@@ -146,12 +153,15 @@ export default class BLEList extends React.Component {
             console.log('Exited beacons region!', region) // Result of monitoring
             alert('regionDidExit')
         })*/
+        BleManager.isEnabled()
+        .then((value) =>{/*alert('enabled:'+value)*/ })
+        .catch((value) =>alert('Please enable bluetooth in Settings -> Bluetooth:') )
     }
     componentWillUnmount(){
         this.bleStopScan.remove()
         this.bleNewPeripheral.remove()
-        BleManager.stop()
-        clearInterval(this.broadcastTimer)
+        //BleManager.stop()
+        //clearInterval(this.broadcastTimer)
         /*
         this.beaconsDidRange = null;
         this.regionDidEnter = null;
@@ -249,7 +259,7 @@ export default class BLEList extends React.Component {
                        <ActivityIndicator animating={this.state.scanning} size="small"
                            style={{alignItems:'center',justifyContent:'center',height: 50}} />
                    </TouchableOpacity>*/
-             return <Icon name={"ion-ios-radio"} color={'#dd3333'} size={45} onPress={() => this.stop() } />
+             return <Icon name={"ion-ios-radio-outline"} color={'#dd3333'} size={45} onPress={() => this.stop() } />
         else return <Icon name={"ion-ios-radio-outline"} color={'#333333'} size={45} onPress={() => this.scan() } />
     }
     startAdvertisingService(){
@@ -270,7 +280,7 @@ export default class BLEList extends React.Component {
         })
         .catch((error) => {
             self.stopBroadcast()
-            alert('Advertising not supported for your device') //JSON.stringify(error)
+            alert(self.unsupported) //JSON.stringify(error)
         });
     }
     stopBroadcast(){
@@ -282,6 +292,7 @@ export default class BLEList extends React.Component {
         this.broadcastTimer = setInterval(()=>this.broadcast(),1000)
     }
     renderBroadcastIcon(){
+        if(this.state.bleDisabled) return <Icon name={'ion-ios-bulb-outline'} color={Style.font_colors.disabled} size={45} onPress={()=>alert(this.unsupported)} />
         if(this.state.broadcasting){
             //this.stopBroadcast()
             return <Icon name={'ion-ios-bulb'} color={'#ffc800'} size={45} onPress={()=>this.stopAdvertisingService()} />
