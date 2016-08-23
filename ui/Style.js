@@ -86,11 +86,12 @@ module.exports = {
   },
   bottomBar:{
       backgroundColor: '#ebeef0',
+      //backgroundColor: 'white',
       paddingBottom:10,
       paddingTop:10,
       flexDirection:'row',
-      borderTopColor:'#666666',
-      borderTopWidth:0.3,
+      //borderTopColor:'#666666',
+      //borderTopWidth:0.3,
   },
   /*drawerBar:{
       paddingRight:12,
