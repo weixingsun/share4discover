@@ -1,11 +1,28 @@
 import React, { Component } from 'react'
-import { StyleSheet,Text,View } from 'react-native'
+import {Animated, StyleSheet,Text,View,Easing } from 'react-native'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 
 class Icon extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            spinValue: new Animated.Value(0)
+        };
+    }
+    componentDidMount () {
+        this.spin()
+    }
+    spin(){
+        this.state.spinValue.setValue(0); 
+        Animated.timing(
+            this.state.spinValue,
+            {
+              toValue: 1,
+              duration: 4000,
+              easing: Easing.linear
+            }
+        ).start(() => this.spin())
     }
     /*getImageSource(name,size,color){
       //  if(name.startsWith('ion')) return IIcon.getImageSource(name.substring(4),size,color)
@@ -44,10 +61,32 @@ class Icon extends Component {
           );
 	}
     }
+    renderSpinIcon(){
+        if(!this.props.spin) return this.renderIcon()
+        else{
+            const getStartValue = () => '0deg'
+            const getEndValue = () => '360deg'
+            const spin = this.state.spinValue.interpolate({
+               inputRange: [0, 1],
+               outputRange: [getStartValue(), getEndValue()]
+            })
+            return (
+              <Animated.View style={{justifyContent:'center',alignItems:'center',transform: [{rotate: spin}]}}>
+                {this.renderIcon()}
+              </Animated.View>
+            )
+        }
+    }
     render(){
+        const getStartValue = () => '0deg'
+        const getEndValue = () => '360deg'
+        const spin = this.state.spinValue.interpolate({
+           inputRange: [0, 1],
+           outputRange: [getStartValue(), getEndValue()]
+        })
 	return (
           <View>
-            {this.renderIcon()}
+            {this.renderSpinIcon()}
             {this.renderBadge()}
           </View>
 	);

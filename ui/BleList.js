@@ -118,7 +118,7 @@ export default class BLEList extends React.Component {
         .then((value) =>{/*alert('enabled:'+value)*/ })
         .catch((value) =>{
             self.setState({bleDisabled:true});
-            alert(self.unsupported) 
+            //alert(self.unsupported) 
         })
     }
     dynamicSort(property) {
@@ -155,7 +155,7 @@ export default class BLEList extends React.Component {
         })*/
         BleManager.isEnabled()
         .then((value) =>{/*alert('enabled:'+value)*/ })
-        .catch((value) =>alert('Please enable bluetooth in Settings -> Bluetooth:') )
+        .catch((value) =>alert('Please enable Bluetooth in System Settings') )
     }
     componentWillUnmount(){
         this.bleStopScan.remove()
@@ -259,7 +259,7 @@ export default class BLEList extends React.Component {
                        <ActivityIndicator animating={this.state.scanning} size="small"
                            style={{alignItems:'center',justifyContent:'center',height: 50}} />
                    </TouchableOpacity>*/
-             return <Icon name={"ion-ios-radio-outline"} color={'#dd3333'} size={45} onPress={() => this.stop() } />
+             return <Icon name={"ion-ios-radio-outline"} color={'#dd3333'} size={45} onPress={() => this.stop() } spin={true} />
         else return <Icon name={"ion-ios-radio-outline"} color={'#333333'} size={45} onPress={() => this.scan() } />
     }
     startAdvertisingService(){
