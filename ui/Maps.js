@@ -403,7 +403,9 @@ export default class Maps extends Component {
       });
     }
     renderFocusIcon(){
-      if(Global.MAP===Global.BaiduMap && this.state.gps){
+      let con1 = Global.MAP===Global.BaiduMap && this.state.gps
+      let con2 = Platform.OS === 'ios' && Global.MAP===Global.GoogleMap
+      if(con1 || con2){
         return (
           <View style={{flexDirection:'row'}}>
              <View style={{flex:1}}/>

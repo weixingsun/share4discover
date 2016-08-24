@@ -70,15 +70,27 @@ export default class MyList extends Component {
     );
   }
   renderAddIcon(){
-      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} onPress={() => alert('Please login to publish your share') }/>
-      else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+      if(Global.mainlogin==='') 
+          return (
+              <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} 
+                    onPress={() => alert('Please login to publish your share') }/>
+          )
+      else return (
+               <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} 
+                     onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+           )
   }
   render() {
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
-            rightButton={ this.renderAddIcon() }
+            rightButton={
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                    {this.renderAddIcon()}
+                    <View style={{width:10}} />
+                </View>
+            }
         />
         <ListView 
             dataSource={this.ds.cloneWithRows(this.state.myMsgList)} 
