@@ -142,6 +142,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-keep-awake')
     //compile project(':react-native-beacon')
     compile project(':react-native-ble-manager')
     compile project(':react-native-photo-view')

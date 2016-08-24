@@ -10,6 +10,7 @@ import BleManager from 'react-native-ble-manager';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
+import KeepAwake from 'react-native-keep-awake';
 //import { Buffer } = from 'buffer'
 //let data = new Buffer(advertising.data)
 
@@ -30,6 +31,13 @@ export default class BLEList extends React.Component {
       this.permissions= ['BLUETOOTH','BLUETOOTH_ADMIN'] //ACCESS_COARSE_LOCATION
       this.uuid = 'd7db32aa-ff2d-58ca-a4f6-e7988b8637c6'
       this.unsupported = "Your device does not support Bluetooth Advertising"
+    }
+    changeKeepAwake(shouldBeAwake) {
+        if (shouldBeAwake) {
+            KeepAwake.activate();
+        } else {
+            KeepAwake.deactivate();
+        }
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
@@ -156,6 +164,7 @@ export default class BLEList extends React.Component {
         BleManager.isEnabled()
         .then((value) =>{/*alert('enabled:'+value)*/ })
         .catch((value) =>alert('Please enable Bluetooth in System Settings') )
+        this.changeKeepAwake(true)
     }
     componentWillUnmount(){
         this.bleStopScan.remove()
@@ -167,6 +176,7 @@ export default class BLEList extends React.Component {
         this.regionDidEnter = null;
         this.regionDidExit = null;
         */
+        this.changeKeepAwake(false)
     }
     openChatWindow(device){
         /*this.props.navigator.push({

@@ -19,7 +19,7 @@ I18n.translations = {
     ok: 'OK',
     cancel: 'Cancel',
     usb: 'USB',
-    ble: 'Bluetooth',
+    ble: 'Bluetooth LE',
     map: 'Map',
   },
   zh_CN: {

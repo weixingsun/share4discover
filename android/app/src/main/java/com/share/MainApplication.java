@@ -22,6 +22,7 @@ import com.reactnative.photoview.PhotoViewPackage;
 import com.keyee.datetime.*;
 import it.innove.BleManagerPackage;
 //import com.beacon.BeaconsAndroidPackage;
+import com.corbt.keepawake.KCKeepAwakePackage;
 
 import android.app.Application;
 import android.util.Log;
@@ -73,6 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
         new VectorIconsPackage(),
         new PhotoViewPackage(),
         new RCTDateTimePickerPackage(),
+        new KCKeepAwakePackage(),
         new BleManagerPackage(),
         //new BeaconsAndroidPackage(),
         //new RNGLPackage(),

@@ -1,6 +1,8 @@
 rootProject.name = 'Share'
 
 include ':app'
+include ':react-native-keep-awake'
+project(':react-native-keep-awake').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keep-awake/android')
 //include ':react-native-beacon'
 //project(':react-native-beacon').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-beacon/android')
 include ':react-native-ble-manager'
