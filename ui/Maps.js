@@ -200,8 +200,16 @@ export default class Maps extends Component {
     }
     moveToMe(){
       //bmap:{timestamp,{coords:{heading,accuracy,longitude,latitude}}}
-      if(this.pos!=null)
-        this.refs.bmap.zoomToLocs([[this.pos.latitude, this.pos.longitude]]);
+      if(this.pos!=null){
+          if(Global.MAP===Global.GoogleMap){
+              let p = {
+                  ...this.state.region,
+                  latitude:this.pos.latitude,
+                  longitude:this.pos.longitude,
+              }
+              this.refs.gmap.animateToRegion(p);
+          }else this.refs.bmap.zoomToLocs([[this.pos.latitude, this.pos.longitude]]);
+      }
     }
     moveBmap(p){
       this.refs.bmap.animateTo(p);
@@ -404,7 +412,7 @@ export default class Maps extends Component {
     }
     renderFocusIcon(){
       let con1 = Global.MAP===Global.BaiduMap && this.state.gps
-      let con2 = Platform.OS === 'ios' && Global.MAP===Global.GoogleMap
+      let con2 = Platform.OS === 'ios' && Global.MAP===Global.GoogleMap && this.state.gps
       if(con1 || con2){
         return (
           <View style={{flexDirection:'row'}}>
