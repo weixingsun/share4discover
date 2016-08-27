@@ -115,11 +115,13 @@ export default class Main extends Component {
   }
   checkLogin(type){
       //var self = this
+      //alert('type='+type+' last2='+type.split('_')[1])
       Store.get(type).then(function(user){  //{type,email}
+          let last2 = type.split('_')[1]
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;
               Global.mainlogin = Global.getMainLogin(Global.logins)
-              Global[type]=user
+              Global.userObjects[last2]=user
               //if(Global.mainlogin!=self.state.mainlogin){
               //    self.setState({mainlogin:Global.mainlogin }) 
               //}
@@ -295,7 +297,7 @@ export default class Main extends Component {
   checkSettingsChange(){
       this.checkLogin('user_fb')
       this.checkLogin('user_gg')
-      this.checkLogin('user_wx')
+      //this.checkLogin('user_wx')
       this.checkLogin('user_wb')
       this.checkMapSettings()
       this.checkFirstTime()

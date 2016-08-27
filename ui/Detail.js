@@ -334,7 +334,7 @@ export default class Detail extends Component {
                    }
                    rightButton={ this.showActionIcons() }
                 />
-                <View style={{flex:8,backgroundColor: '#DDDDDD',}}>
+                <View style={{flex:8,backgroundColor: '#eeeeee',}}>
                     <KeyboardAwareScrollView
                       automaticallyAdjustContentInsets={false}
                       scrollEventThrottle={200}

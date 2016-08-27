@@ -11,7 +11,7 @@ import I18n from 'react-native-i18n';
 
 var Login = React.createClass({
   renderLoginButton() {
-    if(this.props.user !== null){ // && this.props.user.type ==='gg'){
+    if(this.props.user != null){ // && this.props.user.type ==='gg'){
         return <Icon name={'fa-google-plus-square'} size={35} color="#dd4b39" onPress={this._googleSignOut} />
         //return <Icon name={'fa-google-plus-square'} size={20} backgroundColor="#dd4b39" onPress={this._googleSignOut} />
     }else{
@@ -22,7 +22,7 @@ var Login = React.createClass({
   renderLoginName() {
     //console.log('LoginGG.renderLoginName:'+JSON.stringify(this.props.user));
     var name = I18n.t('login')+' '+I18n.t('gg'); //this.props.user.name;
-    if(this.props.user !== null ){
+    if(this.props.user != null ){
        name=this.props.user.name;
     }
     return <View key='user_gg'><Text>{name}</Text></View>

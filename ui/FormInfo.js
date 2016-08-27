@@ -37,27 +37,20 @@ export default class FormInfo extends Component {
         this.validators={
               title:{
                 title:'Title',
-                validate:[{
-                  validator:'isLength',
-                  arguments:[2,50],
-                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
-                }]
+                validate:[{ validator:'isLength', arguments:[2,50], message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters' }]
               },
               content:{
                 title:'Content',
-                validate:[{
-                  validator:'isLength',
-                  arguments:[10,512],
-                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
-                }]
+                validate:[{ validator:'isLength', arguments:[10,512], message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters' }]
               },
               phone:{
                 title:'Phone number',
-                validate:[{
-                  validator:'isLength',
-                  arguments:[6,20],
-                  message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters'
-                }]
+                validate:[{ validator:'isNumeric', message:'{TITLE} must be Numeric' }]
+                       // { validator:'isLength',  arguments:[5,20],message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} numbers'}]
+              },
+              price:{
+                title:'Price',
+                validate:[{ validator:'isNumeric', message:'{TITLE} must be Numeric' }]
               },
               type:{
                 title:'Type',
@@ -88,14 +81,9 @@ export default class FormInfo extends Component {
               },
               address:{
                 title:'Address',
-                validate:[{
-                  validator:'isLength',
-                  arguments:[10,255],
-                  message:'Address is invalid'
-                }]
+                validate:[{ validator:'isLength', arguments:[10,255], message:'Address is invalid' }]
               },
         }
-        // price: t.maybe(t.Number),
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
@@ -158,7 +146,7 @@ export default class FormInfo extends Component {
     }
     fixFormData(values){
         if(values.owner == null) {
-          alert('Please login to publish, go to settings')
+          alert('Please login first, go to settings')
           return
         }
         if(values.hasOwnProperty('ask')  && typeof values.ask ==='object')   values.ask = values.ask[0]
@@ -294,7 +282,7 @@ export default class FormInfo extends Component {
             var myDefaults = {
               title: '', content: '', address: '',
               type:  '',  ask: '',
-              owner: logins,
+              owner: logins, 
               phone: '',  ctime: this.ctime, time:  '',
               lat:   '',  lng:   '',  price: '',
               dest:  '', pics:  [],
@@ -309,7 +297,7 @@ export default class FormInfo extends Component {
             //myDefaults[askkey]  = true;
             myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
             myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
-            //myDefaults['type'] = [this.props.msg.type]
+            //myDefaults['owner_name'] = Global.getMainLoginName()
             //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
             //alert('processProps:'+JSON.stringify(myDefaults))
@@ -365,8 +353,9 @@ export default class FormInfo extends Component {
         //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
         //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
         return (
-          <View style={{height:Style.THUMB_HEIGHT}}>
-            <ScrollView style={{height:Style.THUMB_HEIGHT}} horizontal={true}>
+          <View style={{marginLeft:10,height:Style.THUMB_HEIGHT+10,justifyContent:'center'}}>
+            <View style={{height:5}}/>
+            <ScrollView style={{height:Style.THUMB_HEIGHT,}} horizontal={true}>
                 {
                   list.map((pic,id)=>{
                     let source = pic
@@ -539,7 +528,7 @@ export default class FormInfo extends Component {
         if(this.props.msg!=null) title_nav = 'Edit this Share'
         else title_nav = 'Create a Share'
         return (
-            <View >
+            <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>

@@ -24,10 +24,10 @@ export default class SettingsList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          user_fb:Global.user_fb,
-          user_gg:Global.user_gg,
-          user_wx:Global.user_wx,
-          user_wb:Global.user_wb,
+          user_fb:Global.userObjects.fb,
+          user_gg:Global.userObjects.gg,
+          user_wx:Global.userObjects.wx,
+          user_wb:Global.userObjects.wb,
       };
       this.login_fb  = this.login_fb.bind(this);
       this.logout_fb = this.logout_fb.bind(this);
@@ -40,12 +40,6 @@ export default class SettingsList extends React.Component {
       //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
-        //alert(
-        //  'fb:'+JSON.stringify(Global.user_fb) +
-        //  '\n\ngg:'+JSON.stringify(Global.user_gg) +
-        //  '\n\nwx:'+JSON.stringify(Global.user_wx) +
-        //  '\n\nwb:'+JSON.stringify(Global.user_wb)
-        //)
         //I18n.locale = I18n.locale    //en-US, not compatible with json key format
         I18n.locale = NativeModules.RNI18n.locale  //en_US
     }
@@ -91,53 +85,53 @@ export default class SettingsList extends React.Component {
     }
     login_gg(user){
         this.setState({user_gg:user});
-        Global.user_gg = user
+        Global.userObjects['gg'] = user
         Global.logins.gg = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
         Net.loginUser(user)
     }
     logout_gg(user){
         this.setState({user_gg:null});
-        Global.user_gg = null
+        delete Global.userObjects.gg
         delete Global.logins.gg
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_fb(user){
         this.setState({user_fb:user});
-        Global.user_fb = user
+        Global.userObjects.fb = user
         Global.logins.fb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
         Net.loginUser(user)
     }
     logout_fb(user){
         this.setState({user_fb:null});
-        Global.user_fb = null
+        delete Global.userObjects.fb
         delete Global.logins.fb
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wx(user){
         this.setState({user_wx:user});
-        Global.user_wx = user
+        Global.userObjects.wx = user
         Global.logins.wx = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
         Net.loginUser(user)
     }
     logout_wx(user){
         this.setState({user_wx:null});
-        Global.user_wx = null
+        delete Global.userObjects.wx
         delete Global.logins.wx
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }
     login_wb(user){
         this.setState({user_wb:user});
-        Global.user_wb = user
+        Global.userObjects.wb = user
         Global.logins.wb = user.email
         Global.mainlogin = Global.getMainLogin(Global.logins)
         Net.loginUser(user)
     }
     logout_wb(user){
         this.setState({user_wb:null});
-        Global.user_wx = null
+        delete Global.userObjects.fb
         delete Global.logins.wb
         Global.mainlogin = Global.getMainLogin(Global.logins)
     }

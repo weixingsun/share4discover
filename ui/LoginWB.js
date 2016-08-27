@@ -40,7 +40,7 @@ var Login = React.createClass({
   },
   renderLoginName() {
     var name = I18n.t('login')+' '+I18n.t('wb');
-    if(this.props.user !== null ){
+    if(this.props.user != null ){
        name=this.props.user.name;
     }
     return <View key='user_wb'><Text>{name}</Text></View>

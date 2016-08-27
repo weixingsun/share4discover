@@ -75,7 +75,7 @@ var Login = React.createClass({
   renderLoginName() {
     //console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
     var name = I18n.t('login')+' '+I18n.t('fb');
-    if(this.props.user !== null ){ //&& this.props.user.type === 'fb'){
+    if(this.props.user != null ){ //&& this.props.user.type === 'fb'){
          name = this.props.user.name;
     }
     return (<View key='user_fb'><Text>{name}</Text></View>);

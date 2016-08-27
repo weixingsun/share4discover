@@ -33,9 +33,11 @@ module.exports = {
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
     IP2LOC_HOST: 'http://freegeoip.net/json',
     mainlogin: '',
+    login_names:{},
     logins: {},
     ALL_MSGS: '$allmsgs',
     SHOW_ADS: 'ShowAds',
+    userObjects:{},
     user_fb:null,
     user_gg:null,
     user_wb:null,
@@ -76,7 +78,7 @@ module.exports = {
         let arrKey = Object.keys(loginObj)
         let str = ''
         arrKey.map((k)=>{
-            str += ','+k+':'+loginObj[k]
+            str += ','+k+':'+loginObj[k]+':'+this.userObjects[k]
         })
         return str.substring(1);
     },
@@ -101,6 +103,12 @@ module.exports = {
             if(logins.gg)  return 'gg:'+logins.gg
             if(logins.wb)  return 'wb:'+logins.wb
         }
+    },
+    getMainLoginName(){
+            if(this.logins.fb)  return this.user_fb.name
+            if(this.logins.wx)  return this.user_wx.name
+            if(this.logins.gg)  return this.user_gg.name
+            if(this.logins.wb)  return this.user_wb.name
     },
     getNotifyKey(){
         return '@'+this.mainlogin
