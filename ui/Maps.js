@@ -78,10 +78,8 @@ export default class Maps extends Component {
             //this.singlePermission('ACCESS_COARSE_LOCATION')
         }
     }
-    _handleAppStateChange(state){  //active -- inactive -- background
-	//if(state!=='active') this.turnOffGps();    //crash
-	//else if(this.state.gps) this.turnOnGps();
-    }
+    //_handleAppStateChange(state){  //active -- inactive -- background
+    //}
     /*checkUsbDevice(){
       //UsbSerial.open(9600);
       //UsbSerial.write('test');
@@ -135,8 +133,14 @@ export default class Maps extends Component {
       this.setState({gps:true});
     }
     turnOffGps(){
-      navigator.geolocation.clearWatch(this.watchID);
-      this.setState({gps:false});
+        this.setState({gps:false});
+        if(this.watchID==null){
+            return
+        }
+        if(Global.MAP===Global.GoogleMap)
+            navigator.geolocation.clearWatch(this.watchID);
+        else
+            KKLocation.clearWatch(this.watchID)
     }
     switchGps(){
       if(this.state.gps) {
@@ -193,6 +197,7 @@ export default class Maps extends Component {
         });
     }*/
     back(){
+      this.turnOffGps()
       this.props.navigator.pop();
     }
     move(p){

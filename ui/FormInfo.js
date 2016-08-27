@@ -4,6 +4,7 @@ import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, ScrollView, Styl
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import NavigationBar from 'react-native-navbar';
+import KKLocation from 'react-native-baidumap/KKLocation';
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -177,6 +178,11 @@ export default class FormInfo extends Component {
     }
     onSubmit(values) {
         var self = this;
+        let latlng = {latitude:values.lat, longitude:values.lng}
+        if(this.checkTooFarAway(latlng)){
+            alert('Your location is too far away')
+            return
+        }
         //this.validateAll();
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
         /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
@@ -238,6 +244,48 @@ export default class FormInfo extends Component {
         getImageSource('ion-ios-close', 40, 'white').then((source) => {
             this.setState({close_image:source})
         });
+        this.turnOnGps()
+    }
+    componentWillUnMount(){
+        this.turnOffGps()
+    }
+    turnOffGps(){
+        if(this.watchID==null){
+            return
+        }
+        //alert('closing gps:'+this.watchID)
+        if(Global.MAP===Global.GoogleMap)
+            navigator.geolocation.clearWatch(this.watchID);
+        else
+            KKLocation.clearWatch(this.watchID)
+    }
+    turnOnGps(){
+      let self=this
+      if(Global.MAP===Global.GoogleMap){
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+            self.pos=position.coords
+            //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
+          },
+          (error) => console.log(error.message),
+          {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
+        );
+      }else if(Global.MAP===Global.BaiduMap){
+        this.watchID = KKLocation.watchPosition((position) => {
+          //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+          self.pos=position.coords
+          //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
+        });
+      }
+      //this.setState({gps:true});
+    }
+    checkTooFarAway(position){
+        if(!this.pos) return false
+        let latDiff = Math.abs(position.latitude-this.pos.latitude)
+        let lngDiff = Math.abs(position.longitude-this.pos.longitude)
+        if(latDiff>0.1 || lngDiff>0.1){
+            return true
+        }else return false
     }
     processProps(){
         let logins = Global.getLoginStr(Global.logins)
@@ -480,6 +528,10 @@ export default class FormInfo extends Component {
         })
         //<GiftedForm.OptionWidget title='Estate' value='estate'/>
     }
+    back(){
+      this.turnOffGps()
+      this.props.navigator.pop();
+    }
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
@@ -496,7 +548,7 @@ export default class FormInfo extends Component {
                            color={'#333333'} size={46} 
                            onPress={() => {
                                //if(this.state.pics_changed) alert('Please submit your changes')
-                               this.props.navigator.pop() 
+                               this.back() 
                            }} />
                      </View>
                    }
