@@ -3,9 +3,24 @@ var React = require('react');
 var ReactNative = require('react-native');
 import {Icon} from './Icon'
 //var {FBLoginManager} = require('react-native-facebook-login');
-import FBSDK,{LoginManager,AccessToken} from 'react-native-fbsdk'
+import FBSDK,{LoginManager,AccessToken,ShareApi} from 'react-native-fbsdk'
 import Global from '../io/Global'
-
+//let data={contentType:'link',contentUrl:'http://shareplus.co.nf',contentDescription:'Download App'}
+//ShareApi.canShare(data).then(
+//  var tmp = this;
+//  function(canShare) {
+//    if (canShare) {
+//      return ShareApi.share(shareLinkContent, '/me', 'Some message.');
+//    }
+//  }
+//).then(
+//  function(result) {
+//    alert('Share with ShareApi success.');
+//  },
+//  function(error) {
+//    alert('Share with ShareApi failed with error: ' + error);
+//  }
+//)
 var {
   StyleSheet,
   Text,

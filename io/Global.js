@@ -75,11 +75,12 @@ module.exports = {
       wb:'fa-weibo',
       tel:'ion-ios-call-outline',
     },
-    getLoginStr(loginObj){
-        let arrKey = Object.keys(loginObj)
+    getLoginStr(){
+        //alert(JSON.stringify(this.logins))
+        let arrKey = Object.keys(this.logins)
         let str = ''
         arrKey.map((k)=>{
-            str += ','+k+':'+loginObj[k]+':'+this.userObjects[k]
+            str += ','+k+':'+this.logins[k]+':'+this.userObjects[k]
         })
         return str.substring(1);
     },

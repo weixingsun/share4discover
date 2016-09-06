@@ -102,6 +102,10 @@ var Login = React.createClass({
         ]
     );
   },
+  _share(txt){//
+    let data = {type:'text', text:txt}
+    WeiboAPI.share(data)
+  },
   render(){
     return (
         <View style={{flexDirection:'row', alignItems: 'center',}}>
