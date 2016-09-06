@@ -32,7 +32,7 @@ var Login = React.createClass({
         }
     },
   renderLoginButton() {
-    if(this.props.user !== null){
+    if(this.props.user != null){
         return <Icon name={'fa-weibo'} size={30} color="#dd4b39" onPress={this._signOut} />
     }else{
         return <Icon name={'fa-weibo'} size={30} color="#dddddd" onPress={this._signIn} />

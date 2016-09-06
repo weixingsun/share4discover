@@ -14,7 +14,7 @@ import com.imagepicker.ImagePickerPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.magus.fblogin.FacebookLoginPackage;
+//import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
 //import com.projectseptember.RNGL.RNGLPackage;
 import com.wxsun.usbserial.UsbReactPackage;
@@ -27,6 +27,11 @@ import com.corbt.keepawake.KCKeepAwakePackage;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -42,6 +47,18 @@ public class MainApplication extends Application implements ReactApplication {
   private static final int RECORD_PERMISSION_REQUEST_CODE = 2;
   private static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3;
   private static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
+
+  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+  protected static CallbackManager getCallbackManager() {
+    return mCallbackManager;
+  }
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    FacebookSdk.sdkInitialize(getApplicationContext());
+    // If you want to use AppEventsLogger to log events.
+    AppEventsLogger.activateApp(this);
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -68,7 +85,8 @@ public class MainApplication extends Application implements ReactApplication {
         new UsbReactPackage(),
         new RNGoogleSigninPackage(),
         new RNPermissionsPackage(),  //Android 6.0 permission
-        new FacebookLoginPackage(),
+        //new FacebookLoginPackage(),
+        new FBSDKPackage(mCallbackManager),
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),

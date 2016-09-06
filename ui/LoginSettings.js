@@ -11,6 +11,7 @@ import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 //import YQL from 'yql' //sorry, react native is not nodejs
+import I18n from 'react-native-i18n';
 
 var styles = StyleSheet.create({
     container: {
@@ -50,7 +51,7 @@ var styles = StyleSheet.create({
 
 //API_NAME: exchange
 //value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
-export default class Settings extends React.Component{
+export default class LoginSettings extends React.Component{
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({
@@ -64,13 +65,10 @@ export default class Settings extends React.Component{
         this.state = {
             //isLoading:true,
             form: {
-                map:        Global.MAP,
-                map_type:   Global.MAP_TYPE,
-                map_traffic:Global.MAP_TRAFFIC,
-
-                mapTitle:       Global.MAP,
-                mapTypeTitle:   Global.MAP_TYPE,
-                mapTrafficTitle:Global.MAP_TRAFFIC,
+                fb:   Global.SETTINGS_LOGINS['fb'],
+                gg:   Global.SETTINGS_LOGINS['gg'],
+                wx:   Global.SETTINGS_LOGINS['wx'],
+                wb:   Global.SETTINGS_LOGINS['wb'],
             }
             //editable: false,
             //timerEnabled: false,
@@ -143,34 +141,54 @@ export default class Settings extends React.Component{
       )
     }*/
 
+    clone(hash) {
+        var json = JSON.stringify(hash);
+        var object = JSON.parse(json);
+        return object;
+    }
     handleValueChange(form){
-        if(typeof form.map === 'object'){
-            if(form.map[0] !=null && typeof form.map[0] === 'string'){
-                Store.save_string(Store.SETTINGS_MAP,form.map[0])
-                Global.MAP=form.map[0]
+        let oldlogins = this.clone(this.state.form)
+        let logins = this.state.form
+        if(typeof form.fb === 'object'){
+            let login = form.fb[0]
+            if(login !=null && typeof login === 'string'){
+                Global.SETTINGS_LOGINS['fb']=login
+                logins.fb=login
             }
         }
-        if(typeof form.map_type === 'object'){
-            if(form.map_type[0] !=null && typeof form.map_type[0] === 'string'){
-                Store.save_string(Store.SETTINGS_MAP_TYPE,form.map_type[0])
-                Global.MAP_TYPE=form.map_type[0]
+        if(typeof form.gg === 'object'){
+            let login = form.gg[0]
+            if(login !=null && typeof login === 'string'){
+                Global.SETTINGS_LOGINS['gg']=login
+                logins.gg=login
             }
         }
-        if(typeof form.map_traffic === 'object'){
-            if(form.map_traffic[0] !=null && typeof form.map_traffic[0] === 'string'){
-                Store.save_string(Store.SETTINGS_MAP_TRAFFIC,form.map_traffic[0])
-                Global.MAP_TRAFFIC=form.map_traffic[0]
+        if(typeof form.wb === 'object'){
+            let login = form.wb[0]
+            if(login !=null && typeof login === 'string'){
+                Global.SETTINGS_LOGINS['wb']=login
+                logins.wb=login
             }
         }
-        //alert('form:'+JSON.stringify(form))
+        //alert('form:'+JSON.stringify(form)+"logins:"+JSON.stringify(logins))
+        if(JSON.stringify(logins) != JSON.stringify(oldlogins)){
+            Store.save(Store.SETTINGS_LOGINS,logins)
+            //alert(JSON.stringify(logins))
+        }
     }
     render() {
         //alert('render.map:'+this.state.map+'\nmap.type='+this.state.map_type+'\nmap.traffic='+this.state.map_traffic)
         //if(this.state.isLoading) return <Loading />
         //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
+        let titleName = I18n.t('login')+' '+I18n.t('settings')
+        /*
+             <TouchableOpacity style={styles.header} >
+                 <Text>Map & Search Engine Provider</Text>
+             </TouchableOpacity>
+        */
         return(
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title: "Settings"}}
+          <NavigationBar style={Style.navbar} title={{title: titleName}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
                   <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
@@ -179,10 +197,10 @@ export default class Settings extends React.Component{
           />
           <View style={styles.container}>
              <TouchableOpacity style={styles.header} >
-                 <Text>Map & Search Engine Provider</Text>
+                 <Text>Sharing on your Social Networks</Text>
              </TouchableOpacity>
                 <GiftedForm
-                    formName='newInfoForm'
+                    formName='loginSettingsForm'
                     style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
@@ -190,42 +208,42 @@ export default class Settings extends React.Component{
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
-                            title='Map Provider'
-                            name='map'
-                            display={this.state.form.mapTitle}
-                            value={this.state.form.map}
+                            title='Facebook'
+                            name='fb'
+                            display={this.state.form.fb}
+                            value={this.state.form.fb}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map' title='Map' multiple={false}>
-                                <GiftedForm.OptionWidget title='Google Maps'   value='GoogleMap' />
-                                <GiftedForm.OptionWidget title='Baidu Maps' value='BaiduMap' />
+                            <GiftedForm.SelectWidget name='fb' title='fb' multiple={false}>
+                                <GiftedForm.OptionWidget title='Read' value='read' />
+                                <GiftedForm.OptionWidget title='Post' value='post' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Map Type'
-                            name='map_type'
-                            display={this.state.form.mapTypeTitle}
-                            value={this.state.form.mapType}
+                            title='Google'
+                            name='gg'
+                            display={this.state.form.gg}
+                            value={this.state.form.gg}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map_type' title='Map Type' multiple={false}>
-                                <GiftedForm.OptionWidget title='Standard'   value='standard' />
-                                <GiftedForm.OptionWidget title='Satellite' value='satellite' />
+                            <GiftedForm.SelectWidget name='gg' title='gg' multiple={false}>
+                                <GiftedForm.OptionWidget title='Read' value='read' />
+                                <GiftedForm.OptionWidget title='Post' value='post' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Traffic on Map'
-                            name='map_traffic'
-                            display={this.state.form.mapTrafficTitle}
-                            value={this.state.form.mapTraffic}
+                            title='Weibo'
+                            name='wb'
+                            display={this.state.form.wb}
+                            value={this.state.form.wb}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map_traffic' title='Real Time Traffic' multiple={false}>
-                                <GiftedForm.OptionWidget title='Yes' value='true' />
-                                <GiftedForm.OptionWidget title='No' value='false' />
+                            <GiftedForm.SelectWidget name='wb' title='wb' multiple={false}>
+                                <GiftedForm.OptionWidget title='Read' value='read' />
+                                <GiftedForm.OptionWidget title='Post' value='post' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                 </GiftedForm>
@@ -234,45 +252,3 @@ export default class Settings extends React.Component{
         )
     }
 };
-/*
-            <ListView
-                enableEmptySections={true}      //annoying warning
-                style={styles.listViewContainer}
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow.bind(this)}
-                //renderHeader={this._renderHeader.bind(this)}
-                //renderSectionHeader = {this._renderSectionHeader.bind(this)}
-                automaticallyAdjustContentInsets={false}
-                initialListSize={9}
-            />
-             <Picker selectedValue={this.state.map} onValueChange={(value)=> {
-                  this.setState({ map:value })
-                  Store.save_string(Store.SETTINGS_MAP,value)
-                  Global.MAP=value
-             }}>
-                 {this.map_list.map(function(item,n){
-                      return <Picker.Item key={item} label={item} value={item} />;
-                 })}
-             </Picker>
-             <TouchableOpacity style={styles.header} >
-                 <Text>Map Settings</Text>
-             </TouchableOpacity>
-             <Picker selectedValue={this.state.map_type} onValueChange={(value)=> {
-                  this.setState({ map_type:value })
-                  Store.save_string(Store.SETTINGS_MAP_TYPE,value)
-                  Global.MAP_TYPE=value
-             }}>
-                 {this.map_type_list.map(function(item,n){
-                      return <Picker.Item key={item} label={item} value={item} />;
-                 })}
-             </Picker>
-             <Picker selectedValue={this.state.map_traffic} onValueChange={(value)=> {
-                  this.setState({ map_traffic:value })
-                  Store.save_string(Store.SETTINGS_MAP_TRAFFIC,value)
-                  Global.MAP_TRAFFIC=value
-             }}>
-                 {this.map_traffic_list.map(function(item,n){
-                      return <Picker.Item key={item} label={item} value={item} />;
-                 })}
-             </Picker>
-*/

@@ -35,6 +35,7 @@ module.exports = {
     mainlogin: '',
     login_names:{},
     logins: {},
+    SETTINGS_LOGINS: {},
     ALL_MSGS: '$allmsgs',
     SHOW_ADS: 'ShowAds',
     userObjects:{},
@@ -92,9 +93,19 @@ module.exports = {
         })
         return obj;
     },
-    getMainLogin(logins){
+    getMainLogin(){
         //fb > wx > gg > wb
         //{fb:email,wx:email,gg:email,wb:email}
+        if(Object.keys(this.logins).length===0){
+            return '';
+        }else{
+            if(this.logins.fb)  return 'fb:'+this.logins.fb
+            if(this.logins.wx)  return 'wx:'+this.logins.wx
+            if(this.logins.gg)  return 'gg:'+this.logins.gg
+            if(this.logins.wb)  return 'wb:'+this.logins.wb
+        }
+    },
+    getInfoMainLogin(logins){
         if(Object.keys(logins).length===0){
             return '';
         }else{
@@ -138,5 +149,11 @@ module.exports = {
     getLang(){
         //return LocalizedStrings.getLanguage()
         return moment.locale()
+    },
+    getFeedApi(){
+        if(this.logins.fb){
+            return `https://graph.facebook.com/me/feed&access_token=${this.userObjects.fb.token}`
+        }else if(this.logins.gg) return '';
+        else if(this.logins.wb) return '';
     },
 };

@@ -276,7 +276,7 @@ export default class FormInfo extends Component {
         }else return false
     }
     processProps(){
-        let logins = Global.getLoginStr(Global.logins)
+        let logins = Global.getLoginStr()
         GiftedFormManager.reset('newInfoForm');
         if(!this.props.msg){
             var myDefaults = {

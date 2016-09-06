@@ -5,9 +5,9 @@ cp android/app/google-services-release.json android/app/google-services.json
 #keytool -genkey -v -keystore share-release-key.keystore -alias share-key-alias -keyalg RSA -keysize 2048 -validity 10000
 #CN=Weixing Sun, OU=Dev, O=DaBo, L=Beijing, ST=BJ, C=CN
 
-cd android && ./gradlew clean && ./gradlew assembleRelease
-sleep 5
-cd ..
+#cd android && ./gradlew clean && ./gradlew assembleRelease
+#sleep 5
+#cd ..
 date=`date +%Y%m%d`
 cp  android/app/build/outputs/apk/app-release.apk codepush/Share_$date.apk
 scp codepush/Share_$date.apk nzmesse1@nzmessengers.co.nz:~/www/share/

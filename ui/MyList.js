@@ -80,6 +80,25 @@ export default class MyList extends Component {
                      onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
            )
   }
+  renderFeedIcon(){
+      if(Global.mainlogin!=='')
+          return (
+              <Icon name={'ion-ios-folder-outline'} size={40} color={Style.font_colors.enabled}
+                  onPress={() => this.feed()}/>
+          )
+  }
+  feed(){
+      let _this = this;
+      let api_url = Global.getFeedApi()
+      alert(api_url)
+      fetch(api_url)
+        //.then((response) => response.json())
+        .then((responseData) => {
+            console.log(responseData)
+        })
+        .catch((err)=>{alert(err)})
+        .done();
+  }
   render() {
     return (
       <View style={Style.absoluteContainer}>
@@ -88,6 +107,8 @@ export default class MyList extends Component {
             rightButton={
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                     {this.renderAddIcon()}
+                    <View style={{width:10}} />
+                    {this.renderFeedIcon()}
                     <View style={{width:10}} />
                 </View>
             }

@@ -2,8 +2,8 @@
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import {Icon} from './Icon'
-import FBLogin from 'react-native-facebook-login'
-import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
+//import FBLogin from 'react-native-facebook-login'
+//import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
 import FBLoginView from "./FBLoginView"

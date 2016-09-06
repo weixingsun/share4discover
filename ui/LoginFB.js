@@ -2,8 +2,8 @@
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import {Icon} from './Icon'
-//import FBLogin from 'react-native-facebook-login'
-import {FBLoginManager} from 'react-native-facebook-login'
+//import FBLogin,{FBLoginManager} from 'react-native-facebook-login'
+//import FBSDK,{LoginManager} from 'react-native-fbsdk'
 //import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
@@ -12,20 +12,6 @@ import FBLoginButton from './LoginFBButton'
 import I18n from 'react-native-i18n'
 
 var Login = React.createClass({
-  updateView(data){
-      this._facebookSignIn(data)
-      //console.log(data)
-/*
-    var _this = this;
-    FBLoginManager.getCredentials(function(error, data){
-      if (!error) {
-        _this._facebookSignIn(data)
-      } else {
-        //_this.setState({ user : null });
-      }
-    });
-*/
-  },
   renderLoginButton(){
     var _this=this;
     return  (
@@ -35,7 +21,7 @@ var Login = React.createClass({
           }}
           onLogin={function(data){
             console.log("FBLoginMock logged in!");
-            _this.updateView(data);
+            _this._facebookSignIn(data);
           }}
           onLogout={function(){
             console.log("FBLoginMock logged out.");
@@ -101,9 +87,7 @@ var Login = React.createClass({
     Store.delete('user_fb');
   },
   _facebookSignIn(data) {
-    //console.log('facebook login:')
-    //console.log(data)
-    if(data.hasOwnProperty('profile')){ //Android get all info in 1 time
+    /*if(data.hasOwnProperty('profile')){ //Android get all info in 1 time
         //alert('android:'+JSON.stringify(data))
         var profile = data.profile
         var token = data.profile.token
@@ -130,28 +114,28 @@ var Login = React.createClass({
         this.saveUserDB(this.state.user);
         this.props.login(_user)
         console.log('facebook_user:'+JSON.stringify(_user)); //this.state.user
-    }else{      //iOS need fetch manually
+    }else{*/
+      //data={accessToken,permissions,declinedPermissions,applicationID,accessTokenSource,userID,expirationTime,lastRefreshTime}
       var _this = this;
-      //alert('ios:'+JSON.stringify(data))
-      var api = `https://graph.facebook.com/${data.credentials.userId}?fields=name,email,gender,locale&access_token=${data.credentials.token}`;
+      var api = `https://graph.facebook.com/${data.userID}?fields=name,email,gender,locale&access_token=${data.accessToken}`;
       fetch(api)
         .then((response) => response.json())
         .then((responseData) => {
-          //console.log(responseData)
+            console.log(responseData)
+            
             var _user={
               id : responseData.id,
               name : responseData.name,
               email: responseData.email,
               gender: responseData.gender,
               type: 'fb',
-              token: data.credentials.token,
-	      expire: data.credentials.tokenExpirationDate,
+              token: data.accessToken,
+	      expire: data.expirationTime,
             };
             _this.setState({ user : _user });
             _this.saveUserDB(_user);
             _this.props.login(_user);
         }).done();
-    }
   },
   render(){
     return (

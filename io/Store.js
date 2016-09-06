@@ -9,6 +9,7 @@ var deviceStorage = {
         SETTINGS_MAP:        "settings_map",
         SETTINGS_MAP_TYPE:   "settings_map_type",
         SETTINGS_MAP_TRAFFIC:"settings_map_traffic",
+        SETTINGS_LOGINS:     "settings_login",
         
         msgTab:  'ion-md-chatboxes',
         userTab: 'ion-ios-person',

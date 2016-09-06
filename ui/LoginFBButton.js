@@ -2,7 +2,9 @@
 var React = require('react');
 var ReactNative = require('react-native');
 import {Icon} from './Icon'
-var {FBLoginManager} = require('react-native-facebook-login');
+//var {FBLoginManager} = require('react-native-facebook-login');
+import FBSDK,{LoginManager,AccessToken} from 'react-native-fbsdk'
+import Global from '../io/Global'
 
 var {
   StyleSheet,
@@ -22,7 +24,7 @@ var FBLoginMock = React.createClass({
         email:  React.PropTypes.string,
         gender: React.PropTypes.string,
         token:  React.PropTypes.string,
-        expire: React.PropTypes.string,
+        expire: React.PropTypes.number,
     }),
     style: View.propTypes.style,
     onPress: React.PropTypes.func,
@@ -40,28 +42,74 @@ var FBLoginMock = React.createClass({
   },
 
   handleLogin: function(){
-    //alert(Object.keys(FBLoginManager))
     var _this = this;
-    FBLoginManager.loginWithPermissions(["email","user_friends"],function(error, data){
+    /*FBLoginManager.loginWithPermissions(["email","user_friends"],function(error, data){
       if (!error) {
         _this.setState({ user : data});
         _this.props.onLogin && _this.props.onLogin(data);
       } else {
         console.log(error, data);
       }
-    });
+    })*/
+    if(Global.SETTINGS_LOGINS.fb=='read'){
+        //alert('read')
+        LoginManager.logInWithReadPermissions(['public_profile']).then(  //'email', 'user_friends', 'public_profile'
+          function(result) {
+            if (result.isCancelled) {
+              //alert('Login cancelled');
+            } else {
+              let token = AccessToken.getCurrentAccessToken()
+              //alert('Login success token='+token+' with permissions:'+result.grantedPermissions.toString())
+              AccessToken.getCurrentAccessToken().then(
+                data => {
+                  //alert(JSON.stringify(data)) //{accessToken,permissions,declinedPermissions,applicationID,accessTokenSource,userID,expirationTime,lastRefreshTime}
+                  _this.setState({ user : data});
+                  _this.props.onLogin && _this.props.onLogin(data);
+                }
+              );
+            }
+          },
+          function(error) {
+            alert('Login fail with error: ' + error);
+          }
+        );
+    }else{
+      //alert('post')
+      LoginManager.logInWithPublishPermissions(['publish_actions']).then(
+        function(result) {
+          if (result.isCancelled) {
+            //alert('Login cancelled');
+          } else {
+            let token = AccessToken.getCurrentAccessToken()
+            //alert('Login success token='+token+' with permissions:'+result.grantedPermissions.toString())
+            AccessToken.getCurrentAccessToken().then(
+              data => {
+                  //alert(JSON.stringify(data)) //{accessToken,permissions,declinedPermissions,applicationID,accessTokenSource,userID,expirationTime,lastRefreshTime}
+                  _this.setState({ user : data});
+                  _this.props.onLogin && _this.props.onLogin(data);
+              }
+            );
+          }
+        },
+        function(error) {
+          alert('Login fail with error: ' + error);
+        }
+      );
+    }
   },
-
   handleLogout: function(){
     var _this = this;
-    FBLoginManager.logout(function(error, data){
+    /*FBLoginManager.logout(function(error, data){
       if (!error) {
         _this.setState({ user : null});
         _this.props.onLogout && _this.props.onLogout();
       } else {
         console.log(error, data);
       }
-    });
+    })*/
+    LoginManager.logOut();
+    this.setState({ user : null});
+    this.props.onLogout && _this.props.onLogout();
   },
 
   onPress: function(){

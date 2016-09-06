@@ -10,9 +10,9 @@ import Style from './Style'
 import APIList from './APIList'
 import UsbList from './UsbList'
 import BleList from './BleList'
-import Settings from './Settings'
+import LoginSettings from './LoginSettings'
+import MapSettings from './MapSettings'
 import Help from './Help'
-//import MapSettings from './MapSettings'
 import Store from '../io/Store'
 import Global from '../io/Global'
 import NavigationBar from 'react-native-navbar'
@@ -87,53 +87,53 @@ export default class SettingsList extends React.Component {
         this.setState({user_gg:user});
         Global.userObjects['gg'] = user
         Global.logins.gg = user.email
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_gg(user){
         this.setState({user_gg:null});
         delete Global.userObjects.gg
         delete Global.logins.gg
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
     }
     login_fb(user){
         this.setState({user_fb:user});
         Global.userObjects.fb = user
         Global.logins.fb = user.email
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_fb(user){
         this.setState({user_fb:null});
         delete Global.userObjects.fb
         delete Global.logins.fb
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
     }
     login_wx(user){
         this.setState({user_wx:user});
         Global.userObjects.wx = user
         Global.logins.wx = user.email
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_wx(user){
         this.setState({user_wx:null});
         delete Global.userObjects.wx
         delete Global.logins.wx
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
     }
     login_wb(user){
         this.setState({user_wb:user});
         Global.userObjects.wb = user
         Global.logins.wb = user.email
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_wb(user){
         this.setState({user_wb:null});
         delete Global.userObjects.fb
         delete Global.logins.wb
-        Global.mainlogin = Global.getMainLogin(Global.logins)
+        Global.mainlogin = Global.getMainLogin()
     }
     renderAPI(){
         if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
@@ -218,14 +218,24 @@ export default class SettingsList extends React.Component {
                       <Text>{I18n.t('about')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
-                      component: Settings,
+                      component: MapSettings,
                       passProps: {navigator:this.props.navigator,},
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-cog-outline'} size={35}/>
+                          <Icon name={'ion-ios-map'} size={35}/>
                       </View>
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: LoginSettings,
+                      passProps: {navigator:this.props.navigator,},
+                  })}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'ion-ios-cog'} size={35}/>
+                      </View>
+                      <Text>{I18n.t('login')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   {this.renderAPI()}
                   {this.renderUSB()}

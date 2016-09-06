@@ -120,7 +120,7 @@ export default class Main extends Component {
           let last2 = type.split('_')[1]
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;
-              Global.mainlogin = Global.getMainLogin(Global.logins)
+              Global.mainlogin = Global.getMainLogin()
               Global.userObjects[last2]=user
               //if(Global.mainlogin!=self.state.mainlogin){
               //    self.setState({mainlogin:Global.mainlogin }) 
@@ -128,13 +128,18 @@ export default class Main extends Component {
           }else if(user == null && Global.logins !== ''){
               let look_type = type.substring(5)
               delete Global.logins[look_type]
-              Global.mainlogin = Global.getMainLogin(Global.logins)
+              Global.mainlogin = Global.getMainLogin()
               Global[type]=null
               //if(Global.mainlogin!=self.state.mainlogin){
               //    self.setState({ mainlogin:Global.mainlogin })
               //}
           }
       });
+      Store.get(Store.SETTINGS_LOGINS).then(function(login_settings){
+          if(login_settings) Global.SETTINGS_LOGINS=login_settings
+          else Global.SETTINGS_LOGINS={fb:'read',gg:'read',wx:'read',wb:'read'}
+          
+      })
   }
   checkFirstTime(){
       let self=this
