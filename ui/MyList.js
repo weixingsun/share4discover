@@ -90,7 +90,7 @@ export default class MyList extends Component {
   feed(){
       let _this = this;
       let api_url = Global.getFeedApi()
-      alert(api_url)
+      //alert(api_url)
       fetch(api_url)
         //.then((response) => response.json())
         .then((responseData) => {
@@ -100,6 +100,7 @@ export default class MyList extends Component {
         .done();
   }
   render() {
+    //{this.renderFeedIcon()}
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
@@ -107,8 +108,6 @@ export default class MyList extends Component {
             rightButton={
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                     {this.renderAddIcon()}
-                    <View style={{width:10}} />
-                    {this.renderFeedIcon()}
                     <View style={{width:10}} />
                 </View>
             }

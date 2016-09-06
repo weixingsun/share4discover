@@ -77,24 +77,30 @@ BMKMapManager* mapManager;
     {
       NSLog(@"facebook url: %@", [url scheme]);
       return [[FBSDKApplicationDelegate sharedInstance]
-                application:application                openURL:url
-                sourceApplication:sourceApplication annotation:annotation];
+                application:application
+                    openURL:url
+          sourceApplication:sourceApplication
+                 annotation:annotation];
     }
     // GoogleSignin
     else if ([[url scheme] hasPrefix:@"com.googleusercontent.apps"])
     {
       NSLog(@"google url: %@", [url scheme]);
       return [RNGoogleSignin
-                application:application                openURL:url
-                sourceApplication:sourceApplication annotation:annotation];
+                application:application
+                    openURL:url
+          sourceApplication:sourceApplication
+                 annotation:annotation];
     }
     // Weibo
     else if ([[url scheme] hasPrefix:@"wb"])
     {
       NSLog(@"sina weibo url: %@", [url scheme]);
       return [RCTLinkingManager 
-                application:application                openURL:url 
-                sourceApplication:sourceApplication annotation:annotation];
+                application:application
+                    openURL:url
+          sourceApplication:sourceApplication
+                 annotation:annotation];
     }
     //NSLog([url scheme]);
   return YES;

@@ -29,8 +29,6 @@ include ':react-native-baidumap'
 project(':react-native-baidumap').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-baidumap/android')
 include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
-//include ':react-native-facebook-login'
-//project(':react-native-facebook-login').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-facebook-login/android')
 include ':react-native-wechat'
 project(':react-native-wechat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wechat/android')
 include ':react-native-google-signin'
