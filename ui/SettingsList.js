@@ -235,7 +235,7 @@ export default class SettingsList extends React.Component {
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                           <Icon name={'ion-ios-cog'} size={35}/>
                       </View>
-                      <Text>{I18n.t('login')+' '+I18n.t('settings')}</Text>
+                      <Text>{I18n.t('post')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   {this.renderAPI()}
                   {this.renderUSB()}

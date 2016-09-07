@@ -13,7 +13,8 @@ react-native bundle --platform android --entry-file index.android.js --bundle-ou
 #--assets-dest ./release 
 react-native bundle --platform ios  --entry-file index.ios.js  --bundle-output ./codepush/main.jsbundle  --dev true
 
-code-push release Share ./codepush 1.0.0  
+version=`grep versionName android/app/build.gradle |awk '{print $2}'|sed -e 's/^"//' -e 's/"$//'`
+code-push release Share ./codepush $version
 ##--description "release v1.0.0" --mandatory true    
 ##last parameter: same as android/app/build.gradle: versionName  =  Info.plist: bundleVersion
 

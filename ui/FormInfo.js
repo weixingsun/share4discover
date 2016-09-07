@@ -17,6 +17,7 @@ import ImagePicker from 'react-native-image-picker'
 import Image from 'react-native-image-progress';
 //import Progress from 'react-native-progress';
 import ProgressBar from 'react-native-progress/Bar';
+import * as WeiboAPI from 'react-native-weibo';
  
 export default class FormInfo extends Component {
     constructor(props) {
@@ -191,6 +192,7 @@ export default class FormInfo extends Component {
                           alert('created successfully');
                           if(this.props.msg!=null){ //edit
                               self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
+                              self.postSNS(values);
                           }else{
                               var my_value={
                                   key:'*'+Global.mainlogin, 
@@ -207,6 +209,37 @@ export default class FormInfo extends Component {
               }},
             ]
         )
+    }
+    postSNS(json){
+        if(Global.SETTINGS_LOGINS.fb!='read') this.postFB(json);
+        if(Global.SETTINGS_LOGINS.wb!='read') this.postWB(json);
+    }
+    postFB(json){ //working
+        let {AccessToken,ShareApi} = require('react-native-fbsdk')
+        let data={contentType:'link',contentUrl:'http://shareplus.co.nf',contentDescription:'See more in App'}
+        ShareApi.canShare(data).then( (canShare)=>{
+            if (canShare) {
+              return ShareApi.share(data, '/me', json.title);
+            }
+          }
+        ).then(
+          function(result) {
+            //alert('Share with ShareApi success.');
+          },
+          function(error) {
+            alert('Share with ShareApi failed with error: ' + error);
+          }
+        )
+    }
+    postWB(json){  //scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517'
+        let data = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517',accessToken:Global.userObjects.wb.token,type:'text',text:json.title}
+        //let data = {type:'text', text:json.title, accessToken:Global.userObjects.wb.token}
+        WeiboAPI.share(data).then((result)=>{
+          //alert('data:'+result)
+        }).catch((err)=>{
+          //alert('err:'+err)
+        }).done();
+        //alert('weibo.share: '+JSON.stringify(data))
     }
     changeReply(old_key,new_key){
         if(old_key != new_key){
@@ -484,10 +517,11 @@ export default class FormInfo extends Component {
       });
     }
     showActionIcons(){
+        //<Icon name={'fa-weibo'} size={40} color={'red'} onPress={()=>this.postWB({type:'text',title:'this is a test'}) } />
         return (
             <View style={{flexDirection:'row',}}>
                 <Icon name={'ion-ios-images-outline'} size={40} color={Style.font_colors.enabled} onPress={this.openImagePicker.bind(this) } />
-                <View style={{width:20}} />
+                <View style={{width:10}} />
             </View>
         )
     }
