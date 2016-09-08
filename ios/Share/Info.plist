@@ -72,6 +72,16 @@
 				<string>wb99999999</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.share</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>share</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0.0</string>

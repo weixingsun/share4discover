@@ -15,7 +15,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
-#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
+//#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
+#import "RCTLinkingManager.h"
 
 BMKMapManager* mapManager;
 
@@ -102,6 +103,16 @@ BMKMapManager* mapManager;
           sourceApplication:sourceApplication
                  annotation:annotation];
     }
+    // Open App from URL
+    else if ([[url scheme] hasPrefix:@"share"])
+    {
+      NSLog(@"open app from url: %@", url );
+      return [RCTLinkingManager
+              application:application
+                  openURL:url
+        sourceApplication:sourceApplication
+               annotation:annotation];
+    }
     //NSLog([url scheme]);
   return YES;
 }
@@ -109,5 +120,13 @@ BMKMapManager* mapManager;
 // Required for the notification event.
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
     [RCTOneSignal didReceiveRemoteNotification:notification];
+}
+//[Universal Links]
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  NSLog(@"continueUserActivity:");
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 @end

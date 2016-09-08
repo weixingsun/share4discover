@@ -42,7 +42,7 @@ export default class Main extends Component {
       gps:false,
       
     }; 
-    //this.changeFilter=this.changeFilter.bind(this)
+    this.openMsg=this.openMsg.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
   }
@@ -55,6 +55,7 @@ export default class Main extends Component {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
       clearInterval(this.timer)
+      Linking.removeEventListener('url', this._handleOpenURL);
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -72,15 +73,7 @@ export default class Main extends Component {
       this.notification();
       //this.checkUsbDevice();
   }
-  ExtUrl(){
-      let url=Linking.getInitialURL().then((url)=>{ //AndroidManifest.xml launchMode=standard
-          if(url){
-              let key = url.split('/info/')[1]
-              if(key.length>0) this.getMsg(key)
-          }
-      }).catch(err=>alert('err:'+err))
-  }
-  getMsg(key){
+  openMsg(key){
       var self = this;
       Net.getMsg(key).then((json)=> {
         if(json!=null){
@@ -94,6 +87,23 @@ export default class Main extends Component {
         }else
             alert('This share has been deleted.')
       });
+  }
+  ExtUrl(){
+      let self=this
+      //for ios
+      Linking.addEventListener('url', (event)=>{
+          //console.log('Linking.addEventListener:url='+event.url); 
+          let key = event.url.split('/info/')[1]
+          if(key.length>0) self.openMsg(key)
+      });
+      //for android, AndroidManifest.xml launchMode=standard
+      let url=Linking.getInitialURL().then((url)=>{
+          //console.log('Linking.getInitialURL:url:'+url)
+          if(url){
+              let key = url.split('/info/')[1]
+              if(key.length>0) self.openMsg(key)
+          }
+      }).catch(err=>alert('err:'+err))
   }
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
