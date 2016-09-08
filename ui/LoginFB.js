@@ -130,7 +130,7 @@ var Login = React.createClass({
               gender: responseData.gender,
               type: 'fb',
               token: data.accessToken,
-	      expire: data.expirationTime,
+	      expire: data.expirationTime.toString(),
             };
             _this.setState({ user : _user });
             _this.saveUserDB(_user);

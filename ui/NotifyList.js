@@ -31,7 +31,6 @@ export default class NotifyList extends Component {
               component: Detail,
               passProps: {
                   msg:json,
-		  mainlogin:this.props.mainlogin,
               }
           });
           else
@@ -41,7 +40,7 @@ export default class NotifyList extends Component {
   readMsg(reply){
       //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
       var key = Global.getKeyFromReply(reply)
-      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:'r0|'+this.props.mainlogin+'|'+reply.content}
+      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:'r0|'+Global.mainlogin+'|'+reply.content}
       Net.putHash(notify_value)
       alert(JSON.stringify(notify_value))
   }
@@ -105,8 +104,7 @@ export default class NotifyList extends Component {
     );
   }
   renderActionIcon(){
-    //alert(this.props.mainlogin)
-    /*if(this.props.mainlogin==='') 
+    /*if(Global.mainlogin==='') 
       return (
             <View style={{flexDirection:'row',}}>
                 <Icon name={'ion-ios-add'} size={50} color={'gray'} />

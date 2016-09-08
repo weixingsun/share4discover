@@ -1,5 +1,5 @@
 {
-  "name": "Share",
+  "name": "SharePlus",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,12 +7,12 @@
   },
   "dependencies": {
     "apsl-react-native-button": "^3.0.0",
-    "react": "^15.2.1",
-    "react-native": "^0.29.2",
+    "react": "^15.3.1",
+    "react-native": "^0.32.1",
     "react-native-android-permissions": "0.0.6",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
     "react-native-ble-manager": "^1.1.0",
-    "react-native-code-push": "^1.13.2-beta",
+    "react-native-code-push": "^1.14.6-beta",
     "react-native-facebook-login": "^1.2.0",
     "react-native-fbsdk": "^0.3.0",
     "react-native-gifted-form": "git+https://github.com/weixingsun/react-native-gifted-form.git",
@@ -25,7 +25,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.1.2",
     "react-native-keyboard-aware-scrollview": "^1.1.1",
     "react-native-localization": "^0.1.15",
-    "react-native-maps": "latest",
+    "react-native-maps": "^0.8.0",
     "react-native-navbar": "^1.5.0",
     "react-native-onesignal": "^1.2.0",
     "react-native-photo-view": "^1.0.1",

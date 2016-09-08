@@ -39,7 +39,7 @@ BMKMapManager* mapManager;
   jsCodeLocation = [CodePush bundleURL];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"Share"
+                                                      moduleName:@"SharePlus"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
 

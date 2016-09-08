@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+import {Linking,ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 //import Drawer from 'react-native-drawer'
@@ -19,6 +19,7 @@ import SettingsList   from "./SettingsList"
 import NotifyList from './NotifyList'
 import MyList from './MyList'
 import Help from './Help'
+import Detail from './Detail'
 
 export default class Main extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.timer = setInterval(()=>this.timerFunction(),60000)
+      this.ExtUrl()
   }
   componentWillMount(){
       var _this = this;
@@ -70,14 +72,29 @@ export default class Main extends Component {
       this.notification();
       //this.checkUsbDevice();
   }
-  //checkUsbDevice(){
-      //UsbSerial.open(9600);
-      //UsbSerial.write('test');
-      //UsbSerial.close();
-      //UsbSerial.listen(9600, '\n', (e)=>{
-      //  alert('received:'+e.data)
-      //});
-  //}
+  ExtUrl(){
+      let url=Linking.getInitialURL().then((url)=>{ //AndroidManifest.xml launchMode=standard
+          if(url){
+              let key = url.split('/info/')[1]
+              if(key.length>0) this.getMsg(key)
+          }
+      }).catch(err=>alert('err:'+err))
+  }
+  getMsg(key){
+      var self = this;
+      Net.getMsg(key).then((json)=> {
+        if(json!=null){
+          //alert(JSON.stringify(json))
+          self.props.navigator.push({
+              component: Detail,
+              passProps: {
+                  msg:json,
+              }
+          });
+        }else
+            alert('This share has been deleted.')
+      });
+  }
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
       if (routers.length > 1) {
@@ -290,11 +307,11 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} mainlogin={Global.mainlogin} mails={this.state.mails} />
+      return <NotifyList navigator={this.props.navigator} mails={this.state.mails} />
     } else if(this.state.page ===Store.userTab){
-      return <MyList     navigator={this.props.navigator} mainlogin={Global.mainlogin} />
+      return <MyList     navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} mainlogin={Global.mainlogin} />
+      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} />
     } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
     }

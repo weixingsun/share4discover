@@ -307,7 +307,7 @@ export default class Maps extends Component {
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
-      if(this.props.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
+      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
       else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
     }
     renderTypesModal(){
@@ -410,7 +410,6 @@ export default class Maps extends Component {
               component: Detail,
               passProps: {
                   msg:json,
-                  mainlogin:this.props.mainlogin,
               }
           });
       });

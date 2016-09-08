@@ -24,7 +24,7 @@ var FBLoginMock = React.createClass({
         email:  React.PropTypes.string,
         gender: React.PropTypes.string,
         token:  React.PropTypes.string,
-        expire: React.PropTypes.number,
+        expire: React.PropTypes.string,
     }),
     style: View.propTypes.style,
     onPress: React.PropTypes.func,

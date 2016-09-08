@@ -215,8 +215,10 @@ export default class FormInfo extends Component {
         if(Global.SETTINGS_LOGINS.wb!='read') this.postWB(json);
     }
     postFB(json){ //working
+        let key = Global.getKeyFromMsg(json)
+        let url = Global.getSnsUrl(key)
         let {AccessToken,ShareApi} = require('react-native-fbsdk')
-        let data={contentType:'link',contentUrl:'http://shareplus.co.nf',contentDescription:'See more in App'}
+        let data={contentType:'link',contentUrl:url,contentDescription:'See more in App'}
         ShareApi.canShare(data).then( (canShare)=>{
             if (canShare) {
               return ShareApi.share(data, '/me', json.title);
@@ -232,6 +234,8 @@ export default class FormInfo extends Component {
         )
     }
     postWB(json){  //scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517'
+        let key = Global.getKeyFromMsg(json)
+        let url = Global.getSnsUrl(key)
         let data = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517',accessToken:Global.userObjects.wb.token,type:'text',text:json.title}
         //let data = {type:'text', text:json.title, accessToken:Global.userObjects.wb.token}
         WeiboAPI.share(data).then((result)=>{

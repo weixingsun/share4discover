@@ -31,7 +31,10 @@ module.exports = {
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
+    app_url_pre: 'share://nzmessengers.co.nz/info/',
+    http_url_pre: 'http://nzmessengers.co.nz/service/node.php?path=api/msg/',
     IP2LOC_HOST: 'http://freegeoip.net/json',
+    
     mainlogin: '',
     login_names:{},
     logins: {},
@@ -156,5 +159,12 @@ module.exports = {
             return `https://graph.facebook.com/me/feed&access_token=${this.userObjects.fb.token}`
         }else if(this.logins.gg) return '';
         else if(this.logins.wb) return '';
+    },
+    //share://nzmessengers.co.nz/info/car:41.767338,123.422675:1469942725304
+    getSnsUrl(key){
+        //let first = 'intent://nzmessengers.co.nz/info/'+key
+        //let second = '#Intent;scheme=share;package=com.share;S.browser_fallback_url='+this.http_url_pre+key+';end'
+        //return first+second
+        return this.app_url_pre+key
     },
 };

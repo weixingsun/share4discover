@@ -23,8 +23,8 @@ export default class Detail extends Component {
         super(props);
         this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = this.props.msg.pics?this.props.msg.pics.split(','):[]
-        this.isLogin = (this.props.mainlogin.length>0)
-        this.isMyMsg = this.checkSns(this.props.mainlogin, this.props.msg.owner)
+        this.isLogin = (Global.mainlogin.length>0)
+        this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
         this.close_image = null;
         this.state={ 
             reply: '',
@@ -43,9 +43,9 @@ export default class Detail extends Component {
         }
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
-        var value={key:key, field:'#'+time, value:this.props.mainlogin+'|'+this.state.reply}
+        var value={key:key, field:'#'+time, value:Global.mainlogin+'|'+this.state.reply}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+this.props.mainlogin+'|'+this.state.reply}
+        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+Global.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -64,9 +64,9 @@ export default class Detail extends Component {
     onClose() {
         var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
-        var value={key:key, field:'close', value:this.props.mainlogin+'|'+time}
+        var value={key:key, field:'close', value:Global.mainlogin+'|'+time}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+this.props.mainlogin+'|'}
+	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
         var _this = this;
         Alert.alert(
             "Complete",
@@ -296,7 +296,6 @@ export default class Detail extends Component {
       )
     }
     renderReplyInput(){
-        //alert('isLogin='+this.isLogin+'\nmainlogin='+this.props.mainlogin)
         if(this.isLogin)
             return (
                 <View style={Style.detail_card} >
