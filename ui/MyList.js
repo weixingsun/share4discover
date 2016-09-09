@@ -52,7 +52,10 @@ export default class MyList extends Component {
       });
   }
   _renderRowView(rowData) {
-    return (
+    if(rowData!=null){
+      console.log(rowData)
+      if(rowData==null) return
+      return (
       <TouchableHighlight underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
           <View>
@@ -67,7 +70,8 @@ export default class MyList extends Component {
               <View style={Style.separator} />
           </View>
       </TouchableHighlight>
-    );
+      );
+    }
   }
   renderAddIcon(){
       if(Global.mainlogin==='') 

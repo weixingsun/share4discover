@@ -84,6 +84,7 @@ export default class Detail extends Component {
     onDelete() {
 	var _this = this;
         var key = Global.getKeyFromMsg(this.props.msg)
+        let myjson = {key:'*'+Global.mainlogin,field:key}
         Alert.alert(
             "Delete",
             "Do you want to delete this information ? ",
@@ -91,6 +92,7 @@ export default class Detail extends Component {
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.delMsg(key)
+                    Net.delHash(myjson);
                     _this.props.navigator.pop();
                 }},
             ]
@@ -171,6 +173,7 @@ export default class Detail extends Component {
             owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
+		var sns_name = owner.split(':')[2]
 	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
                 return (
                     <View style={{flexDirection:'row',marginLeft:20}} key={owner} >
@@ -180,7 +183,7 @@ export default class Detail extends Component {
                             color={'blue'}
                             name={Global.SNS_ICONS[sns_type]}
                         />
-                        <Text style={{marginLeft:20}}>{sns_user}</Text>
+                        <Text style={{marginLeft:20}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
             })

@@ -32,7 +32,8 @@ module.exports = {
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
     app_url_pre: 'share://nzmessengers.co.nz/info/',
-    http_url_pre: 'http://nzmessengers.co.nz/service/node.php?path=api/msg/',
+    //http_url_pre: 'http://nzmessengers.co.nz/service/node.php?path=api/msg/',
+    http_url_pre: 'http://shareplus.co.nf/url.html?key=',
     IP2LOC_HOST: 'http://freegeoip.net/json',
     
     mainlogin: '',
@@ -83,7 +84,8 @@ module.exports = {
         let arrKey = Object.keys(this.logins)
         let str = ''
         arrKey.map((k)=>{
-            str += ','+k+':'+this.logins[k]+':'+this.userObjects[k]
+            str += ','+k+':'+this.logins[k]+':'+this.userObjects[k].name
+            //console.log('Global.getLoginStr()'+k+':'+this.logins[k]+':'+JSON.stringify(this.userObjects[k]))
         })
         return str.substring(1);
     },
@@ -164,7 +166,7 @@ module.exports = {
     getSnsUrl(key){
         //let first = 'intent://nzmessengers.co.nz/info/'+key
         //let second = '#Intent;scheme=share;package=com.share;S.browser_fallback_url='+this.http_url_pre+key+';end'
-        //return first+second
-        return this.app_url_pre+key
+        return this.http_url_pre+key
+        //return this.app_url_pre+key
     },
 };

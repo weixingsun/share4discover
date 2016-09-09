@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Linking,ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+import {DeviceEventEmitter,Linking,ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 //import Drawer from 'react-native-drawer'
@@ -55,7 +55,7 @@ export default class Main extends Component {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
       clearInterval(this.timer)
-      Linking.removeEventListener('url', this._handleOpenURL);
+      //if(Platform.OS === 'ios') Linking.removeEventListener('url', this._handleOpenURL);
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -71,7 +71,6 @@ export default class Main extends Component {
       }
       this.checkSettingsChange();
       this.notification();
-      //this.checkUsbDevice();
   }
   openMsg(key){
       var self = this;
@@ -88,17 +87,36 @@ export default class Main extends Component {
             alert('This share has been deleted.')
       });
   }
+  _handleOpenURL(event) {
+      let key = event.url.split('/info/')[1]
+      if(key.length>0){
+        //var self = this;
+        Net.getMsg(key).then((json)=> {
+          if(json!=null){
+            //alert(JSON.stringify(json))
+            this.props.navigator.push({
+              component: Detail,
+              passProps: {
+                  msg:json,
+              }
+            });
+          }else
+            alert('This share has been deleted.')
+        });
+      }
+  }
   ExtUrl(){
       let self=this
       //for ios
+    if(Platform.OS === 'ios')
       Linking.addEventListener('url', (event)=>{
-          //console.log('Linking.addEventListener:url='+event.url); 
           let key = event.url.split('/info/')[1]
           if(key.length>0) self.openMsg(key)
       });
       //for android, AndroidManifest.xml launchMode=standard
-      let url=Linking.getInitialURL().then((url)=>{
-          //console.log('Linking.getInitialURL:url:'+url)
+    else if(Platform.OS === 'android')
+      Linking.getInitialURL().then((url)=>{
+          //alert('Linking.getInitialURL:url:'+url)
           if(url){
               let key = url.split('/info/')[1]
               if(key.length>0) self.openMsg(key)

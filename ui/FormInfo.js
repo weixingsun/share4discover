@@ -18,11 +18,13 @@ import Image from 'react-native-image-progress';
 //import Progress from 'react-native-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
+import {checkPermission,requestPermission} from 'react-native-android-permissions';
  
 export default class FormInfo extends Component {
     constructor(props) {
         super(props);
         this.ctime = +new Date();
+        this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
         this.state={ 
             //pics_changed:false,
             uploading:[],
@@ -34,7 +36,6 @@ export default class FormInfo extends Component {
             form:{},
             grantedPermissions:{},
         };
-        this.permissions=['CAMERA']
         this.validators={
               title:{
                 title:'Title',
@@ -98,8 +99,9 @@ export default class FormInfo extends Component {
     }
     permission(){
         if(Platform.OS === 'android' && Platform.Version > 22){
-            this.singlePermission('CAMERA')
-            this.singlePermission('WRITE_EXTERNAL_STORAGE')
+            this.permissions.map((perm)=>{
+                this.singlePermission(perm)
+            })
         }
     }
     initKeys(){
@@ -186,13 +188,13 @@ export default class FormInfo extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
+                      console.log('ready:'+JSON.stringify(values));
                   Net.setMsg(values).then((ret)=> {
-                      //alert(JSON.stringify(ret));
+                      console.log('created:'+JSON.stringify(ret));
                       if(ret.phone == values.phone){
-                          alert('created successfully');
                           if(this.props.msg!=null){ //edit
                               self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
-                              self.postSNS(values);
+                              alert('Edit successfully');
                           }else{
                               var my_value={
                                   key:'*'+Global.mainlogin, 
@@ -200,6 +202,8 @@ export default class FormInfo extends Component {
                                   value:'owner|open'
                               }
                               Net.putHash(my_value);
+                              let sns_ret = self.postSNS(values);
+                              alert('Create successfully'+sns_ret);
                           }
                           self.props.navigator.pop();
                       }else{
@@ -211,8 +215,20 @@ export default class FormInfo extends Component {
         )
     }
     postSNS(json){
-        if(Global.SETTINGS_LOGINS.fb!='read') this.postFB(json);
-        if(Global.SETTINGS_LOGINS.wb!='read') this.postWB(json);
+        let ret = ''
+        if(Global.SETTINGS_LOGINS.fb!='read'){ 
+            this.postFB(json); 
+            ret+=',facebook'
+        }
+        if(Global.SETTINGS_LOGINS.wb!='read'){
+            this.postWB(json);
+            ret+=',weibo'
+        }
+        //if(ret.indexOf(',') > -1)
+        if(ret.startsWith(',')){
+            ret=ret.substring(1)
+        }
+        return ret
     }
     postFB(json){ //working
         let key = Global.getKeyFromMsg(json)
@@ -236,7 +252,7 @@ export default class FormInfo extends Component {
     postWB(json){  //scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517'
         let key = Global.getKeyFromMsg(json)
         let url = Global.getSnsUrl(key)
-        let data = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517',accessToken:Global.userObjects.wb.token,type:'text',text:json.title}
+        let data = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517',accessToken:Global.userObjects.wb.token,type:'text',text:json.title+'\n'+url}
         //let data = {type:'text', text:json.title, accessToken:Global.userObjects.wb.token}
         WeiboAPI.share(data).then((result)=>{
           //alert('data:'+result)
@@ -265,6 +281,7 @@ export default class FormInfo extends Component {
     }
     componentWillMount(){
         this.initKeys();
+        this.permission();
         this.processProps();
         getImageSource('ion-ios-close', 40, 'white').then((source) => {
             this.setState({close_image:source})
@@ -326,7 +343,6 @@ export default class FormInfo extends Component {
             };
             this.setState({form:myDefaults})
         }else{
-            //alert('processProps:'+JSON.stringify(this.props.msg))
             var myDefaults=this.props.msg;
             //var typekey = 'type{'+this.props.msg.type+'}';
             //myDefaults[typekey] = true;
@@ -337,7 +353,6 @@ export default class FormInfo extends Component {
             //myDefaults['owner_name'] = Global.getMainLoginName()
             //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
-            //alert('processProps:'+JSON.stringify(myDefaults))
             this.ctime=parseInt(this.props.msg.ctime)
             this.setState({ form: myDefaults })
         }
