@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+  var myVar="hello";
+  function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+    return "unknown";
+  }
+  function parseQuery(url) {
+      var query = {};
+      var qstr  = url.split('?')[1]
+      //alert(qstr)
+      var a = qstr.split('&');
+      for (var i = 0; i < a.length; i++) {
+          var b = a[i].split('=');
+          query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+      }
+      return query;
+  }
+  function getAndroidUrl(key){
+      let first = 'intent://nzmessengers.co.nz/info/'+key+'#Intent;scheme=share;package=com.share;end'
+      let second ='S.browser_fallback_url=http://nzmessengers.co.nz/service/node.php?path=api/msg/'+key+';end'
+      return first;
+  }
+  function getIosUrl(key){
+      return 'share://nzmessengers.co.nz/info/'+key
+  }
+  function getPcUrl(key){
+      return 'http://nzmessengers.co.nz/service/node.php?path=api/msg/'+key
+  }
+  function showUrl() {
+      let url = decodeURI(window.location.href)
+      let keys = parseQuery(url)
+      //alert(keys.key)
+      let key = keys.key
+      let os = getMobileOperatingSystem()
+      let new_url = ''
+      if(os=='Android'){
+          new_url = getAndroidUrl(key)
+      }else if(os=='iOS'){
+          new_url = getIosUrl(key)
+      }
+      return new_url
+      //alert('os='+getMobileOperatingSystem()+'\nurl='+url+'\nparams='+JSON.stringify(key));
+  }
+  function clickUrl(url){
+      //var a = document.createElement('a');
+      var a = document.getElementById('go');
+      a.setAttribute('href',url);
+      //document.body.appendChild(a);
+      a.click();
+  }
+  function submitUrl(url){
+      var form = document.getElementById('form');
+      //var url = document.getElementById('url');
+      //url.setAttribute('value',url);
+      form.setAttribute('action',url);
+      form.submit();
+  }
+  window.onload = function(){
+      clickUrl(showUrl());
+  }
+</script>
+
+</head>
+
+<body>
+
+<a id='go' href=''><font size='10'>Click to continue</font></a>
+<!--<form id="form">
+<input type="hidden" id="url" name="url">
+</form>-->
+
+</body>
+</html>

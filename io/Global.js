@@ -31,9 +31,9 @@ module.exports = {
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
-    app_url_pre: 'share://nzmessengers.co.nz/info/',
-    //http_url_pre: 'http://nzmessengers.co.nz/service/node.php?path=api/msg/',
-    http_url_pre: 'http://shareplus.co.nf/url.html?key=',
+    //app_url_pre: 'share://nzmessengers.co.nz/info/',
+    http_url_pre: 'http://shareplus.co.nf/url.php?key=',
+    //http_url_pre: 'http://nzmessengers.co.nz/share/url.php?key=',
     IP2LOC_HOST: 'http://freegeoip.net/json',
     
     mainlogin: '',
@@ -164,9 +164,9 @@ module.exports = {
     },
     //share://nzmessengers.co.nz/info/car:41.767338,123.422675:1469942725304
     getSnsUrl(key){
-        //let first = 'intent://nzmessengers.co.nz/info/'+key
+        //let first = 'intent://shareplus.co.nf/i/'+key
         //let second = '#Intent;scheme=share;package=com.share;S.browser_fallback_url='+this.http_url_pre+key+';end'
-        return this.http_url_pre+key
+        return this.http_url_pre+encodeURIComponent(key)
         //return this.app_url_pre+key
     },
 };

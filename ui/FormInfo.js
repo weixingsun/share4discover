@@ -188,9 +188,9 @@ export default class FormInfo extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
-                      console.log('ready:'+JSON.stringify(values));
+                      //console.log('ready:'+JSON.stringify(values));
                   Net.setMsg(values).then((ret)=> {
-                      console.log('created:'+JSON.stringify(ret));
+                      //console.log('created:'+JSON.stringify(ret));
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
                               self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
@@ -203,11 +203,11 @@ export default class FormInfo extends Component {
                               }
                               Net.putHash(my_value);
                               let sns_ret = self.postSNS(values);
-                              alert('Create successfully'+sns_ret);
+                              if(sns_ret.length>0) alert('Create successfully');
                           }
                           self.props.navigator.pop();
                       }else{
-                          alert(ret)
+                          alert('Error:'+ret)
                       }
                   })
               }},
@@ -245,7 +245,7 @@ export default class FormInfo extends Component {
             //alert('Share with ShareApi success.');
           },
           function(error) {
-            alert('Share with ShareApi failed with error: ' + error);
+            alert('Post on Facebook failed with error: ' + error);
           }
         )
     }
@@ -257,7 +257,7 @@ export default class FormInfo extends Component {
         WeiboAPI.share(data).then((result)=>{
           //alert('data:'+result)
         }).catch((err)=>{
-          //alert('err:'+err)
+            alert('Post on Weibo failed with error: ' + err);
         }).done();
         //alert('weibo.share: '+JSON.stringify(data))
     }

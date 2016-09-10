@@ -88,7 +88,7 @@ export default class Main extends Component {
       });
   }
   _handleOpenURL(event) {
-      let key = event.url.split('/info/')[1]
+      let key = event.url.split('/i/')[1]
       if(key.length>0){
         //var self = this;
         Net.getMsg(key).then((json)=> {
@@ -110,7 +110,7 @@ export default class Main extends Component {
       //for ios
     if(Platform.OS === 'ios')
       Linking.addEventListener('url', (event)=>{
-          let key = event.url.split('/info/')[1]
+          let key = event.url.split('/i/')[1]
           if(key.length>0) self.openMsg(key)
       });
       //for android, AndroidManifest.xml launchMode=standard
@@ -118,7 +118,7 @@ export default class Main extends Component {
       Linking.getInitialURL().then((url)=>{
           //alert('Linking.getInitialURL:url:'+url)
           if(url){
-              let key = url.split('/info/')[1]
+              let key = url.split('/i/')[1]
               if(key.length>0) self.openMsg(key)
           }
       }).catch(err=>alert('err:'+err))

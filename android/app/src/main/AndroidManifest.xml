@@ -39,8 +39,8 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="http" android:host="nzmessengers.co.nz" android:pathPrefix="/info/" />
-            <data android:scheme="share" android:host="nzmessengers.co.nz" />
+            <data android:scheme="http" android:host="shareplus.co.nf" android:pathPrefix="/i/" />
+            <data android:scheme="share" android:host="shareplus.co.nf" />
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
