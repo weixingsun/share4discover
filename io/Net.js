@@ -1,4 +1,4 @@
-//import React,{ NetInfo } from 'react-native'
+import Global from './Global'
 /*
 #https
 wget https://dl.eff.org/certbot-auto
@@ -23,8 +23,8 @@ var Net = {
         'help':'Help',
     },
     //HOST:'http://45.32.83.93',
-    HOST:'http://nzmessengers.co.nz/service/node.php?path=',
-    USER_HOST:'http://nzmessengers.co.nz/service/user.php',
+    HOST:Global.HOST,
+    USER_HOST:Global.USER_HOST,
     async netCmd(url, data) {
       try {
         let response = await fetch(url, data);

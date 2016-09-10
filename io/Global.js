@@ -23,10 +23,12 @@ function loadLang(lang){
 }
 module.exports = {
     GoogleMap:'GoogleMap',
-    BaiduMap:'BaiduMap',
-    GaodeMap:'GaodeMap',
-    MAP_TYPE_NORMAL:'standard',
+    BaiduMap: 'BaiduMap',
+    GaodeMap: 'GaodeMap',
+    MAP_TYPE_NORMAL:   'standard',
     MAP_TYPE_SATELLITE:'satellite',
+    HOST: 'http://nzmessengers.co.nz/service/node.php?path=',
+    USER_HOST: 'http://nzmessengers.co.nz/service/user.php',
     host_image: 'http://nzmessengers.co.nz/service/',
     empty_image: 'http://nzmessengers.co.nz/service/empty.png',
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
@@ -163,10 +165,10 @@ module.exports = {
         else if(this.logins.wb) return '';
     },
     //share://nzmessengers.co.nz/info/car:41.767338,123.422675:1469942725304
-    getSnsUrl(key){
+    getSnsUrl(key,sns){
         //let first = 'intent://shareplus.co.nf/i/'+key
         //let second = '#Intent;scheme=share;package=com.share;S.browser_fallback_url='+this.http_url_pre+key+';end'
-        return this.http_url_pre+encodeURIComponent(key)
+        return this.http_url_pre+encodeURIComponent(key)+'&sns='+sns
         //return this.app_url_pre+key
     },
 };
