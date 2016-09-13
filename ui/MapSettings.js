@@ -1,6 +1,6 @@
 'use strict'
 import React, { Component } from 'react'
-import {Alert, Image, ListView, Picker, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Alert, Image, ListView, Picker, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 //import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -62,6 +62,7 @@ export default class Settings extends React.Component{
         this.map_traffic_list = ['true','false'];
         this.map_type_list = [Global.MAP_TYPE_NORMAL,Global.MAP_TYPE_SATELLITE];
         this.place_list = [];
+        this.mapTitleIos = Platform.OS==='ios'?I18n.t('apple')+I18n.t('map'):I18n.t('gg')+I18n.t('map')
         this.state = {
             //isLoading:true,
             form: {
@@ -69,7 +70,7 @@ export default class Settings extends React.Component{
                 map_type:   Global.MAP_TYPE,
                 map_traffic:Global.MAP_TRAFFIC,
 
-                mapTitle:       Global.MAP,
+                mapTitle:       Global.MAP===Global.GoogleMap?this.mapTitleIos:I18n.t('baidu')+I18n.t('map'),
                 mapTypeTitle:   Global.MAP_TYPE,
                 mapTrafficTitle:Global.MAP_TRAFFIC,
             }
@@ -170,6 +171,9 @@ export default class Settings extends React.Component{
         //if(this.state.isLoading) return <Loading />
         //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
         let titleName = I18n.t('map')+' '+I18n.t('settings')
+        let google = Platform.OS==='ios'?I18n.t('apple'):I18n.t('gg')
+        let googlemap = google+' '+I18n.t('map')
+        let baidumap = I18n.t('baidu')+' '+I18n.t('map')
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: titleName}}
@@ -200,8 +204,8 @@ export default class Settings extends React.Component{
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='map' title='Map' multiple={false}>
-                                <GiftedForm.OptionWidget title='Google Maps'   value='GoogleMap' />
-                                <GiftedForm.OptionWidget title='Baidu Maps' value='BaiduMap' />
+                                <GiftedForm.OptionWidget title={googlemap} value='GoogleMap' />
+                                <GiftedForm.OptionWidget title={baidumap}  value='BaiduMap' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget

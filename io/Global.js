@@ -27,6 +27,7 @@ module.exports = {
     GaodeMap: 'GaodeMap',
     MAP_TYPE_NORMAL:   'standard',
     MAP_TYPE_SATELLITE:'satellite',
+    MAP_TRAFFIC_FALSE: false,
     HOST: 'http://nzmessengers.co.nz/service/node.php?path=',
     USER_HOST: 'http://nzmessengers.co.nz/service/user.php',
     host_image: 'http://nzmessengers.co.nz/service/',
@@ -37,6 +38,8 @@ module.exports = {
     http_url_pre: 'http://shareplus.co.nf/url.php?key=',
     //http_url_pre: 'http://nzmessengers.co.nz/share/url.php?key=',
     IP2LOC_HOST: 'http://freegeoip.net/json',
+    post:'post',
+    none:'none',
     
     mainlogin: '',
     login_names:{},

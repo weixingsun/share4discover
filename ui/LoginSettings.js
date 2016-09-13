@@ -216,8 +216,8 @@ export default class LoginSettings extends React.Component{
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='fb' title='fb' multiple={false}>
-                                <GiftedForm.OptionWidget title='Read' value='read' />
-                                <GiftedForm.OptionWidget title='Post' value='post' />
+                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
+                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
@@ -229,8 +229,8 @@ export default class LoginSettings extends React.Component{
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='gg' title='gg' multiple={false}>
-                                <GiftedForm.OptionWidget title='Read' value='read' />
-                                <GiftedForm.OptionWidget title='Post' value='post' />
+                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
+                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
@@ -242,8 +242,8 @@ export default class LoginSettings extends React.Component{
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='wb' title='wb' multiple={false}>
-                                <GiftedForm.OptionWidget title='Read' value='read' />
-                                <GiftedForm.OptionWidget title='Post' value='post' />
+                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
+                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                 </GiftedForm>

@@ -51,8 +51,7 @@ var FBLoginMock = React.createClass({
         console.log(error, data);
       }
     })*/
-    if(Global.SETTINGS_LOGINS.fb=='read'){
-        //alert('read')
+    if(Global.SETTINGS_LOGINS.fb===Global.none){
         LoginManager.logInWithReadPermissions(['public_profile']).then(  //'email', 'user_friends', 'public_profile'
           function(result) {
             if (result.isCancelled) {

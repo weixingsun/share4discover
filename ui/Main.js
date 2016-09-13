@@ -182,7 +182,7 @@ export default class Main extends Component {
       });
       Store.get(Store.SETTINGS_LOGINS).then(function(login_settings){
           if(login_settings) Global.SETTINGS_LOGINS=login_settings
-          else Global.SETTINGS_LOGINS={fb:'read',gg:'read',wx:'read',wb:'read'}
+          else Global.SETTINGS_LOGINS={fb:Global.none,gg:Global.none,wx:Global.none,wb:Global.none}
           
       })
   }
@@ -225,14 +225,14 @@ export default class Main extends Component {
         if(map_type != null){
             Global.MAP_TYPE = map_type
         }else{
-            Global.MAP_TYPE = 'standard'
+            Global.MAP_TYPE = Global.MAP_TYPE_NORMAL
         }
       });
       Store.get_string(Store.SETTINGS_MAP_TRAFFIC).then((map_traffic) => {
         if(map_traffic != null){
             Global.MAP_TRAFFIC = map_traffic
         }else{
-            Global.MAP_TRAFFIC = 'false'
+            Global.MAP_TRAFFIC = Global.MAP_TRAFFIC_FALSE
         }
       });
   }
@@ -240,8 +240,8 @@ export default class Main extends Component {
       let _this=this
       Net._get(Global.IP2LOC_HOST).then((result)=>{
           if(result.country_code == 'CN') 
-               Global.MAP = 'BaiduMap';
-          else Global.MAP = 'GoogleMap';
+               Global.MAP = Global.BaiduMap;
+          else Global.MAP = Global.GoogleMap;
       })
   }
   timerFunction(){

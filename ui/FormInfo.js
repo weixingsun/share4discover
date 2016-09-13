@@ -216,11 +216,11 @@ export default class FormInfo extends Component {
     }
     postSNS(json){
         let ret = ''
-        if(Global.SETTINGS_LOGINS.fb!='read'){ 
+        if(Global.SETTINGS_LOGINS.fb!=Global.none){ 
             this.postFB(json); 
             ret+=',facebook'
         }
-        if(Global.SETTINGS_LOGINS.wb!='read'){
+        if(Global.SETTINGS_LOGINS.wb!=Global.none){
             this.postWB(json);
             ret+=',weibo'
         }
