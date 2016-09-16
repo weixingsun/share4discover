@@ -84,6 +84,9 @@ module.exports = {
       wb:'fa-weibo',
       tel:'ion-ios-call-outline',
     },
+    FEED_ICONS:{
+      rss:'ion-logo-rss',
+    },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))
         let arrKey = Object.keys(this.logins)
@@ -153,6 +156,21 @@ module.exports = {
 	}else{
 	    return momentDate.format('YYYY-MM-DD')
 	}
+    },
+    str2date(str){
+        return moment(str)
+    },
+    rssDateStr2date(str,lang){
+        //let date=moment(str).valueOf()
+        let dateInt = Date.parse(str);
+        loadLang(lang)
+        let momentDate = moment(dateInt)
+        let now = +new Date();
+        if(now-dateInt<86400000){        //1 day
+            return momentDate.fromNow()
+        }else{
+            return momentDate.format('YYYY-MM-DD')
+        }
     },
     loadLocale(lang){
         loadLang(lang)

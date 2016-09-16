@@ -5,7 +5,8 @@ import Login from './Login'
 //import LoginSettings from './LoginSettings'
 import Net from '../io/Net'
 import Style from './Style'
-import APIList from './APIList'
+//import APIList from './APIList'
+import FeedList from './FeedList'
 import UsbList from './UsbList'
 import BleList from './BleList'
 import MapSettings from './MapSettings'
@@ -65,12 +66,12 @@ export default class SettingsList extends React.Component {
             passProps: {navigator:this.props.navigator,},
         })
     }
-    renderAPI(){
+    renderFeed(){
         if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
             var DEVICE_WIDTH = Dimensions.get('window').width
             return (
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
-                      component: APIList,
+                      component: FeedList,
                       passProps: {navigator:this.props.navigator,},
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
@@ -173,7 +174,7 @@ export default class SettingsList extends React.Component {
                       </View>
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
-                  {this.renderAPI()}
+                  {this.renderFeed()}
                   {this.renderUSB()}
                   {this.renderBLE()}
                   {this.renderLogin()}

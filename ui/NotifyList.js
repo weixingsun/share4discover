@@ -54,8 +54,17 @@ export default class NotifyList extends Component {
           backgroundColor:'#ff6f00',
           onPress:()=>{
             let json = {key:'@'+rowData.user,field:Global.getKeyFromReply(rowData)+'#'+rowData.rtime}
-            alert(JSON.stringify(json))
-            Net.delHash(json);
+            Alert.alert(
+              "Delete",
+              "Do you want to delete this message ? ",
+              [
+                {text:"Cancel" },
+                {text:"OK", onPress:()=>{
+                    Net.delHash(json);
+                }},
+              ]
+            );
+            //alert(JSON.stringify(json))
           }
         }]
     return (

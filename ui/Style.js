@@ -16,6 +16,10 @@ function em(value){
 }
 
 module.exports = {
+  setLayout: function(layout){
+    this.DEVICE_WIDTH=layout.width
+    this.DEVICE_HEIGHT=layout.height
+  },
   //General
   DEVICE_WIDTH:Dimensions.get('window').width,
   DEVICE_HEIGHT:Dimensions.get('window').height,

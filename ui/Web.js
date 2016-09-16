@@ -83,21 +83,21 @@ requestAnimationFrame <> cancelAnimationFrame
         });
     }
     render(){
+      let title = this.state.title.length>50?this.state.title.substr(0,48)+'...':this.state.title
       return (
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title: this.state.title+'',}}
+          <NavigationBar style={Style.navbar} title={{title: title}}
             leftButton={
                 <View style={{flexDirection:'row',}}>
-                <Icon name={"ion-close"} color={'#333333'} size={30} onPress={() => this.props.navigator.pop() } />
-                 <View style={{width:50}} />
-                <Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
+                <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={50} onPress={() => this.props.navigator.pop() } />
                 </View>
             }
             rightButton={
                 <View style={{flexDirection:'row',}}>
-                <Icon name={"ion-arrow-left-a"} color={this.getColor(this.state.backEnabled)} size={30} onPress={() => this.back() } />
-                  <View style={{width:50}} />
-                <Icon name={"ion-arrow-right-a"} color={this.getColor(this.state.forwardEnabled)} size={30} onPress={() => this.forward() } />
+                <Icon name={"ion-ios-arrow-dropleft-outline"} color={this.getColor(this.state.backEnabled)} size={30} onPress={() => this.back() } />
+                  <View style={{width:30}} />
+                <Icon name={"ion-ios-arrow-dropright-outline"} color={this.getColor(this.state.forwardEnabled)} size={30} onPress={() => this.forward() } />
+                  <View style={{width:10}} />
                 </View>
             }
           />

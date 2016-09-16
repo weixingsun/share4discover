@@ -115,7 +115,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-send'} size={50}/>
+                          <Icon name={'ion-ios-paper-plane-outline'} size={40}/>
                       </View>
                       <Text>{I18n.t('post')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>

@@ -2,6 +2,7 @@ import { AsyncStorage } from 'react-native';
 
 var deviceStorage = {
         API_LIST:  "api_list",
+        FEED_LIST: "feed_list",
         MAP_LIST:  "map_list",
         PLACE_LIST:"place_list",
         SETTINGS:  "settings",
@@ -42,6 +43,39 @@ var deviceStorage = {
 			return value;
 		});
 	},
+        insertFeedData: function() {
+                //this.insertFeed('rss|http://rss.sina.com.cn/news/china/focus15.xml');
+                //this.insertFeed('rss|http://rss.cnn.com/rss/edition.rss');
+                //this.insertFeed('rss|http://feeds.bbci.co.uk/news/rss.xml');
+                let array = ['rss|http://rss.cnn.com/rss/edition.rss','rss|http://feeds.bbci.co.uk/news/rss.xml','rss|http://rss.sina.com.cn/news/china/focus15.xml']
+                this.save(this.FEED_LIST,array)
+        },
+        removeArrayElement: function(arr, item) {
+                for(var i = arr.length; i--;) {
+                    if(arr[i] === item) {
+                        arr.splice(i, 1);
+                    }
+                }
+        },
+        deleteFeed: function(data){
+                let self = this
+                this.get(this.FEED_LIST).then(function(array){
+                    if(array){
+                        self.removeArrayElement(array,data)
+                        self.save(self.FEED_LIST,array);
+                    }
+                })
+        },
+        insertFeed: function(data){
+                let self = this
+                this.get(this.FEED_LIST).then(function(json){
+                    let list = []
+                    if(json) list = json
+                    //self.deleteFeed(data)
+                    list.push(data) // type|url|name
+                    self.save(self.FEED_LIST,list);
+                })
+        },
 	insertExampleData: function() {
                 var api_json_yql_exchange = 'api:json:yql:exchange';
                 var api_json_url_exchange = 'api:json:url:exchange';
