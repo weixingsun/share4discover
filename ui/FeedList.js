@@ -131,7 +131,7 @@ export default class FeedList extends React.Component {
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
                   <Icon
                     style={{marginLeft:15,marginRight:6}}
-                    size={30}
+                    size={20}
                     //color={this.props.msg.ask=='false'?'blue':'gray'}
                     color={'gray'}
                     name={Global.FEED_ICONS[type]}

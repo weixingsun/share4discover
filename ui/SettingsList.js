@@ -76,9 +76,9 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-plug'} size={30}/>
+                          <Icon name={'fa-rss-square'} size={30}/>
                       </View>
-                      <Text>{I18n.t('plugin')}</Text>
+                      <Text>{I18n.t('feed')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
             )
         }
@@ -170,7 +170,7 @@ export default class SettingsList extends React.Component {
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-map'} size={35}/>
+                          <Icon name={'fa-globe'} size={30}/>
                       </View>
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>

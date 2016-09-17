@@ -11,6 +11,8 @@ import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
+import xml2js from 'xml2js'
+import xpath from 'xml2js-xpath'
 //import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
@@ -96,9 +98,23 @@ export default class FormFeed extends React.Component{
         //this.props.event.emitEvent('feedlist:reload');
         this.props.navigator.pop()
     }
+    getFeedName(url){
+        let self=this
+        fetch(url).then(function(result){
+            if (result.status===200){
+                xml2js.parseString(result._bodyText, function(err,json){
+                    let title = xpath.find(json, "/rss/channel/title")[0];
+                    self.setState({
+                        form:{ ...self.state.form, name:title },
+                    })
+                })
+            }
+        })
+    }
     render() {
         //alert('render.map:'+this.state.map+'\nmap.type='+this.state.map_type+'\nmap.traffic='+this.state.map_traffic)
         let title1 = this.props.feed==null?'Create a Feed Source':'Edit Feed: '+this.state.form.name
+        let submit_name = (this.state.form.name==='')?'Validate':'Submit'
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: title1}}
@@ -149,7 +165,7 @@ export default class FormFeed extends React.Component{
                             //validationResults={this.state.validationResults}
                         />
                         <GiftedForm.SubmitWidget
-                            title='Submit'
+                            title={submit_name}
                             widgetStyles={{
                                 submitButton: {
                                     backgroundColor: '#6495ED',
@@ -159,7 +175,11 @@ export default class FormFeed extends React.Component{
                                 if (isValid === true) {
                                     //values.type = values.type[0];
                                     postSubmit();
-                                    this.onSubmit(values)
+                                    if(this.state.form.name===''){
+                                        this.getFeedName(values.url)
+                                    }else{
+                                        this.onSubmit(values)
+                                    }
                                 }
                             }}
                        />
