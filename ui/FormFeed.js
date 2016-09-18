@@ -1,6 +1,6 @@
 'use strict'
 import React, { Component } from 'react'
-import {Alert, Image, ListView, Picker, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Alert, DeviceEventEmitter, Image, ListView, Picker, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 //import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -80,9 +80,12 @@ export default class FormFeed extends React.Component{
             });
         }
     }
-    componentDidMount() {
+    componentDidMount(){
+        //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,this.refresh);
     }
-
+    componentWillUnmount(){
+        //this.event.remove();
+    }
     handleValueChange(form){
         /*if(typeof form.type === 'object'){
             if(form.type[0] !=null && typeof form.type[0] === 'string'){
@@ -93,9 +96,9 @@ export default class FormFeed extends React.Component{
     }
     onSubmit(values){
         if(typeof values.type === 'object') values.type=values.type[0]
-        Store.insertFeed(values.type+'|'+values.url+'|'+values.name)
-        //alert(JSON.stringify(values))
-        //this.props.event.emitEvent('feedlist:reload');
+        let obj = values.type+'|'+values.url+'|'+values.name
+        Store.insertFeed(obj)
+        DeviceEventEmitter.emit('refresh:FeedList',obj);
         this.props.navigator.pop()
     }
     getFeedName(url){

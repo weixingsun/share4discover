@@ -71,7 +71,7 @@ var deviceStorage = {
                 this.get(this.FEED_LIST).then(function(json){
                     let list = []
                     if(json) list = json
-                    //self.deleteFeed(data)
+                    self.removeArrayElement(list,data)
                     list.push(data) // type|url|name
                     self.save(self.FEED_LIST,list);
                 })

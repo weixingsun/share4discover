@@ -1,6 +1,6 @@
 'use strict';
 import React, {Component} from 'react'
-import {Alert, ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
+import {Alert, DeviceEventEmitter, ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
 import {Icon} from './Icon'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -15,6 +15,7 @@ import FormFeed from './FormFeed';
 export default class FeedList extends React.Component {
     constructor(props) {
       super(props);
+      this.className = 'FeedList'
       this.ds = new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
@@ -23,10 +24,17 @@ export default class FeedList extends React.Component {
       this.state = {
           dataSource:this.ds.cloneWithRows(this.feed_list),
       };
+      //this.load=this.load.bind(this)
+    }
+    componentDidMount(){
+        this.event = DeviceEventEmitter.addListener('refresh:FeedList',(evt)=>setTimeout(()=>this.load(),500));
+    }
+    componentWillUnmount(){
+        this.event.remove();
     }
     componentWillMount(){
         this.load();
-        //this.props.event.addListener('feedlist:reload', this.load);
+        //this.props.event.addListener('feedlist:reload', this.load.bind(this));
     }
     //componentWillUpdate(){
     //    this.load();

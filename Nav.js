@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {AppRegistry, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
+import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
 //var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 //import NavigationBar from 'react-native-navbar';
 //import Register from './ui/Register'
@@ -13,11 +13,9 @@ import CodePush from "react-native-code-push"
 export default class Nav extends Component {
     componentDidMount() {
         //CodePush.sync();
+        //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,(evt)=>this.refresh());
     }
     _renderScene(route, navigator) {
-       //   return <Main navigator={navigator} {...route.passProps} />
-       //   return <Detail navigator={navigator} {...route.passProps} />
-       //   return <Filter navigator={navigator} {...route.passProps} />
       if(route.giftedForm == true) return route.renderScene(navigator)
       return <route.component route={route} navigator={navigator} {...route.passProps} />
     }
