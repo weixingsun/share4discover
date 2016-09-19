@@ -191,6 +191,24 @@ module.exports = {
         //return this.app_url_pre+key
     },
     trimTitle(title){
-        return title.trim();
-    }
+        let limit = 30
+        let len = (this.getLength(title))
+        let title1 = len>limit?this.subString(title,limit)+'...':title
+        return title1.trim();
+    },
+    getLength(str){
+        if (str == null) return 0;
+        if (typeof str != "string") str += "";
+        return str.replace(/[^\x00-\xff]/g,"[]").length;
+    },
+    subString(str,n){
+        var r = /[^\x00-\xff]/g;
+        if(str.replace(r, "[]").length <= n) return str;
+        // n = n - 3;
+        var m = Math.floor(n/2);
+        for(var i=m; i<str.length; i++) {
+            if(str.substr(0, i).replace(r, "[]").length>=n) return str.substr(0, i) ;
+        }
+        return str;
+    },
 };

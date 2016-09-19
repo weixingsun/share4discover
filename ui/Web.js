@@ -4,6 +4,7 @@ import {StyleSheet, Text, View, WebView} from 'react-native';
 import NavigationBar from 'react-native-navbar'
 import Style from './Style'
 import {Icon} from './Icon'
+import Global from '../io/Global'
 //import TimerMixin from 'react-timer-mixin'
  
 export default class Web extends Component {
@@ -82,25 +83,8 @@ requestAnimationFrame <> cancelAnimationFrame
             loading:        navState.loading,
         });
     }
-    getLength(str){
-        if (str == null) return 0;  
-        if (typeof str != "string") str += "";
-        return str.replace(/[^\x00-\xff]/g,"[]").length;
-    }
-    subString(str,n){
-        var r = /[^\x00-\xff]/g;
-        if(str.replace(r, "[]").length <= n) return str;
-        // n = n - 3;
-        var m = Math.floor(n/2);    
-        for(var i=m; i<str.length; i++) {
-            if(str.substr(0, i).replace(r, "[]").length>=n) return str.substr(0, i) ;
-        } 
-        return str;
-    }
     render(){
-      let len = (this.getLength(this.state.title))
-      let limit = 30
-      let title = len>limit?this.subString(this.state.title,limit)+'...':this.state.title
+      let title = Global.trimTitle(this.state.title)
       return (
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: title}}
