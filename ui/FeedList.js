@@ -46,6 +46,7 @@ export default class FeedList extends React.Component {
             if(list){
                 _this.feed_list = list
                 _this.setState({dataSource: _this.ds.cloneWithRows(list)});
+                //alert(JSON.stringify(list))
             //}else{
             //  Store.insertFeedData();
             }
@@ -128,6 +129,7 @@ export default class FeedList extends React.Component {
         let array = data.split('|')
         let type = array[0]
         let url = array[1]
+        if(url==null) return
         let name1 = array.length===3?array[2]:url
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
