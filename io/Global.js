@@ -1,5 +1,7 @@
 import moment from 'moment';
 import Lang from './Lang';
+import ReactNativeI18n from 'react-native-i18n'
+//const deviceLocale = ReactNativeI18n.locale
 
 function loadLang(lang){
   switch(lang) {
@@ -144,12 +146,11 @@ module.exports = {
     getKeyFromReply(reply){
         return reply.type+':'+reply.latlng+':'+reply.ctime
     },
-    getDateTimeFormat(datetimeInt,lang){
+    getDateTimeFormat(datetimeInt){
         let now = +new Date();   //date.getTimezoneOffset() / 60
 	//let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
-        //let lang = LocalizedStrings.getLanguage()
         //moment.locale(lang);
-        loadLang(lang)
+        loadLang(ReactNativeI18n.locale.replace('_', '-').toLowerCase())
         let momentDate = moment(datetimeInt) //.format("YYYY-MM-DD hh:MM:ss");
         if(now-datetimeInt<86400000){        //1 day
             return momentDate.fromNow()
@@ -160,10 +161,11 @@ module.exports = {
     str2date(str){
         return moment(str)
     },
-    rssDateStr2date(str,lang){
+    rssDateStr2date(str){
         //let date=moment(str).valueOf()
         let dateInt = Date.parse(str);
-        loadLang(lang)
+        //loadLang(lang)
+        loadLang(ReactNativeI18n.locale.replace('_', '-').toLowerCase())
         let momentDate = moment(dateInt)
         let now = +new Date();
         if(now-dateInt<86400000){        //1 day
@@ -172,11 +174,7 @@ module.exports = {
             return momentDate.format('YYYY-MM-DD')
         }
     },
-    loadLocale(lang){
-        loadLang(lang)
-    },
     getLang(){
-        //return LocalizedStrings.getLanguage()
         return moment.locale()
     },
     getFeedApi(){
@@ -192,4 +190,7 @@ module.exports = {
         return this.http_url_pre+encodeURIComponent(key)+'&sns='+sns
         //return this.app_url_pre+key
     },
+    trimTitle(title){
+        return title.trim();
+    }
 };

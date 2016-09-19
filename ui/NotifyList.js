@@ -17,7 +17,7 @@ import FormInfo from './FormInfo'
 export default class NotifyList extends Component {
   constructor(props) {
       super(props);
-      this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()  //zh_CN  -> zh-cn
+      //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()  //zh_CN  -> zh-cn
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
   componentWillMount(){
@@ -84,7 +84,7 @@ export default class NotifyList extends Component {
     )
   }
   _renderRowView(rowData) {
-    var time = Global.getDateTimeFormat(parseInt(rowData.rtime),this.lang)
+    var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
     var bold = rowData.status==='1'? {fontSize:16,fontWeight:'bold',color:'black'}: {fontSize:16}
     return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 

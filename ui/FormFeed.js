@@ -1,6 +1,6 @@
 'use strict'
 import React, { Component } from 'react'
-import {Alert, DeviceEventEmitter, Image, ListView, Picker, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Alert, DeviceEventEmitter, Image, Linking, ListView, Picker, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 //import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -124,6 +124,11 @@ export default class FormFeed extends React.Component{
              leftButton={
                 <View style={{flexDirection:'row',}}>
                   <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                </View>
+             }
+             rightButton={
+                <View style={{flexDirection:'row',}}>
+                  <Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={() => Linking.openURL('http://ctrlq.org/rss') } />
                 </View>
              }
           />

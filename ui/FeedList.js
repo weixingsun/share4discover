@@ -46,8 +46,8 @@ export default class FeedList extends React.Component {
             if(list){
                 _this.feed_list = list
                 _this.setState({dataSource: _this.ds.cloneWithRows(list)});
-            }else{
-                Store.insertFeedData();
+            //}else{
+            //  Store.insertFeedData();
             }
         })
         //Store.insertFeedData();
@@ -128,9 +128,10 @@ export default class FeedList extends React.Component {
         let array = data.split('|')
         let type = array[0]
         let url = array[1]
-        let name = array.length===3?array[2]:url
+        let name1 = array.length===3?array[2]:url
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
+        let name = Global.trimTitle(name1)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
             onPress={()=>this.openRss(data)} >

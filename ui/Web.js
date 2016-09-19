@@ -82,8 +82,25 @@ requestAnimationFrame <> cancelAnimationFrame
             loading:        navState.loading,
         });
     }
+    getLength(str){
+        if (str == null) return 0;  
+        if (typeof str != "string") str += "";
+        return str.replace(/[^\x00-\xff]/g,"[]").length;
+    }
+    subString(str,n){
+        var r = /[^\x00-\xff]/g;
+        if(str.replace(r, "[]").length <= n) return str;
+        // n = n - 3;
+        var m = Math.floor(n/2);    
+        for(var i=m; i<str.length; i++) {
+            if(str.substr(0, i).replace(r, "[]").length>=n) return str.substr(0, i) ;
+        } 
+        return str;
+    }
     render(){
-      let title = this.state.title.length>50?this.state.title.substr(0,48)+'...':this.state.title
+      let len = (this.getLength(this.state.title))
+      let limit = 30
+      let title = len>limit?this.subString(this.state.title,limit)+'...':this.state.title
       return (
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: title}}
@@ -95,7 +112,7 @@ requestAnimationFrame <> cancelAnimationFrame
             rightButton={
                 <View style={{flexDirection:'row',}}>
                 <Icon name={"ion-ios-arrow-dropleft-outline"} color={this.getColor(this.state.backEnabled)} size={30} onPress={() => this.back() } />
-                  <View style={{width:30}} />
+                  <View style={{width:20}} />
                 <Icon name={"ion-ios-arrow-dropright-outline"} color={this.getColor(this.state.forwardEnabled)} size={30} onPress={() => this.forward() } />
                   <View style={{width:10}} />
                 </View>
@@ -112,7 +129,7 @@ requestAnimationFrame <> cancelAnimationFrame
             domStorageEnabled={true}
             javaScriptEnabled={false}
             onNavigationStateChange={this.onNavigationStateChange}
-            onShouldStartLoadWithRequest={true}
+            onShouldStartLoadWithRequest={()=>{return true}}
             >
           </WebView>
         </View>

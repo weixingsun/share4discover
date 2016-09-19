@@ -21,7 +21,7 @@ var {height, width} = Dimensions.get('window');
 export default class Detail extends Component {
     constructor(props) {
         super(props);
-        this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+        //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = this.props.msg.pics?this.props.msg.pics.split(','):[]
         this.isLogin = (Global.mainlogin.length>0)
         this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
@@ -200,7 +200,7 @@ export default class Detail extends Component {
               var str = this.props.msg[key];
               let owner = str.split('|')[0]
               let reply = str.split('|')[1]
-              let time  = parseInt(key.substring(1))    //Global.getDateTimeFormat(Int)
+              let time  = parseInt(key.substring(1))
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
 	      if(sns_type==null || sns_type==''){
@@ -217,7 +217,7 @@ export default class Detail extends Component {
                         name={Global.SNS_ICONS[sns_type]}
                     />
                     <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
-                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time,this.lang)}</Text>
+                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
                   </View>
 	        )
               }
@@ -322,7 +322,7 @@ export default class Detail extends Component {
             )
     }
     render(){
-	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime),this.lang)
+	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
         return (

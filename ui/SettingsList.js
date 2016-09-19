@@ -67,9 +67,9 @@ export default class SettingsList extends React.Component {
         })
     }
     renderFeed(){
-        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
-            var DEVICE_WIDTH = Dimensions.get('window').width
-            return (
+        //if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+        var DEVICE_WIDTH = Dimensions.get('window').width
+        return (
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                       component: FeedList,
                       passProps: {navigator:this.props.navigator,},
@@ -80,8 +80,8 @@ export default class SettingsList extends React.Component {
                       </View>
                       <Text>{I18n.t('feed')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
-            )
-        }
+        )
+        //}
     }
     renderUSB(){
         if(Global.mainlogin=='fb:weixing.sun@gmail.com'){

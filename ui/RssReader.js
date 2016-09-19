@@ -21,7 +21,7 @@ export default class FeedReader extends React.Component {
           rowHasChanged: (row1, row2) => row1 !== row2,
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
-      this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+      //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
       this.items = []
       this.state = {
           dataSource:this.ds.cloneWithRows(this.items),
@@ -123,7 +123,7 @@ export default class FeedReader extends React.Component {
                 </View>
         */
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
-        let time = Global.rssDateStr2date(data.pubDate,this.lang)
+        let time = Global.rssDateStr2date(data.pubDate)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
             onPress={()=>this.openRss(data)} >
