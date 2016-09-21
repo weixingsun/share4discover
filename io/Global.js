@@ -87,7 +87,9 @@ module.exports = {
       tel:'ion-ios-call-outline',
     },
     FEED_ICONS:{
-      rss:'ion-logo-rss',
+      rss:'fa-rss',
+      yql:'fa-yahoo',
+      web:'fa-internet-explorer',
     },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))

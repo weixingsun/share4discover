@@ -13,7 +13,6 @@ import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
 import xml2js from 'xml2js'
 import xpath from 'xml2js-xpath'
-//import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
     container: {
@@ -51,32 +50,29 @@ export default class FormFeed extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.type_list = ['rss'];
+        this.feed_types = { rss:{url:true,name:false}, yql:{yql:true,name:true}, web:{url:true,name:false},}
         this.state = {
+            type: 'rss',
             form: {
-                type:  'rss',
                 url:   '',
                 name:  '',
-
-                typeTitle: 'RSS',
             }
         };
+    }
+    getValueObj(str){
+        let fields = JSON.parse(this.props.feed)
+        let type = fields.type
+        delete fields.type
+        return {type:type, fields:fields}
     }
     componentWillMount() {
         if(this.props.feed){
             //alert(JSON.stringify(this.props.feed))
-            let array = this.props.feed.split('|')
-            let type = array[0]
-            let url = array[1]
-            let name = array.length===3?array[2]:''
+            let obj = this.getValueObj(this.props.feed)
+            //alert(JSON.stringify(obj))
             this.setState({
-                form: {
-                    type:  type,
-                    url:   url,
-                    name:  name,
-
-                    typeTitle: type,
-                }
+                type: obj.type,
+                form: obj.fields,
             });
         }
     }
@@ -87,23 +83,25 @@ export default class FormFeed extends React.Component{
         //this.event.remove();
     }
     handleValueChange(form){
-        /*if(typeof form.type === 'object'){
+        if(typeof form.type === 'object'){
             if(form.type[0] !=null && typeof form.type[0] === 'string'){
-                form.type = form.type[0]
+                //form.type = form.type[0]
+                this.setState({ type:form.type[0] })
             }
-        }*/
+        }
         //alert('form:'+JSON.stringify(form))
     }
     onSubmit(values){
-        if(typeof values.type === 'object') values.type=values.type[0]
-        let obj = values.type+'|'+values.url+'|'+values.name
-        Store.insertFeed(obj)
-        DeviceEventEmitter.emit('refresh:FeedList',obj);
+        //alert(JSON.stringify(values))
+        Store.insertFeed(values)
+        DeviceEventEmitter.emit('refresh:FeedList',values);
         this.props.navigator.pop()
     }
-    getFeedName(url){
+    getFeedName(formValues){
         let self=this
-        fetch(url).then(function(result){
+        //alert(JSON.stringify(formValues))
+        if(formValues.type==='rss'){
+          fetch(formValues.url).then(function(result){
             if (result.status===200){
                 xml2js.parseString(result._bodyText, function(err,json){
                     let title = xpath.find(json, "/rss/channel/title")[0];
@@ -112,6 +110,37 @@ export default class FormFeed extends React.Component{
                     })
                 })
             }
+          })
+        }else if(formValues.type==='yql'){
+          let title = formValues.yql.split('from')[1]
+          //let table = arr[0].split('from')[1]
+          self.setState({ form:{ ...self.state.form, name:title }, })
+        }else if(formValues.type==='web'){
+          let title = formValues.url
+          self.setState({ form:{ ...self.state.form, name:title }, })
+        }
+    }
+    cap1(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    renderField(name,editable){
+        return (
+            <GiftedForm.TextInputWidget
+                key={name}
+                name={name}
+                title={this.cap1(name)}
+                //placeholder='Enter'
+                editable={editable}
+                clearButtonMode='while-editing'
+                value={this.state.form[name]}
+                //displayValue='title'
+                //validationResults={this.state.validationResults}
+            />)
+    }
+    renderTypeFields(obj){
+        let keys = Object.keys(obj)
+        return keys.map((key)=>{
+            return this.renderField(key,obj[key])
         })
     }
     render() {
@@ -144,34 +173,18 @@ export default class FormFeed extends React.Component{
                         <GiftedForm.ModalWidget
                             title='Type'
                             name='type'
-                            display={this.state.form.typeTitle}
-                            value={this.state.form.type}
+                            display={this.state.type.toUpperCase()}
+                            value={this.state.type}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
                                 <GiftedForm.OptionWidget title='RSS' value='rss' />
-                                <GiftedForm.OptionWidget title='Web' value='web' />
+                                <GiftedForm.OptionWidget title='WEB' value='web' />
+                                <GiftedForm.OptionWidget title='YQL' value='yql' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        <GiftedForm.TextInputWidget
-                            name='url'
-                            title='URL'
-                            placeholder='Enter URL'
-                            clearButtonMode='while-editing'
-                            //displayValue='title'
-                            value={this.state.form.url}
-                            //validationResults={this.state.validationResults}
-                        />
-                        <GiftedForm.TextInputWidget
-                            name='name'
-                            title='Name'
-                            placeholder='Auto Fill'
-                            clearButtonMode='while-editing'
-                            editable={false}
-                            value={this.state.form.name}
-                            //validationResults={this.state.validationResults}
-                        />
+                        {this.renderTypeFields(this.feed_types[this.state.type])}
                         <GiftedForm.SubmitWidget
                             title={submit_name}
                             widgetStyles={{
@@ -181,10 +194,12 @@ export default class FormFeed extends React.Component{
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
                                 if (isValid === true) {
-                                    //values.type = values.type[0];
+                                    //alert(JSON.stringify(values))
                                     postSubmit();
-                                    if(this.state.form.name===''){
-                                        this.getFeedName(values.url)
+                                    if(typeof values.type === 'object') values.type=values.type[0]
+                                    //alert(JSON.stringify(values))
+                                    if(values.name===''){
+                                        this.getFeedName(values)
                                     }else{
                                         this.onSubmit(values)
                                     }

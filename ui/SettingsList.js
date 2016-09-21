@@ -5,7 +5,7 @@ import Login from './Login'
 //import LoginSettings from './LoginSettings'
 import Net from '../io/Net'
 import Style from './Style'
-//import APIList from './APIList'
+import ListJson from './ListJson'
 import FeedList from './FeedList'
 import UsbList from './UsbList'
 import BleList from './BleList'
@@ -79,6 +79,23 @@ export default class SettingsList extends React.Component {
                           <Icon name={'fa-rss-square'} size={30}/>
                       </View>
                       <Text>{I18n.t('feed')+' '+I18n.t('settings')}</Text>
+                  </TouchableOpacity>
+        )
+        //}
+    }
+    renderJson(){
+        //if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+        var DEVICE_WIDTH = Dimensions.get('window').width
+        return (
+                  <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
+                      component: ListJson,
+                      passProps: {navigator:this.props.navigator,},
+                  })}>
+                      <View style={{width:DEVICE_WIDTH/3}} />
+                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                          <Icon name={'fa-plug'} size={30}/>
+                      </View>
+                      <Text>{I18n.t('plugin')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
         )
         //}

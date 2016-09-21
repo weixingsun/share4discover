@@ -54,7 +54,7 @@ export default class FeedReader extends React.Component {
         })
     }
     addRss(){
-        Store.insertFeed('rss','http://news.ifeng.com/rss/index.xml');
+        //Store.insertFeed('rss','http://news.ifeng.com/rss/index.xml');
     }
     openRss(data){
         this.props.navigator.push({
@@ -155,7 +155,7 @@ export default class FeedReader extends React.Component {
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addRss()} />
+                    <Icon name={'ion-ios-refresh-outline'} color={'#333333'} size={45} onPress={()=>this.load()} />
                     <View style={{width:10}} />
                  </View>
               }

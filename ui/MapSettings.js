@@ -11,7 +11,6 @@ import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
-//import YQL from 'yql' //sorry, react native is not nodejs
 
 var styles = StyleSheet.create({
     container: {
@@ -42,15 +41,6 @@ var styles = StyleSheet.create({
     },
 });
 
-//xchange: 'select * from yahoo.finance.xchange where pair in (' + items + ')'
-//weather: 'select * from weather.forecast where (location = 94089)'
-//stock:   'select * from yahoo.finance.quote where symbol in (' + items + ')'
-//path:    '$.query.results.rate[*]'   //'$.query.results.rate'
-//field:   'Name,Rate,Date,Time,Ask,Bid'   //default all
-//timer:   3
-
-//API_NAME: exchange
-//value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
 export default class Settings extends React.Component{
     constructor(props){
         super(props);

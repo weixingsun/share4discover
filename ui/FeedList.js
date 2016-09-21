@@ -15,7 +15,7 @@ import FormFeed from './FormFeed';
 export default class FeedList extends React.Component {
     constructor(props) {
       super(props);
-      this.className = 'FeedList'
+      //this.className = 'FeedList'
       this.ds = new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
@@ -34,7 +34,7 @@ export default class FeedList extends React.Component {
     }
     componentWillMount(){
         this.load();
-        //this.props.event.addListener('feedlist:reload', this.load.bind(this));
+        //Store.emptyFeedList()
     }
     //componentWillUpdate(){
     //    this.load();
@@ -44,9 +44,9 @@ export default class FeedList extends React.Component {
         //Store.delete(Store.FEED_LIST)
         Store.get(Store.FEED_LIST).then(function(list){
             if(list){
+                //alert(JSON.stringify(list))
                 _this.feed_list = list
                 _this.setState({dataSource: _this.ds.cloneWithRows(list)});
-                //alert(JSON.stringify(list))
             //}else{
             //  Store.insertFeedData();
             }
@@ -60,12 +60,23 @@ export default class FeedList extends React.Component {
             passProps: {navigator:this.props.navigator, } //refresh:this.load},
         })
     }
-    openRss(data){
-        let url = data.split('|')[1]
-        this.props.navigator.push({
-            component: RssReader,
-            passProps: {navigator:this.props.navigator,url:url},
-        });
+    openFeed(json){
+        if(json.type==='rss'){
+            this.props.navigator.push({
+                component: RssReader,
+                passProps: {navigator:this.props.navigator,url:json.url},
+            });
+        }else if(json.type==='yql'){
+            this.props.navigator.push({
+                component: YqlReader,
+                passProps: {navigator:this.props.navigator,yql:json.yql},
+            });
+        }else if(json.type==='web'){
+            this.props.navigator.push({
+                component: WebReader,
+                passProps: {navigator:this.props.navigator,yql:json.yql},
+            });
+        }
     }
     openJsonAPI(name){
         this.props.navigator.push({
@@ -125,18 +136,15 @@ export default class FeedList extends React.Component {
       )
     }
     _renderRow(data) {
-        //alert(JSON.stringify(data))
-        let array = data.split('|')
-        let type = array[0]
-        let url = array[1]
-        if(url==null) return
-        let name1 = array.length===3?array[2]:url
+        let json = JSON.parse(data)
+        if(!json.name) return
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
-        let name = Global.trimTitle(name1)
+        let type = json.type
+        let name = Global.trimTitle(json.name)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
-            onPress={()=>this.openRss(data)} >
+            onPress={()=>this.openFeed(json)} >
           <View >
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
@@ -220,5 +228,3 @@ var styles = StyleSheet.create({
         backgroundColor: "#387ef5",
     },
 });
-//<View style={{width:50}} />
-//<Icon name={'plus'} size={30} onPress={()=>this.props.navigator.push({component: FormAddJson})} />

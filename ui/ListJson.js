@@ -45,6 +45,10 @@ var styles = StyleSheet.create({
 //path:    '$.query.results.rate[*]'   //'$.query.results.rate'
 //field:   'Name,Rate,Date,Time,Ask,Bid'   //default all
 //timer:   3
+//Store.save('exchange_yql', {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"});
+//Store.save('exchange_yql', {"filter":"USDCNY,USDNZD", "yql":'select * from yahoo.finance.xchange where pair in ("USDCNY","USDNZD")', "path":"$.query.results.rate", "title":"My Exchange Rates YQL API"});
+//Store.save('exchange_url',{"filter":"USD/CNY,USD/NZD", "url":"http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&view=basic", "path":"$.list.resources","subpath":"$.resource.fields", "title":"My Exchange Rates URL API"});
+
 
 //API_NAME: exchange
 //value: {"list":"USDCNY,USDAUD", "yql":"select * from yahoo.finance.xchange where pair in ", "path":"$.query.results.rate", "title":"My Exchange Rates Watch List"}
@@ -63,7 +67,7 @@ export default class ListJson extends React.Component{
         this.subpath = null;
         this.title = '';
         this.column_width = 0;
-        this.filter = null;
+        //this.filter = null;
         this.state = {
             editable: false,
             timerEnabled: false,
@@ -88,13 +92,13 @@ export default class ListJson extends React.Component{
               if(value.yql != null){
                  _this.yql= value.yql
                  _this.parser=_this.getYQLjsonpath.bind(_this);
-              }else{
-                 _this.url= value.url
-                 _this.parser=_this.getURLjsonpath.bind(_this);
+              //}else{
+              //   _this.url= value.url
+              //   _this.parser=_this.getURLjsonpath.bind(_this);
               }
               _this.path= value.path
               _this.subpath= value.subpath
-              _this.filter= value.filter
+              //_this.filter= value.filter
               _this.title= value.title
               _this.reload();
           }
