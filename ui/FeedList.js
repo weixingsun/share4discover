@@ -34,11 +34,18 @@ export default class FeedList extends React.Component {
     }
     componentWillMount(){
         this.load();
-        //Store.emptyFeedList()
     }
-    //componentWillUpdate(){
-    //    this.load();
-    //}
+    emptyDB(){
+        let self=this
+        Alert.alert(
+            "Delete",
+            "Do you want to delete all rows ? ",
+            [
+                {text:"Cancel" },
+                {text:"OK", onPress:()=>Store.emptyFeedList() },
+            ]
+        );
+    }
     load(){
         var _this=this;
         //Store.delete(Store.FEED_LIST)
@@ -181,6 +188,8 @@ export default class FeedList extends React.Component {
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
+                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={40} onPress={()=>this.emptyDB()} />
+                    <View style={{width:20}} />
                     <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addRss()} />
                     <View style={{width:10}} />
                  </View>
