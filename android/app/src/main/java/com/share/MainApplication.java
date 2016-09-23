@@ -33,6 +33,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.RNSvgPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -77,6 +78,7 @@ public class MainApplication extends Application implements ReactApplication {
       String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new RNSvgPackage(),
         new ReactNativeI18n(),
         new ReactNativeOneSignalPackage(),
         new ImagePickerPackage(),

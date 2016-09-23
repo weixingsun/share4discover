@@ -10,6 +10,7 @@ import NavigationBar from 'react-native-navbar'
 import {parseString} from 'xml2js'
 import Swipeout from 'react-native-swipeout';
 import RssReader from './RssReader';
+import YqlReader from './YqlReader';
 import FormFeed from './FormFeed';
 
 export default class FeedList extends React.Component {
@@ -76,12 +77,12 @@ export default class FeedList extends React.Component {
         }else if(json.type==='yql'){
             this.props.navigator.push({
                 component: YqlReader,
-                passProps: {navigator:this.props.navigator,yql:json.yql},
+                passProps: {navigator:this.props.navigator,json:json},
             });
         }else if(json.type==='web'){
             this.props.navigator.push({
                 component: WebReader,
-                passProps: {navigator:this.props.navigator,yql:json.yql},
+                passProps: {navigator:this.props.navigator,url:json.url},
             });
         }
     }
