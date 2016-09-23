@@ -25,8 +25,6 @@ export default class ForceView extends Component {
         w:Style.DEVICE_WIDTH,
         h:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-20
     }
-    this.root = {x:this.panel.w/2,y:100}
-    this.dist = {x:20,y:30}
     this.stat={}  //{d1:1,d2:2}
     this.state={}
   }
@@ -47,11 +45,16 @@ export default class ForceView extends Component {
     }
   }
   findPiramidXY(node){  //{d,i,f,s,c,k,v}
-    //let X=this.root.x + node.i * this.dist.x
-    let div=this.panel.w*0.8/this.stat['d'+node.d].t
-    let X=this.panel.w*0.1 + this.stat['d'+node.d].r * div
+    let total=this.stat['d'+node.d].t
+    let seq  =this.stat['d'+node.d].r
+    let divX=this.panel.w*0.8/total
+    let startX=this.panel.w/2 - (total-1)/2.0*divX
+    let X=startX + seq * divX
     this.stat['d'+node.d].r++
-    let Y=this.root.y + node.d * this.dist.y
+    let totalDeep = Object.keys(this.stat).length
+    let divY=this.panel.h*0.8/totalDeep
+    let startY=this.panel.h/2 - (totalDeep-1)/2.0*divY
+    let Y = startY + (node.d-1) *divY
     return {x:X,y:Y}
   }
   renderNodes(){
