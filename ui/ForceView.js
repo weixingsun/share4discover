@@ -3,7 +3,7 @@ import React, {
   PropTypes,
 } from 'react';
 import { Dimensions,StyleSheet } from 'react-native'
-import Svg,{Circle,G,Defs,Use,Rect } from 'react-native-svg'
+import Svg,{Circle,G,Defs,Use,Rect,Line } from 'react-native-svg'
 import Style from './Style'
 
 export default class ForceView extends Component {
@@ -26,31 +26,35 @@ export default class ForceView extends Component {
         h:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-20
     }
     this.stat={}  //{d1:1,d2:2}
-    this.state={}
+    //this.state={}
+    this.totalIndex=0
   }
-  traverse(o,dad) {
+  traverse(json,dad) {
     let deep = dad.d+1
-    for (var i in o) {
-        let kids=typeof(o[i])==="object"?o[i].length:0
-        if (kids==null) kids=Object.keys(o[i]).length
-        let siblings=typeof(o)==="object"?o.length:0
-        if (siblings==null) siblings=Object.keys(o).length
-        if(this.stat['d'+deep]==null) this.stat['d'+deep]={r:0,t:1}  //{renderSeq,totalSeq}
-        else this.stat['d'+deep].t++
-        let n= {d:deep, i:this.stat['d'+deep].t-1, f:dad.i, s:siblings, c:kids, k:i, v:o[i]}
+    for (var obj in json) {
+        let kids=typeof(json[obj])==="object"?json[obj].length:0
+        if (kids==null) kids=Object.keys(json[obj]).length
+        let siblings=typeof(json)==="object"?json.length:0
+        if (siblings==null) siblings=Object.keys(json).length
+        if(this.stat['d'+deep]==null) this.stat['d'+deep]=1  //{renderSeq,totalSeq}
+        else this.stat['d'+deep]++
+        //let n= {d:deep, i:this.stat['d'+deep].t-1, f:dad.i, s:siblings, c:kids, k:i, v:o[i]}
+        let n= {d:deep, o:this.stat['d'+deep]-1, i:this.totalIndex, f:dad.i, s:siblings, c:kids, k:obj, v:json[obj]}
         this.nodes.push( n );
-        if (o[i] !== null && typeof(o[i])=="object") {
-            this.traverse(o[i],n);
+        this.totalIndex++
+        if (json[obj] !== null && typeof(json[obj])=="object") {
+            this.traverse(json[obj],n);
         }
     }
   }
-  findPiramidXY(node){  //{d,i,f,s,c,k,v}
-    let total=this.stat['d'+node.d].t
-    let seq  =this.stat['d'+node.d].r
-    let divX=this.panel.w*0.8/total
+  findPyramidXY(node){  //{d,i,f,s,c,k,v}
+    let total=this.stat['d'+node.d]
+    //let seq  =this.stat['d'+node.d].r
+    let seq  =node.o
+    let divX =this.panel.w*0.8/total
     let startX=this.panel.w/2 - (total-1)/2.0*divX
     let X=startX + seq * divX
-    this.stat['d'+node.d].r++
+    //this.stat['d'+node.d].r++
     let totalDeep = Object.keys(this.stat).length
     let divY=this.panel.h*0.8/totalDeep
     let startY=this.panel.h/2 - (totalDeep-1)/2.0*divY
@@ -59,9 +63,13 @@ export default class ForceView extends Component {
   }
   renderNodes(){
     return this.nodes.map((node,seq)=>{
-      let xy=this.findPiramidXY(node)
+      let xy=this.findPyramidXY(node)
+      let dad = this.nodes[node.f]
+      let fxy=this.findPyramidXY(dad)
+      console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
       return (
-          <Circle key={seq}
+        <G key={'g'+seq}>
+          <Circle key={'c'+seq}
               cx={xy.x}
               cy={xy.y}
               r="10"
@@ -70,11 +78,15 @@ export default class ForceView extends Component {
               fill={node.c==0?"green":"blue"}
               onPress={()=> alert(JSON.stringify(node)) }
           />
+          <Line key={'l'+seq}
+              x1={xy.x} y1={xy.y} 
+              x2={fxy.x} y2={fxy.y} 
+              stroke="#999" />
+        </G>
       )
     })
   }
   render() {
-    //alert(this.nodes.length+'  \n'+JSON.stringify(this.stat))
     return (
             <Svg height={this.panel.h} width={this.panel.w}>
                 {this.renderNodes()}
