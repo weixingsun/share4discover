@@ -33,6 +33,8 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.zmxv.RNSound.RNSoundPackage;
+import com.keyee.datetime.RCTDateTimePickerPackage;
 import com.horcrux.svg.RNSvgPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -78,6 +80,7 @@ public class MainApplication extends Application implements ReactApplication {
       String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new RNSoundPackage(),
         new RNSvgPackage(),
         new ReactNativeI18n(),
         new ReactNativeOneSignalPackage(),
@@ -93,7 +96,6 @@ public class MainApplication extends Application implements ReactApplication {
         new WeiboPackage(),
         new VectorIconsPackage(),
         new PhotoViewPackage(),
-        new RCTDateTimePickerPackage(),
         new KCKeepAwakePackage(),
         new BleManagerPackage(),
         //new BeaconsAndroidPackage(),

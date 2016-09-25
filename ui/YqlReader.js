@@ -10,11 +10,11 @@ import NavigationBar from 'react-native-navbar'
 import {parseString} from 'xml2js'
 import xml2js from 'xml2js'
 import xpath from 'xml2js-xpath'
-import jsonpath from '../io/jsonpath'
+//import jsonpath from '../io/jsonpath'
 import Swipeout from 'react-native-swipeout';
 import SGListView from 'react-native-sglistview';
 import Web from './Web'
-import ForceView from './ForceView'
+import JsonPyramid from './JsonPyramid'
 
 export default class YqlReader extends React.Component {
     constructor(props) {
@@ -125,7 +125,7 @@ export default class YqlReader extends React.Component {
                  </View>
               }
           />
-          <ForceView data={this.state.data} />
+          <JsonPyramid data={this.state.data} />
       </View>
       );
     }

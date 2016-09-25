@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="classes264" level="project" />
+    <orderEntry type="library" name="classes23" level="project" />
+    <orderEntry type="library" name="classes399" level="project" />
+    <orderEntry type="library" name="classes341" level="project" />
+    <orderEntry type="library" name="classes22" level="project" />
+    <orderEntry type="library" name="classes317" level="project" />
+    <orderEntry type="library" name="classes51" level="project" />
+    <orderEntry type="library" name="classes353" level="project" />
+    <orderEntry type="library" name="classes304" level="project" />
+    <orderEntry type="library" name="classes93" level="project" />
+    <orderEntry type="library" name="classes336" level="project" />
+    <orderEntry type="library" name="classes220" level="project" />
+    <orderEntry type="library" name="classes335" level="project" />
+    <orderEntry type="library" name="classes266" level="project" />
+    <orderEntry type="library" name="classes305" level="project" />
+    <orderEntry type="library" name="classes212" level="project" />
+    <orderEntry type="library" name="classes4" level="project" />
+    <orderEntry type="library" name="classes297" level="project" />
+    <orderEntry type="library" name="classes298" level="project" />
+    <orderEntry type="library" name="classes329" level="project" />
+    <orderEntry type="library" name="classes407" level="project" />
+    <orderEntry type="library" name="classes137" level="project" />
+    <orderEntry type="library" name="classes189" level="project" />
+    <orderEntry type="library" name="classes162" level="project" />
+    <orderEntry type="library" name="classes143" level="project" />
+    <orderEntry type="library" name="classes60" level="project" />
+    <orderEntry type="library" name="classes61" level="project" />
+    <orderEntry type="library" name="classes96" level="project" />
+    <orderEntry type="library" name="classes243" level="project" />
+    <orderEntry type="library" name="classes121" level="project" />
+    <orderEntry type="library" name="classes81" level="project" />
+    <orderEntry type="library" name="classes347" level="project" />
+    <orderEntry type="library" name="classes295" level="project" />
+    <orderEntry type="library" name="classes97" level="project" />
+    <orderEntry type="library" name="classes322" level="project" />
+    <orderEntry type="library" name="classes312" level="project" />
+    <orderEntry type="library" name="classes313" level="project" />
+    <orderEntry type="library" name="classes267" level="project" />
+    <orderEntry type="library" name="classes25" level="project" />
+    <orderEntry type="library" name="classes352" level="project" />
+    <orderEntry type="library" name="classes80" level="project" />
+    <orderEntry type="library" name="classes159" level="project" />
+    <orderEntry type="library" name="classes181" level="project" />
+    <orderEntry type="library" name="classes392" level="project" />
+    <orderEntry type="library" name="classes324" level="project" />
+    <orderEntry type="library" name="classes247" level="project" />
+    <orderEntry type="library" name="classes45" level="project" />
+    <orderEntry type="library" name="classes300" level="project" />
+    <orderEntry type="library" name="classes394" level="project" />
+    <orderEntry type="library" name="classes204" level="project" />
+    <orderEntry type="library" name="classes34" level="project" />
+    <orderEntry type="library" name="classes229" level="project" />
+    <orderEntry type="library" name="classes56" level="project" />
+    <orderEntry type="library" name="classes358" level="project" />
+    <orderEntry type="library" name="classes328" level="project" />
+    <orderEntry type="library" name="mockable-android-23" level="project" />
+    <orderEntry type="library" name="classes232" level="project" />
+    <orderEntry type="library" name="classes150" level="project" />
+    <orderEntry type="library" name="mockable-android-232" level="project" />
+    <orderEntry type="library" name="classes404" level="project" />
+    <orderEntry type="library" name="classes94" level="project" />
+    <orderEntry type="library" name="mockable-android-231" level="project" />
+    <orderEntry type="library" name="classes241" level="project" />
+    <orderEntry type="library" name="classes90" level="project" />
+    <orderEntry type="library" name="classes244" level="project" />
+    <orderEntry type="library" name="classes27" level="project" />
+    <orderEntry type="library" name="classes31" level="project" />
+    <orderEntry type="library" name="classes148" level="project" />
+    <orderEntry type="library" name="classes6" level="project" />
+    <orderEntry type="library" name="classes105" level="project" />
+    <orderEntry type="library" name="classes186" level="project" />
+    <orderEntry type="library" name="classes180" level="project" />
+    <orderEntry type="library" name="classes365" level="project" />
+    <orderEntry type="library" name="classes396" level="project" />
+    <orderEntry type="library" name="classes140" level="project" />
+    <orderEntry type="library" name="classes201" level="project" />
+    <orderEntry type="library" name="classes361" level="project" />
+    <orderEntry type="library" name="classes370" level="project" />
+    <orderEntry type="library" name="classes281" level="project" />
+    <orderEntry type="library" name="classes182" level="project" />
+    <orderEntry type="library" name="classes218" level="project" />
+    <orderEntry type="library" name="classes216" level="project" />
+    <orderEntry type="library" name="classes7" level="project" />
+    <orderEntry type="library" name="classes351" level="project" />
+    <orderEntry type="library" name="classes43" level="project" />
+    <orderEntry type="module" module-name="r1" />
+    <orderEntry type="module" module-name="buildConfig2" />
+    <orderEntry type="module" module-name="main23" />
+    <orderEntry type="module" module-name="main15" />
+    <orderEntry type="module" module-name="buildConfig10" />
+    <orderEntry type="module" module-name="buildConfig12" />
+    <orderEntry type="module" module-name="main22" />
+    <orderEntry type="module" module-name="main12" />
+    <orderEntry type="module" module-name="r5" />
+    <orderEntry type="module" module-name="buildConfig6" />
+    <orderEntry type="module" module-name="r19" />
+    <orderEntry type="module" module-name="r4" />
+    <orderEntry type="module" module-name="test3" />
+    <orderEntry type="module" module-name="r20" />
+    <orderEntry type="module" module-name="main19" />
+    <orderEntry type="module" module-name="androidTest2" />
+    <orderEntry type="module" module-name="r6" />
+    <orderEntry type="module" module-name="r10" />
+    <orderEntry type="module" module-name="buildConfig11" />
+    <orderEntry type="module" module-name="main9" />
+    <orderEntry type="module" module-name="main25" />
+    <orderEntry type="module" module-name="main8" />
+    <orderEntry type="module" module-name="buildConfig14" />
+    <orderEntry type="module" module-name="r17" />
+    <orderEntry type="module" module-name="r18" />
+    <orderEntry type="module" module-name="buildConfig" />
+    <orderEntry type="module" module-name="r15" />
+    <orderEntry type="module" module-name="r21" />
+    <orderEntry type="module" module-name="buildConfig22" />
+    <orderEntry type="module" module-name="r13" />
+    <orderEntry type="module" module-name="main1" />
+    <orderEntry type="module" module-name="main11" />
+    <orderEntry type="module" module-name="main6" />
+    <orderEntry type="module" module-name="buildConfig17" />
+    <orderEntry type="module" module-name="test1" />
+    <orderEntry type="module" module-name="geektime" />
+    <orderEntry type="module" module-name="r9" />
+    <orderEntry type="module" module-name="main17" />
+    <orderEntry type="module" module-name="r14" />
+    <orderEntry type="module" module-name="androidTest9" />
+    <orderEntry type="module" module-name="r7" />
+    <orderEntry type="module" module-name="androidTest" />
+    <orderEntry type="module" module-name="r22" />
+    <orderEntry type="module" module-name="androidTest11" />
+    <orderEntry type="module" module-name="main26" />
+    <orderEntry type="module" module-name="main14" />
+    <orderEntry type="module" module-name="buildConfig21" />
+    <orderEntry type="module" module-name="androidTest10" />
+    <orderEntry type="module" module-name="r12" />
+    <orderEntry type="module" module-name="buildConfig20" />
+    <orderEntry type="module" module-name="main4" />
+    <orderEntry type="module" module-name="main20" />
+    <orderEntry type="module" module-name="test2" />
+    <orderEntry type="module" module-name="r3" />
+    <orderEntry type="module" module-name="main5" />
+    <orderEntry type="module" module-name="buildConfig3" />
+    <orderEntry type="module" module-name="buildConfig16" />
+    <orderEntry type="module" module-name="test" />
+    <orderEntry type="module" module-name="main24" />
+    <orderEntry type="module" module-name="buildConfig15" />
+    <orderEntry type="module" module-name="androidTest6" />
+    <orderEntry type="module" module-name="main3" />
+    <orderEntry type="module" module-name="buildConfig4" />
+    <orderEntry type="module" module-name="buildConfig19" />
+    <orderEntry type="module" module-name="r8" />
+    <orderEntry type="module" module-name="main27" />
+    <orderEntry type="module" module-name="main" />
+    <orderEntry type="module" module-name="r" />
+    <orderEntry type="module" module-name="main21" />
+    <orderEntry type="module" module-name="r2" />
+    <orderEntry type="module" module-name="androidTest8" />
+    <orderEntry type="module" module-name="r11" />
+    <orderEntry type="module" module-name="buildConfig1" />
+    <orderEntry type="module" module-name="r16" />
+    <orderEntry type="module" module-name="buildConfig7" />
+    <orderEntry type="module" module-name="buildConfig8" />
+  </component>
+</module>

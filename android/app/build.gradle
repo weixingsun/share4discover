@@ -86,10 +86,11 @@ android {
     defaultConfig {
         //applicationId "open.share"
         applicationId "com.share"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.1"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -142,6 +143,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sound')
+    compile project(':react-native-datetime')
     compile project(':react-native-svg')
     compile project(':react-native-keep-awake')
     //compile project(':react-native-beacon')
@@ -162,16 +165,16 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':react-native-maps')
     compile project(':react-native-baidumap')
-    compile project(':react-native-yunpeng-datetime')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.3"
     compile "com.facebook.react:react-native:+"
-    compile 'com.google.android.gms:play-services-base:8.4.0'
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
-    compile "com.google.android.gms:play-services-location:8.4.0"
-    compile 'com.google.android.gms:play-services-auth:8.4.0'
-    compile 'com.google.android.gms:play-services-measurement:8.4.0'
+    compile 'com.google.android.gms:play-services-base:9.6.1'
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
+    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+    compile 'com.google.android.gms:play-services-analytics:9.6.1'
+    compile "com.google.android.gms:play-services-location:9.6.1"
+    compile 'com.google.android.gms:play-services-auth:9.6.1'
+    //compile 'com.google.android.gms:play-services-measurement:9.4.0'
+    //compile 'com.android.support:multidex:1.0.0'
 }
 apply plugin: "com.google.gms.google-services"

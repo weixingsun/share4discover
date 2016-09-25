@@ -6,6 +6,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.app.Activity;
 
 public class MainActivity extends ReactActivity {
 
@@ -22,11 +23,11 @@ public class MainActivity extends ReactActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
-    }
+    //@Override
+    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //    super.onActivityResult(requestCode, resultCode, data);
+    //    MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+    //}
     @Override
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
