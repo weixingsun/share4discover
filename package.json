@@ -13,7 +13,7 @@
     "react-native": "^0.33.1",
     "react-native-android-permissions": "0.0.7",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
-    "react-native-ble-manager": "^1.4.2",
+    "react-native-ble-manager": "git+https://github.com/weixingsun/react-native-ble-manager.git",
     "react-native-code-push": "^1.14.6-beta",
     "react-native-datetime": "^0.1.2",
     "react-native-fbsdk": "^0.3.0",

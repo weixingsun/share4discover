@@ -66,7 +66,7 @@ export default class ForceView extends Component {
       let xy=this.findPyramidXY(node)
       let dad = this.nodes[node.f]
       let fxy=this.findPyramidXY(dad)
-      console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
+      //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
       return (
         <G key={'g'+seq}>
           <Circle key={'c'+seq}
@@ -76,7 +76,10 @@ export default class ForceView extends Component {
               //stroke={node.e?"green":"blue"}
               //strokeWidth="2.5"
               fill={node.c==0?"green":"blue"}
-              onPress={()=> alert(JSON.stringify(node)) }
+              onPress={()=> {
+                  let msg = node.c===0?node.k+": "+node.v:node.k
+                  alert(JSON.stringify(msg))
+              }}
           />
           <Line key={'l'+seq}
               x1={xy.x} y1={xy.y} 
