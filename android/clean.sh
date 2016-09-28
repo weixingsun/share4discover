@@ -1,1 +1,1 @@
-cd android && ./gradlew clean
+./gradlew clean

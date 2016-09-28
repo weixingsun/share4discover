@@ -7,7 +7,7 @@ import Global from '../io/Global'
 import Style from './Style'
 import Loading from './Loading'
 import NavigationBar from 'react-native-navbar'
-import {parseString} from 'xml2js'
+//import {parseString} from 'xml2js'
 import Swipeout from 'react-native-swipeout';
 import RssReader from './RssReader';
 import YqlReader from './YqlReader';

@@ -384,7 +384,7 @@ export default class FormInfo extends Component {
           if (response.didCancel) {
             //alert('User cancelled image picker');
           }else if (response.error) {
-            alert('ImagePicker Error: ', JSON.stringify(response.error));
+            //alert('ImagePicker Error: ', JSON.stringify(response));
           }else if (response.customButton) {
             //alert('User tapped custom button: '+response.customButton);
             //this.addField(response.customButton)

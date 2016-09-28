@@ -12,7 +12,7 @@ import com.yiyang.reactnativebaidumap.ReactMapPackage;
 //import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.microsoft.codepush.react.CodePush;
-import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
+//import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 //import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
@@ -33,6 +33,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+//import com.magus.fblogin.FacebookLoginPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.keyee.datetime.RCTDateTimePickerPackage;
 import com.horcrux.svg.RNSvgPackage;
@@ -60,7 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     FacebookSdk.sdkInitialize(getApplicationContext());
     // If you want to use AppEventsLogger to log events.
-    AppEventsLogger.activateApp(this);
+    //AppEventsLogger.activateApp(this);
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -86,12 +87,12 @@ public class MainApplication extends Application implements ReactApplication {
         new ReactNativeOneSignalPackage(),
         new ImagePickerPackage(),
         new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
-        new ReactNativeLocalizationPackage(),
+        //new ReactNativeLocalizationPackage(),
         new UsbReactPackage(),
         new RNGoogleSigninPackage(),
         new RNPermissionsPackage(),  //Android 6.0 permission
         //new FacebookLoginPackage(),
-        new FBSDKPackage(mCallbackManager),
+        new FBSDKPackage(mCallbackManager),  //mCallbackManager
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),

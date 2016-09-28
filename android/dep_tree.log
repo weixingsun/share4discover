@@ -1,0 +1,13 @@
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+:dependencies
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+No configurations
+
+BUILD SUCCESSFUL
+
+Total time: 7.544 secs

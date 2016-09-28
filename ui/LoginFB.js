@@ -8,14 +8,15 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
 //import FBLoginView from "./FBLoginView"
-import FBLoginButton from './LoginFBButton'
+import LoginFBOfficial from './LoginFBOfficial'
+//import LoginFBNonOfficial from './LoginFBNonOfficial'
 import I18n from 'react-native-i18n'
 
 var Login = React.createClass({
   renderLoginButton(){
     var _this=this;
     return  (
-        <FBLoginButton style={{ marginBottom: 10, }}
+        <LoginFBOfficial style={{ marginBottom: 10, }}
           onPress={function(){
             //console.log("FBLoginMock clicked.");
           }}

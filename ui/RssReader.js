@@ -7,9 +7,9 @@ import Global from '../io/Global'
 import Style from './Style'
 import Loading from './Loading'
 import NavigationBar from 'react-native-navbar'
-import {parseString} from 'xml2js'
-import xml2js from 'xml2js'
+import xml2js,{parseString} from 'xml2js'
 import xpath from 'xml2js-xpath'
+//import jsonpath from '../io/jsonpath'
 import Swipeout from 'react-native-swipeout';
 import SGListView from 'react-native-sglistview';
 import Web from './Web'
