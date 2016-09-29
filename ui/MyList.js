@@ -8,7 +8,7 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormInfo from "./FormInfo"
+import FormInfo from "./FormInfoVar"
 //import Drawer from 'react-native-drawer'
 //import ControlPanel from './ControlPanel'
 

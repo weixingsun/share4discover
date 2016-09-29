@@ -1,6 +1,6 @@
-//'use strict'; //ERROR: Attempted to assign to readonly property
+//'use strict'; //ERROR: Attempted to assign to readonlly property
 import React, { Component } from 'react';
-import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import NavigationBar from 'react-native-navbar';
@@ -11,7 +11,7 @@ import Global from '../io/Global';
 import Net from '../io/Net'
 import Immutable from 'immutable'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import PlaceSearch from './PlaceSearch'
 import ImagePicker from 'react-native-image-picker'
 import Image from 'react-native-image-progress';
@@ -26,72 +26,123 @@ export default class FormInfo extends Component {
         this.ctime = +new Date();
         this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
         this.state={ 
-            //pics_changed:false,
             uploading:[],
-            add_fields:{
-              Price:   'Price:num',
-              Time:    'Time:date',
-              Destination: 'Destination:str',
-            },
             form:{},
             grantedPermissions:{},
+            type:'house',
+            //validators:{},
         };
-        this.validators={
-              title:{
-                title:'Title',
-                validate:[{ validator:'isLength', arguments:[2,50], message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters' }]
-              },
-              content:{
-                title:'Content',
-                validate:[{ validator:'isLength', arguments:[10,512], message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} characters' }]
-              },
-              phone:{
-                title:'Phone number',
-                validate:[{ validator:'isNumeric', message:'{TITLE} must be Numeric' }]
-                       // { validator:'isLength',  arguments:[5,20],message:'{TITLE} must be between {ARGS[0]} and {ARGS[1]} numbers'}]
-              },
-              price:{
-                title:'Price',
-                validate:[{ validator:'isNumeric', message:'{TITLE} must be Numeric' }]
-              },
-              type:{
-                title:'Type',
-                validate:[{
-                  validator:(...args) => {
-                      return (args[0]==='')? false:true;
-                  },
-                  message:'Type is required'
-                }]
-              },
-              cat:{
-                title:'Category',
-                validate:[{
-                  validator:(...args) => {
-                      if (args[0] === '') {
-                         return false;
-                      }
-                      return true;
-                  },
-                  message:'Category is required'
-                }]
-              },
-              ask:{
-                title:'Ask/Offer',
-                validate:[{
-                  validator:(...args) => {
-                      //if (args[0] === undefined) {
-                      if (args[0] === '') {
-                         return false;
-                      }
-                      return true;
-                  },
-                  message:'Ask/Offer is required'
-                }]
-              },
-              address:{
-                title:'Address',
-                validate:[{ validator:'isLength', arguments:[10,255], message:'Address is invalid' }]
-              },
+        this.validators={}
+        this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
+        this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.time_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
+            house:{
+                //title:  {type:'txt1',title:'Title',validator:this.length_validator(5,55)},
+                //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
+                //phone:  {type:'nmbr',title:'Phone',validator:this.number_validator},
+                //price:  {type:'nmbr',title:'Price',validator:this.number_validator},
+                bedroom: {type:'nmbr',title:'Bedroom',validator:this.number_validator},
+                bathroom:{type:'nmbr',title:'Bathroom',validator:this.number_validator},
+                //content: {type:'txt3',title:'Content',validator:this.length_validator(10,255)},
+            },
+            car:{
+                //title:  {type:'txt1',title:'Title',validator:this.length_validator(5,55)},
+                //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
+                //phone:  {type:'nmbr',title:'Phone',validator:this.number_validator},
+                //price:  {type:'nmbr',title:'Price',validator:this.number_validator},
+                target :{type:'addr',title:'Target',validator:this.length_validator(10,255)},
+                time:   {type:'time',title:'Time',validator:this.time_validator},
+                //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
+            },
+        }
+    }
+    length_validator(min,max){
+        return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }
+    }
+    componentWillMount(){
+        this.initKeys();
+        this.permission();
+        this.initAllValidators()
+        this.processProps();
+        getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
+            this.setState({close_image:source})
+        });
+        this.turnOnGps()
+    }
+    componentWillUnMount(){
+        this.turnOffGps()
+    }
+    initAllValidators(){
+        this.validators={}
+        this.genValidator('type',  'Type',     this.select_validator)
+        this.genValidator('cat',   'Category', this.select_validator)
+        this.genValidator('ask',   'Ask/Offer',this.select_validator)
+        this.genValidator('title', 'Title',    this.length_validator(5,55))
+        this.genValidator('content','Content', this.length_validator(10,255))
+        this.genValidator('address','Address', this.length_validator(10,255))
+        this.genValidator('phone', 'Phone',    this.number_validator)
+        this.genValidator('price', 'Price',    this.number_validator)
+    }
+    genValidator(name,titleStr,validateJson){
+        //alert('genValidator:'+name+' title:'+titleStr)
+        this.validators[name] = {title:titleStr, validate:[validateJson]}
+    }
+    genTypeValidators(type){
+        let self=this
+        let keys = Object.keys(this.info_types[type])
+        keys.map((key)=>{
+            let obj = this.info_types[type][key]
+            this.genValidator(key,obj.title,obj.validator)
+        })
+        //this.setState({validators:this.validators})
+        /*for (var i=0;i<keys.length;i++){
+            let key = keys[i]
+            let obj = this.info_types[type][key]
+            alert('add validator for type:'+type+' name='+key+' title='+obj)
+            this.genValidator(key,obj.title,obj.validator)
+        }*/
+    }
+    changeValidator(type){
+        this.initAllValidators()
+        this.genTypeValidators(type)
+        GiftedFormManager.stores['newInfoForm'].validators = {};
+        for (var key in this.validators) {
+            //alert('key='+key+' value='+this.validators[key])
+            //if (nextProps.validators.hasOwnProperty(key)) {}
+            let value = this.validators[key]
+            GiftedFormManager.setValidators('newInfoForm', key, {title:value.title,validate:value.validate});
+        }
+    }
+    processProps(){
+        let logins = Global.getLoginStr()
+        GiftedFormManager.reset('newInfoForm');
+        if(!this.props.msg){
+            var myDefaults = {
+              type: 'house', typeTitle: 'House',
+              ask: '', cat: '',
+              title: '',     content: '', address: '',
+              phone: '',     ctime: this.ctime, time:  '',
+              lat:   '',     lng:   '',  price: '',
+              dest:  '',     pics:  [], owner: logins,
+            };
+            this.setState({type:'house', form:myDefaults})
+            this.genTypeValidators('house')
+        }else{
+            var myDefaults=this.props.msg;
+            //var typekey = 'type{'+this.props.msg.type+'}';
+            //myDefaults[typekey] = true;
+            //var askkey  = 'ask{' +this.props.msg.ask+'}';
+            //myDefaults[askkey]  = true;
+            myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
+            myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
+            myDefaults['catTitle'] = this.capitalizeFirstLetter(this.props.msg.cat)
+            //myDefaults['owner_name'] = Global.getMainLoginName()
+            //myDefaults['ask'] = [this.props.msg.ask]
+            if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
+            this.ctime=parseInt(this.props.msg.ctime)
+            this.setState({ type:this.props.msg.type, form: myDefaults })
+            this.genTypeValidators(this.props.msg.type)
         }
     }
     singlePermission(name){
@@ -125,35 +176,6 @@ export default class FormInfo extends Component {
         }
         this.ggkey='AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A'
     }
-    validateAll(){
-        var fields = Object.keys(this.state.validators)
-        fields.map((field_name)=>{
-            let obj = this.state.validators[field_name]
-            if(obj.validate[0].arguments !== undefined) alert(JSON.stringify(obj.validate[0].arguments))
-        })
-    }
-    addField(value){  //value = field:type
-        let add_fields = this.state.add_fields
-        let all_fields = this.state.all_fields
-        let name = value.split(':')[0]
-        all_fields[name] = this.getFieldType(value)
-        delete add_fields[name];
-        this.setState({
-            add_fields: add_fields,
-            all_fields: all_fields,
-            //all_fields: {...this.state.all_fields, name:t.maybe(t.String), },
-        })
-    }
-    removeField(name){
-        let add_fields = this.state.add_fields
-        let all_fields = this.state.all_fields
-        add_fields[name] = all_fields[name];
-        delete all_fields[name];
-        this.setState({
-            add_fields: add_fields,
-            all_fields: all_fields,
-        })
-    }
     fixFormData(values){
         if(values.owner == null) {
           alert('Please login first, go to settings')
@@ -183,7 +205,6 @@ export default class FormInfo extends Component {
             alert('Your location is too far away')
             return
         }
-        //this.validateAll();
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
         /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
@@ -288,18 +309,6 @@ export default class FormInfo extends Component {
             });
         }
     }
-    componentWillMount(){
-        this.initKeys();
-        this.permission();
-        this.processProps();
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {
-            this.setState({close_image:source})
-        });
-        this.turnOnGps()
-    }
-    componentWillUnMount(){
-        this.turnOffGps()
-    }
     turnOffGps(){
         if(this.watchID==null){
             return
@@ -337,34 +346,6 @@ export default class FormInfo extends Component {
         if(latDiff>0.1 || lngDiff>0.1){
             return true
         }else return false
-    }
-    processProps(){
-        let logins = Global.getLoginStr()
-        GiftedFormManager.reset('newInfoForm');
-        if(!this.props.msg){
-            var myDefaults = {
-              type:  '',  ask: '', cat: '',
-              title: '', content: '', address: '',
-              phone: '',  ctime: this.ctime, time:  '',
-              lat:   '',  lng:   '',  price: '',
-              dest:  '', pics:  [], owner: logins,
-            };
-            this.setState({form:myDefaults})
-        }else{
-            var myDefaults=this.props.msg;
-            //var typekey = 'type{'+this.props.msg.type+'}';
-            //myDefaults[typekey] = true;
-            //var askkey  = 'ask{' +this.props.msg.ask+'}';
-            //myDefaults[askkey]  = true;
-            myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
-            myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
-            //myDefaults['catTitle'] = (this.props.msg.==='true')?'Ask':'Offer'
-            //myDefaults['owner_name'] = Global.getMainLoginName()
-            //myDefaults['ask'] = [this.props.msg.ask]
-            if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
-            this.ctime=parseInt(this.props.msg.ctime)
-            this.setState({ form: myDefaults })
-        }
     }
     capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -553,13 +534,18 @@ export default class FormInfo extends Component {
             </View>
         )
     }
-    //<Icon name={'ion-ios-paper-plane-outline'} size={40} onPress={this.onSubmit.bind(this) } />
     handleValueChange(values) {
-        if( typeof values.type==='string'&&values.type && values.lat && values.lng && values.ctime ){
-          this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
+        //if( typeof values.type==='string'&&values.type && values.lat && values.lng && values.ctime ){
+        //  this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
+        //}
+        if(typeof values.type === 'object'){ // && values.type[0]!==this.lasttype) 
+            if(this.lasttype==null || values.type[0]!==this.lasttype){
+                this.lasttype=values.type[0]
+                //alert('change type:'+this.lasttype)
+                this.setState({type:this.lasttype})
+                this.changeValidator(this.lasttype)
+            }
         }
-        //this.setState({ form: values })
-        //alert(JSON.stringify(this.state.form))
     }
     capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -583,13 +569,66 @@ export default class FormInfo extends Component {
       this.turnOffGps()
       this.props.navigator.pop();
     }
+    renderAddrField(name,title,validator){
+        return (
+            <GiftedForm.PlaceSearchWidget
+                key={name}
+                name={name}
+                title={title}
+                placeholder={'Enter '+title}
+                clearButtonMode='while-editing'
+                displayValue={name}
+                value={this.state.form[name]}
+                validationResults={this.state.validationResults}
+                map={this.map}
+                query={{
+                    ak:this.ak,mcode:this.mcode,
+                    //gdkey:gdkey,
+                    key:this.ggkey
+                }}
+                onClose={ (loc)=> {
+                    let values = this.state.form
+                    values[name+'_lat']=loc.lat
+                    values[name+'_lng']=loc.lng
+                    //form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }
+                    this.setState({
+                        form:values
+                    })
+                }}
+            />)
+    }
+    renderTextField(name,title,validator){
+        return (
+            <GiftedForm.TextInputWidget
+                key={name}
+                name={name}
+                title={title}
+                placeholder={'Enter '+title}
+                clearButtonMode='while-editing'
+                displayValue={name}
+                value={this.state.form[name]}
+                validationResults={this.state.validationResults}
+            />)
+    }
+    renderField(type,name,title,validator){  //type= {txt1,nmbr,txt3,addr,time}
+        if(type==='txt1'||type==='nmbr') return this.renderTextField(name,title,validator)
+        else if(type==='addr') return this.renderAddrField(name,title,validator)
+        else if(type==='txt3') return null
+        else if(type==='time') return this.renderTextField(name,title,validator)
+    }
+    renderOptionalFields(json){
+        let keys = Object.keys(json)
+        return keys.map((key)=>{
+            let obj = json[key]
+            return this.renderField(obj.type,key,obj.title,obj.validator)
+        })
+    }
     render(){
         //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         if(this.props.msg!=null) title_nav = 'Edit this Share'
         else title_nav = 'Create a Share'
-        //<KeyboardAwareScrollView style={{height:h}}>
         return (
             <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
@@ -598,16 +637,14 @@ export default class FormInfo extends Component {
                        <Icon 
                            name={"ion-ios-arrow-round-back"} 
                            color={'#333333'} size={46} 
-                           onPress={() => {
-                               //if(this.state.pics_changed) alert('Please submit your changes')
-                               this.back() 
-                           }} />
+                           onPress={() => this.back() } />
                      </View>
                    }
                    rightButton={ this.showActionIcons() }
                 />
-                {this.showPics()}
-                <GiftedForm
+                <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
+                  {this.showPics()}
+                  <GiftedForm
                     formName='newInfoForm'
                     style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
@@ -616,6 +653,19 @@ export default class FormInfo extends Component {
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
+                            title='Type'
+                            name='type'
+                            //displayValue='typeTitle'
+                            display={this.state.form.typeTitle}
+                            value={this.state.form.type}
+                            validationResults={this.state.validationResults}
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
+                                {this.renderTypeOptions()}
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+                        <GiftedForm.ModalWidget
                             title='Sell/Rent/Free'
                             name='cat'
                             display={this.state.form.catTitle}
@@ -623,7 +673,7 @@ export default class FormInfo extends Component {
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='Category' title='Sell/Rent/Free' multiple={false}>
+                            <GiftedForm.SelectWidget name='cat' title='Sell/Rent/Free' multiple={false}>
                                 <GiftedForm.OptionWidget title='Sell' value='sell' />
                                 <GiftedForm.OptionWidget title='Rent' value='rent' />
                                 <GiftedForm.OptionWidget title='Free' value='free' />
@@ -642,47 +692,10 @@ export default class FormInfo extends Component {
                                 <GiftedForm.OptionWidget title='Offer' value='false' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        <GiftedForm.ModalWidget
-                            title='Type'
-                            name='type'
-                            //displayValue='typeTitle'
-                            display={this.state.form.typeTitle}
-                            value={this.state.form.type}
-                            validationResults={this.state.validationResults}
-                        >
-                            <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
-                                {this.renderTypeOptions()}
-                            </GiftedForm.SelectWidget>
-                        </GiftedForm.ModalWidget>
-                        <GiftedForm.TextInputWidget
-                            name='title'
-                            title='Title'
-                            placeholder='Enter title'
-                            clearButtonMode='while-editing'
-                            displayValue='title'
-                            value={this.state.form.title}
-                            validationResults={this.state.validationResults}
-                        />
-                        <GiftedForm.TextInputWidget
-                            name='phone'
-                            title='Phone'
-                            placeholder='Enter phone'
-                            clearButtonMode='while-editing'
-                            displayValue='phone'
-                            value={this.state.form.phone}
-                            validationResults={this.state.validationResults}
-                        />
-                        <GiftedForm.TextInputWidget
-                            name='price'
-                            title='Price'
-                            placeholder='Enter price'
-                            clearButtonMode='while-editing'
-                            displayValue='price'
-                            value={this.state.form.price}
-                            validationResults={this.state.validationResults}
-                            //scrollEnabled={true}
-                        />
+                        {this.renderTextField('title','Title', this.length_validator(5,55))}
+                        {this.renderTextField('phone','Phone', this.number_validator)}
+                        {this.renderTextField('price','Price', this.number_validator)}
+                        {this.renderOptionalFields(this.info_types[this.state.type])}
                         <GiftedForm.PlaceSearchWidget
                             name='address'
                             title='Address'
@@ -730,10 +743,11 @@ export default class FormInfo extends Component {
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
-                                alert(JSON.stringify(validationResults))
+                                //alert(JSON.stringify(validationResults))
+                                //alert(JSON.stringify(values))
                                 this.setState({ validationResults:validationResults.results })
                                 if (isValid === true) {
-                                  //this.onSubmit(values)
+                                  this.onSubmit(values)
                                   postSubmit();
                                 }else{
                                   //alert(JSON.stringify(validationResults.results))
@@ -741,9 +755,9 @@ export default class FormInfo extends Component {
                             }}
                         />
                 </GiftedForm>
+              </KeyboardAvoidingView>
             </View>
         );
-        //</KeyboardAwareScrollView>
     }
 }
 const styles = StyleSheet.create({
