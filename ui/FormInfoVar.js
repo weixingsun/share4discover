@@ -20,7 +20,7 @@ import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
  
-export default class FormInfo extends Component {
+export default class FormInfoVar extends Component {
     constructor(props) {
         super(props);
         this.ctime = +new Date();
@@ -35,30 +35,28 @@ export default class FormInfo extends Component {
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.time_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             house:{
-                //title:  {type:'txt1',title:'Title',validator:this.length_validator(5,55)},
+                //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
-                //phone:  {type:'nmbr',title:'Phone',validator:this.number_validator},
-                //price:  {type:'nmbr',title:'Price',validator:this.number_validator},
-                bedroom: {type:'nmbr',title:'Bedroom',validator:this.number_validator},
+                //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
+                //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
+                bedroom: {type:'nmbr',title:'Bedroom', validator:this.number_validator},
                 bathroom:{type:'nmbr',title:'Bathroom',validator:this.number_validator},
-                //content: {type:'txt3',title:'Content',validator:this.length_validator(10,255)},
+                //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
             car:{
-                //title:  {type:'txt1',title:'Title',validator:this.length_validator(5,55)},
+                //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
-                //phone:  {type:'nmbr',title:'Phone',validator:this.number_validator},
-                //price:  {type:'nmbr',title:'Price',validator:this.number_validator},
-                target :{type:'addr',title:'Target',validator:this.length_validator(10,255)},
-                time:   {type:'time',title:'Time',validator:this.time_validator},
+                //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
+                //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
+                target :{type:'addr',title:'Target',   validator:this.length_validator(10,255)},
+                time:   {type:'time',title:'Time',     validator:this.time_validator},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
         }
-    }
-    length_validator(min,max){
-        return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }
     }
     componentWillMount(){
         this.initKeys();
@@ -85,7 +83,6 @@ export default class FormInfo extends Component {
         this.genValidator('price', 'Price',    this.number_validator)
     }
     genValidator(name,titleStr,validateJson){
-        //alert('genValidator:'+name+' title:'+titleStr)
         this.validators[name] = {title:titleStr, validate:[validateJson]}
     }
     genTypeValidators(type){
@@ -547,8 +544,9 @@ export default class FormInfo extends Component {
             }
         }
     }
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    capitalizeFirstLetter(str) {
+        if(str==null) return ''
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
     renderTypeOptions(){
         let arr = Object.keys(Global.TYPE_ICONS)
@@ -643,6 +641,7 @@ export default class FormInfo extends Component {
                    rightButton={ this.showActionIcons() }
                 />
                 <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
+                  <ScrollView>
                   {this.showPics()}
                   <GiftedForm
                     formName='newInfoForm'
@@ -755,6 +754,7 @@ export default class FormInfo extends Component {
                             }}
                         />
                 </GiftedForm>
+                </ScrollView>
               </KeyboardAvoidingView>
             </View>
         );

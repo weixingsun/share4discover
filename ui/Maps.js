@@ -15,7 +15,7 @@ import Net from "../io/Net"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormInfo from "./FormInfo"
+import FormInfo from "./FormInfoVar"
 import PriceMarker from './PriceMarker'
 import Overlay from './Overlay'
 import SearchAddr from './SearchAddr'

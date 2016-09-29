@@ -12,7 +12,7 @@ import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
-import FormInfo from './FormInfo'
+import FormInfo from './FormInfoVar'
 
 export default class NotifyList extends Component {
   constructor(props) {

@@ -15,7 +15,7 @@ import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
-import FormInfo from "./FormInfo"
+import FormInfo from "./FormInfoVar"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
