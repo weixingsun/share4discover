@@ -32,10 +32,13 @@ export default class FormInfoVar extends Component {
             type:'house',
             //validators:{},
         };
+        this.formName='infoForm'
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
+        //this.addr_validator=(lat)=>{ return { validator:'isAddr', message:'{TITLE} is invalid' }}
+        this.addr_validator=this.length_validator
         this.time_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             house:{
@@ -43,8 +46,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
-                bedroom: {type:'nmbr',title:'Bedroom', validator:this.number_validator},
-                bathroom:{type:'nmbr',title:'Bathroom',validator:this.number_validator},
+                bedroom: {type:'nmbr',title:'Bedroom', validator:this.number_validator, img:'fa-bed'},
+                bathroom:{type:'nmbr',title:'Bathroom',validator:this.number_validator, img:'fa-tint'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
             car:{
@@ -52,8 +55,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
-                target :{type:'addr',title:'Target',   validator:this.length_validator(10,255)},
-                time:   {type:'time',title:'Time',     validator:this.time_validator},
+                target :{type:'addr',title:'Target',   validator:this.addr_validator('targetLat'), img:'fa-flag'},
+                time:   {type:'time',title:'Time',     validator:this.time_validator, img:'fa-clock-o'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
         }
@@ -67,6 +70,8 @@ export default class FormInfoVar extends Component {
             this.setState({close_image:source})
         });
         this.turnOnGps()
+    }
+    componentDidMount(){
     }
     componentWillUnMount(){
         this.turnOffGps()
@@ -103,21 +108,21 @@ export default class FormInfoVar extends Component {
     changeValidator(type){
         this.initAllValidators()
         this.genTypeValidators(type)
-        GiftedFormManager.stores['newInfoForm'].validators = {};
+        GiftedFormManager.stores[this.formName].validators = {};
         for (var key in this.validators) {
             //alert('key='+key+' value='+this.validators[key])
             //if (nextProps.validators.hasOwnProperty(key)) {}
             let value = this.validators[key]
-            GiftedFormManager.setValidators('newInfoForm', key, {title:value.title,validate:value.validate});
+            GiftedFormManager.setValidators(this.formName, key, {title:value.title,validate:value.validate});
         }
     }
     processProps(){
         let logins = Global.getLoginStr()
-        GiftedFormManager.reset('newInfoForm');
+        GiftedFormManager.reset(this.formName);
         if(!this.props.msg){
             var myDefaults = {
               type: 'house', typeTitle: 'House',
-              ask: '', cat: '',
+              ask: '', cat: '', catTitle:'',
               title: '',     content: '', address: '',
               phone: '',     ctime: this.ctime, time:  '',
               lat:   '',     lng:   '',  price: '',
@@ -543,6 +548,10 @@ export default class FormInfoVar extends Component {
                 this.changeValidator(this.lasttype)
             }
         }
+        if (this.state.validationResults!=null && !this.state.validationResults.isValid) {
+            //alert(JSON.stringify(this.state.validationResults))
+            //this.setState({validationResults:GiftedFormManager.validate(this.formName)});
+        }
     }
     capitalizeFirstLetter(str) {
         if(str==null) return ''
@@ -567,7 +576,8 @@ export default class FormInfoVar extends Component {
       this.turnOffGps()
       this.props.navigator.pop();
     }
-    renderAddrField(name,title,validator){
+    renderAddrField(name,title,validator,img=null){
+        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
         return (
             <GiftedForm.PlaceSearchWidget
                 key={name}
@@ -578,6 +588,7 @@ export default class FormInfoVar extends Component {
                 displayValue={name}
                 value={this.state.form[name]}
                 validationResults={this.state.validationResults}
+                image={imgView}
                 map={this.map}
                 query={{
                     ak:this.ak,mcode:this.mcode,
@@ -595,12 +606,14 @@ export default class FormInfoVar extends Component {
                 }}
             />)
     }
-    renderTextField(name,title,validator){
+    renderTextField(name,title,validator,img=null){
+        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
         return (
             <GiftedForm.TextInputWidget
                 key={name}
                 name={name}
                 title={title}
+                image={imgView}
                 placeholder={'Enter '+title}
                 clearButtonMode='while-editing'
                 displayValue={name}
@@ -608,17 +621,17 @@ export default class FormInfoVar extends Component {
                 validationResults={this.state.validationResults}
             />)
     }
-    renderField(type,name,title,validator){  //type= {txt1,nmbr,txt3,addr,time}
-        if(type==='txt1'||type==='nmbr') return this.renderTextField(name,title,validator)
-        else if(type==='addr') return this.renderAddrField(name,title,validator)
+    renderField(type,name,title,validator,img){  //type= {txt1,nmbr,txt3,addr,time}
+        if(type==='txt1'||type==='nmbr') return this.renderTextField(name,title,validator,img)
+        else if(type==='addr') return this.renderAddrField(name,title,validator,img)
         else if(type==='txt3') return null
-        else if(type==='time') return this.renderTextField(name,title,validator)
+        else if(type==='time') return this.renderTextField(name,title,validator,img)
     }
     renderOptionalFields(json){
         let keys = Object.keys(json)
         return keys.map((key)=>{
             let obj = json[key]
-            return this.renderField(obj.type,key,obj.title,obj.validator)
+            return this.renderField(obj.type,key,obj.title,obj.validator,obj.img)
         })
     }
     render(){
@@ -644,7 +657,7 @@ export default class FormInfoVar extends Component {
                   <ScrollView>
                   {this.showPics()}
                   <GiftedForm
-                    formName='newInfoForm'
+                    formName={this.formName}
                     style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
@@ -657,7 +670,7 @@ export default class FormInfoVar extends Component {
                             //displayValue='typeTitle'
                             display={this.state.form.typeTitle}
                             value={this.state.form.type}
-                            validationResults={this.state.validationResults}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.type]} size={30} /></View>}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
@@ -665,35 +678,25 @@ export default class FormInfoVar extends Component {
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Sell/Rent/Free'
+                            title='Behave'
                             name='cat'
                             display={this.state.form.catTitle}
                             value={this.state.form.cat}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-list-ol'} size={25} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='cat' title='Sell/Rent/Free' multiple={false}>
+                            <GiftedForm.SelectWidget name='cat' title='Behave' multiple={false}>
                                 <GiftedForm.OptionWidget title='Sell' value='sell' />
-                                <GiftedForm.OptionWidget title='Rent' value='rent' />
-                                <GiftedForm.OptionWidget title='Free' value='free' />
+                                <GiftedForm.OptionWidget title='Buy'  value='buy' />
+                                <GiftedForm.OptionWidget title='Rent' value='rent1' />
+                                <GiftedForm.OptionWidget title='Ask Rent'  value='rent0' />
+                                <GiftedForm.OptionWidget title='Free Gift' value='free' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        <GiftedForm.ModalWidget
-                            title='Ask/Offer'
-                            name='ask'
-                            display={this.state.form.askTitle}
-                            value={this.state.form.ask}
-                            validationResults={this.state.validationResults}
-                        >
-                            <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='ask' title='Ask/Offer' multiple={false}>
-                                <GiftedForm.OptionWidget title='Ask'   value='true' />
-                                <GiftedForm.OptionWidget title='Offer' value='false' />
-                            </GiftedForm.SelectWidget>
-                        </GiftedForm.ModalWidget>
-                        {this.renderTextField('title','Title', this.length_validator(5,55))}
-                        {this.renderTextField('phone','Phone', this.number_validator)}
-                        {this.renderTextField('price','Price', this.number_validator)}
+                        {this.renderTextField('title','Title', this.length_validator(5,55),'fa-header')}
+                        {this.renderTextField('phone','Phone', this.number_validator,'fa-phone')}
+                        {this.renderTextField('price','Price', this.number_validator,'fa-usd')}
                         {this.renderOptionalFields(this.info_types[this.state.type])}
                         <GiftedForm.PlaceSearchWidget
                             name='address'
@@ -702,6 +705,7 @@ export default class FormInfoVar extends Component {
                             clearButtonMode='while-editing'
                             displayValue='address'
                             value={this.state.form.address}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-location-arrow'} size={25} /></View>}
                             validationResults={this.state.validationResults}
                             map={this.map}
                             query={{
@@ -716,13 +720,13 @@ export default class FormInfoVar extends Component {
                             title='Content'
                             display={this.state.form.content}
                             //scrollEnabled={true}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-file-text-o'} size={25} /></View>}
                             value={this.state.form.content}
                             validationResults={this.state.validationResults}
-                            displayValue='content'
+                            //displayValue='content'
                         >
                             <GiftedForm.SeparatorWidget/>
-                            <GiftedForm.TextAreaWidget
-                                name='content'
+                            <GiftedForm.TextAreaWidget name='content' title='Content'
                                 autoFocus={true}
                                 placeholder='Detail information'
                                 //value={this.state.form.content}
@@ -742,14 +746,12 @@ export default class FormInfoVar extends Component {
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
-                                //alert(JSON.stringify(validationResults))
-                                //alert(JSON.stringify(values))
                                 this.setState({ validationResults:validationResults.results })
                                 if (isValid === true) {
                                   this.onSubmit(values)
                                   postSubmit();
                                 }else{
-                                  //alert(JSON.stringify(validationResults.results))
+                                  alert(JSON.stringify(values))
                                 }
                             }}
                         />
@@ -758,6 +760,7 @@ export default class FormInfoVar extends Component {
               </KeyboardAvoidingView>
             </View>
         );
+        //<GiftedForm.ErrorsWidget/>
     }
 }
 const styles = StyleSheet.create({

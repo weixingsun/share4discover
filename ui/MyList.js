@@ -54,7 +54,7 @@ export default class MyList extends Component {
   }
   _renderRowView(rowData) {
     if(rowData!=null){
-      console.log(rowData)
+      //console.log(rowData)
       if(rowData==null) return
       return (
       <TouchableHighlight underlayColor='#c8c7cc' 
@@ -85,27 +85,7 @@ export default class MyList extends Component {
                      onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
            )
   }
-  renderFeedIcon(){
-      if(Global.mainlogin!=='')
-          return (
-              <Icon name={'ion-ios-folder-outline'} size={40} color={Style.font_colors.enabled}
-                  onPress={() => this.feed()}/>
-          )
-  }
-  feed(){
-      let _this = this;
-      let api_url = Global.getFeedApi()
-      //alert(api_url)
-      fetch(api_url)
-        //.then((response) => response.json())
-        .then((responseData) => {
-            console.log(responseData)
-        })
-        .catch((err)=>{alert(err)})
-        .done();
-  }
   render() {
-    //{this.renderFeedIcon()}
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
