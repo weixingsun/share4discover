@@ -37,9 +37,9 @@ export default class FormInfoVar extends Component {
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
-        //this.addr_validator=(lat)=>{ return { validator:'isAddr', message:'{TITLE} is invalid' }}
-        this.addr_validator=this.length_validator
-        this.time_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
+        //this.addr_validator=this.length_validator
+        this.time_validator={ validator: 'isNumeric', message:'{TITLE} is invalid' }
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             house:{
                 //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
@@ -55,8 +55,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
-                target :{type:'addr',title:'Target',   validator:this.addr_validator('targetLat'), img:'fa-flag'},
-                time:   {type:'time',title:'Time',     validator:this.time_validator, img:'fa-clock-o'},
+                dest:  {type:'addr',title:'Destination', validator:this.addr_validator(','), img:'fa-flag'},
+                time:  {type:'time',title:'Time',        validator:this.time_validator, img:'fa-clock-o'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
         }
@@ -131,6 +131,7 @@ export default class FormInfoVar extends Component {
             this.setState({type:'house', form:myDefaults})
             this.genTypeValidators('house')
         }else{
+            //alert(JSON.stringify(this.props.msg))
             var myDefaults=this.props.msg;
             //var typekey = 'type{'+this.props.msg.type+'}';
             //myDefaults[typekey] = true;
@@ -713,7 +714,9 @@ export default class FormInfoVar extends Component {
                                 //gdkey:gdkey,
                                 key:this.ggkey
                             }}
-                            onClose={ (loc)=> this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }}) }
+                            onClose={ (loc)=> {
+                                this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})} 
+                            }
                         />
                         <GiftedForm.ModalWidget
                             name='content'
