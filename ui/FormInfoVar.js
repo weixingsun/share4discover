@@ -33,7 +33,7 @@ export default class FormInfoVar extends Component {
             type:'house',
             //validators:{},
         };
-        this.more_fields={}
+        this.hidden_fields={}
         this.formName='infoForm'
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
@@ -204,7 +204,7 @@ export default class FormInfoVar extends Component {
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
         //alert(JSON.stringify(values))
-        this.merge_into(values,this.more_fields)
+        this.merge_into(values,this.hidden_fields)
     }
     merge_into(obj,obj_to_merge){
         //for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
@@ -601,8 +601,8 @@ export default class FormInfoVar extends Component {
                     key:this.ggkey
                 }}
                 onClose={ (loc)=> {
-                    this.more_fields[name+'_lat']=loc.lat
-                    this.more_fields[name+'_lng']=loc.lng
+                    this.hidden_fields[name+'_lat']=loc.lat
+                    this.hidden_fields[name+'_lng']=loc.lng
                 }}
             />)
     }
@@ -687,11 +687,11 @@ export default class FormInfoVar extends Component {
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='cat' title='Behave' multiple={false}>
-                                <GiftedForm.OptionWidget title='Sell' value='sell' />
-                                <GiftedForm.OptionWidget title='Buy'  value='buy' />
-                                <GiftedForm.OptionWidget title='Rent' value='rent1' />
-                                <GiftedForm.OptionWidget title='Ask Rent'  value='rent0' />
-                                <GiftedForm.OptionWidget title='Free Gift' value='free' />
+                                <GiftedForm.OptionWidget title={I18n.t('sell')}  value='sell'  />
+                                <GiftedForm.OptionWidget title={I18n.t('buy')}   value='buy'   />
+                                <GiftedForm.OptionWidget title={I18n.t('rent1')} value='rent1' />
+                                <GiftedForm.OptionWidget title={I18n.t('rent0')} value='rent0' />
+                                <GiftedForm.OptionWidget title={I18n.t('free')}  value='free'  />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         {this.renderTextField('title','Title', this.length_validator(5,55),'fa-header')}

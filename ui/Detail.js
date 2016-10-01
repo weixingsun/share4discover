@@ -16,12 +16,13 @@ import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
 import FormInfo from "./FormInfoVar"
+import I18n from 'react-native-i18n';
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
     constructor(props) {
         super(props);
-        //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+        this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = []
         this.isLogin = (Global.mainlogin.length>0)
         this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
@@ -47,6 +48,7 @@ export default class Detail extends Component {
             if(this.props.msg.pics!=='') this.images = this.props.msg.pics.split(',')
             //alert(JSON.stringify(this.props.msg))
         }
+        I18n.locale = NativeModules.RNI18n.locale
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     onReply() {
@@ -181,15 +183,17 @@ export default class Detail extends Component {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
 		var sns_name = owner.split(':')[2]
-	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)
+	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)  <View style={{width:30,alignItems:'center'}}>
                 return (
-                    <View style={{flexDirection:'row',marginLeft:20}} key={owner} >
-                        <Icon
-                            style={{marginLeft:23,marginRight:6}}
+                    <View style={{flexDirection:'row',marginLeft:10}} key={owner} >
+                        <View style={{width:30,alignItems:'center'}}>
+                          <Icon
+                            style={{marginLeft:10,marginRight:6}}
                             size={24}
                             color={'blue'}
                             name={Global.SNS_ICONS[sns_type]}
-                        />
+                          />
+                        </View>
                         <Text style={{marginLeft:20}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
@@ -236,7 +240,7 @@ export default class Detail extends Component {
         if(this.isLogin)
             return (
                 <View style={Style.detail_card} >
-                    <Text style={{marginLeft:21,fontWeight:'bold'}}>Replys :  </Text>
+                    <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('replies')} :  </Text>
                     {this.renderReplyItems()}
                 </View>
             )
@@ -311,9 +315,9 @@ export default class Detail extends Component {
             return (
                 <View style={Style.detail_card} >
                     <View style={{flexDirection:'row'}}>
-                        <Text style={{marginLeft:21,fontWeight:'bold'}}>Your Reply:  </Text>
+                        <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('my_reply')}:  </Text>
                         <View style={{flex:1}} />
-                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#3498db',borderColor:'#2980b9'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>Reply</Button>
+                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#3498db',borderColor:'#2980b9'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
                     </View>
                         <TextInput
                             style={{marginLeft:20,height:this.state.reply_height}}
@@ -332,7 +336,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','dest_lat','dest_lng']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','dest_lat','dest_lng','catTitle','typeTitle']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
@@ -341,9 +345,9 @@ export default class Detail extends Component {
         return (
             <View style={Style.detail_card} >
                 {misc.map((key)=>{
-                    return <Text style={{marginLeft:21}} key={key}><Text style={{fontWeight:'bold'}}>{key}:  </Text>{this.props.msg[key]}</Text>
+                    return <Text style={{marginLeft:21}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.props.msg[key]}</Text>
                 })}
-                <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
+                <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>{I18n.t('content')}:</Text></Text>
                 <Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
             </View>
         )
@@ -353,7 +357,7 @@ export default class Detail extends Component {
         let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
         let asking = 'rent0,buy'.contains(this.props.msg.cat)
         let destView = null
-        if(this.props.msg.dest) destView=<Text>Destination: {this.props.msg.dest}</Text>
+        if(this.props.msg.dest) destView=<Text>{I18n.t('dest')} : {this.props.msg.dest}</Text>
         return (
 
                       <View style={Style.detail_card} >
@@ -366,9 +370,9 @@ export default class Detail extends Component {
                           />
                           <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Type   : {this.props.msg.cat}</Text>
-                            <Text>Time   : {_ctime}</Text>
-                            <Text>Address: {this.props.msg.address}</Text>
+                            <Text>{I18n.t('cat')} : {I18n.t(this.props.msg.cat)}</Text>
+                            <Text>{I18n.t('time')} : {_ctime}</Text>
+                            <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
                             {destView}
                           </View>
                         </View>
