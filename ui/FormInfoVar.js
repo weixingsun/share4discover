@@ -47,8 +47,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
-                bedroom: {type:'nmbr',title:'Bedroom', validator:this.number_validator, img:'fa-bed'},
-                bathroom:{type:'nmbr',title:'Bathroom',validator:this.number_validator, img:'fa-tint'},
+                bedroom: {type:'nmbr',title:I18n.t('bedroom'), validator:this.number_validator, img:'fa-bed'},
+                bathroom:{type:'nmbr',title:I18n.t('bathroom'),validator:this.number_validator, img:'fa-tint'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
             car:{
@@ -56,8 +56,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
-                dest:  {type:'addr',title:'Destination', validator:this.addr_validator(','), img:'fa-flag'},
-                time:  {type:'time',title:'Time',        validator:this.time_validator, img:'fa-clock-o'},
+                dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator, img:'fa-clock-o'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
         }
@@ -80,14 +80,14 @@ export default class FormInfoVar extends Component {
     initAllValidators(){
         //I18n.t('type')
         this.validators={}
-        this.genValidator('type',  I18n.t('type'),     this.select_validator)
-        this.genValidator('cat',   'Category', this.select_validator)
+        this.genValidator('type',   I18n.t('type'),    this.select_validator)
+        this.genValidator('cat',    I18n.t('cat'),     this.select_validator)
         //this.genValidator('ask',   'Ask/Offer',this.select_validator)
-        this.genValidator('title', 'Title',    this.length_validator(5,55))
-        this.genValidator('content','Content', this.length_validator(10,255))
-        this.genValidator('address','Address', this.length_validator(10,255))
-        this.genValidator('phone', 'Phone',    this.number_validator)
-        this.genValidator('price', 'Price',    this.number_validator)
+        this.genValidator('title',  I18n.t('title'),   this.length_validator(5,55))
+        this.genValidator('content',I18n.t('content'), this.length_validator(10,255))
+        this.genValidator('address',I18n.t('address'), this.length_validator(10,255))
+        this.genValidator('phone',  I18n.t('phone'),   this.number_validator)
+        this.genValidator('price',  I18n.t('price'),   this.number_validator)
     }
     genValidator(name,titleStr,validateJson){
         this.validators[name] = {title:titleStr, validate:[validateJson]}
@@ -140,9 +140,9 @@ export default class FormInfoVar extends Component {
             //myDefaults[typekey] = true;
             //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[askkey]  = true;
-            myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
+            myDefaults['typeTitle'] = I18n.t(this.props.msg.type)
             //myDefaults['askTitle']  = (this.props.msg.ask==='true')?'Ask':'Offer'
-            myDefaults['catTitle']  = this.capitalizeFirstLetter(this.props.msg.cat)
+            myDefaults['catTitle']  = I18n.t(this.props.msg.cat)
             //myDefaults['owner_name'] = Global.getMainLoginName()
             //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
@@ -558,16 +558,12 @@ export default class FormInfoVar extends Component {
             //this.setState({validationResults:GiftedFormManager.validate(this.formName)});
         }
     }
-    capitalizeFirstLetter(str) {
-        if(str==null) return ''
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
     renderTypeOptions(){
         let arr = Object.keys(Global.TYPE_ICONS)
         return arr.map((key,i)=>{
             return <GiftedForm.OptionWidget 
                        key={i} 
-                       title={this.capitalizeFirstLetter(key)} 
+                       title={I18n.t(key)} 
                        value={key} 
                        image={(
                            <View style={{width:80,alignItems:'center'}}>
@@ -665,7 +661,7 @@ export default class FormInfoVar extends Component {
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
-                            title='Type'
+                            title={I18n.t('type')}
                             name='type'
                             //displayValue='typeTitle'
                             display={this.state.form.typeTitle}
@@ -678,7 +674,7 @@ export default class FormInfoVar extends Component {
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Behave'
+                            title={I18n.t('cat')}
                             name='cat'
                             display={this.state.form.catTitle}
                             value={this.state.form.cat}
@@ -694,13 +690,13 @@ export default class FormInfoVar extends Component {
                                 <GiftedForm.OptionWidget title={I18n.t('free')}  value='free'  />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        {this.renderTextField('title','Title', this.length_validator(5,55),'fa-header')}
-                        {this.renderTextField('phone','Phone', this.number_validator,'fa-phone')}
-                        {this.renderTextField('price','Price', this.number_validator,'fa-usd')}
+                        {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}
+                        {this.renderTextField('phone',I18n.t('phone'), this.number_validator,'fa-phone')}
+                        {this.renderTextField('price',I18n.t('price'), this.number_validator,'fa-usd')}
                         {this.renderOptionalFields(this.info_types[this.state.type])}
                         <GiftedForm.PlaceSearchWidget
                             name='address'
-                            title='Address'
+                            title={I18n.t('address')}
                             //placeholder='Enter address'
                             clearButtonMode='while-editing'
                             displayValue='address'
@@ -719,7 +715,7 @@ export default class FormInfoVar extends Component {
                         />
                         <GiftedForm.ModalWidget
                             name='content'
-                            title='Content'
+                            title={I18n.t('content')}
                             display={this.state.form.content}
                             //scrollEnabled={true}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-file-text-o'} size={25} /></View>}
@@ -741,7 +737,7 @@ export default class FormInfoVar extends Component {
                         <GiftedForm.HiddenWidget name='ctime' displayValue='ctime' value={this.state.form.ctime} />
                         <GiftedForm.HiddenWidget name='pics' displayValue='pics' value={this.state.form.pics} />
                         <GiftedForm.SubmitWidget
-                            title='Publish'
+                            title={I18n.t('publish')}
                             widgetStyles={{
                                 submitButton: {
                                     backgroundColor: '#6495ED',
