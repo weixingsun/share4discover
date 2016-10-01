@@ -19,6 +19,7 @@ import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
+import I18n from 'react-native-i18n';
  
 export default class FormInfoVar extends Component {
     constructor(props) {
@@ -32,13 +33,13 @@ export default class FormInfoVar extends Component {
             type:'house',
             //validators:{},
         };
+        this.more_fields={}
         this.formName='infoForm'
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
-        //this.addr_validator=this.length_validator
         this.time_validator={ validator: 'isNumeric', message:'{TITLE} is invalid' }
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             house:{
@@ -77,10 +78,11 @@ export default class FormInfoVar extends Component {
         this.turnOffGps()
     }
     initAllValidators(){
+        //I18n.t('type')
         this.validators={}
-        this.genValidator('type',  'Type',     this.select_validator)
+        this.genValidator('type',  I18n.t('type'),     this.select_validator)
         this.genValidator('cat',   'Category', this.select_validator)
-        this.genValidator('ask',   'Ask/Offer',this.select_validator)
+        //this.genValidator('ask',   'Ask/Offer',this.select_validator)
         this.genValidator('title', 'Title',    this.length_validator(5,55))
         this.genValidator('content','Content', this.length_validator(10,255))
         this.genValidator('address','Address', this.length_validator(10,255))
@@ -120,13 +122,14 @@ export default class FormInfoVar extends Component {
         let logins = Global.getLoginStr()
         GiftedFormManager.reset(this.formName);
         if(!this.props.msg){
-            var myDefaults = {
+            var myDefaults = {  //ask
               type: 'house', typeTitle: 'House',
-              ask: '', cat: '', catTitle:'',
+              cat: '', catTitle:'',
               title: '',     content: '', address: '',
-              phone: '',     ctime: this.ctime, time:  '',
+              phone: '',     ctime: this.ctime,
               lat:   '',     lng:   '',  price: '',
-              dest:  '',     pics:  [], owner: logins,
+              //time:  '',     dest:  '',
+              pics:  [],     owner: logins,
             };
             this.setState({type:'house', form:myDefaults})
             this.genTypeValidators('house')
@@ -138,8 +141,8 @@ export default class FormInfoVar extends Component {
             //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[askkey]  = true;
             myDefaults['typeTitle'] = this.capitalizeFirstLetter(this.props.msg.type)
-            myDefaults['askTitle'] = (this.props.msg.ask==='true')?'Ask':'Offer'
-            myDefaults['catTitle'] = this.capitalizeFirstLetter(this.props.msg.cat)
+            //myDefaults['askTitle']  = (this.props.msg.ask==='true')?'Ask':'Offer'
+            myDefaults['catTitle']  = this.capitalizeFirstLetter(this.props.msg.cat)
             //myDefaults['owner_name'] = Global.getMainLoginName()
             //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
@@ -184,15 +187,16 @@ export default class FormInfoVar extends Component {
           alert('Please login first, go to settings')
           return
         }
-        if(values.hasOwnProperty('ask')  && typeof values.ask ==='object')   values.ask = values.ask[0]
-        if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
-        else values.ask = false
+        //if(values.hasOwnProperty('ask')  && typeof values.ask ==='object')   values.ask = values.ask[0]
+        //if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
+        //else values.ask = false
         if(values.hasOwnProperty('cat') && typeof values.cat ==='object')  values.cat = values.cat[0]
         values.cat=values.cat.toLowerCase()
         if(values.hasOwnProperty('type') && typeof values.type ==='object')  values.type = values.type[0]
         values.type=values.type.toLowerCase()
         if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
-        if(values.hasOwnProperty('askTitle')) delete values.askTitle
+        if(values.hasOwnProperty('ask')) delete values.ask
+        if(values.hasOwnProperty('catTitle')) delete values.catTitle
         if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
         //if(values.hasOwnProperty('contentTitle')) delete values.contentTitle
         //if(values.hasOwnProperty('dest') && values.dest.length===0) delete values.dest
@@ -200,6 +204,11 @@ export default class FormInfoVar extends Component {
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
         //alert(JSON.stringify(values))
+        this.merge_into(values,this.more_fields)
+    }
+    merge_into(obj,obj_to_merge){
+        //for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+        for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
     }
     onSubmit(values) {
         var self = this;
@@ -211,9 +220,9 @@ export default class FormInfoVar extends Component {
         //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
         /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
         ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
-        ** GiftedFormManager.reset('signupForm'); // clear the states of the form manually. 'signupForm' is the formName used
         */
-        //alert('props.msg='+JSON.stringify(this.props.msg)+'\nstate.form='+JSON.stringify(values))
+        self.fixFormData(values);
+        //alert('form:'+JSON.stringify(values));
         Alert.alert(
             "Publish",
             "Do you want to publish this form ? ",
@@ -221,9 +230,7 @@ export default class FormInfoVar extends Component {
               {text:"Cancel" },
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
-                      //console.log('ready:'+JSON.stringify(values));
                   Net.setMsg(values).then((ret)=> {
-                      //console.log('created:'+JSON.stringify(ret));
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
                               self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
@@ -238,7 +245,7 @@ export default class FormInfoVar extends Component {
                               let sns_ret = self.postSNS(values);
                               if(sns_ret.length>0) alert('Create successfully');
                           }
-                          self.props.navigator.pop();
+                          self.back()
                       }else{
                           alert('Error:'+ret)
                       }
@@ -349,9 +356,6 @@ export default class FormInfoVar extends Component {
         if(latDiff>0.1 || lngDiff>0.1){
             return true
         }else return false
-    }
-    capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
     }
     openImagePicker(){
         //if(!this.key){  //type:lat,lng:ctime
@@ -581,7 +585,7 @@ export default class FormInfoVar extends Component {
         let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
         return (
             <GiftedForm.PlaceSearchWidget
-                key={name}
+                key={name+'_addr'}
                 name={name}
                 title={title}
                 placeholder={'Enter '+title}
@@ -597,13 +601,8 @@ export default class FormInfoVar extends Component {
                     key:this.ggkey
                 }}
                 onClose={ (loc)=> {
-                    let values = this.state.form
-                    values[name+'_lat']=loc.lat
-                    values[name+'_lng']=loc.lng
-                    //form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }
-                    this.setState({
-                        form:values
-                    })
+                    this.more_fields[name+'_lat']=loc.lat
+                    this.more_fields[name+'_lng']=loc.lng
                 }}
             />)
     }

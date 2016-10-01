@@ -25,6 +25,8 @@ I18n.translations = {
     usb: 'USB',
     ble: 'Bluetooth LE',
     map: 'Map',
+    //form
+    type: 'Type',
   },
   zh_CN: {
     hi: '你好',
@@ -49,5 +51,7 @@ I18n.translations = {
     usb: 'USB',
     ble: '蓝牙',
     map: '地图',
+    //form
+    type: '类型',
   },
 }

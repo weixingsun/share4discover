@@ -22,7 +22,7 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
         //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
-        this.images = this.props.msg.pics?this.props.msg.pics.split(','):[]
+        this.images = []
         this.isLogin = (Global.mainlogin.length>0)
         this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
         this.close_image = null;
@@ -34,6 +34,19 @@ export default class Detail extends Component {
         }
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
+    }
+    componentWillMount(){
+        let self = this;
+        getImageSource('ion-ios-close', 40, 'white').then((source) => {
+            self.close_image=source
+        });
+        if(typeof this.props.msg.pics ==='object'){
+            this.images = this.props.msg.pics
+            //alert(JSON.stringify(this.props.msg))
+        }else if(typeof this.props.msg.pics ==='string'){
+            if(this.props.msg.pics!=='') this.images = this.props.msg.pics.split(',')
+            //alert(JSON.stringify(this.props.msg))
+        }
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     onReply() {
@@ -109,12 +122,6 @@ export default class Detail extends Component {
         this.setState({show_pic_modal:false})
         
     }
-    componentWillMount(){
-        let self = this;
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {
-            self.close_image=source
-        });
-    }
     checkSns(mainlogin,owner){
         if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
           return true
@@ -151,10 +158,8 @@ export default class Detail extends Component {
         }
     }
     showSlides(){
-        if(this.props.msg.pics != null) {
-            let cond1 = (typeof this.props.msg.pics === 'string' && this.props.msg.pics.length>0)
-            let cond2 = (typeof this.props.msg.pics === 'object' && this.props.msg.pics[0]!=null && this.props.msg.pics[0].length>0)
-            if(cond1 || cond2)
+        if(this.images.length>0) {
+            //alert(JSON.stringify(this.images))
             return (
                 <DetailImg 
                     msg={this.props.msg}
@@ -171,7 +176,8 @@ export default class Detail extends Component {
 	var owners = this.props.msg.owner.split(',')
         owners.push('tel:'+this.props.msg.phone)
         return (
-            owners.map( (owner) => {
+          <View style={Style.detail_card} >
+            {owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
 		var sns_name = owner.split(':')[2]
@@ -187,7 +193,8 @@ export default class Detail extends Component {
                         <Text style={{marginLeft:20}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
-            })
+            }) }
+          </View>
         );
     }
     renderReplyItems(){
@@ -322,13 +329,56 @@ export default class Detail extends Component {
                     </View>
             )
     }
-    render(){
-	var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
-        //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
+    renderMisc(){
+        let self=this
+        // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','dest_lat','dest_lng']
+        var keys = Object.keys(this.props.msg)
+        var misc = keys.filter((key) => {
+            return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
+        }).sort()
+        //alert(JSON.stringify(misc))
+        return (
+            <View style={Style.detail_card} >
+                {misc.map((key)=>{
+                    return <Text style={{marginLeft:21}} key={key}><Text style={{fontWeight:'bold'}}>{key}:  </Text>{this.props.msg[key]}</Text>
+                })}
+                <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
+                <Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
+            </View>
+        )
+    }
+    renderTitle(){
+        var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
         let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
+        let asking = 'rent0,buy'.contains(this.props.msg.cat)
+        let destView = null
+        if(this.props.msg.dest) destView=<Text>Destination: {this.props.msg.dest}</Text>
+        return (
+
+                      <View style={Style.detail_card} >
+                        <View style={{flexDirection:'row',marginLeft:20}} >
+                          <Icon
+                            style={{marginLeft:15,marginRight:15}}
+                            size={44}
+                            color={asking?'gray':'blue'}
+                            name={typeIcon}
+                          />
+                          <View style={{flex:1,marginLeft:20}}>
+                            <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
+                            <Text>Type   : {this.props.msg.cat}</Text>
+                            <Text>Time   : {_ctime}</Text>
+                            <Text>Address: {this.props.msg.address}</Text>
+                            {destView}
+                          </View>
+                        </View>
+                      </View>
+       )
+    }
+    render(){
+        //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
             <View style={{flex:1}}>
-                {this.renderModal()}
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
@@ -344,31 +394,10 @@ export default class Detail extends Component {
                       style={{flex:8}}
                     >
                       {this.showSlides()}
-                      <View style={Style.detail_card} >
-                        <View style={{flexDirection:'row',marginLeft:20}} >
-                          <Icon
-                            style={{marginLeft:15,marginRight:15}}
-                            size={44}
-                            color={this.props.msg.ask=='false'?'blue':'gray'}
-                            name={typeIcon}
-                          />
-                          <View style={{flex:1,marginLeft:20}}>
-                            <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>Time   : {_ctime}</Text>
-                            <Text>Address: {this.props.msg.address}</Text>
-                          </View>
-                        </View>
-                      </View>
-                      <View style={Style.detail_card} >
-			{ this.showOwners() }
-                      </View>
-                      <View style={Style.detail_card} >
-                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Publish Time:  </Text> {_ctime} </Text>
-			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Asking :  </Text>  {this.props.msg.ask}</Text>
-			<Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Price :  </Text>  {this.props.msg.price}</Text>
-                        <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>Details:</Text></Text>
-			<Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
-                      </View>
+                      {this.renderModal()}
+                      {this.renderTitle()}
+                      {this.showOwners()}
+                      {this.renderMisc()}
                       {this.renderReplySection()}
                       {this.renderReplyInput()}
                     </KeyboardAwareScrollView>

@@ -27,7 +27,7 @@ var TopScreen = React.createClass({
     //let key = Global.getKeyFromMsg(this.props.msg)
     let key = this.props.msg.ctime
     //alert(Global.host_image_info+key+'\n'+this.props.msg.pics+'\ntype:'+typeof this.props.msg.pics)
-    let IMGS = this.props.msg.pics.split(',')
+    let IMGS = (typeof this.props.msg.pics==='object')?this.props.msg.pics:this.props.msg.pics.split(',')
     return {
       index:0,
       image_names:IMGS,
