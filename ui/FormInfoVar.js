@@ -20,6 +20,7 @@ import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import I18n from 'react-native-i18n';
+import moment from 'moment'
  
 export default class FormInfoVar extends Component {
     constructor(props) {
@@ -35,12 +36,13 @@ export default class FormInfoVar extends Component {
         };
         this.hidden_fields={}
         this.formName='infoForm'
+        this.time_format='YYYY-MM-DD HH:mm'
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
-        this.time_validator={ validator: 'isNumeric', message:'{TITLE} is invalid' }
+        this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             house:{
                 //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
@@ -56,8 +58,8 @@ export default class FormInfoVar extends Component {
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
                 dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator, img:'fa-clock-o'},
                 //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
         }
@@ -602,6 +604,25 @@ export default class FormInfoVar extends Component {
                 }}
             />)
     }
+    renderTimeField(name,title,validator,img=null){
+        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
+        return (
+            <GiftedForm.DatePickerIOSWidget
+                key={name}
+                name={name}
+                title={title}
+                displayValue={name}
+                image={imgView}
+                //underlined={true}
+                mode='datetime'
+                value={this.state.form[name]}
+                getDefaultDate={() => {
+                  return moment().format(this.time_format);
+                }}
+                validationResults={this.state.validationResults}
+            />
+        )
+    }
     renderTextField(name,title,validator,img=null){
         let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
         return (
@@ -621,7 +642,7 @@ export default class FormInfoVar extends Component {
         if(type==='txt1'||type==='nmbr') return this.renderTextField(name,title,validator,img)
         else if(type==='addr') return this.renderAddrField(name,title,validator,img)
         else if(type==='txt3') return null
-        else if(type==='time') return this.renderTextField(name,title,validator,img)
+        else if(type==='time') return this.renderTimeField(name,title,validator,img)
     }
     renderOptionalFields(json){
         let keys = Object.keys(json)

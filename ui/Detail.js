@@ -336,7 +336,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','dest_lat','dest_lng','catTitle','typeTitle']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
@@ -358,6 +358,8 @@ export default class Detail extends Component {
         let asking = 'rent0,buy'.contains(this.props.msg.cat)
         let destView = null
         if(this.props.msg.dest) destView=<Text>{I18n.t('dest')} : {this.props.msg.dest}</Text>
+        let destTimeView = null
+        if(this.props.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.props.msg.time}</Text>
         return (
 
                       <View style={Style.detail_card} >
@@ -371,8 +373,9 @@ export default class Detail extends Component {
                           <View style={{flex:1,marginLeft:20}}>
                             <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
                             <Text>{I18n.t('cat')} : {I18n.t(this.props.msg.cat)}</Text>
-                            <Text>{I18n.t('time')} : {_ctime}</Text>
+                            <Text>{I18n.t('ctime')} : {_ctime}</Text>
                             <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
+                            {destTimeView}
                             {destView}
                           </View>
                         </View>
