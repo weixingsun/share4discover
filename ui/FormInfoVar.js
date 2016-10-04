@@ -125,11 +125,12 @@ export default class FormInfoVar extends Component {
         GiftedFormManager.reset(this.formName);
         if(!this.props.msg){
             var myDefaults = {  //ask
-              type: 'house', typeTitle: 'House',
-              cat: '', catTitle:'',
-              title: '',     content: '', address: '',
+              type: 'house', //typeTitle: 'House',
+              cat: '',       //catTitle:'',
+              title: '',     content: '', 
+              address: '',   price: '',
               phone: '',     ctime: this.ctime,
-              lat:   '',     lng:   '',  price: '',
+              lat:   '',     lng:   '',
               //time:  '',     dest:  '',
               pics:  [],     owner: logins,
             };
@@ -142,9 +143,9 @@ export default class FormInfoVar extends Component {
             //myDefaults[typekey] = true;
             //var askkey  = 'ask{' +this.props.msg.ask+'}';
             //myDefaults[askkey]  = true;
-            myDefaults['typeTitle'] = I18n.t(this.props.msg.type)
+            //myDefaults['typeTitle'] = I18n.t(this.props.msg.type)
             //myDefaults['askTitle']  = (this.props.msg.ask==='true')?'Ask':'Offer'
-            myDefaults['catTitle']  = I18n.t(this.props.msg.cat)
+            //myDefaults['catTitle']  = I18n.t(this.props.msg.cat)
             //myDefaults['owner_name'] = Global.getMainLoginName()
             //myDefaults['ask'] = [this.props.msg.ask]
             if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
@@ -198,8 +199,8 @@ export default class FormInfoVar extends Component {
         values.type=values.type.toLowerCase()
         if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
         if(values.hasOwnProperty('ask')) delete values.ask
-        if(values.hasOwnProperty('catTitle')) delete values.catTitle
-        if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
+        //if(values.hasOwnProperty('catTitle')) delete values.catTitle
+        //if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
         //if(values.hasOwnProperty('contentTitle')) delete values.contentTitle
         //if(values.hasOwnProperty('dest') && values.dest.length===0) delete values.dest
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
@@ -616,9 +617,7 @@ export default class FormInfoVar extends Component {
                 //underlined={true}
                 mode='datetime'
                 value={this.state.form[name]}
-                getDefaultDate={() => {
-                  return moment().format(this.time_format);
-                }}
+                getDefaultDate={() => {return this.state.form[name]}}
                 validationResults={this.state.validationResults}
             />
         )
@@ -682,10 +681,9 @@ export default class FormInfoVar extends Component {
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
-                            title={I18n.t('type')}
+                            title={I18n.t('cat')}
                             name='type'
-                            //displayValue='typeTitle'
-                            display={this.state.form.typeTitle}
+                            display={I18n.t(this.state.form.type)}
                             value={this.state.form.type}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.type]} size={30} /></View>}
                         >
@@ -695,20 +693,20 @@ export default class FormInfoVar extends Component {
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title={I18n.t('cat')}
+                            title={I18n.t('type')}
                             name='cat'
-                            display={this.state.form.catTitle}
+                            display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)+I18n.t(this.state.form.type)}
                             value={this.state.form.cat}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-list-ol'} size={25} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='cat' title='Behave' multiple={false}>
-                                <GiftedForm.OptionWidget title={I18n.t('sell')}  value='sell'  />
-                                <GiftedForm.OptionWidget title={I18n.t('buy')}   value='buy'   />
-                                <GiftedForm.OptionWidget title={I18n.t('rent1')} value='rent1' />
-                                <GiftedForm.OptionWidget title={I18n.t('rent0')} value='rent0' />
-                                <GiftedForm.OptionWidget title={I18n.t('free')}  value='free'  />
+                            <GiftedForm.SelectWidget name='cat' title='Type' multiple={false}>
+                                <GiftedForm.OptionWidget title={I18n.t('rent0')+I18n.t(this.state.form.type)} value='rent0' />
+                                <GiftedForm.OptionWidget title={I18n.t('rent1')+I18n.t(this.state.form.type)} value='rent1' />
+                                <GiftedForm.OptionWidget title={I18n.t('buy') +I18n.t(this.state.form.type)}  value='buy'   />
+                                <GiftedForm.OptionWidget title={I18n.t('sell')+I18n.t(this.state.form.type)}  value='sell'  />
+                                <GiftedForm.OptionWidget title={I18n.t('free')+I18n.t(this.state.form.type)}  value='free'  />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}

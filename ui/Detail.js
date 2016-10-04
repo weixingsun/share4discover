@@ -361,25 +361,24 @@ export default class Detail extends Component {
         let destTimeView = null
         if(this.props.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.props.msg.time}</Text>
         return (
-
-                      <View style={Style.detail_card} >
-                        <View style={{flexDirection:'row',marginLeft:20}} >
-                          <Icon
-                            style={{marginLeft:15,marginRight:15}}
-                            size={44}
-                            color={asking?'gray':'blue'}
-                            name={typeIcon}
-                          />
-                          <View style={{flex:1,marginLeft:20}}>
-                            <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                            <Text>{I18n.t('cat')} : {I18n.t(this.props.msg.cat)}</Text>
-                            <Text>{I18n.t('ctime')} : {_ctime}</Text>
-                            <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
-                            {destTimeView}
-                            {destView}
-                          </View>
-                        </View>
-                      </View>
+            <View style={Style.detail_card} >
+                <View style={{flexDirection:'row',marginLeft:20}} >
+                    <Icon
+                        style={{marginLeft:15,marginRight:15}}
+                        size={44}
+                        color={asking?'gray':'blue'}
+                        name={typeIcon}
+                    />
+                    <View style={{flex:1,marginLeft:20}}>
+                        <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
+                        <Text>{I18n.t('cat')} : {this.props.msg.cat?I18n.t(this.props.msg.cat)+I18n.t(this.props.msg.type):''}</Text>
+                        <Text>{I18n.t('ctime')} : {_ctime}</Text>
+                        <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
+                        {destTimeView}
+                        {destView}
+                    </View>
+                </View>
+            </View>
        )
     }
     render(){
