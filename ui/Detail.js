@@ -355,7 +355,7 @@ export default class Detail extends Component {
     renderTitle(){
         var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
         let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
-        let asking = 'rent0,buy'.contains(this.props.msg.cat)
+        let asking = 'rent0,buy'.indexOf(this.props.msg.cat)>0
         let destView = null
         if(this.props.msg.dest) destView=<Text>{I18n.t('dest')} : {this.props.msg.dest}</Text>
         let destTimeView = null
