@@ -108,9 +108,6 @@ export default class JsonNode extends Component {
         }
     }
     highlight(){
-        /*this.C.setNativeProps({
-            fill:'red',
-        })*/
         this.change('red',10)
         setTimeout(()=> this.change(this.init_color,0), 15000);
     }
@@ -132,12 +129,7 @@ export default class JsonNode extends Component {
     )
   }
   render() {
-    //let { pos, enter, } = this.state;
-    //let [translateX, translateY] = [pos.x, pos.y];
-    //let rotate = pos.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
-    //let opacity = pos.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]})
-    //let scale = new Animated.Value(1);
-    //        <Animated.G 
+    // <Animated.G 
     return (
             <G 
               key={'g_'+this.props.node.i} 
@@ -155,10 +147,7 @@ export default class JsonNode extends Component {
                   fill={this.state.color}
                   //stroke={node.e?"green":"blue"}
                   //strokeWidth="2.5"
-                  //onPress={()=> {
-                  //    let msg = this.props.node.c===0?this.props.node.k+": "+this.props.node.v:this.props.node.k
-                      //alert(JSON.stringify(msg))
-                  //}}
+                  //onPress={()=> {} }
                   //{...this._panResponder.panHandlers}
                 />
                 <Line key={'l'+this.props.node.i} ref={ele => {this.L = ele;}}
