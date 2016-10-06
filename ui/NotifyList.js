@@ -42,7 +42,7 @@ export default class NotifyList extends Component {
       var key = Global.getKeyFromReply(reply)
       var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:'r0|'+Global.mainlogin+'|'+reply.content}
       Net.putHash(notify_value)
-      alert(JSON.stringify(notify_value))
+      //alert(JSON.stringify(notify_value))
   }
   _onPress(rowData) {
       if(rowData.status==='1')this.readMsg(rowData)

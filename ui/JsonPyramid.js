@@ -2,9 +2,10 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import { Dimensions,StyleSheet } from 'react-native'
+import { Dimensions,PanResponder,StyleSheet } from 'react-native'
 import Svg,{Circle,G,Defs,Use,Rect,Line } from 'react-native-svg'
 import Style from './Style'
+import JsonNode from './JsonNode'
 
 export default class ForceView extends Component {
   //static propTypes = {
@@ -12,6 +13,14 @@ export default class ForceView extends Component {
   //}
   componentWillMount() {
     //this.traverse(this.props.data,0);
+    /*  this._panResponder = PanResponder.create({
+          onStartShouldSetPanResponder: this._alwaysTrue,
+          onMoveShouldSetPanResponder: this._alwaysTrue,
+          onPanResponderGrant: this._handlePanResponderGrant,
+          onPanResponderMove: this._handlePanResponderMove,
+          onPanResponderRelease: this._handlePanResponderEnd,
+          onPanResponderTerminate: this._handlePanResponderEnd
+      });*/
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,10 +34,37 @@ export default class ForceView extends Component {
         w:Style.DEVICE_WIDTH,
         h:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-20
     }
-    this.stat={}  //{d1:1,d2:2}
-    //this.state={}
     this.totalIndex=0
+    this._previousLeft = 0;
+    this._previousTop = 0;
+    this.stat={}  //{d1:1,d2:2}
+    this.state={
+        root_pos:{x:0,y:0}
+    }
   }
+  /*  _alwaysTrue = () => true;
+
+    _handlePanResponderMove = (e, gestureState)=>{
+        let x= this._previousLeft + gestureState.dx
+        let y= this._previousTop + gestureState.dy
+        this.setState({ root_pos: {x:x,y:y} });
+    };
+
+    _handlePanResponderGrant = ()=>{
+        this.root.setNativeProps({
+            opacity: 0.5
+        });
+    };
+
+    _handlePanResponderEnd = (e, gestureState)=>{
+        this.root.setNativeProps({
+            opacity: 1
+        });
+        this._previousLeft += gestureState.dx;
+        this._previousTop += gestureState.dy;
+        //alert('x='+gestureState.dx+' y='+gestureState.dy) //x,y is moving delta
+    };
+  */
   traverse(json,dad) {
     let deep = dad.d+1
     for (var obj in json) {
@@ -61,7 +97,7 @@ export default class ForceView extends Component {
     let Y = startY + (node.d-1) *divY
     return {x:X,y:Y}
   }
-  renderNodes(){
+  /*renderNodes(){
     return this.nodes.map((node,seq)=>{
       let xy=this.findPyramidXY(node)
       let dad = this.nodes[node.f]
@@ -80,6 +116,8 @@ export default class ForceView extends Component {
                   let msg = node.c===0?node.k+": "+node.v:node.k
                   alert(JSON.stringify(msg))
               }}
+              //{...this._panResponder.panHandlers}
+              //onResponderMove={(e)=>{alert('onResponderMove')}}
           />
           <Line key={'l'+seq}
               x1={xy.x} y1={xy.y} 
@@ -88,49 +126,30 @@ export default class ForceView extends Component {
         </G>
       )
     })
+  }*/
+  renderNodes(){
+    return this.nodes.map((node,seq)=>{
+      let xy=this.findPyramidXY(node)
+      let dad = this.nodes[node.f]
+      let fxy=this.findPyramidXY(dad)
+      //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
+      return (
+          <JsonNode key={seq} node={node} n1={xy} n2={fxy} />
+      )
+    })
   }
   render() {
+    //{...this._panResponder.panHandlers}
     return (
-            <Svg height={this.panel.h} width={this.panel.w}>
+            <Svg height={this.panel.h} width={this.panel.w} >
+              <G
+                ref={ele => {this.root = ele;}}
+                x={this.state.root_pos.x}
+                y={this.state.root_pos.y}
+                >
                 {this.renderNodes()}
+              </G>
             </Svg>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-  },
-
-  tickLabelX: {
-    position: 'absolute',
-    bottom: 0,
-    fontSize: 12,
-    textAlign: 'center',
-  },
-
-  ticksYContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-
-  tickLabelY: {
-    position: 'absolute',
-    left: 0,
-    backgroundColor: 'transparent',
-  },
-
-  tickLabelYText: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-
-  ticksYDot: {
-    position: 'absolute',
-    width: 2,
-    height: 2,
-    backgroundColor: '#000000',
-    borderRadius: 100,
-  },
-});

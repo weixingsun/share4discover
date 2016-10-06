@@ -8,8 +8,8 @@ import Button from 'apsl-react-native-button'
 //import {ImageCrop} from 'react-native-image-cropper'
 import PhotoView from 'react-native-photo-view';
 //import ZoomableImage from './ZoomableImage2';
-//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
