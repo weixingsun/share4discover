@@ -14,7 +14,7 @@ const Animated = {
 
 export default class JsonNode extends Component {
   componentWillMount() {
-      this._panResponder = PanResponder.create({
+      /*this._panResponder = PanResponder.create({
           onStartShouldSetPanResponder: this._alwaysTrue,
           onMoveShouldSetPanResponder: this._alwaysTrue,
           onPanResponderGrant: this._handlePanResponderGrant,
@@ -23,23 +23,24 @@ export default class JsonNode extends Component {
           onPanResponderRelease: this._handlePanResponderEnd,
           onPanResponderTerminate: this._handlePanResponderEnd
       });
-      
+      */
   }
 
   constructor(props){
     super(props);
     this.init_pos={x:this.props.n1.x,y:this.props.n1.y}
     this.dad_pos={x:this.props.n2.x,y:this.props.n2.y}
+    this.init_color=this.props.node.c==0?"green":"blue"
     this.state={
-        color: this.props.node.c==0?"green":"blue"
+        color: this.init_color,
+        text_timer: 0,
     }
     this.pos=new Animated.ValueXY(this.init_pos)
-    this.text_color='black'
-    this.props.node.c==0?"green":"blue"
     //this._animatedValue = new Animated.ValueXY()
     //this._value = {x: 0, y: 0}
     //this._animatedValue.addListener((value) => this._value = value);
   }
+    /*
     _alwaysTrue = () => true;
 
     _handlePanResponderMove = (e, gestureState)=> { 
@@ -73,7 +74,7 @@ export default class JsonNode extends Component {
         this.moveCircle(this.init_pos)
         this.moveLine(this.init_pos,this.dad_pos)
         this.moveText(this.init_pos)
-    };
+    };*/
     moveCircle(pos){
         this.C.setNativeProps({
             cx: pos.x+'',
@@ -110,10 +111,26 @@ export default class JsonNode extends Component {
         /*this.C.setNativeProps({
             fill:'red',
         })*/
-        this.setState({
-            color:'red'
-        })
+        this.change('red',10)
+        setTimeout(()=> this.change(this.init_color,0), 15000);
     }
+  change(color,timer){
+      this.setState({
+          color: color,
+          text_timer: timer,
+      })
+  }
+  renderText(){
+    let msg = this.props.node.c===0?this.props.node.k+": "+this.props.node.v:this.props.node.k
+    if(this.state.text_timer>0)
+    return (
+        <Text key={'t'+this.props.node.i} ref={ele => {this.T = ele;}}
+            rotate="90" fontSize="18" fontWeight="normal" fill="blue"
+            textAnchor="start" x={this.getTextXY(this.init_pos).x} y={this.getTextXY(this.init_pos).y} >
+              {msg}
+        </Text>
+    )
+  }
   render() {
     //let { pos, enter, } = this.state;
     //let [translateX, translateY] = [pos.x, pos.y];
@@ -121,15 +138,6 @@ export default class JsonNode extends Component {
     //let opacity = pos.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]})
     //let scale = new Animated.Value(1);
     //        <Animated.G 
-    let msg = this.props.node.c===0?this.props.node.k+": "+this.props.node.v:this.props.node.k
-    /*
-                <Text key={'t'+this.props.node.i} ref={ele => {this.T = ele;}}
-                  rotate="90" fontSize="18" fontWeight="normal" fill="blue"
-                  textAnchor="start" x={this.getTextXY(this.init_pos).x} y={this.getTextXY(this.init_pos).y}
-                >
-                  {msg}
-                </Text>
-    */
     return (
             <G 
               key={'g_'+this.props.node.i} 
@@ -151,7 +159,7 @@ export default class JsonNode extends Component {
                   //    let msg = this.props.node.c===0?this.props.node.k+": "+this.props.node.v:this.props.node.k
                       //alert(JSON.stringify(msg))
                   //}}
-                  {...this._panResponder.panHandlers}
+                  //{...this._panResponder.panHandlers}
                 />
                 <Line key={'l'+this.props.node.i} ref={ele => {this.L = ele;}}
                   x1={this.props.n1.x} y1={this.props.n1.y}
@@ -159,6 +167,7 @@ export default class JsonNode extends Component {
                   //x1={0} y1={0}
                   //x2={this.props.n2.x-this.props.n1.x} y2={this.props.n2.y-this.props.n1.y}
                   stroke="#999" />
+                {this.renderText()}
             </G>
     );
   }
