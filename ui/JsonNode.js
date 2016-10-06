@@ -23,15 +23,19 @@ export default class JsonNode extends Component {
           onPanResponderRelease: this._handlePanResponderEnd,
           onPanResponderTerminate: this._handlePanResponderEnd
       });
+      
   }
 
   constructor(props){
     super(props);
     this.init_pos={x:this.props.n1.x,y:this.props.n1.y}
     this.dad_pos={x:this.props.n2.x,y:this.props.n2.y}
-    //this.state={}
+    this.state={
+        color: this.props.node.c==0?"green":"blue"
+    }
     this.pos=new Animated.ValueXY(this.init_pos)
-
+    this.text_color='black'
+    this.props.node.c==0?"green":"blue"
     //this._animatedValue = new Animated.ValueXY()
     //this._value = {x: 0, y: 0}
     //this._animatedValue.addListener((value) => this._value = value);
@@ -44,6 +48,7 @@ export default class JsonNode extends Component {
         //this.pos = {x:gestureState.dx, y:gestureState.dy}
         this.moveCircle(this.pos)
         this.moveLine(this.pos,this.dad_pos)
+        this.moveText(this.pos)
     }
     _handlePanResponderGrant = (e, gestureState)=>{
         this.C.setNativeProps({ opacity: 0.6 });
@@ -67,6 +72,7 @@ export default class JsonNode extends Component {
         //}).start();
         this.moveCircle(this.init_pos)
         this.moveLine(this.init_pos,this.dad_pos)
+        this.moveText(this.init_pos)
     };
     moveCircle(pos){
         this.C.setNativeProps({
@@ -83,13 +89,13 @@ export default class JsonNode extends Component {
             y2: pos2.y+'',
         });
     }
-    moveText(pos1,pos2){
+    moveText(pos){
+      if(this.T)
         this.T.setNativeProps({
-            x1: pos1.x+'',
-            y1: pos1.y+'',
-            x2: pos2.x+'',
-            y2: pos2.y+'',
+            x: pos.x+'',
+            y: pos.y+'',
         });
+        //console.log('moveText('+pos.x+','+pos.y+')')
     }
     findDownLinks(){
         
@@ -100,7 +106,14 @@ export default class JsonNode extends Component {
             y:pos.y+15,
         }
     }
-    
+    highlight(){
+        /*this.C.setNativeProps({
+            fill:'red',
+        })*/
+        this.setState({
+            color:'red'
+        })
+    }
   render() {
     //let { pos, enter, } = this.state;
     //let [translateX, translateY] = [pos.x, pos.y];
@@ -109,6 +122,14 @@ export default class JsonNode extends Component {
     //let scale = new Animated.Value(1);
     //        <Animated.G 
     let msg = this.props.node.c===0?this.props.node.k+": "+this.props.node.v:this.props.node.k
+    /*
+                <Text key={'t'+this.props.node.i} ref={ele => {this.T = ele;}}
+                  rotate="90" fontSize="18" fontWeight="normal" fill="blue"
+                  textAnchor="start" x={this.getTextXY(this.init_pos).x} y={this.getTextXY(this.init_pos).y}
+                >
+                  {msg}
+                </Text>
+    */
     return (
             <G 
               key={'g_'+this.props.node.i} 
@@ -123,7 +144,7 @@ export default class JsonNode extends Component {
                   cy={this.pos.y._value}
                   //style={this.state.pos.getLayout()}
                   r="15"
-                  fill={this.props.node.c==0?"green":"blue"}
+                  fill={this.state.color}
                   //stroke={node.e?"green":"blue"}
                   //strokeWidth="2.5"
                   //onPress={()=> {
@@ -132,12 +153,6 @@ export default class JsonNode extends Component {
                   //}}
                   {...this._panResponder.panHandlers}
                 />
-                <Text ref={ele => {this.T = ele;}} 
-                  rotate="90" fontSize="18" fontWeight="normal" fill="blue" 
-                  textAnchor="start" x={this.getTextXY(this.init_pos).x} y={this.getTextXY(this.init_pos).y}
-                >
-                  {msg}
-                </Text>
                 <Line key={'l'+this.props.node.i} ref={ele => {this.L = ele;}}
                   x1={this.props.n1.x} y1={this.props.n1.y}
                   x2={this.props.n2.x} y2={this.props.n2.y}

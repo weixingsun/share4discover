@@ -13,18 +13,21 @@ export default class ForceView extends Component {
   //}
   componentWillMount() {
     //this.traverse(this.props.data,0);
-    /*  this._panResponder = PanResponder.create({
+      this._panResponder = PanResponder.create({
           onStartShouldSetPanResponder: this._alwaysTrue,
           onMoveShouldSetPanResponder: this._alwaysTrue,
           onPanResponderGrant: this._handlePanResponderGrant,
           onPanResponderMove: this._handlePanResponderMove,
           onPanResponderRelease: this._handlePanResponderEnd,
           onPanResponderTerminate: this._handlePanResponderEnd
-      });*/
+      });
   }
-
+  componentDidUpdate() {
+      //alert('this.nodes='+JSON.stringify(this.nodes))
+  }
   componentWillReceiveProps(nextProps) {
     this.traverse(nextProps.data,{d:0,i:0});
+    //alert(JSON.stringify(nextProps.data))
   }
   constructor(props){
     super(props);
@@ -41,30 +44,34 @@ export default class ForceView extends Component {
     this.state={
         root_pos:{x:0,y:0}
     }
+    this.NODES={}
   }
-  /*  _alwaysTrue = () => true;
+    _alwaysTrue = () => true;
 
     _handlePanResponderMove = (e, gestureState)=>{
-        let x= this._previousLeft + gestureState.dx
-        let y= this._previousTop + gestureState.dy
-        this.setState({ root_pos: {x:x,y:y} });
+        //let find_node = this.findNearestNode(x,y,10)
+        //console.log('_handlePanResponderMove('+x+','+y+')'+JSON.stringify(find_node.length))
+        let x= gestureState.x0 + gestureState.dx
+        let y= gestureState.y0 + gestureState.dy - Style.NAVBAR_HEIGHT
+        this.hover(x,y);
     };
 
     _handlePanResponderGrant = ()=>{
-        this.root.setNativeProps({
+        /*this.root.setNativeProps({
             opacity: 0.5
-        });
+        });*/
     };
 
     _handlePanResponderEnd = (e, gestureState)=>{
-        this.root.setNativeProps({
+        /*this.root.setNativeProps({
             opacity: 1
         });
-        this._previousLeft += gestureState.dx;
-        this._previousTop += gestureState.dy;
-        //alert('x='+gestureState.dx+' y='+gestureState.dy) //x,y is moving delta
+        */
+        let x= gestureState.x0 + gestureState.dx
+        let y= gestureState.y0 + gestureState.dy - Style.NAVBAR_HEIGHT
+        this.hover(x,y);
     };
-  */
+
   traverse(json,dad) {
     let deep = dad.d+1
     for (var obj in json) {
@@ -84,9 +91,9 @@ export default class ForceView extends Component {
     }
   }
   findPyramidXY(node){  //{d,i,f,s,c,k,v}
-    let total=this.stat['d'+node.d]
+    let total=this.stat['d'+node.d]      //deep #
     //let seq  =this.stat['d'+node.d].r
-    let seq  =node.o
+    let seq  =node.o                     //horizontal #
     let divX =this.panel.w*0.8/total
     let startX=this.panel.w/2 - (total-1)/2.0*divX
     let X=startX + seq * divX
@@ -96,6 +103,20 @@ export default class ForceView extends Component {
     let startY=this.panel.h/2 - (totalDeep-1)/2.0*divY
     let Y = startY + (node.d-1) *divY
     return {x:X,y:Y}
+  }
+  findNearestNode(x,y,min){
+    return this.nodes.filter((node)=>{
+        return Math.abs(node.x-x)+Math.abs(node.y-y) < min
+    })
+  }
+  hover(x,y){
+      let find_node = this.findNearestNode(x,y,15)
+      if(find_node.length>0){
+          let v1 = this.NODES[find_node[0].i]
+          v1.highlight()
+      }
+      //alert('x='+x+'\ny='+y+'\nnode0='+this.nodes[0].x+','+this.nodes[0].y+'\nnodes='+this.nodes.length+'\n'+JSON.stringify(find_node)) //x,y is moving delta
+      //console.log('_handlePanResponderMove('+x+','+y+')'+JSON.stringify(find_node.length))
   }
   /*renderNodes(){
     return this.nodes.map((node,seq)=>{
@@ -130,18 +151,20 @@ export default class ForceView extends Component {
   renderNodes(){
     return this.nodes.map((node,seq)=>{
       let xy=this.findPyramidXY(node)
+      node['x']=xy.x
+      node['y']=xy.y
       let dad = this.nodes[node.f]
       let fxy=this.findPyramidXY(dad)
       //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
       return (
-          <JsonNode key={seq} node={node} n1={xy} n2={fxy} />
+          <JsonNode ref={ele => {this.NODES[node.i] = ele;}} key={seq} node={node} n1={xy} n2={fxy} />
       )
     })
   }
   render() {
     //{...this._panResponder.panHandlers}
     return (
-            <Svg height={this.panel.h} width={this.panel.w} >
+            <Svg height={this.panel.h} width={this.panel.w} {...this._panResponder.panHandlers}>
               <G
                 ref={ele => {this.root = ele;}}
                 x={this.state.root_pos.x}
