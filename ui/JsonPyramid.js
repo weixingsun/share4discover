@@ -14,12 +14,13 @@ export default class ForceView extends Component {
   componentWillMount() {
     //this.traverse(this.props.data,0);
       this._panResponder = PanResponder.create({
-          onStartShouldSetPanResponder: this._alwaysTrue,
-          onMoveShouldSetPanResponder: this._alwaysTrue,
-          onPanResponderGrant: this._handlePanResponderGrant,
+          onStartShouldSetPanResponder: this._onlyMove,
+          onMoveShouldSetPanResponder: this._onlyMove,
+          //onPanResponderGrant: this._handlePanResponderGrant,
           onPanResponderMove: this._handlePanResponderMove,
           onPanResponderRelease: this._handlePanResponderEnd,
-          onPanResponderTerminate: this._handlePanResponderEnd
+          onPanResponderTerminate: this._handlePanResponderEnd,
+          onMoveShouldSetPanResponderCapture: this._onlyMove,
       });
   }
   componentDidUpdate() {
@@ -47,6 +48,7 @@ export default class ForceView extends Component {
     this.NODES={}
   }
     _alwaysTrue = () => true;
+    _onlyMove = (e,gestureState) => Math.abs(gestureState.dx) > 5  //gestureState.dx != 0 && gestureState.dy != 0
 
     _handlePanResponderMove = (e, gestureState)=>{
         //let find_node = this.findNearestNode(x,y,10)
@@ -65,8 +67,8 @@ export default class ForceView extends Component {
     _handlePanResponderEnd = (e, gestureState)=>{
         /*this.root.setNativeProps({
             opacity: 1
-        });
-        */
+        })*/
+        //alert('_handlePanResponderEnd')
         let x= gestureState.x0 + gestureState.dx
         let y= gestureState.y0 + gestureState.dy - Style.NAVBAR_HEIGHT
         this.hover(x,y);

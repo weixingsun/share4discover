@@ -107,7 +107,7 @@ export default class JsonNode extends Component {
             y:pos.y+15,
         }
     }
-    highlight(){
+    highlight = ()=>{
         this.change('red',10)
         setTimeout(()=> this.change(this.init_color,0), 15000);
     }
@@ -123,6 +123,7 @@ export default class JsonNode extends Component {
     return (
         <Text key={'t'+this.props.node.i} ref={ele => {this.T = ele;}}
             rotate="90" fontSize="18" fontWeight="normal" fill="blue"
+            //onPress={()=> {alert(msg)} }
             textAnchor="start" x={this.getTextXY(this.init_pos).x} y={this.getTextXY(this.init_pos).y} >
               {msg}
         </Text>
@@ -147,7 +148,7 @@ export default class JsonNode extends Component {
                   fill={this.state.color}
                   //stroke={node.e?"green":"blue"}
                   //strokeWidth="2.5"
-                  //onPress={()=> {} }
+                  onPress={()=> {this.highlight()}}
                   //{...this._panResponder.panHandlers}
                 />
                 <Line key={'l'+this.props.node.i} ref={ele => {this.L = ele;}}
