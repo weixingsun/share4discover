@@ -23,29 +23,33 @@ export default class ForceView extends Component {
           onMoveShouldSetPanResponderCapture: this._onlyMove,
       });
   }
+  init(){
+      this.nodes=[]
+      this.NODES={}  //JsonNode view
+      this.totalIndex=0
+      this._previousLeft = 0;
+      this._previousTop = 0;
+      this.stat={}  //{d1:1,d2:2}
+      this.state={
+        root_pos:{x:0,y:0}
+      }
+  }
   componentDidUpdate() {
       //alert('this.nodes='+JSON.stringify(this.nodes))
   }
   componentWillReceiveProps(nextProps) {
+    this.init()
     this.traverse(nextProps.data,{d:0,i:0});
     //alert(JSON.stringify(nextProps.data))
   }
   constructor(props){
     super(props);
     //this.data = this.props.data
-    this.nodes = []
     this.panel={
         w:Style.DEVICE_WIDTH,
         h:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-20
     }
-    this.totalIndex=0
-    this._previousLeft = 0;
-    this._previousTop = 0;
-    this.stat={}  //{d1:1,d2:2}
-    this.state={
-        root_pos:{x:0,y:0}
-    }
-    this.NODES={}
+    this.init()
   }
     _alwaysTrue = () => true;
     _onlyMove = (e,gestureState) => Math.abs(gestureState.dx) > 5  //gestureState.dx != 0 && gestureState.dy != 0
@@ -102,7 +106,7 @@ export default class ForceView extends Component {
     //this.stat['d'+node.d].r++
     let totalDeep = Object.keys(this.stat).length
     let divY=this.panel.h*0.8/totalDeep
-    let startY=this.panel.h/2 - (totalDeep-1)/2.0*divY
+    let startY=this.panel.h/2 - (totalDeep)/2.0*divY
     let Y = startY + (node.d-1) *divY
     return {x:X,y:Y}
   }
@@ -112,51 +116,23 @@ export default class ForceView extends Component {
     })
   }
   hover(x,y){
-      let find_node = this.findNearestNode(x,y,15)
-      if(find_node.length>0){
-          let v1 = this.NODES[find_node[0].i]
-          v1.highlight()
+      let find_nodes = this.findNearestNode(x,y,30)
+      if(find_nodes.length>0){
+          //let v1 = this.NODES[find_node[0].i]
+          find_nodes.map((node)=>{
+              this.NODES[node.i].highlight()
+          } )
       }
       //alert('x='+x+'\ny='+y+'\nnode0='+this.nodes[0].x+','+this.nodes[0].y+'\nnodes='+this.nodes.length+'\n'+JSON.stringify(find_node)) //x,y is moving delta
       //console.log('_handlePanResponderMove('+x+','+y+')'+JSON.stringify(find_node.length))
   }
-  /*renderNodes(){
-    return this.nodes.map((node,seq)=>{
-      let xy=this.findPyramidXY(node)
-      let dad = this.nodes[node.f]
-      let fxy=this.findPyramidXY(dad)
-      //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
-      return (
-        <G key={'g'+seq}>
-          <Circle key={'c'+seq}
-              cx={xy.x}
-              cy={xy.y}
-              r="10"
-              //stroke={node.e?"green":"blue"}
-              //strokeWidth="2.5"
-              fill={node.c==0?"green":"blue"}
-              onPress={()=> {
-                  let msg = node.c===0?node.k+": "+node.v:node.k
-                  alert(JSON.stringify(msg))
-              }}
-              //{...this._panResponder.panHandlers}
-              //onResponderMove={(e)=>{alert('onResponderMove')}}
-          />
-          <Line key={'l'+seq}
-              x1={xy.x} y1={xy.y} 
-              x2={fxy.x} y2={fxy.y} 
-              stroke="#999" />
-        </G>
-      )
-    })
-  }*/
   renderNodes(){
     return this.nodes.map((node,seq)=>{
       let xy=this.findPyramidXY(node)
       node['x']=xy.x
       node['y']=xy.y
       let dad = this.nodes[node.f]
-      let fxy=this.findPyramidXY(dad)
+      let fxy = this.findPyramidXY(dad)
       //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
       return (
           <JsonNode ref={ele => {this.NODES[node.i] = ele;}} key={seq} node={node} n1={xy} n2={fxy} />

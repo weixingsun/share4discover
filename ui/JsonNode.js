@@ -25,7 +25,9 @@ export default class JsonNode extends Component {
       });
       */
   }
-
+  componentWillUnmount(){
+    if(this.timer) clearTimeout(this.timer)
+  }
   constructor(props){
     super(props);
     this.init_pos={x:this.props.n1.x,y:this.props.n1.y}
@@ -109,7 +111,8 @@ export default class JsonNode extends Component {
     }
     highlight = ()=>{
         this.change('red',10)
-        setTimeout(()=> this.change(this.init_color,0), 15000);
+        if(this.timer) clearTimeout(this.timer)
+        this.timer=setTimeout(()=> this.change(this.init_color,0), 20*1000);
     }
   change(color,timer){
       this.setState({
@@ -130,6 +133,7 @@ export default class JsonNode extends Component {
     )
   }
   render() {
+    let r=this.props.node.d<2?16:12;
     // <Animated.G 
     return (
             <G 
@@ -144,7 +148,7 @@ export default class JsonNode extends Component {
                   cx={this.pos.x._value}
                   cy={this.pos.y._value}
                   //style={this.state.pos.getLayout()}
-                  r="15"
+                  r={r}
                   fill={this.state.color}
                   //stroke={node.e?"green":"blue"}
                   //strokeWidth="2.5"
