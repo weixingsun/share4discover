@@ -52,14 +52,30 @@ export default class FeedList extends React.Component {
         //Store.delete(Store.FEED_LIST)
         Store.get(Store.FEED_LIST).then(function(list){
             if(list){
-                //alert(JSON.stringify(list))
-                _this.feed_list = list
-                _this.setState({dataSource: _this.ds.cloneWithRows(list)});
+                _this.feed_list = _this.sort(list)
+                _this.setState({dataSource: _this.ds.cloneWithRows(_this.feed_list)});
             //}else{
             //  Store.insertFeedData();
             }
         })
         //Store.insertFeedData();
+    }
+    sort(arr){
+        let total ={}
+        arr.map((item)=>{
+          let obj = JSON.parse(item)
+          if(total[obj.type]) total[obj.type].push(item)
+          else total[obj.type] = [item]
+        })
+        //alert(JSON.stringify(total))
+        var keys = Object.keys(total);
+        keys.sort();
+        let s_arr = []
+        keys.map((key)=>{
+          s_arr = s_arr.concat(total[key])
+        })
+        //alert(JSON.stringify(s_arr))
+        return s_arr;
     }
     addRss(){
         //http://ctrlq.org/rss/
@@ -82,6 +98,11 @@ export default class FeedList extends React.Component {
         }else if(json.type==='web'){
             this.props.navigator.push({
                 component: WebReader,
+                passProps: {navigator:this.props.navigator,url:json.url},
+            });
+        }else if(json.type==='share'){
+            this.props.navigator.push({
+                component: ShareReader,
                 passProps: {navigator:this.props.navigator,url:json.url},
             });
         }

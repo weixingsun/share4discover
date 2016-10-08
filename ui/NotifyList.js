@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {NativeModules, ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
+import { Alert, NativeModules, ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
 import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
 import Swipeout from 'react-native-swipeout';
@@ -8,20 +8,87 @@ import Net from "../io/Net"
 import Global from "../io/Global"
 import Store from "../io/Store"
 import {Icon} from './Icon'
-import Filter from "./Filter"
 import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
 import FormInfo from './FormInfoVar'
+import RssReader from './RssReader';
+import YqlReader from './YqlReader';
+import FormFeed from './FormFeed';
 
 export default class NotifyList extends Component {
   constructor(props) {
       super(props);
       //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()  //zh_CN  -> zh-cn
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.all_notes=[]
+      this.state={
+          feed_list:[],
+      }
   }
   componentWillMount(){
       //alert(NativeModules.RNI18n.locale)
+      this.load()
+  }
+  load(){
+      var _this=this;
+      Store.get(Store.FEED_LIST).then(function(list){
+          if(list){
+              let sorted = _this.sort(list)
+              //alert(JSON.stringify(sorted))
+              _this.setState({feed_list: sorted})
+              //_this.setState({dataSource: _this.ds.cloneWithRows(list)});
+          }
+      })
+  }
+  sort(arr){
+      let total ={}
+      arr.map((item)=>{
+          let obj = JSON.parse(item)
+          if(total[obj.type]) total[obj.type].push(item)
+          else total[obj.type] = [item]
+      })
+      //alert(JSON.stringify(total))
+      var keys = Object.keys(total);
+      keys.sort();
+      let s_arr = []
+      keys.map((key)=>{
+          s_arr = s_arr.concat(total[key])
+      })
+      //alert(JSON.stringify(s_arr))
+      return s_arr;
+  }
+  sort_dict(dict){
+      var keys = Object.keys(dict);
+      keys.sort();
+      let s_dict = {}
+      for (var i=0; i<keys.length; i++) {
+          s_dict[keys[i]] = dict[ keys[i] ]
+      }
+      return s_dict;
+  }
+  openFeed(json){
+      if(json.type==='rss'){
+          this.props.navigator.push({
+              component: RssReader,
+              passProps: {navigator:this.props.navigator,url:json.url},
+          });
+      }else if(json.type==='yql'){
+          this.props.navigator.push({
+              component: YqlReader,
+              passProps: {navigator:this.props.navigator,json:json},
+          });
+      }else if(json.type==='web'){
+          this.props.navigator.push({
+              component: WebReader,
+              passProps: {navigator:this.props.navigator,url:json.url},
+          });
+      }else if(json.type==='share'){
+          this.props.navigator.push({
+              component: ShareReader,
+              passProps: {navigator:this.props.navigator,url:json.url},
+          });
+      }
   }
   getMsg(key){
       var self = this;
@@ -83,7 +150,7 @@ export default class NotifyList extends Component {
       </Swipeout>
     )
   }
-  _renderRowView(rowData) {
+  _renderShareRowView(rowData) {
     var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
     var bold = rowData.status==='1'? {fontSize:16,fontWeight:'bold',color:'black'}: {fontSize:16}
     return (
@@ -112,6 +179,39 @@ export default class NotifyList extends Component {
       </TouchableHighlight>
     );
   }
+    _renderFeedRowView(data) {
+        let json = JSON.parse(data)
+        if(!json.name) return
+        let number = ''
+        let bold = {fontSize:16,fontWeight:'bold',color:'black'}
+        let type = json.type
+        let name = Global.trimTitle(json.name)
+        return (
+      <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
+            onPress={()=>this.openFeed(json)} >
+          <View >
+              <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
+                <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
+                  <Icon
+                    style={{marginLeft:15,marginRight:6}}
+                    size={20}
+                    //color={this.props.msg.ask=='false'?'blue':'gray'}
+                    color={'gray'}
+                    name={Global.FEED_ICONS[type]}
+                  />
+                </View>
+                <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
+                    <Text style={ bold }>{name}</Text>
+                </View>
+                <View style={{marginRight:10,justifyContent:'center'}}>
+                    <Text>{number}</Text>
+                </View>
+              </View>
+              <View style={Style.separator} />
+          </View>
+      </TouchableHighlight>
+        );
+    }
   renderActionIcon(){
     /*if(Global.mainlogin==='') 
       return (
@@ -131,9 +231,21 @@ export default class NotifyList extends Component {
       )
     }*/
   }
+  _renderRowView(data){
+      //let feed_types = ['rss','yql','web','share']
+      let share_types = Object.keys(Global.TYPE_ICONS)
+      if(share_types.indexOf(data.type)<0){
+          return this._renderFeedRowView(data)
+      }else{
+          return this._renderShareRowView(data)
+      }
+  }
   render() {
-    let ds=this.ds.cloneWithRows([])
-    if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
+    //let ds=this.ds.cloneWithRows(this.all_notes)
+    this.all_notes = this.props.mails.concat(this.state.feed_list)
+    //alert(JSON.stringify(this.all_notes))
+    let ds=this.ds.cloneWithRows(this.all_notes)
+    //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'My Messages',tintColor:Style.font_colors.enabled}} 

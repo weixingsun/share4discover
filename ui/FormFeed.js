@@ -50,7 +50,12 @@ export default class FormFeed extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.feed_types = { rss:{url:true,name:false}, yql:{yql:true,name:true}, web:{url:true,name:false},}
+        this.feed_types = { 
+            rss:{url:true,name:false}, 
+            yql:{yql:true,name:true}, 
+            web:{url:true,name:false},
+          share:{cat:true,loc:false,name:false},
+        }
         this.state = {
             type: 'rss',
             form: {
@@ -118,6 +123,9 @@ export default class FormFeed extends React.Component{
         }else if(formValues.type==='web'){
           let title = formValues.url
           self.setState({ form:{ ...self.state.form, name:title }, })
+        }else if(formValues.type==='share'){
+          let title = formValues.cat
+          self.setState({ form:{ ...self.state.form, name:title }, })
         }
     }
     cap1(str){
@@ -182,6 +190,7 @@ export default class FormFeed extends React.Component{
                                 <GiftedForm.OptionWidget title='RSS' value='rss' />
                                 <GiftedForm.OptionWidget title='WEB' value='web' />
                                 <GiftedForm.OptionWidget title='YQL' value='yql' />
+                                <GiftedForm.OptionWidget title='Share' value='share' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         {this.renderTypeFields(this.feed_types[this.state.type])}

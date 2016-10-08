@@ -7,7 +7,7 @@ import Svg,{Circle,G,Defs,Use,Rect,Line } from 'react-native-svg'
 import Style from './Style'
 import JsonNode from './JsonNode'
 
-export default class JsonPyramid extends Component {
+export default class JsonStar extends Component {
   //static propTypes = {
   //  data: PropTypes.array.isRequired,
   //}
@@ -96,7 +96,7 @@ export default class JsonPyramid extends Component {
         }
     }
   }
-  findPyramidXY(node){  //{d,i,f,s,c,k,v}
+  findStarXY(node){  //{d,i,f,s,c,k,v}
     let total=this.stat['d'+node.d]      //deep #
     //let seq  =this.stat['d'+node.d].r
     let seq  =node.o                     //horizontal #
@@ -128,11 +128,11 @@ export default class JsonPyramid extends Component {
   }
   renderNodes(){
     return this.nodes.map((node,seq)=>{
-      let xy=this.findPyramidXY(node)
+      let xy=this.findStarXY(node)
       node['x']=xy.x
       node['y']=xy.y
       let dad = this.nodes[node.f]
-      let fxy = this.findPyramidXY(dad)
+      let fxy = this.findStarXY(dad)
       //console.log('('+xy.x+','+xy.y+') \n fxy('+fxy.x+','+fxy.y+')\n f ' +JSON.stringify(dad))
       return (
           <JsonNode ref={ele => {this.NODES[node.i] = ele;}} key={seq} node={node} n1={xy} n2={fxy} />
