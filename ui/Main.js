@@ -134,15 +134,25 @@ export default class Main extends Component {
           },
           onNotificationOpened: function(message, data, isActive) {
             if (data.p2p_notification && data.p2p_notification.key) {
-              console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
+              let replyKey= data.p2p_notification.key //car:lat,lng:ctime#rtime
+              self.readMsg(replyKey,data.p2p_notification.value);
+              let msgKey= replyKey.split('#')[0] //car:lat,lng:ctime
+              //console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
               //self.openMsg(data.p2p_notification.key)
-              let url = 'share://shareplus.co.nf/i/'+data.p2p_notification.key;
-              //if(Platform.OS==='android')
-                 //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
+              let url='share://shareplus.co.nf/i/'+msgKey;
+              //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
               Linking.openURL(url);
             }
           }
       });
+  }
+  readMsg(noteKey,noteValue){
+      //key='car:lat,lng:ctime#rtime'  value='{t:'r1', l:Global.mainlogin,c:this.state.reply}'
+      let jsonValue = JSON.parse(noteValue)
+      jsonValue.t='r0'
+      var notify_value={key:Global.getNotifyKey(), field:noteKey, value:JSON.stringify(jsonValue)}
+      Net.putHash(notify_value)
+      //alert(JSON.stringify(notify_value))
   }
   checkLogin(type){
       //var self = this
@@ -271,26 +281,29 @@ export default class Main extends Component {
     });*/
   }
   //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
+  //key='car:lat,lng:ctime#rtime'  value={t:'r1', l:'fb:email', c:'content'}
   Kv2Json(kv){
       var arr = []
       if(kv == null) return arr;
       var keys = Object.keys(kv)  //.reverse()
       keys.map((key)=>{
+          //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
           var key_arr = key.split(':')
           var type   = key_arr[0]
           var latlng = key_arr[1]
           var times   = key_arr[2]
           var ctime   = times.split('#')[0]
           var rtime   = times.split('#')[1]
-          var value_arr = kv[key].split('|')
-          var rtype = value_arr[0].substring(0,1);    //r
-          var status = value_arr[0].substring(1)      //1
-          var user = value_arr[1]
-          var content = value_arr[2]
-          var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
-          //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-          //alert(JSON.stringify(obj))
-          arr.push( obj )
+          if(kv[key].substring(0,1)==='{') {
+            var value_obj = JSON.parse(kv[key])
+            var rtype = value_obj.t.substring(0,1);    //r
+            var status = value_obj.t.substring(1)      //1
+            var user = value_obj.l
+            var content = value_obj.c
+            var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
+            //alert(JSON.stringify(obj))
+            arr.push( obj )
+          }
       })
       arr.sort(function(a,b){
           return parseInt(b.rtime)-parseInt(a.rtime)

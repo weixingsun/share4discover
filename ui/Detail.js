@@ -53,10 +53,10 @@ export default class Detail extends Component {
         I18n.locale = NativeModules.RNI18n.locale
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
-    s1Note(msg,reply){
+    s1Note(msg,notify){
         if(this.props.msg.s1uid){
-            let contents = {'en':msg.title+': '+reply}
-            let data = {key:this.key}
+            let contents = {'en':msg.title+': '+notify.value}
+            let data = {key:notify.field,value:notify.value}
             OneSignal.postNotification(contents, data, this.props.msg.s1uid);
             //OneSignal.Configure
             //onNotificationOpened: function(message, data, isActive) {
@@ -75,9 +75,11 @@ export default class Detail extends Component {
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
-        var value={key:this.key, field:'#'+time, value:Global.mainlogin+'|'+this.state.reply}
+        let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
+        var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'r1|'+Global.mainlogin+'|'+this.state.reply}
+        let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
+        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -88,7 +90,7 @@ export default class Detail extends Component {
                 {text:"OK", onPress:()=>{
                     Net.putHash(value)
                     Net.putHash(notify_value)
-                    _this.s1Note(_this.props.msg,_this.state.reply)
+                    _this.s1Note(_this.props.msg,notify_value)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -220,17 +222,18 @@ export default class Detail extends Component {
         );
     }
     renderReplyItems(){
-        //id:#rtime  key='car:lat,lng:ctime#time'  value='r1|fb:email|content'
+        //id:#rtime  key='car:lat,lng:ctime#time'  value='{l:Global.mainlogin,c:this.state.reply}'
         var keys = Object.keys(this.props.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
 	}).sort()
 	return (
 	  replys.map((key)=>{
-              var str = this.props.msg[key];
-              let owner = str.split('|')[0]
-              let reply = str.split('|')[1]
-              let time  = parseInt(key.substring(1))
+              //var str = this.props.msg[key];
+              let replyObj = JSON.parse(this.props.msg[key])
+              let owner = replyObj.l
+              let reply = replyObj.c
+              let time  = parseInt(key.substring(1)) //#time -> time
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
 	      if(sns_type==null || sns_type==''){
@@ -239,16 +242,21 @@ export default class Detail extends Component {
                 )
 	      }else{
 	        return (
-	          <View style={{flexDirection:'row',marginLeft:30}} key={key} >
+	        <View style={{marginLeft:30}} key={key}>
+	          <View style={{flexDirection:'row',marginLeft:30}}>
                     <Icon
                         //style={{marginRight:6}}
-                        size={24}
+                        size={20}
                         color={'blue'}
                         name={Global.SNS_ICONS[sns_type]}
                     />
-                    <Text style={{flex:1,marginLeft:1}}>  { sns_user + ':  '+ reply } </Text>
+                    <Text style={{flex:1,marginLeft:1}}>{ sns_user }</Text>
                     <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
                   </View>
+                  <View style={{flexDirection:'row',marginLeft:30}}>
+                    <Text style={{flex:1,marginLeft:10}}>  { reply } </Text>
+                  </View>
+                </View>
 	        )
               }
           })

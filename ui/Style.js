@@ -28,6 +28,7 @@ module.exports = {
   UNIT:em(1),
   PADDING: em(1.25),
   NAVBAR_HEIGHT:66,
+  BOTTOM_BAR_HEIGHT:50,
   THUMB_HEIGHT:150,
   
   //Card
@@ -71,6 +72,10 @@ module.exports = {
       right: 0,
       bottom: 50,
   },
+  listContainer:{
+      flex:1,
+      height:this.DEVICE_HEIGHT-this.NAVBAR_HEIGHT-this.BOTTOM_BAR_HEIGHT-20,
+  },
   scrollview:{
       flex:1,
   },
@@ -96,6 +101,7 @@ module.exports = {
       flexDirection:'row',
       //borderTopColor:'#666666',
       //borderTopWidth:0.3,
+      //height:this.BOTTOM_BAR_HEIGHT,
   },
   /*drawerBar:{
       paddingRight:12,

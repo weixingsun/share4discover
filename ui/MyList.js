@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
-import {DeviceEventEmitter,ListView, NetInfo, Text, View, TouchableHighlight, Image, } from 'react-native';
+import {DeviceEventEmitter,ListView, NetInfo, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
 import Net from "../io/Net"
 import Global from "../io/Global"
 import {Icon} from './Icon'
@@ -87,7 +87,7 @@ export default class MyList extends Component {
   }
   render() {
     return (
-      <View style={Style.absoluteContainer}>
+      <View>
         <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             rightButton={
@@ -97,7 +97,7 @@ export default class MyList extends Component {
                 </View>
             }
         />
-        <ListView 
+        <ListView style={styles.listContainer}
             dataSource={this.ds.cloneWithRows(this.state.myMsgList)} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
@@ -105,3 +105,10 @@ export default class MyList extends Component {
     );
   }
 }
+var styles = StyleSheet.create({
+    listContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.BOTTOM_BAR_HEIGHT-20,
+    },
+})

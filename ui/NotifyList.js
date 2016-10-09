@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import { Alert, NativeModules, ListView, Text, View, TouchableHighlight, Image, } from 'react-native';
+import { Alert, NativeModules, ListView, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
 import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
 import Swipeout from 'react-native-swipeout';
@@ -15,6 +15,7 @@ import FormInfo from './FormInfoVar'
 import RssReader from './RssReader';
 import YqlReader from './YqlReader';
 import FormFeed from './FormFeed';
+import SGListView from 'react-native-sglistview';
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -247,17 +248,34 @@ export default class NotifyList extends Component {
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     return (
-      <View style={Style.absoluteContainer}>
+      <View>
         <NavigationBar style={Style.navbar} title={{title:'My Messages',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             //rightButton= {this.renderActionIcon()}
 	/>
-        <ListView 
-            dataSource={ds} 
-            //renderRow={this._renderRowView.bind(this)} 
-            renderRow={this._renderSwipeoutRow.bind(this)} 
-            enableEmptySections={true} />
+          <SGListView
+              enableEmptySections={true}
+              ref={'listview'}
+              pageSize={10}
+              initialListSize={10}
+              stickyHeaderIndices={[]}
+              onEndReachedThreshold={1}
+              scrollRenderAheadDistance={1}
+              style={styles.listContainer}
+              dataSource={ds}
+              renderRow={this._renderSwipeoutRow.bind(this)}
+              //renderHeader={this._renderHeader.bind(this)}
+              //renderSectionHeader = {this._renderSectionHeader.bind(this)}
+              automaticallyAdjustContentInsets={false}
+          />
       </View>
     );
   }
 }
+var styles = StyleSheet.create({
+    listContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.BOTTOM_BAR_HEIGHT-20,
+    },
+})
