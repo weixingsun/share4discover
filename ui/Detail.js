@@ -17,6 +17,7 @@ import Net from '../io/Net'
 import DetailImg from './DetailImg';
 import FormInfo from "./FormInfoVar"
 import I18n from 'react-native-i18n';
+import OneSignal from 'react-native-onesignal';
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -33,6 +34,7 @@ export default class Detail extends Component {
             image_modal_name:this.images[0],
             show_pic_modal:false,
         }
+        this.key = Global.getKeyFromMsg(this.props.msg)
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
     }
@@ -51,16 +53,31 @@ export default class Detail extends Component {
         I18n.locale = NativeModules.RNI18n.locale
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
+    s1Note(msg,reply){
+        if(this.props.msg.s1uid){
+            let contents = {'en':msg.title+': '+reply}
+            let data = {key:this.key}
+            OneSignal.postNotification(contents, data, this.props.msg.s1uid);
+            //OneSignal.Configure
+            //onNotificationOpened: function(message, data, isActive) {
+            //  if (data.p2p_notification) {
+            //    for (var num in data.p2p_notification) {
+            //    // console.log(data.p2p_notification[num]);
+            //    }
+            //  }
+            //}
+        }
+    }
     onReply() {
         if(this.state.reply.length<5) {
             alert('Please reply with more characters.')
             return;
         }
-        var key = Global.getKeyFromMsg(this.props.msg)
+        //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
-        var value={key:key, field:'#'+time, value:Global.mainlogin+'|'+this.state.reply}
+        var value={key:this.key, field:'#'+time, value:Global.mainlogin+'|'+this.state.reply}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'r1|'+Global.mainlogin+'|'+this.state.reply}
+        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'r1|'+Global.mainlogin+'|'+this.state.reply}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -71,17 +88,18 @@ export default class Detail extends Component {
                 {text:"OK", onPress:()=>{
                     Net.putHash(value)
                     Net.putHash(notify_value)
+                    _this.s1Note(_this.props.msg,_this.state.reply)
                     _this.props.navigator.pop();
                 }},
             ]
         );
     }
     onClose() {
-        var key = Global.getKeyFromMsg(this.props.msg)
+        //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = +new Date();
-        var value={key:key, field:'close', value:Global.mainlogin+'|'+time}
+        var value={key:this.key, field:'close', value:Global.mainlogin+'|'+time}
         let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
+	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
         var _this = this;
         Alert.alert(
             "Complete",
@@ -98,15 +116,15 @@ export default class Detail extends Component {
     }
     onDelete() {
 	var _this = this;
-        var key = Global.getKeyFromMsg(this.props.msg)
-        let myjson = {key:'*'+Global.mainlogin,field:key}
+        //var key = Global.getKeyFromMsg(this.props.msg)
+        let myjson = {key:'*'+Global.mainlogin,field:this.key}
         Alert.alert(
             "Delete",
             "Do you want to delete this information ? ",
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    Net.delMsg(key)
+                    Net.delMsg(_this.key)
                     Net.delHash(myjson);
                     DeviceEventEmitter.emit('refresh:MyList',0);
                     _this.props.navigator.pop();
@@ -336,7 +354,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','s1uid']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)

@@ -21,6 +21,7 @@ import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import I18n from 'react-native-i18n';
 import moment from 'moment'
+import OneSignal from 'react-native-onesignal';
  
 export default class FormInfoVar extends Component {
     constructor(props) {
@@ -73,6 +74,12 @@ export default class FormInfoVar extends Component {
             this.setState({close_image:source})
         });
         this.turnOnGps()
+        OneSignal.configure({
+            onIdsAvailable: (device)=> {  //userId,pushToken
+                //alert('onesignal:'+JSON.stringify(device));
+                this.s1uid=device.userId
+            }
+        });
     }
     componentDidMount(){
     }
@@ -208,6 +215,7 @@ export default class FormInfoVar extends Component {
         values.lng = parseFloat(values.lng).toFixed(6)
         //alert(JSON.stringify(values))
         this.merge_into(values,this.hidden_fields)
+        if(this.s1uid) values['s1uid']=this.s1uid
     }
     merge_into(obj,obj_to_merge){
         //for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
@@ -768,7 +776,8 @@ export default class FormInfoVar extends Component {
                                   this.onSubmit(values)
                                   postSubmit();
                                 }else{
-                                  alert(JSON.stringify(values))
+                                  //alert(JSON.stringify(values))
+                                  //alert(this.s1uid)
                                 }
                             }}
                         />

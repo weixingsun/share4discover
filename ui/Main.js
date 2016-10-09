@@ -90,19 +90,7 @@ export default class Main extends Component {
   _handleOpenURL(event) {
       let key = event.url.split('/i/')[1]
       if(key.length>0){
-        //var self = this;
-        Net.getMsg(key).then((json)=> {
-          if(json!=null){
-            //alert(JSON.stringify(json))
-            this.props.navigator.push({
-              component: Detail,
-              passProps: {
-                  msg:json,
-              }
-            });
-          }else
-            alert('This share has been deleted.')
-        });
+        this.openMsg(key)
       }
   }
   ExtUrl(){
@@ -116,7 +104,7 @@ export default class Main extends Component {
       //for android, AndroidManifest.xml launchMode=standard
     else if(Platform.OS === 'android')
       Linking.getInitialURL().then((url)=>{
-          //alert('Linking.getInitialURL:url:'+url)
+          console.log('Linking.getInitialURL:url:'+url)
           if(url){
               let key = url.split('/i/')[1]
               if(key.length>0) self.openMsg(key)
@@ -137,26 +125,24 @@ export default class Main extends Component {
       return true;
   }
   notification(){
+      let self=this
       OneSignal.configure({
           onIdsAvailable: function(device) {
-            let userid = 'UserId = '+ device.userId;
-            let token  = 'PushToken = '+ device.pushToken;
+            //let userid = 'UserId = '+ device.userId;
+            //let token  = 'PushToken = '+ device.pushToken;
             //alert('onesignal.notification:\n'+userid+'\n'+token)
           },
-      onNotificationOpened: function(message, data, isActive) {
-          console.log('MESSAGE: ', message);
-          console.log('DATA: ', data);
-          console.log('ISACTIVE: ', isActive);
-      // Do whatever you want with the objects here
-      // _navigator.to('main.post', data.title, { // If applicable
-      //  article: {
-      //    title: data.title,
-      //    link: data.url,
-      //    action: data.actionSelected
-      //  }
-      // });
-      }
-  });
+          onNotificationOpened: function(message, data, isActive) {
+            if (data.p2p_notification && data.p2p_notification.key) {
+              console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
+              //self.openMsg(data.p2p_notification.key)
+              let url = 'share://shareplus.co.nf/i/'+data.p2p_notification.key;
+              //if(Platform.OS==='android')
+                 //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
+              Linking.openURL(url);
+            }
+          }
+      });
   }
   checkLogin(type){
       //var self = this
