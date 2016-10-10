@@ -150,9 +150,9 @@ export default class Main extends Component {
       //key='car:lat,lng:ctime#rtime'  value='{t:'r1', l:Global.mainlogin,c:this.state.reply}'
       let jsonValue = JSON.parse(noteValue)
       jsonValue.t='r0'
+      //alert(JSON.stringify(notify_value))
       var notify_value={key:Global.getNotifyKey(), field:noteKey, value:JSON.stringify(jsonValue)}
       Net.putHash(notify_value)
-      //alert(JSON.stringify(notify_value))
   }
   checkLogin(type){
       //var self = this

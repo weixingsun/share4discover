@@ -55,17 +55,10 @@ export default class Detail extends Component {
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     s1Note(msg,notify){
         if(this.props.msg.s1uid){
-            let contents = {'en':msg.title+': '+notify.value}
+            let note = JSON.parse(notify.value)
+            let title = {'en':msg.title+'\n '+note.c}
             let data = {key:notify.field,value:notify.value}
-            OneSignal.postNotification(contents, data, this.props.msg.s1uid);
-            //OneSignal.Configure
-            //onNotificationOpened: function(message, data, isActive) {
-            //  if (data.p2p_notification) {
-            //    for (var num in data.p2p_notification) {
-            //    // console.log(data.p2p_notification[num]);
-            //    }
-            //  }
-            //}
+            OneSignal.postNotification(title, data, this.props.msg.s1uid);
         }
     }
     onReply() {
@@ -229,19 +222,17 @@ export default class Detail extends Component {
 	}).sort()
 	return (
 	  replys.map((key)=>{
-              //var str = this.props.msg[key];
+	    //if(sns_type==null || sns_type==''){
+            if(this.props.msg[key].substring(0,1)!=='{'){
+              return <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
+            }else{
               let replyObj = JSON.parse(this.props.msg[key])
               let owner = replyObj.l
               let reply = replyObj.c
               let time  = parseInt(key.substring(1)) //#time -> time
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
-	      if(sns_type==null || sns_type==''){
-                return (
-                    <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
-                )
-	      }else{
-	        return (
+	      return (
 	        <View style={{marginLeft:30}} key={key}>
 	          <View style={{flexDirection:'row',marginLeft:30}}>
                     <Icon
@@ -258,7 +249,8 @@ export default class Detail extends Component {
                   </View>
                 </View>
 	        )
-              }
+              //}
+            }
           })
 	)
     }

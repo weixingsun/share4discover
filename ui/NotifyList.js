@@ -108,7 +108,8 @@ export default class NotifyList extends Component {
   readMsg(reply){
       //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
       var key = Global.getKeyFromReply(reply)
-      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:'r0|'+Global.mainlogin+'|'+reply.content}
+      let v = {t:'r0',l:reply.user,c:reply.content}
+      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:JSON.stringify(v)}
       Net.putHash(notify_value)
       //alert(JSON.stringify(notify_value))
   }
