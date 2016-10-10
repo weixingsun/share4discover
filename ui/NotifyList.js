@@ -26,6 +26,7 @@ export default class NotifyList extends Component {
       this.state={
           feed_list:[],
       }
+      this.share_types = Object.keys(Global.TYPE_ICONS)
   }
   componentWillMount(){
       //alert(NativeModules.RNI18n.locale)
@@ -117,26 +118,58 @@ export default class NotifyList extends Component {
       if(rowData.status==='1')this.readMsg(rowData)
       this.getMsg(Global.getKeyFromReply(rowData))
   }
+  onDeleteReply(rowData){
+      let json = {key:'@'+rowData.user,field:Global.getKeyFromReply(rowData)+'#'+rowData.rtime}
+      Alert.alert(
+          "Delete",
+          "Do you want to delete this message ? ",
+          [
+              {text:"Cancel" },
+              {text:"OK", onPress:()=>{
+                  Net.delHash(json);
+                  DeviceEventEmitter.emit('refresh:Main.Notify',0);
+              }},
+          ]
+      );
+  }
+    EditFeed(data){
+        this.props.navigator.push({
+            component: FormFeed,
+            passProps: {navigator:this.props.navigator,feed:data,} //refresh:this.load},
+        })
+    }
+    deleteFeed(data){
+        Store.deleteFeed(data)
+        this.feed_list = this.feed_list.filter(function(name){ return name != data})
+        this.setState({dataSource: this.ds.cloneWithRows(this.feed_list)});
+    }
+    deleteFeedAlert(data){
+        let self=this
+        Alert.alert(
+            "Delete",
+            "Do you want to delete this row ? ",
+            [
+                {text:"Cancel" },
+                {text:"OK", onPress:()=>self.deleteFeed(data) },
+            ]
+        );
+    }
   _renderSwipeoutRow(rowData){
     let rightButton = [{
           text:'Delete',
           backgroundColor:'#ff6f00',
-          onPress:()=>{
-            let json = {key:'@'+rowData.user,field:Global.getKeyFromReply(rowData)+'#'+rowData.rtime}
-            Alert.alert(
-              "Delete",
-              "Do you want to delete this message ? ",
-              [
-                {text:"Cancel" },
-                {text:"OK", onPress:()=>{
-                    Net.delHash(json);
-                    DeviceEventEmitter.emit('refresh:Main.Notify',0);
-                }},
-              ]
-            );
-            //alert(JSON.stringify(json))
-          }
+          onPress:()=>this.onDeleteReply(rowData),
         }]
+    if(this.share_types.indexOf(rowData.type)<0)
+        rightButton = [{
+          text:'Modify',
+          backgroundColor:'#ff6f00',
+          onPress:()=>this.EditFeed(rowData),
+        },{
+          text:'Delete',
+          backgroundColor:'#ff0000',
+          onPress:()=>this.deleteFeedAlert(rowData),
+        },]
     return (
       <Swipeout
         //left={rowData.left}
@@ -236,8 +269,7 @@ export default class NotifyList extends Component {
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
-      let share_types = Object.keys(Global.TYPE_ICONS)
-      if(share_types.indexOf(data.type)<0){
+      if(this.share_types.indexOf(data.type)<0){
           return this._renderFeedRowView(data)
       }else{
           return this._renderShareRowView(data)
