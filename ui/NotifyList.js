@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import { Alert, NativeModules, ListView, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
+import { Alert, DeviceEventEmitter, NativeModules, ListView, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
 import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
 import Swipeout from 'react-native-swipeout';
@@ -130,6 +130,7 @@ export default class NotifyList extends Component {
                 {text:"Cancel" },
                 {text:"OK", onPress:()=>{
                     Net.delHash(json);
+                    DeviceEventEmitter.emit('refresh:Main.Notify',0);
                 }},
               ]
             );

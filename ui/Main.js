@@ -54,15 +54,16 @@ export default class Main extends Component {
       if(Platform.OS === 'android') {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
-      clearInterval(this.timer)
+      //clearInterval(this.timer)
+      this.event_notify.remove()
       //if(Platform.OS === 'ios') Linking.removeEventListener('url', this._handleOpenURL);
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
       //    this.setState({isLoading: false});
       //});
-      this.timer = setInterval(()=>this.timerFunction(),60000)
       this.ExtUrl()
+      this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),1000));
   }
   componentWillMount(){
       var _this = this;
@@ -239,9 +240,6 @@ export default class Main extends Component {
                Global.MAP = Global.BaiduMap;
           else Global.MAP = Global.GoogleMap;
       })
-  }
-  timerFunction(){
-      this.loadNotifyByLogin()
   }
   loadNotifyByLogin(){
       if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());

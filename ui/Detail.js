@@ -233,20 +233,23 @@ export default class Detail extends Component {
               let sns_type = owner.split(':')[0]
 	      let sns_user = owner.split(':')[1]
 	      return (
-	        <View style={{marginLeft:30}} key={key}>
-	          <View style={{flexDirection:'row',marginLeft:30}}>
+	        <View style={{marginLeft:20,flexDirection:'row',flex:1}} key={key}>
                     <Icon
-                        //style={{marginRight:6}}
+                        style={{marginLeft:6}}
                         size={20}
                         color={'blue'}
                         name={Global.SNS_ICONS[sns_type]}
                     />
-                    <Text style={{flex:1,marginLeft:1}}>{ sns_user }</Text>
-                    <Text style={{marginRight:5,color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
-                  </View>
-                  <View style={{flexDirection:'row',marginLeft:30}}>
-                    <Text style={{flex:1,marginLeft:10}}>  { reply } </Text>
-                  </View>
+                    <View style={{marginLeft:10,flex:1}}>
+  	              <View style={{flexDirection:'row'}}>
+                        <Text>{ sns_user }</Text>
+                        <View style={{flex:1}} />
+                        <Text style={{color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
+                      </View>
+                      <View >
+                        <Text>{ reply }</Text>
+                      </View>
+                    </View>
                 </View>
 	        )
               //}
