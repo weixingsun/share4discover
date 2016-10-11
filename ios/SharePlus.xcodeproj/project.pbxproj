@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -73,6 +72,7 @@
 		E8BA60B2C02B4EF8BC633A33 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A50FABCC624F5FA5DD85B7 /* libRNSVG.a */; };
 		F82D64430BCD4B13999B7F85 /* libBleManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C7FB15B826E4000A6672205 /* libBleManager.a */; };
 		F916FBDAE137417C9BA1A250 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A6FCF2F66E8417C8ABEFA9D /* libKCKeepAwake.a */; };
+		0B7799DD5DF84E1493EC8991 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C40F6DA08D9D475B8D56A9A7 /* libRNDeviceInfo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -368,6 +368,8 @@
 		E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		EB3CC9415A1843D3A1D9B503 /* BleManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BleManager.xcodeproj; path = "../node_modules/react-native-ble-manager/ios/BleManager.xcodeproj"; sourceTree = "<group>"; };
 		F33085546F8A464EBDDF8A30 /* libRCTFBLogin.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBLogin.a; sourceTree = "<group>"; };
+		3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceInfo.xcodeproj"; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C40F6DA08D9D475B8D56A9A7 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo.a"; path = "libRNDeviceInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,6 +426,7 @@
 				E8BA60B2C02B4EF8BC633A33 /* libRNSVG.a in Frameworks */,
 				A12C1FD1E895454BA07B527B /* libRNSound.a in Frameworks */,
 				A3C36D233F4E4486A798C529 /* libRCTFBLogin.a in Frameworks */,
+				0B7799DD5DF84E1493EC8991 /* libRNDeviceInfo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +706,7 @@
 				583479CD5437462B9AA84EDD /* RNSVG.xcodeproj */,
 				E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */,
 				5379DF645D1446D698DB8EC7 /* RCTFBLogin.xcodeproj */,
+				3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -803,7 +807,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 800;
 				ORGANIZATIONNAME = WXSun;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
@@ -1267,6 +1271,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
+					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1275,6 +1280,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
+					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
@@ -1328,6 +1334,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
+					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1336,6 +1343,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
+					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
 					"\"$(SRCROOT)/SharePlus\"",
@@ -1412,6 +1420,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
+					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1476,6 +1485,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
+					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

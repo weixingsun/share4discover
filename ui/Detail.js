@@ -23,7 +23,7 @@ var {height, width} = Dimensions.get('window');
 export default class Detail extends Component {
     constructor(props) {
         super(props);
-        this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
+        //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = []
         this.isLogin = (Global.mainlogin.length>0)
         this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)

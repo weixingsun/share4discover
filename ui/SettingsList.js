@@ -10,6 +10,7 @@ import FeedList from './FeedList'
 import UsbList from './UsbList'
 import BleList from './BleList'
 import MapSettings from './MapSettings'
+import About from './About'
 import Help from './Help'
 import Store from '../io/Store'
 import Global from '../io/Global'
@@ -50,15 +51,10 @@ export default class SettingsList extends React.Component {
         });
     }
     about(){
-        //CodePush.getCurrentPackage().then((update) => {
-           // If the current app "session" represents the first time
-           // this update has run, and it had a description provided
-           // with it upon release, let's show it to the end user
-           // console.log("current app version:"+JSON.stringify(update));
-           //if (update.isFirstRun && update.description) {
-           //    // Display a "what's new?" modal
-           //}
-        //});
+        this.props.navigator.push({
+            component: About,
+            passProps: {navigator:this.props.navigator,},
+        })
     }
     help(){
         this.props.navigator.push({
