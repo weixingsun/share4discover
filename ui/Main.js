@@ -105,10 +105,15 @@ export default class Main extends Component {
       //for android, AndroidManifest.xml launchMode=standard
     else if(Platform.OS === 'android')
       Linking.getInitialURL().then((url)=>{
-          console.log('Linking.getInitialURL:url:'+url)
+          //console.log('Linking.getInitialURL:url:'+url)
           if(url){
-              let key = url.split('/i/')[1]
-              if(key.length>0) self.openMsg(key)
+              if(url.indexOf('/i/')>-1) {
+                  let key = url.split('/i/')[1]
+                  if(key.length>0) self.openMsg(key)
+              }else if(url.indexOf('/c/')>-1){
+                  let strNote = url.split('/c/')[1]
+                  alert(decodeURI(strNote))
+              }
           }
       }).catch(err=>alert('err:'+err))
   }
@@ -134,18 +139,30 @@ export default class Main extends Component {
             //alert('onesignal.notification:\n'+userid+'\n'+token)
           },
           onNotificationOpened: function(message, data, isActive) {
-            if (data.p2p_notification && data.p2p_notification.key) {
-              let replyKey= data.p2p_notification.key //car:lat,lng:ctime#rtime
-              self.readMsg(replyKey,data.p2p_notification.value);
-              let msgKey= replyKey.split('#')[0] //car:lat,lng:ctime
-              //console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
-              //self.openMsg(data.p2p_notification.key)
-              let url='share://shareplus.co.nf/i/'+msgKey;
-              //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
-              Linking.openURL(url);
+            //console.log(JSON.stringify(data))
+            if(data.custom){
+              self.openCustomNote(data)
+            }else if (data.p2p_notification && data.p2p_notification.key) {
+              self.openShareReadReply(data.p2p_notification)
             }
           }
       });
+  }
+  openCustomNote(note){ //{custom:1,title,content}
+      let str64=encodeURI(JSON.stringify(note))
+      let url='share://shareplus.co.nf/c/'+str64;
+      //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
+      Linking.openURL(url);
+  }
+  openShareReadReply(reply){
+      let replyKey= reply.key //car:lat,lng:ctime#rtime
+      let replyValue= reply.value //{t:'r1',l:'fb:email',c:'content'}
+      this.readMsg(replyKey,replyValue);
+      let msgKey= replyKey.split('#')[0] //car:lat,lng:ctime
+      //console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
+      let url='share://shareplus.co.nf/i/'+msgKey;
+      //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
+      Linking.openURL(url);
   }
   readMsg(noteKey,noteValue){
       //key='car:lat,lng:ctime#rtime'  value='{t:'r1', l:Global.mainlogin,c:this.state.reply}'
