@@ -65,6 +65,9 @@ I18n.translations = {
     pc:    'Laptop',
     school:'Study',
     music: 'Music',
+    //notes
+    host:'Host',
+    condition:'Condition',
   },
   zh_CN: {
     shareplus: '分享家',
@@ -129,5 +132,8 @@ I18n.translations = {
     pc:    '电脑',
     school:'学习',
     music: '音乐',
+    //notes
+    host:'主机',
+    condition:'条件',
   },
 }
