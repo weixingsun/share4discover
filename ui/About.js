@@ -39,7 +39,7 @@ export default class USBList extends React.Component {
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:100,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> UUID: </Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> UUID: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}}>{ this.state.onesignal_id }</Text>
               </View>
             </View>
@@ -49,7 +49,7 @@ export default class USBList extends React.Component {
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:100,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> Home: </Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> Home: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={()=>Linking.openURL('http://shareplus.co.nf')}>http://shareplus.co.nf</Text>
               </View>
             </View>
