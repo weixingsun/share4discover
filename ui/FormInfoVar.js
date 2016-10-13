@@ -560,8 +560,9 @@ export default class FormInfoVar extends Component {
             if(this.lasttype==null || values.type[0]!==this.lasttype){
                 this.lasttype=values.type[0]
                 //alert('change type:'+this.lasttype)
-                this.setState({type:this.lasttype})
+                this.setState({type:this.lasttype,form:{...this.state.form,type:this.lasttype}})
                 this.changeValidator(this.lasttype)
+                //GiftedFormManager.updateValue(this.formName, 'type', this.lasttype)
             }
         }
         if (this.state.validationResults!=null && !this.state.validationResults.isValid) {
@@ -659,7 +660,6 @@ export default class FormInfoVar extends Component {
         })
     }
     render(){
-        //alert('render()form:'+JSON.stringify(this.state.form) +'\nmsg:'+JSON.stringify(this.props.msg))
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         if(this.props.msg!=null) title_nav = 'Edit this Share'
@@ -677,8 +677,8 @@ export default class FormInfoVar extends Component {
                    }
                    rightButton={ this.showActionIcons() }
                 />
-                <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
                   <ScrollView>
+                  <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
                   {this.showPics()}
                   <GiftedForm
                     formName={this.formName}
@@ -691,30 +691,30 @@ export default class FormInfoVar extends Component {
                         <GiftedForm.ModalWidget
                             title={I18n.t('cat')}
                             name='type'
-                            display={I18n.t(this.state.form.type)}
+                            display={I18n.t(this.state.type)}
                             value={this.state.form.type}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.type]} size={30} /></View>}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
+                            <GiftedForm.SelectWidget name='type' title='Category' multiple={false}>
                                 {this.renderTypeOptions()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
                             title={I18n.t('type')}
                             name='cat'
-                            display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)+I18n.t(this.state.form.type)}
+                            display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)+I18n.t(this.state.type)}
                             value={this.state.form.cat}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-list-ol'} size={25} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='cat' title='Type' multiple={false}>
-                                <GiftedForm.OptionWidget title={I18n.t('rent0')+I18n.t(this.state.form.type)} value='rent0' />
-                                <GiftedForm.OptionWidget title={I18n.t('rent1')+I18n.t(this.state.form.type)} value='rent1' />
-                                <GiftedForm.OptionWidget title={I18n.t('buy') +I18n.t(this.state.form.type)}  value='buy'   />
-                                <GiftedForm.OptionWidget title={I18n.t('sell')+I18n.t(this.state.form.type)}  value='sell'  />
-                                <GiftedForm.OptionWidget title={I18n.t('free')+I18n.t(this.state.form.type)}  value='free'  />
+                                <GiftedForm.OptionWidget title={I18n.t('rent0')} value='rent0' />
+                                <GiftedForm.OptionWidget title={I18n.t('rent1')} value='rent1' />
+                                <GiftedForm.OptionWidget title={I18n.t('buy')  } value='buy'   />
+                                <GiftedForm.OptionWidget title={I18n.t('sell') } value='sell'  />
+                                <GiftedForm.OptionWidget title={I18n.t('free') } value='free'  />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}
@@ -782,8 +782,8 @@ export default class FormInfoVar extends Component {
                             }}
                         />
                 </GiftedForm>
+                </KeyboardAvoidingView>
                 </ScrollView>
-              </KeyboardAvoidingView>
             </View>
         );
         //<GiftedForm.ErrorsWidget/>
