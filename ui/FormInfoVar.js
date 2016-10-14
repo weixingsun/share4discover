@@ -571,7 +571,7 @@ export default class FormInfoVar extends Component {
         //<Icon name={'fa-weibo'} size={40} color={'red'} onPress={()=>this.postWB({type:'text',title:'this is a test'}) } />
         return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-images-outline'} size={40} color={Style.font_colors.enabled} onPress={this.openImagePicker.bind(this) } />
+                <Icon name={'ion-ios-attach'} size={40} color={Style.font_colors.enabled} onPress={this.openImagePicker.bind(this) } />
                 <View style={{width:10}} />
             </View>
         )

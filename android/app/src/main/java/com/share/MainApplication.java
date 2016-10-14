@@ -18,7 +18,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.theweflex.react.WeChatPackage;
 //import com.projectseptember.RNGL.RNGLPackage;
 import com.wxsun.usbserial.UsbReactPackage;
-import com.reactnative.photoview.PhotoViewPackage;
+//import com.reactnative.photoview.PhotoViewPackage;
 import com.keyee.datetime.*;
 import it.innove.BleManagerPackage;
 //import com.beacon.BeaconsAndroidPackage;
@@ -98,7 +98,7 @@ public class MainApplication extends Application implements ReactApplication {
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),
-        new PhotoViewPackage(),
+        //new PhotoViewPackage(),
         new KCKeepAwakePackage(),
         new BleManagerPackage(),
         //new BeaconsAndroidPackage(),
