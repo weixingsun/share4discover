@@ -8,7 +8,7 @@ import Style from './Style'
 import ListJson from './ListJson'
 import FeedList from './FeedList'
 import UsbList from './UsbList'
-import BleList from './BleList'
+//import BleList from './BleList'
 import MapSettings from './MapSettings'
 import About from './About'
 import Help from './Help'
@@ -189,10 +189,10 @@ export default class SettingsList extends React.Component {
                   </TouchableOpacity>
                   {this.renderFeed()}
                   {this.renderUSB()}
-                  {this.renderBLE()}
                   {this.renderLogin()}
               </ScrollView>
           </View>
         );
+        //{this.renderBLE()}
     }
 }
