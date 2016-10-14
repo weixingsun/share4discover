@@ -60,44 +60,31 @@ export default class FormInfoVar extends Component {
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
                 dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
             },
-            food:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
             book:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            mail:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-                dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
-            },
             tool:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
-            help:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             game:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            cell:{
+            phone:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             laptop:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
+            camera:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
             ticket:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            human:{
+            media:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            study:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
-            music:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
-            medical:{
+            medkit:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
         }

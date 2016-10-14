@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {AppState, Image, ListView, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {AppState, Image, ListView, NativeModules, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -16,10 +16,8 @@ import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
 import FormInfo from "./FormInfoVar"
-import PriceMarker from './PriceMarker'
-import Overlay from './Overlay'
-import SearchAddr from './SearchAddr'
 import Modal from 'react-native-root-modal';
+import I18n from 'react-native-i18n';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 export default class Maps extends Component {
@@ -44,7 +42,6 @@ export default class Maps extends Component {
         grantedPermissions:{},
       };
       this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION']
-      this.msg = this.props.msg;
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
       this.turnOnGps = this.turnOnGps.bind(this)
@@ -97,6 +94,7 @@ export default class Maps extends Component {
         //this.checkUsbDevice();
         this.loadIcons(Global.TYPE_ICONS[this.state.type]);
 	//AppState.addEventListener('change', this._handleAppStateChange);
+        I18n.locale = NativeModules.RNI18n.locale
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -258,14 +256,6 @@ export default class Maps extends Component {
       return Math.floor(m);
     }
     renderNavBar() {
-      if(this.msg!=null){
-        return (
-          <NavigationBar style={Style.navbar} title={{title:this.msg.title,}}
-            leftButton={
-                <Icon name={"ion-ios-arrow-round-back"} color={'#3B3938'} size={44} onPress={this.back.bind(this)} />
-            }
-          />);
-      }else{
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
@@ -293,7 +283,6 @@ export default class Maps extends Component {
             }
           />
         );
-      }
     }
     renderDownloadIcon(){
         let c = Style.font_colors.disabled
@@ -329,7 +318,7 @@ export default class Maps extends Component {
             <Icon name={Global.TYPE_ICONS[row]} size={40} color={'gray'} />
             <View style={{width:Style.DEVICE_WIDTH/3}}>
               <Text style={{ fontSize:20,marginLeft:30 }}>
-                { row }
+                { I18n.t(row) }
               </Text>
             </View>
           </View>
@@ -351,11 +340,6 @@ export default class Maps extends Component {
         this.enableDownload(true)
         this.clearMarkers()
     }
-    /*renderDetailOverlay() {
-      if(this.msg!=null){
-        return ( <Overlay style={Style.detail} msg={this.msg}/>  );
-      }
-    }*/
     onRegionChange(r) {
       this.setState({region: r});
       Store.save('region', r);
