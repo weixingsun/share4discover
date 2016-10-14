@@ -45,23 +45,60 @@ export default class FormInfoVar extends Component {
         this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
         this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
-            house:{
+            //common:{
                 //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
                 //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
                 //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
                 //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
+                //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
+            //},
+            house:{
                 bedroom: {type:'nmbr',title:I18n.t('bedroom'), validator:this.number_validator, img:'fa-bed'},
                 bathroom:{type:'nmbr',title:I18n.t('bathroom'),validator:this.number_validator, img:'fa-tint'},
-                //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
             },
             car:{
-                //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
-                //address:{type:'addr',title:'Address',validator:this.length_validator(10,255)},
-                //phone:  {type:'nmbr',title:'Phone',  validator:this.number_validator},
-                //price:  {type:'nmbr',title:'Price',  validator:this.number_validator},
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
                 dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
-                //content:{type:'txt3',title:'Content',validator:this.length_validator(10,255)},
+            },
+            food:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            book:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            mail:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+                dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
+            },
+            tool:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            help:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            game:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            cell:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            laptop:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            ticket:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            human:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            study:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            music:{
+                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            medical:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
         }
     }
