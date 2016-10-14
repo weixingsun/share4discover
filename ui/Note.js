@@ -5,11 +5,9 @@ import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
-//import {ImageCrop} from 'react-native-image-cropper'
-import PhotoView from 'react-native-photo-view';
-//import ZoomableImage from './ZoomableImage2';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import Gallery from 'react-native-gallery';
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -165,23 +163,22 @@ export default class Detail extends Component {
         }
     }
     renderModal(){
-      let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
+      let pre = Global.host_image_info+this.props.msg.ctime+'/'
+      let images = this.images.map((item)=>{
+          return pre+item
+      })
       return (
-        <Modal 
-            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
+        <Modal
+            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }}
             //transform: [{scale: this.state.scaleAnimation}]
             visible={this.state.show_pic_modal}
         >
             <View>
-                <PhotoView
-                  source={{uri: uri}}
-                  minimumZoomScale={0.5}
-                  maximumZoomScale={3}
-                  androidScaleType="center"
-                  //onLoad={() => alert("Image loaded!")}
-                  onTap={this.closeZoom}
-                  style={{width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}}
-                />
+            <Gallery
+                style={{flex:1,backgroundColor:'black',width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}}
+                images={ images }
+                onSingleTapConfirmed={this.closeZoom}
+            />
             </View>
         </Modal>
       )
@@ -248,12 +245,12 @@ export default class Detail extends Component {
                       style={{flex:8}}
                     >
                       {this.showSlides()}
-                      {this.renderModal()}
                       {this.renderTitle()}
                       {this.renderMisc()}
                     </KeyboardAwareScrollView>
 		</View>
             </View>
         );
+        //{this.renderModal()}
     }
 }

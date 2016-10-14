@@ -20,7 +20,7 @@ import com.theweflex.react.WeChatPackage;
 import com.wxsun.usbserial.UsbReactPackage;
 //import com.reactnative.photoview.PhotoViewPackage;
 import com.keyee.datetime.*;
-import it.innove.BleManagerPackage;
+//import it.innove.BleManagerPackage;
 //import com.beacon.BeaconsAndroidPackage;
 import com.corbt.keepawake.KCKeepAwakePackage;
 
@@ -100,7 +100,7 @@ public class MainApplication extends Application implements ReactApplication {
         new VectorIconsPackage(),
         //new PhotoViewPackage(),
         new KCKeepAwakePackage(),
-        new BleManagerPackage(),
+        //new BleManagerPackage(),
         //new BeaconsAndroidPackage(),
         //new RNGLPackage(),
         new ReactMapPackage(),  //BaiduMap
