@@ -5,11 +5,6 @@ import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
-//import {ImageCrop} from 'react-native-image-cropper'
-//import PhotoView from 'react-native-photo-view';
-//import ZoomableImage from './ZoomableImage2';
-//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
@@ -43,8 +38,8 @@ export default class Attachment extends Component {
         getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
             this.setState({close_image:source})
         });
-        if(this.state.pics==null){
-        }else if(typeof this.state.pics ==='string'){
+        //alert(this.props.pics)
+        if(typeof this.state.pics ==='string'){
             if(this.state.pics!=='') 
                 this.setState({
                     pics:this.props.msg.pics.split(','),
@@ -196,7 +191,6 @@ export default class Attachment extends Component {
         )
     }
     showImages(list){
-        //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
         //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
         return (
           <View style={{marginLeft:10,height:Style.THUMB_HEIGHT+10,justifyContent:'center'}}>
@@ -206,9 +200,10 @@ export default class Attachment extends Component {
                   list.map((pic,id)=>{
                     //let source = {uri:pic}
                     if(this.state.uploading[id]<100) pic=Global.empty_image
-                    console.log('showImages() pic='+pic)
+                    let source={uri:pic}
+                    //console.log('showImages() source='+JSON.stringify(source))
                     return (
-                        <Image key={id} source={{uri:pic}} 
+                        <Image key={id} source={source} 
                             style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}
                             indicator={ProgressBar}
                         >
@@ -236,10 +231,9 @@ export default class Attachment extends Component {
         )
     }
     showSlides(){
-        if(this.state.pics.length>0) {
+        if(typeof this.state.pics === 'object' && this.state.pics.length>0) {
             let pre = Global.host_image_info+this.ctime+'/'
-            //alert('showSlides() pics:'+JSON.stringify(this.state.pics))
-            //        openModal={this.openZoom} 
+            //console.log('showSlides() pics:'+JSON.stringify(this.state.pics))
             let list = this.state.pics.map((img)=>{
                 return pre+img;
             })
