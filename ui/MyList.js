@@ -25,10 +25,12 @@ export default class MyList extends Component {
       this.load()
   }
   componentDidMount() {
+      DeviceEventEmitter.removeAllListeners('refresh:MyList')
       this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),500));
   }
   componentWillUnmount() {
       this.updateOnUI=false
+      DeviceEventEmitter.removeAllListeners('refresh:MyList')
   }
   load(){
       let list = []

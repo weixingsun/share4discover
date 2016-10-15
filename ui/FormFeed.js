@@ -82,7 +82,6 @@ export default class FormFeed extends React.Component{
         }
     }
     componentDidMount(){
-        //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,this.refresh);
     }
     componentWillUnmount(){
         //this.event.remove();

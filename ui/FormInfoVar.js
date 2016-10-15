@@ -34,6 +34,7 @@ export default class FormInfoVar extends Component {
             grantedPermissions:{},
             type:'house',
         };
+        this.updatePics=this.updatePics.bind(this)
         this.hidden_fields={}
         this.formName='infoForm'
         this.time_format='YYYY-MM-DD HH:mm'
@@ -96,16 +97,19 @@ export default class FormInfoVar extends Component {
         this.turnOnGps()
         OneSignal.configure({
             onIdsAvailable: (device)=> {  //userId,pushToken
-                //alert('onesignal:'+JSON.stringify(device));
                 this.s1uid=device.userId
             }
         });
-        this.event = DeviceEventEmitter.addListener('refresh:FormInfoVar',(pics)=>this.updatePics(pics));
     }
     componentDidMount(){
+        DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
+        this.evt = DeviceEventEmitter.addListener('refresh:FormInfoVar',(data)=>this.updatePics(data));
     }
     componentWillUnMount(){
         this.turnOffGps()
+        this.evt.remove()
+        DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
+        //DeviceEventEmitter.removeListener('refresh:FormInfoVar',(data)=>this.updatePics(data));
     }
     updatePics(pics){
         //alert('updatePics()'+JSON.stringify(pics))

@@ -28,10 +28,12 @@ export default class FeedList extends React.Component {
       //this.load=this.load.bind(this)
     }
     componentDidMount(){
+        DeviceEventEmitter.removeAllListeners('refresh:FeedList')
         this.event = DeviceEventEmitter.addListener('refresh:FeedList',(evt)=>setTimeout(()=>this.load(),500));
     }
     componentWillUnmount(){
-        this.event.remove();
+        //this.event.remove();
+        DeviceEventEmitter.removeAllListeners('refresh:FeedList')
     }
     componentWillMount(){
         this.load();
