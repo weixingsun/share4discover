@@ -1,113 +1,56 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, DeviceEventEmitter, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
+import {ActivityIndicator,Alert, DeviceEventEmitter, Dimensions,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
 //import {ImageCrop} from 'react-native-image-cropper'
-import PhotoView from 'react-native-photo-view';
+//import PhotoView from 'react-native-photo-view';
 //import ZoomableImage from './ZoomableImage2';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
 import DetailImg from './DetailImg';
-import FormInfo from "./FormInfoVar"
 import I18n from 'react-native-i18n';
 import OneSignal from 'react-native-onesignal';
+//import { Col, Row, Grid } from "react-native-easy-grid";
 var {height, width} = Dimensions.get('window');
+import ImagePicker from 'react-native-image-picker'
+import Image from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
+import Gallery from 'react-native-gallery';
 
-export default class Detail extends Component {
+export default class Attachment extends Component {
     constructor(props) {
         super(props);
         //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
-        this.images = []
-        this.isLogin = (Global.mainlogin.length>0)
-        this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
-        this.close_image = null;
         this.state={ 
-            reply: '',
-            reply_height: 35,
-            image_modal_name:this.images[0],
             show_pic_modal:false,
+            close_image:'',
+            uploading:[],
+            pics:this.props.pics?this.props.pics:[],
         }
-        this.key = Global.getKeyFromMsg(this.props.msg)
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
+        this.ctime=this.props.ctime
     }
     componentWillMount(){
         let self = this;
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {
-            self.close_image=source
+        getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
+            this.setState({close_image:source})
         });
-        if(typeof this.props.msg.pics ==='object'){
-            this.images = this.props.msg.pics
-            //alert(JSON.stringify(this.props.msg))
-        }else if(typeof this.props.msg.pics ==='string'){
-            if(this.props.msg.pics!=='') this.images = this.props.msg.pics.split(',')
-            //alert(JSON.stringify(this.props.msg))
+        if(this.state.pics==null){
+        }else if(typeof this.state.pics ==='string'){
+            if(this.state.pics!=='') 
+                this.setState({
+                    pics:this.props.msg.pics.split(','),
+                })
         }
         I18n.locale = NativeModules.RNI18n.locale
-    }
-    //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
-    s1Note(msg,notify){
-        if(this.props.msg.s1uid){
-            let note = JSON.parse(notify.value)
-            let title = {'en':msg.title+'\n '+note.c}
-            let data = {key:notify.field,value:notify.value}
-            OneSignal.postNotification(title, data, this.props.msg.s1uid);
-        }
-    }
-    onReply() {
-        if(this.state.reply.length<5) {
-            alert('Please reply with more characters.')
-            return;
-        }
-        //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
-        let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
-        var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-        let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
-        var _this = this;
-        Alert.alert(
-            "Reply",
-            "Do you want to reply this information ? ",
-            //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.putHash(value)
-                    Net.putHash(notify_value)
-                    _this.s1Note(_this.props.msg,notify_value)
-                    _this.props.navigator.pop();
-                }},
-            ]
-        );
-    }
-    onClose() {
-        //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
-        var value={key:this.key, field:'close', value:Global.mainlogin+'|'+time}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
-        var _this = this;
-        Alert.alert(
-            "Complete",
-            "Do you want to complete this request ? ",
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.putHash(value)
-                    //Net.putHash(notify_value)
-                    _this.props.navigator.pop();
-                }},
-            ]
-        );
     }
     onDelete() {
 	var _this = this;
@@ -135,20 +78,107 @@ export default class Detail extends Component {
     }
     closeZoom(){
         this.setState({show_pic_modal:false})
-        
     }
-    checkSns(mainlogin,owner){
-        if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
-          return true
-        else
-          return false
+    deletePic(id){
+        let pictures = this.state.pics
+        let filename = pictures[id]
+        let self=this
+        Alert.alert(
+            "Delete",
+            "Do you want to delete this picture ? ",
+            [
+              {text:"Cancel" },
+              {text:"OK", onPress:()=>{
+                  //delete file from server
+                  //self._deletePic(this.ctime,filename)
+                  pictures.splice(id,1)
+                  self.setState({ pics:pictures});  //pics_changed:true,
+              }},
+            ]
+        )
     }
-    getSNSIcon(type){
-        return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
+    _deletePic(key,filename){
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', Global.host_image+'/svc.php');
+        //var formdata = new FormData();
+        //formdata.append('to_delete', filename);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("to_delete="+filename+"&key="+key);
+    }
+    _upload(file) {
+      //alert('uri:'+file.uri)
+      let time = new Date().getTime()
+      var index = this.state.pics?this.state.pics.length:0;
+      var filename = this.ctime+'-'+time+'.png'
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', Global.host_image+'/svc.php');
+      xhr.onload = () => {
+        let uploadingJson = this.state.uploading
+        uploadingJson[index]=100
+        this.setState({uploading:uploadingJson });
+        if (xhr.status !== 200) {
+            alert('Upload error: ' + xhr.status)
+            return;  //redo upload
+        }
+        if (!xhr.responseText) {
+            alert('Upload failed: No response payload. ')
+            return;  //redo upload
+        }
+        if (xhr.responseText.indexOf('OK:') < 0) {
+            alert('Upload failed: '+xhr.responseText)
+            return;  //redo upload
+        }
+        // http://nzmessengers.co.nz/service/info/car:39.915814,116.478772:1468417311586/2.jpg
+      };
+      var formdata = new FormData();
+      formdata.append('image', {uri:file.uri, type:'image/png', name:filename });
+      xhr.upload.onprogress = (event) => {
+        //console.log('upload onprogress', event);
+        if (event.lengthComputable) {
+          let uploadingJson = this.state.uploading
+          uploadingJson[index]=100*(event.loaded / event.total)
+          this.setState({uploading: uploadingJson});
+        }
+      };
+      xhr.send(formdata);
+      let uploadingJson = this.state.uploading
+      uploadingJson[index]=0
+      let pics_arr = this.state.pics
+      if(typeof pics_arr==='string' && pics_arr==='') pics_arr=[]
+      else if(typeof pics_arr==='object' && pics_arr.length===1 && pics_arr[0].length===0) pics_arr=[]
+      //alert('pics_arr:'+JSON.stringify(pics_arr)+'\nnew_pic: '+this.ctime+'/'+time+'.png')
+      this.setState({
+          uploading:uploadingJson,
+          //pics_changed:true,      new pic will consistent if not submit/publish
+          pics: [...pics_arr, time+'.png'],
+      });
+    }
+    openImagePicker(){
+        const options = {
+          title: 'Add photo into this form',
+          //quality: 0.5,
+          //maxWidth: 300,
+          //maxHeight: 300,
+          allowsEditing: false,
+          storageOptions: {
+            skipBackup: true
+          },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+          if (response.didCancel) {
+          }else if (response.error) {
+          }else if (response.customButton) {
+          }else {
+            //{type,fileName,fileSize,path,data,uri,height,width,isVertical}
+            //const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+            const source = {uri: response.uri, isStatic: true};
+            //const source = {uri: response.uri.replace('file://', ''), isStatic: true};
+            this._upload(source)
+         }
+       });
     }
     showActionIcons(){
-        if(this.isMyMsg){
-          return (
+        return (
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-create-outline'}
@@ -157,277 +187,119 @@ export default class Detail extends Component {
                 onPress={this.onEdit.bind(this) } />
 	      <View style={{width:40}} />
               <Icon
-                name={'ion-ios-trash-outline'}
-                color={'red'}
-                size={40}
-                onPress={this.onDelete.bind(this) } />
-              <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-checkmark-circle-outline'}
-                color={'green'}
-                size={40}
-                onPress={this.onClose.bind(this) } />
+                name={'ion-ios-add'}
+                color={'blue'}
+                size={50}
+                onPress={this.openImagePicker.bind(this) } />
               <View style={{width:10}} />
-            </View>
-          )
-        }
-    }
-    showSlides(){
-        if(this.images.length>0) {
-            //alert(JSON.stringify(this.images))
-            return (
-                <DetailImg 
-                    msg={this.props.msg}
-                    style={{backgroundColor:'transparent',height:height/2}} 
-                    openModal={this.openZoom} 
-                    onChange={(currName)=>{
-                        //alert('pic:'+currName)
-                        this.setState({image_modal_name:currName})
-                    }} />
-            )
-        }
-    }
-    showOwners(){
-	var owners = this.props.msg.owner.split(',')
-        owners.push('tel:'+this.props.msg.phone)
-        return (
-          <View style={Style.detail_card} >
-            {owners.map( (owner) => {
-		var sns_type = owner.split(':')[0]
-		var sns_user = owner.split(':')[1]
-		var sns_name = owner.split(':')[2]
-	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)  <View style={{width:30,alignItems:'center'}}>
-                return (
-                    <View style={{flexDirection:'row',marginLeft:10}} key={owner} >
-                        <View style={{width:30,alignItems:'center'}}>
-                          <Icon
-                            style={{marginLeft:10,marginRight:6}}
-                            size={24}
-                            color={'blue'}
-                            name={Global.SNS_ICONS[sns_type]}
-                          />
-                        </View>
-                        <Text style={{marginLeft:20}}>{sns_name==null?sns_user:sns_name}</Text>
-                    </View>
-                )
-            }) }
-          </View>
-        );
-    }
-    renderReplyItems(){
-        //id:#rtime  key='car:lat,lng:ctime#time'  value='{l:Global.mainlogin,c:this.state.reply}'
-        var keys = Object.keys(this.props.msg)
-	var replys = keys.filter((key) => {
-	    return (key.substring(0,1)==='#')
-	}).sort()
-	return (
-	  replys.map((key)=>{
-	    //if(sns_type==null || sns_type==''){
-            if(this.props.msg[key].substring(0,1)!=='{'){
-              return <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
-            }else{
-              let replyObj = JSON.parse(this.props.msg[key])
-              let owner = replyObj.l
-              let reply = replyObj.c
-              let time  = parseInt(key.substring(1)) //#time -> time
-              let sns_type = owner.split(':')[0]
-	      let sns_user = owner.split(':')[1]
-	      return (
-	        <View style={{marginLeft:20,flexDirection:'row',flex:1}} key={key}>
-                    <Icon
-                        style={{marginLeft:6}}
-                        size={20}
-                        color={'blue'}
-                        name={Global.SNS_ICONS[sns_type]}
-                    />
-                    <View style={{marginLeft:10,flex:1}}>
-  	              <View style={{flexDirection:'row'}}>
-                        <Text>{ sns_user }</Text>
-                        <View style={{flex:1}} />
-                        <Text style={{color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
-                      </View>
-                      <View >
-                        <Text>{ reply }</Text>
-                      </View>
-                    </View>
-                </View>
-	        )
-              //}
-            }
-          })
-	)
-    }
-    renderReplySection(){
-        if(this.isLogin)
-            return (
-                <View style={Style.detail_card} >
-                    <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('replies')} :  </Text>
-                    {this.renderReplyItems()}
-                </View>
-            )
-    }
-    /*renderModal(){
-      //let key = Global.getKeyFromMsg(this.props.msg);
-      let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
-      return (
-        <Modal 
-            //style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
-            //transform: [{scale: this.state.scaleAnimation}]
-            visible={this.state.show_pic_modal}
-        >
-            <View>
-                <ImageCrop ref={'cropper'}
-                    image={uri}
-                    cropHeight={Style.DEVICE_HEIGHT}
-                    cropWidth={Style.DEVICE_WIDTH}
-                    zoom={0} maxZoom={80} minZoom={0}
-                    panToMove={true} pinchToZoom={true}
-                    //onClose={this.closeZoom}
-                />
-                <TouchableHighlight
-                    onPress={this.closeZoom}
-                    style={{ 
-                             width:40,height:40,position:'absolute', top:15,right:5,
-                             alignItems:'center',justifyContent:'center', backgroundColor: 'black' 
-                    }}
-                >
-                        <Image style={{width:20,height:20,margin:5}} source={this.close_image} />
-                </TouchableHighlight>
-            </View>
-        </Modal>
-      )
-    }
-                <ZoomableImage
-                  source={{uri: uri}}
-                  //minimumZoomScale={0.5}
-                  //maximumZoomScale={3}
-                  //androidScaleType="center"
-                  //onLoad={() => alert("Image loaded!")}
-                  //onTap={this.closeZoom}
-                  imageWidth={Style.DEVICE_WIDTH}
-                  imageHeight={Style.DEVICE_HEIGHT}
-                />
-*/
-    renderModal(){
-      //let key = Global.getKeyFromMsg(this.props.msg);
-      let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
-      return (
-        <Modal 
-            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }} 
-            //transform: [{scale: this.state.scaleAnimation}]
-            visible={this.state.show_pic_modal}
-        >
-            <View>
-                <PhotoView
-                  source={{uri: uri}}
-                  minimumZoomScale={0.5}
-                  maximumZoomScale={3}
-                  androidScaleType="center"
-                  //onLoad={() => alert("Image loaded!")}
-                  onTap={this.closeZoom}
-                  style={{width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}}
-                />
-            </View>
-        </Modal>
-      )
-    }
-    renderReplyInput(){
-        if(this.isLogin)
-            return (
-                <View style={Style.detail_card} >
-                    <View style={{flexDirection:'row'}}>
-                        <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('my_reply')}:  </Text>
-                        <View style={{flex:1}} />
-                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#3498db',borderColor:'#2980b9'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
-                    </View>
-                        <TextInput
-                            style={{marginLeft:20,height:this.state.reply_height}}
-                            multiline={true}
-                            value={this.state.reply}
-                            onChange={(event) => {
-                                this.setState({
-                                    reply: event.nativeEvent.text,
-                                    reply_height: event.nativeEvent.contentSize.height,
-                                });
-                            }}
-                        />
-                    </View>
-            )
-    }
-    renderMisc(){
-        let self=this
-        // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','s1uid']
-        var keys = Object.keys(this.props.msg)
-        var misc = keys.filter((key) => {
-            return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
-        }).sort()
-        //alert(JSON.stringify(misc))
-        return (
-            <View style={Style.detail_card} >
-                {misc.map((key)=>{
-                    return <Text style={{marginLeft:21}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.props.msg[key]}</Text>
-                })}
-                <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>{I18n.t('content')}:</Text></Text>
-                <Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
             </View>
         )
     }
-    renderTitle(){
-        var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
-        let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
-        let asking = 'rent0,buy'.indexOf(this.props.msg.cat)>0
-        let destView = null
-        if(this.props.msg.dest) destView=<Text>{I18n.t('dest')} : {this.props.msg.dest}</Text>
-        let destTimeView = null
-        if(this.props.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.props.msg.time}</Text>
+    showImages(list){
+        //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
+        //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
         return (
-            <View style={Style.detail_card} >
-                <View style={{flexDirection:'row',marginLeft:20}} >
-                    <Icon
-                        style={{marginLeft:15,marginRight:15}}
-                        size={44}
-                        color={asking?'gray':'blue'}
-                        name={typeIcon}
-                    />
-                    <View style={{flex:1,marginLeft:20}}>
-                        <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                        <Text>{I18n.t('cat')} : {this.props.msg.cat?I18n.t(this.props.msg.cat)+I18n.t(this.props.msg.type):''}</Text>
-                        <Text>{I18n.t('ctime')} : {_ctime}</Text>
-                        <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
-                        {destTimeView}
-                        {destView}
-                    </View>
-                </View>
+          <View style={{marginLeft:10,height:Style.THUMB_HEIGHT+10,justifyContent:'center'}}>
+            <View style={{height:5}}/>
+            <ScrollView style={{height:Style.THUMB_HEIGHT,}} horizontal={true}>
+                {
+                  list.map((pic,id)=>{
+                    //let source = {uri:pic}
+                    if(this.state.uploading[id]<100) pic=Global.empty_image
+                    console.log('showImages() pic='+pic)
+                    return (
+                        <Image key={id} source={{uri:pic}} 
+                            style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}
+                            indicator={ProgressBar}
+                        >
+                            {
+                              this.state.uploading[id]<100 ?
+                              <View style={{flex: 1,alignItems: 'center',justifyContent: 'center',}}>
+                                  <Text style={{fontWeight: 'bold',color:'blue'}}>{Math.floor(this.state.uploading[id])}%</Text>
+                                  <ActivityIndicator style={{marginLeft:5}} />
+                              </View> :
+                              <View style={Style.close,{height:25,flexDirection:'row'}}>
+                              <View style={{flex:1}}/>
+                              <TouchableHighlight
+                                  onPress={()=>this.deletePic(id)}
+                                  style={{ width:25,height:25,backgroundColor:'black',alignItems:'center',justifyContent:'center' }}>
+                                  <Image style={{width:16,height:16,margin:5}} source={this.state.close_image} />
+                              </TouchableHighlight>
+                              </View>
+                            }
+                        </Image>
+                    )
+                  })
+                }
+            </ScrollView>
+          </View>
+        )
+    }
+    showSlides(){
+        if(this.state.pics.length>0) {
+            let pre = Global.host_image_info+this.ctime+'/'
+            //alert('showSlides() pics:'+JSON.stringify(this.state.pics))
+            //        openModal={this.openZoom} 
+            let list = this.state.pics.map((img)=>{
+                return pre+img;
+            })
+            return this.showImages(list);
+            /*return(
+              <ScrollView>
+                <Grid>
+                    <Row size={2} style={{backgroundColor:'green'}}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                    <Row size={1}></Row>
+                </Grid>
+              </ScrollView>
+            )*/
+        }
+    }
+    renderModal(){
+      //let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
+      let pre = Global.host_image_info+this.ctime+'/'
+      let images = this.state.pics.map((item)=>{
+          return pre+item
+      })
+      return (
+        <Modal
+            style={{ top:0,bottom:0,right:0,left:0, backgroundColor:'rgba(0, 0, 0, 0.7)' }}
+            //transform: [{scale: this.state.scaleAnimation}]
+            visible={this.state.show_pic_modal}
+        >
+            <View>
+            <Gallery
+                style={{flex:1,backgroundColor:'black',width: Style.DEVICE_WIDTH, height: Style.DEVICE_HEIGHT}}
+                images={ images }
+                onSingleTapConfirmed={this.closeZoom}
+            />
             </View>
-       )
+        </Modal>
+      )
+    }
+    back(){
+        DeviceEventEmitter.emit('refresh:FormInfoVar',this.state.pics);
+        this.props.navigator.pop()
     }
     render(){
-        //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
             <View style={{flex:1}}>
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.back() } />
                      </View>
                    }
                    rightButton={ this.showActionIcons() }
                 />
                 <View style={{flex:8,backgroundColor: '#eeeeee',}}>
-                    <KeyboardAwareScrollView
-                      automaticallyAdjustContentInsets={false}
-                      scrollEventThrottle={200}
-                      style={{flex:8}}
-                    >
-                      {this.showSlides()}
-                      {this.renderModal()}
-                      {this.renderTitle()}
-                      {this.showOwners()}
-                      {this.renderMisc()}
-                      {this.renderReplySection()}
-                      {this.renderReplyInput()}
-                    </KeyboardAwareScrollView>
+                    {this.showSlides()}
+                    {this.renderModal()}
 		</View>
             </View>
         );

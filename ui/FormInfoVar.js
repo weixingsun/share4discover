@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonlly property
 import React, { Component } from 'react';
-import {ActivityIndicator, Alert, Picker, PixelRatio, Platform, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {ActivityIndicator, Alert, DeviceEventEmitter,Picker, PixelRatio, Platform, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import NavigationBar from 'react-native-navbar';
@@ -22,6 +22,7 @@ import {checkPermission,requestPermission} from 'react-native-android-permission
 import I18n from 'react-native-i18n';
 import moment from 'moment'
 import OneSignal from 'react-native-onesignal';
+import Attachments from './Attachments';
  
 export default class FormInfoVar extends Component {
     constructor(props) {
@@ -29,11 +30,9 @@ export default class FormInfoVar extends Component {
         this.ctime = +new Date();
         this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
         this.state={ 
-            uploading:[],
             form:{},
             grantedPermissions:{},
             type:'house',
-            //validators:{},
         };
         this.hidden_fields={}
         this.formName='infoForm'
@@ -94,9 +93,6 @@ export default class FormInfoVar extends Component {
         this.permission();
         this.initAllValidators()
         this.processProps();
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
-            this.setState({close_image:source})
-        });
         this.turnOnGps()
         OneSignal.configure({
             onIdsAvailable: (device)=> {  //userId,pushToken
@@ -104,11 +100,16 @@ export default class FormInfoVar extends Component {
                 this.s1uid=device.userId
             }
         });
+        this.event = DeviceEventEmitter.addListener('refresh:FormInfoVar',(pics)=>this.updatePics(pics));
     }
     componentDidMount(){
     }
     componentWillUnMount(){
         this.turnOffGps()
+    }
+    updatePics(pics){
+        //alert('updatePics()'+JSON.stringify(pics))
+        this.setState({form:{ ...this.state.form, pics:pics }})
     }
     initAllValidators(){
         //I18n.t('type')
@@ -392,186 +393,26 @@ export default class FormInfoVar extends Component {
             return true
         }else return false
     }
-    openImagePicker(){
-        //if(!this.key){  //type:lat,lng:ctime
-        //    alert('Please select type, ask/offer and address')
-        //    return
-        //}
-        //let perm_nbr = Object.keys(this.state.grantedPermissions).length
-        //if(perm_nbr< this.permissions.length) {
-            
-        //}
-        const options = {
-          title: 'Add photo into this form',
-          //quality: 0.5,
-          //maxWidth: 300,
-          //maxHeight: 300,
-          allowsEditing: false,
-          storageOptions: {
-            skipBackup: true
-          },
-          //customButtons: this.state.add_fields,
-        };
-        ImagePicker.showImagePicker(options, (response) => {
-          if (response.didCancel) {
-            //alert('User cancelled image picker');
-          }else if (response.error) {
-            //alert('ImagePicker Error: ', JSON.stringify(response));
-          }else if (response.customButton) {
-            //alert('User tapped custom button: '+response.customButton);
-            //this.addField(response.customButton)
-          }else {
-            //{type,fileName,fileSize,path,data,uri,height,width,isVertical}
-            //const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-            const source = {uri: response.uri, isStatic: true};
-            //const source = {uri: response.uri.replace('file://', ''), isStatic: true};
-            //alert(JSON.stringify(source))  // {uri}
-            this._upload(source)
-         }
-       });
-       /*ImagePicker.launchCamera(options, (response)  => {
-           // Same code as in above section!
-       });*/
-    }
-    showImages(list){
-        //alert('this.state.form.pics='+JSON.stringify(this.state.form.pics))  //pics=['0.jpg','1.jpg']
-        //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
-        return (
-          <View style={{marginLeft:10,height:Style.THUMB_HEIGHT+10,justifyContent:'center'}}>
-            <View style={{height:5}}/>
-            <ScrollView style={{height:Style.THUMB_HEIGHT,}} horizontal={true}>
-                {
-                  list.map((pic,id)=>{
-                    let source = pic
-                    if(this.state.uploading[id] <100) source={uri:Global.empty_image}
-                    return (
-                        <Image key={pic.uri} source={source}
-                            style={{width:Style.THUMB_HEIGHT,height:Style.THUMB_HEIGHT}}
-                            indicator={ProgressBar}
-                        >
-                            {
-                              this.state.uploading[id]<100 ?
-                              <View style={{flex: 1,alignItems: 'center',justifyContent: 'center',}}>
-                                  <Text style={{fontWeight: 'bold',color:'blue'}}>{Math.floor(this.state.uploading[id])}%</Text>
-                                  <ActivityIndicator style={{marginLeft:5}} />
-                              </View> :
-                              <View style={Style.close,{height:25,flexDirection:'row'}}>
-                              <View style={{flex:1}}/>
-                              <TouchableHighlight 
-                                  onPress={()=>this.deletePic(id)}
-                                  style={{ width:25,height:25,backgroundColor:'black',alignItems:'center',justifyContent:'center' }}>
-                                  <Image style={{width:16,height:16,margin:5}} source={this.state.close_image} />
-                              </TouchableHighlight>
-                              </View>
-                            }
-                        </Image>
-                    )
-                  })
-                }
-            </ScrollView>
-          </View>
-        )
-    }
-    showPics(){
-        //alert(JSON.stringify(this.state.form.pics))
-        if(this.state.form.pics && this.state.form.pics.length>0 && this.state.form.pics[0].length>0){
-            //let key = Global.getKeyFromMsg(this.state.form)
-            let url = Global.host_image_info+this.ctime+'/'
-            let list = this.state.form.pics.map((pic)=>{
-                return {uri: url+pic}
-            })
-            //alert(JSON.stringify(list))
-            return this.showImages(list)
-        }
-    }
-    deletePic(id){
-        let pictures = this.state.form.pics
-        let filename = pictures[id]
-        //let key = Global.getKeyFromMsg(this.state.form)
-        let self=this
-        Alert.alert(
-            "Delete",
-            "Do you want to delete this picture ? ",
-            [
-              {text:"Cancel" },
-              {text:"OK", onPress:()=>{
-                  //delete file from server
-                  //self._deletePic(this.ctime,filename)
-                  pictures.splice(id,1)
-                  self.setState({ form:{...self.state.form, pics:pictures}});  //pics_changed:true,
-              }},
-            ]
-        )
-    }
-    _deletePic(key,filename){
-        var xhr = new XMLHttpRequest();
-        xhr.open('DELETE', Global.host_image+'/svc.php');
-        //var formdata = new FormData();
-        //formdata.append('to_delete', filename);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("to_delete="+filename+"&key="+key);
-    }
-    _upload(file) {
-      //alert('uri:'+file.uri)
-      let time = new Date().getTime()
-      var index = this.state.form.pics?this.state.form.pics.length:0;
-      var filename = this.ctime+'-'+time+'.png'
-      //alert('filename='+filename+'\ntype='+this.state.form.type)
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', Global.host_image+'/svc.php');
-      xhr.onload = () => {
-        let uploadingJson = this.state.uploading
-        uploadingJson[index]=100
-        this.setState({uploading:uploadingJson });
-        if (xhr.status !== 200) {
-            alert('Upload error: ' + xhr.status)
-            return;  //redo upload
-        }
-        if (!xhr.responseText) {
-            alert('Upload failed: No response payload. ')
-            return;  //redo upload
-        }
-        if (xhr.responseText.indexOf('OK:') < 0) {
-            alert('Upload failed: '+xhr.responseText)
-            return;  //redo upload
-        }
-        // http://nzmessengers.co.nz/service/info/car:39.915814,116.478772:1468417311586/2.jpg
-        //let photos = this.state.form.pics? this.state.form.pics: [];
-        //photos.push(index+'.jpg')
-        //alert('pics:'+JSON.stringify(photos))
-        //this.setState({
-        //    form:{ ...this.state.form, pics:photos },
-        //})
-      };
-      var formdata = new FormData();
-      formdata.append('image', {uri:file.uri, type:'image/png', name:filename });
-      xhr.upload.onprogress = (event) => {
-        //console.log('upload onprogress', event);
-        if (event.lengthComputable) {
-          let uploadingJson = this.state.uploading
-          uploadingJson[index]=100*(event.loaded / event.total)
-          this.setState({uploading: uploadingJson});
-        }
-      };
-      xhr.send(formdata);
-      let uploadingJson = this.state.uploading
-      uploadingJson[index]=0
-      let pics_arr = this.state.form.pics
-      if(pics_arr==null) pics_arr=[]
-      else if(typeof pics_arr==='string' && pics_arr==='') pics_arr=[]
-      else if(typeof pics_arr==='object' && pics_arr.length===1 && pics_arr[0].length===0) pics_arr=[]
-      //alert('pics_arr:'+JSON.stringify(pics_arr)+'\nnew_pic: '+this.ctime+'/'+time+'.png')
-      this.setState({
-          uploading:uploadingJson,
-          //pics_changed:true,      new pic will consistent if not submit/publish
-          form: { ...this.state.form, pics: [...pics_arr, time+'.png'],}
-      });
-    }
     showActionIcons(){
         //<Icon name={'fa-weibo'} size={40} color={'red'} onPress={()=>this.postWB({type:'text',title:'this is a test'}) } />
+        let size = this.state.form.pics?this.state.form.pics.length:''
+        if(size===0) size=''
         return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-attach'} size={40} color={Style.font_colors.enabled} onPress={this.openImagePicker.bind(this) } />
+                <Icon 
+                    name={'ion-ios-attach'} 
+                    size={40} 
+                    color={Style.font_colors.enabled} 
+                    badge={{text:size, color:'red'}} 
+                    onPress={
+                      ()=>this.props.navigator.push({
+                        component: Attachments,
+                        passProps: { 
+                          pics:this.state.form.pics, 
+                          ctime:this.ctime, 
+                          navigator:this.props.navigator 
+                        } })
+                    } />
                 <View style={{width:10}} />
             </View>
         )
@@ -703,7 +544,6 @@ export default class FormInfoVar extends Component {
                 />
                   <ScrollView>
                   <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
-                  {this.showPics()}
                   <GiftedForm
                     formName={this.formName}
                     style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height

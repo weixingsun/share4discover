@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Animated, StyleSheet,Text,View,Easing } from 'react-native'
+import {Animated, StyleSheet,TouchableHighlight,Text,View,Easing } from 'react-native'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import FIcon from 'react-native-vector-icons/FontAwesome'
 
@@ -55,9 +55,9 @@ class Icon extends Component {
             backgroundColor: this.props.badge.color,
           };
           return (
-            <View style={styles}>
+            <TouchableHighlight style={styles} onPress={this.props.onPress}>
                 <Text style={{color:'#FFFFFF'}}>{this.props.badge.text}</Text>
-            </View>
+            </TouchableHighlight>
           );
 	}
     }
