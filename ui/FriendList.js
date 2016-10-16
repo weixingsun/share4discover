@@ -60,29 +60,6 @@ export default class ShareList extends Component {
   componentDidUpdate(prevProps, prevState){
      this.firstLoad=false
   }
-  /**
-   * refreshing
-   * @param {number} page Requested page to fetch
-   * @param {function} callback Should pass the rows
-   * @param {object} options Inform if first load
-   */
-  reload(filters) {
-    var self = this;
-    //alert(JSON.stringify(filters))
-    //JsonAPI.friends(filters.type,filters.position,filters.range).then((rows)=> {
-      //console.log(this.state.type+'rows:\n'+JSON.stringify(rows));
-      //self.dataSource= self.ds.cloneWithRows(rows);
-    //})
-    //.catch((e)=>{
-      //_this.isConnected = false
-      //_this.setState({dataSource:})
-      //alert('Network Problem!')
-    //});
-    //JsonAPI.getMsgTypes().then((rows)=> {
-    //  this.setState({types:rows});
-    //});
-  }
-  
   _onPress(rowData) {
     alert('rowData='+rowData);
   }
@@ -103,25 +80,7 @@ export default class ShareList extends Component {
       </TouchableHighlight>
     );
   }
-  /*setHeaderViewStyle(){
-    if(this.state.typeHeaderHeight===50 ) {
-        this.setState({typeHeaderHeight: Style.CARD_HEIGHT, typeIconStyle: styles.rotate270 })
-    }else{
-        //if(this.refs.picker.isPickerShow) this.refs.picker.hide();
-        this.setState({typeHeaderHeight: 50, typeIconStyle: styles.normal, })
-    }
-  }
-
-  getDynamicStyle(){
-    return {
-      height: this.state.typeHeaderHeight,
-      width: this.state.typeHeaderWidth,
-      backgroundColor: 'rgba(200, 200, 200, 0.8)',
-    };
-  }*/
   render() {
-    //alert(JSON.stringify(this.props.filters))
-    this.reload(this.props.filters);
     return (
       <View style={Style.absoluteContainer}>
         <NavigationBar style={Style.navbar} title={{title:'My shares',}} 

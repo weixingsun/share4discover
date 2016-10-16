@@ -38,12 +38,15 @@ export default class FormInfoVar extends Component {
         this.hidden_fields={}
         this.formName='infoForm'
         this.time_format='YYYY-MM-DD HH:mm'
+        this.sec_types_no_rent = ['buy','sell','free']
+        this.sec_types_all = ['buy','sell','rent0','rent1','free']
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
         this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
+        this.no_rent_types = ['ticket','service'];
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             //common:{
                 //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
@@ -82,9 +85,12 @@ export default class FormInfoVar extends Component {
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             media:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             medkit:{
+                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            },
+            service:{
                 //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
         }
@@ -209,17 +215,13 @@ export default class FormInfoVar extends Component {
     }
     initKeys(){
         this.map=Global.MAP
-        this.mcode = 'com.share.2016';    //ios mcode
-        this.ak = 'Cyq8AKxGeAVNZSzV0Dk74dGpRsImpIHu';    //ios ak
-        var rel_and_mcode = 'F9:F3:46:15:55:59:22:6A:FB:75:92:FF:23:B4:75:AF:20:E7:22:D6;com.share'
-        var dev_and_mcode = '81:1E:3F:40:F6:F6:4F:68:D7:6E:79:BC:18:CA:AC:26:84:14:1C:F7;com.share'
-        var demo_mcode = 'DA:4C:B6:A9:55:62:1D:AD:12:29:DD:7B:69:31:67:47:C5:B2:4E:E1;szj.com.ditu'
+        this.mcode = Global.ios_mcode;
+        this.ak = Global.ios_ak;
         if (Platform.OS === 'android') {
-            this.ak='6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L';    //android ak
-            //ak='VRMNc7QoiSM5ar5at5g3lRQD';          //android demo ak
-            this.mcode=(__DEV__) ? dev_and_mcode : rel_and_mcode
+            this.ak=Global.and_ak
+            this.mcode=(__DEV__) ? Global.dev_and_mcode : Global.rel_and_mcode
         }
-        this.ggkey='AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A'
+        this.ggkey=Global.ggkey
     }
     fixFormData(values){
         if(values.owner == null) {
@@ -528,6 +530,13 @@ export default class FormInfoVar extends Component {
             return this.renderField(obj.type,key,obj.title,obj.validator,obj.img)
         })
     }
+    renderSecondTypeOptionList(){
+        let no_rent = this.no_rent_types.indexOf(this.state.type)>-1?true:false
+        let types = no_rent?this.sec_types_no_rent:this.sec_types_all
+        return types.map((type,id)=>{
+            return <GiftedForm.OptionWidget key={id} title={I18n.t(type)} value={type} />
+        })
+    }
     render(){
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
@@ -571,18 +580,14 @@ export default class FormInfoVar extends Component {
                         <GiftedForm.ModalWidget
                             title={I18n.t('type')}
                             name='cat'
-                            display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)+I18n.t(this.state.type)}
+                            display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)}
                             value={this.state.form.cat}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-list-ol'} size={25} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='cat' title='Type' multiple={false}>
-                                <GiftedForm.OptionWidget title={I18n.t('rent0')} value='rent0' />
-                                <GiftedForm.OptionWidget title={I18n.t('rent1')} value='rent1' />
-                                <GiftedForm.OptionWidget title={I18n.t('buy')  } value='buy'   />
-                                <GiftedForm.OptionWidget title={I18n.t('sell') } value='sell'  />
-                                <GiftedForm.OptionWidget title={I18n.t('free') } value='free'  />
+                                {this.renderSecondTypeOptionList()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}

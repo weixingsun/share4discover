@@ -41,7 +41,6 @@ export default class APIList extends React.Component {
             _this.api_list = list;
         })
     }
-    //fetch html
     openWebList(){
         this.props.navigator.push({
             component: ListWeb,

@@ -16,13 +16,8 @@ function isJsonString(str) {
     }
     return true;
 }
+
 var Net = {
-    MSG_TYPES:{
-        'car':'Car',
-        'estate':'Real Estate',
-        'help':'Help',
-    },
-    //HOST:'http://45.32.83.93',
     HOST:Global.HOST,
     USER_HOST:Global.USER_HOST,
     async netCmd(url, data) {
@@ -30,8 +25,9 @@ var Net = {
         let response = await fetch(url, data);
         let responseJson = await response.json();
         return responseJson;
-      } catch(error) {
-        console.error(error);
+      } catch(err) {
+        //console.error(err);
+        alert(JSON.stringify(err))
       }
     },
     _get(url) {

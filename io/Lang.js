@@ -52,6 +52,7 @@ I18n.translations = {
     //type
     house: 'House',
     car:   'Car',
+    service:'Service',
     ticket:'Ticket',
     book:  'Book',
     tool:  'Tool',
@@ -63,7 +64,6 @@ I18n.translations = {
     media: 'Media',
     //school:'Study',
     //food:  'Food',
-    //help:  'Help',
     //mail:  'Mail',
     //human: 'Human',
     //notes
@@ -120,6 +120,7 @@ I18n.translations = {
     //type
     house: '房',
     car:   '车',
+    service:'服务',
     ticket:'票',
     book:  '书',
     tool:  '工具',
@@ -131,7 +132,6 @@ I18n.translations = {
     media: '光盘',
     //study:'学习',
     //food:  '吃',
-    //help:  '帮助',
     //mail:  '邮件',
     //human: '人力',
     //notes
