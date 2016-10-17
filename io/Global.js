@@ -74,15 +74,16 @@ module.exports = {
       house: 'ion-ios-home',
       car:   'ion-ios-car',
       tool:  'ion-ios-construct',
-      book:  'ion-ios-book',
       game:  'ion-ios-game-controller-b',
       phone: 'ion-ios-phone-portrait',
-      laptop:'ion-ios-laptop',
+      computer:'ion-ios-laptop',
       camera:'ion-ios-camera',
       ticket:'ion-md-pricetags',  //ion-ios-pricetags
-      medkit:'ion-ios-medkit',
-      media: 'ion-ios-musical-notes',
       service:'ion-ios-key',  //  'ion-ios-thumbs-up',  //ion-ios-happy
+      //book:  'ion-ios-book',
+      //medkit:'ion-ios-medkit',
+      //media: 'ion-ios-musical-notes',
+      //ticket:'ion-md-pricetags',  //ion-ios-pricetags
       //help:  'ion-ios-help-buoy',
       //study: 'ion-ios-school',
       //plants:'ion-ios-pizza',

@@ -37,16 +37,20 @@ export default class FormInfoVar extends Component {
         this.updatePics=this.updatePics.bind(this)
         this.hidden_fields={}
         this.formName='infoForm'
+        this.lasttype=''
         this.time_format='YYYY-MM-DD HH:mm'
-        this.sec_types_no_rent = ['buy','sell','free']
-        this.sec_types_all = ['buy','sell','rent0','rent1','free']
+        this.sec_types_no_rent = ['buy','sell','service']
+        this.sec_types_all = ['buy','sell','rent0','rent1','service']
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.price1_validator={ validator:'contains',arguments:['/'], message:'{TITLE} format like 100/week' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
-        this.addr_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
+        this.str_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
         this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
         this.no_rent_types = ['ticket','service'];
+        this.rent_price_circles = ['year','quarter','month','week','day'];
+        this.price_units = ['usd','gbp','eur','cny','cad','aud'];
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
             //common:{
                 //title:  {type:'txt1',title:'Title',  validator:this.length_validator(5,55)},
@@ -61,38 +65,27 @@ export default class FormInfoVar extends Component {
             },
             car:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-                dest:  {type:'addr',title:I18n.t('dest'), validator:this.addr_validator(','), img:'fa-flag'},
+                dest:  {type:'addr',title:I18n.t('dest'), validator:this.str_validator(','), img:'fa-flag'},
             },
             book:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             tool:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             game:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             phone:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            laptop:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+            computer:{
             },
             camera:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
             ticket:{
                 time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
             },
-            media:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
-            medkit:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
-            service:{
-                //time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-            },
+            media:{},
+            medkit:{},
+            service:{},
         }
     }
     componentWillMount(){
@@ -124,24 +117,24 @@ export default class FormInfoVar extends Component {
     initAllValidators(){
         //I18n.t('type')
         this.validators={}
-        this.genValidator('type',   I18n.t('type'),    this.select_validator)
-        this.genValidator('cat',    I18n.t('cat'),     this.select_validator)
-        //this.genValidator('ask',   'Ask/Offer',this.select_validator)
-        this.genValidator('title',  I18n.t('title'),   this.length_validator(5,55))
-        this.genValidator('content',I18n.t('content'), this.length_validator(10,255))
-        this.genValidator('address',I18n.t('address'), this.length_validator(10,255))
-        this.genValidator('phone',  I18n.t('phone'),   this.number_validator)
-        this.genValidator('price',  I18n.t('price'),   this.number_validator)
+        this.genValidator('type',     this.select_validator)
+        this.genValidator('cat',      this.select_validator)
+        this.genValidator('title',    this.length_validator(5,55))
+        this.genValidator('content',  this.length_validator(10,255))
+        this.genValidator('address',  this.length_validator(10,255))
+        this.genValidator('phone',    this.number_validator)
+        this.genValidator('price',    this.number_validator)
+        //this.genValidator('price',  this.price1_validator)
     }
-    genValidator(name,titleStr,validateJson){
-        this.validators[name] = {title:titleStr, validate:[validateJson]}
+    genValidator(name,validateJson){
+        this.validators[name] = {title:I18n.t(name), validate:[validateJson]}
     }
     genTypeValidators(type){
         let self=this
         let keys = Object.keys(this.info_types[type])
         keys.map((key)=>{
             let obj = this.info_types[type][key]
-            this.genValidator(key,obj.title,obj.validator)
+            this.genValidator(key,obj.validator)
         })
         //this.setState({validators:this.validators})
         /*for (var i=0;i<keys.length;i++){
@@ -151,16 +144,24 @@ export default class FormInfoVar extends Component {
             this.genValidator(key,obj.title,obj.validator)
         }*/
     }
-    changeValidator(type){
+    changePriceValidator(){
+        let rent_cats = ['rent0','rent1']
+        if(this.lastcat!=='' && rent_cats.indexOf(this.lastcat)>-1){
+            this.genValidator('price', this.price1_validator)
+        }
+    }
+    changeValidator(){
+      if(this.lasttype !== ''){
         this.initAllValidators()
-        this.genTypeValidators(type)
+        this.genTypeValidators(this.lasttype)
+        this.changePriceValidator()
         GiftedFormManager.stores[this.formName].validators = {};
         for (var key in this.validators) {
-            //alert('key='+key+' value='+this.validators[key])
-            //if (nextProps.validators.hasOwnProperty(key)) {}
             let value = this.validators[key]
-            GiftedFormManager.setValidators(this.formName, key, {title:value.title,validate:value.validate});
+            //if(key==='price') alert('lastcat='+this.lastcat+'form.cat='+this.state.form.cat+' price validator '+JSON.stringify(value))
+            GiftedFormManager.setValidators(this.formName, key, {title:I18n.t(key),validate:value.validate});
         }
+      }
     }
     processProps(){
         let logins = Global.getLoginStr()
@@ -170,7 +171,7 @@ export default class FormInfoVar extends Component {
               type: 'house', //typeTitle: 'House',
               cat: '',       //catTitle:'',
               title: '',     content: '', 
-              address: '',   price: '',
+              address: '',   price: '',   per: '',
               phone: '',     ctime: this.ctime,
               lat:   '',     lng:   '',
               //time:  '',     dest:  '',
@@ -428,12 +429,21 @@ export default class FormInfoVar extends Component {
         //  this.key = values.type+':'+values.lat+','+values.lng+':'+values.ctime
         //}
         if(typeof values.type === 'object'){ // && values.type[0]!==this.lasttype) 
-            if(this.lasttype==null || values.type[0]!==this.lasttype){
+            if(values.type[0]!==this.lasttype){
                 this.lasttype=values.type[0]
                 //alert('change type:'+this.lasttype)
                 this.setState({type:this.lasttype,form:{...this.state.form,type:this.lasttype}})
-                this.changeValidator(this.lasttype)
+                this.changeValidator()
                 //GiftedFormManager.updateValue(this.formName, 'type', this.lasttype)
+            }
+        }
+        if(typeof values.cat === 'object'){
+            if(values.cat[0]!==this.lastcat){
+                this.lastcat=values.cat[0]
+                this.lasttype=this.state.form.type
+                this.setState({form:{...this.state.form,cat:this.lastcat}})
+                this.changeValidator()
+                if(values.price)this.setState({validationResults:GiftedFormManager.validate(this.formName)});
             }
         }
         if (this.state.validationResults!=null && !this.state.validationResults.isValid) {
@@ -454,7 +464,6 @@ export default class FormInfoVar extends Component {
                            </View>
                        )} />
         })
-        //<GiftedForm.OptionWidget title='Estate' value='estate'/>
     }
     back(){
       this.turnOffGps()
@@ -500,6 +509,35 @@ export default class FormInfoVar extends Component {
                 getDefaultDate={() => {return this.state.form[name]}}
                 validationResults={this.state.validationResults}
             />
+        )
+    }
+    renderSelectOptions(list){
+        return list.map((key,i)=>{
+            return <GiftedForm.OptionWidget
+                       key={i}
+                       title={I18n.t(key)}
+                       value={key}
+                   />
+        })
+    }
+    renderSelectField(name,optlist,validator,img=null){
+        //this.genValidator(name, this.select_validator)
+        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
+        let title=I18n.t(name)
+        let display = this.state.form[name]?I18n.t(this.state.form[name]):''
+        return (
+            <GiftedForm.ModalWidget
+                title={title}
+                name={name}
+                display={display}
+                value={this.state.form[name]}
+                image={imgView}
+            >
+                <GiftedForm.SeparatorWidget />
+                <GiftedForm.SelectWidget name={name} title={title} multiple={false}>
+                    {this.renderSelectOptions(optlist)}
+                </GiftedForm.SelectWidget>
+            </GiftedForm.ModalWidget>
         )
     }
     renderTextField(name,title,validator,img=null){
@@ -592,7 +630,7 @@ export default class FormInfoVar extends Component {
                         </GiftedForm.ModalWidget>
                         {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}
                         {this.renderTextField('phone',I18n.t('phone'), this.number_validator,'fa-phone')}
-                        {this.renderTextField('price',I18n.t('price'), this.number_validator,'fa-usd')}
+                        {this.renderTextField('price',I18n.t('price'), this.price_validator,'fa-usd')}
                         {this.renderOptionalFields(this.info_types[this.state.type])}
                         <GiftedForm.PlaceSearchWidget
                             name='address'
@@ -644,6 +682,7 @@ export default class FormInfoVar extends Component {
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {
+                                //alert('validators='+JSON.stringify(this.validators))
                                 this.setState({ validationResults:validationResults.results })
                                 if (isValid === true) {
                                   this.onSubmit(values)
