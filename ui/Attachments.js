@@ -173,14 +173,16 @@ export default class Attachment extends Component {
        });
     }
     showActionIcons(){
-        return (
-            <View style={{flexDirection:'row',}}>
+/*
               <Icon
                 name={'ion-ios-create-outline'}
                 color={'blue'}
                 size={40}
                 onPress={this.onEdit.bind(this) } />
-	      <View style={{width:40}} />
+              <View style={{width:40}} />
+*/
+        return (
+            <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-add'}
                 color={'blue'}
