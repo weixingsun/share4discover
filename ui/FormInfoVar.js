@@ -44,6 +44,7 @@ export default class FormInfoVar extends Component {
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
+        this.phone_validator={ validator: 'matches', arguments: /^\d{6,12}$/, message:'{TITLE} is invalid' }
         this.price1_validator={ validator:'contains',arguments:['/'], message:'{TITLE} format like 100/week' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.str_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
@@ -122,7 +123,7 @@ export default class FormInfoVar extends Component {
         this.genValidator('title',    this.length_validator(5,55))
         this.genValidator('content',  this.length_validator(10,255))
         this.genValidator('address',  this.length_validator(10,255))
-        this.genValidator('phone',    this.number_validator)
+        this.genValidator('phone',    this.phone_validator)
         this.genValidator('price',    this.number_validator)
         //this.genValidator('price',  this.price1_validator)
     }
@@ -171,7 +172,7 @@ export default class FormInfoVar extends Component {
               type: 'house', //typeTitle: 'House',
               cat: '',       //catTitle:'',
               title: '',     content: '', 
-              address: '',   price: '',   per: '',
+              address: '',   price: '',
               phone: '',     ctime: this.ctime,
               lat:   '',     lng:   '',
               //time:  '',     dest:  '',
@@ -195,6 +196,8 @@ export default class FormInfoVar extends Component {
             this.ctime=parseInt(this.props.msg.ctime)
             this.setState({ type:this.props.msg.type, form: myDefaults })
             this.genTypeValidators(this.props.msg.type)
+            this.lastcat=this.props.msg.cat
+            this.changePriceValidator()
         }
     }
     singlePermission(name){
