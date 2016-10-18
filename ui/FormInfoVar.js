@@ -39,8 +39,17 @@ export default class FormInfoVar extends Component {
         this.formName='infoForm'
         this.lasttype=''
         this.time_format='YYYY-MM-DD HH:mm'
-        this.sec_types_no_rent = ['buy','sell','service']
-        this.sec_types_all = ['buy','sell','rent0','rent1','service']
+        this.rent_cats = ['rent0','rent1','service']
+        this.sec_types_no_rent = [
+            {value:'buy',icon:'ion-ios-log-in'},
+            {value:'sell',icon:'ion-ios-log-out'},
+            {value:'service',icon:'ion-ios-planet'}]
+        this.sec_types_all = [
+            {value:'buy',icon:'ion-ios-log-in'},
+            {value:'sell',icon:'ion-ios-log-out'},
+            {value:'rent0',icon:'ion-ios-log-in'},
+            {value:'rent1',icon:'ion-ios-log-out'},
+            {value:'service',icon:'ion-ios-planet'}]
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
@@ -146,8 +155,7 @@ export default class FormInfoVar extends Component {
         }*/
     }
     changePriceValidator(){
-        let rent_cats = ['rent0','rent1']
-        if(this.lastcat!=='' && rent_cats.indexOf(this.lastcat)>-1){
+        if(this.lastcat!=='' && this.rent_cats.indexOf(this.lastcat)>-1){
             this.genValidator('price', this.price1_validator)
         }
     }
@@ -544,7 +552,7 @@ export default class FormInfoVar extends Component {
         )
     }
     renderTextField(name,title,validator,img=null){
-        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
+        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={20} /></View>
         return (
             <GiftedForm.TextInputWidget
                 key={name}
@@ -575,7 +583,15 @@ export default class FormInfoVar extends Component {
         let no_rent = this.no_rent_types.indexOf(this.state.type)>-1?true:false
         let types = no_rent?this.sec_types_no_rent:this.sec_types_all
         return types.map((type,id)=>{
-            return <GiftedForm.OptionWidget key={id} title={I18n.t(type)} value={type} />
+            return <GiftedForm.OptionWidget
+                    key={id} 
+                    title={I18n.t(type.value)} 
+                    value={type.value}
+                    image={(
+                         <View style={{width:80,alignItems:'center'}}>
+                             <Icon name={type.icon} size={30} />
+                         </View>
+                    )} />
         })
     }
     render(){
@@ -623,7 +639,7 @@ export default class FormInfoVar extends Component {
                             name='cat'
                             display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)}
                             value={this.state.form.cat}
-                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-list-ol'} size={25} /></View>}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'ion-ios-menu'} size={28} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
