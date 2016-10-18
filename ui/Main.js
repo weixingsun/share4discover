@@ -234,7 +234,7 @@ export default class Main extends Component {
         if(map_value != null){
             Global.MAP = map_value
         }else{
-            _this.getCountryCodeFromNetwork();
+            Net.chooseMapFromNetwork()
         }
       });
       Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
@@ -251,14 +251,6 @@ export default class Main extends Component {
             Global.MAP_TRAFFIC = Global.MAP_TRAFFIC_FALSE
         }
       });
-  }
-  getCountryCodeFromNetwork(){
-      let _this=this
-      Net._get(Global.IP2LOC_HOST).then((result)=>{
-          if(result.country_code == 'CN') 
-               Global.MAP = Global.BaiduMap;
-          else Global.MAP = Global.GoogleMap;
-      })
   }
   loadNotifyByLogin(){
       if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());

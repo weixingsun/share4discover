@@ -118,6 +118,19 @@ var Net = {
       var url = this.USER_HOST;
       return this._post(url, json);
     },
+    chooseMapFromNetwork(){
+      this._get(Global.IP2LOC_HOST).then((result)=>{
+        let inchina = result.country_code.toUpperCase() == 'CN'
+        if(inchina)  Global.MAP = Global.BaiduMap;
+        else Global.MAP = Global.GoogleMap;
+      })
+    },
+    getLatlngFromNetwork(){
+      this._get(Global.IP2LOC_HOST).then((result)=>{
+        //let inchina = result.country_code.toUpperCase() == 'CN'
+        alert(JSON.stringify(result))
+      })
+    },
 };
 
 module.exports = Net;

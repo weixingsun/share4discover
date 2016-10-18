@@ -50,6 +50,7 @@ export default class FormInfoVar extends Component {
             {value:'rent0',icon:'ion-ios-log-in'},
             {value:'rent1',icon:'ion-ios-log-out'},
             {value:'service',icon:'ion-ios-planet'}]
+        //this.GpsTick=0
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
@@ -392,8 +393,11 @@ export default class FormInfoVar extends Component {
             self.pos=position.coords
             //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
-          (error) => console.log(error.message),
-          {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
+          (error) => {
+              console.log(error.message)
+              alert('gps err:'+error.message)
+          },
+          {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
         );
       }else if(Global.MAP===Global.BaiduMap){
         this.watchID = KKLocation.watchPosition((position) => {
@@ -405,10 +409,11 @@ export default class FormInfoVar extends Component {
       //this.setState({gps:true});
     }
     checkTooFarAway(position){
+        let maxDelta = 0.2
         if(!this.pos) return false
         let latDiff = Math.abs(position.latitude-this.pos.latitude)
         let lngDiff = Math.abs(position.longitude-this.pos.longitude)
-        if(latDiff>0.1 || lngDiff>0.1){
+        if(latDiff>maxDelta || lngDiff>maxDelta){
             return true
         }else return false
     }
