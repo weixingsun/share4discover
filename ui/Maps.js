@@ -119,7 +119,7 @@ export default class Maps extends Component {
             //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
           (error) => console.log(error.message),
-          {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
+          {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:50},
         );
       }else if(Global.MAP===Global.BaiduMap){
         this.watchID = KKLocation.watchPosition((position) => {
