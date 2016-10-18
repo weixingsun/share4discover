@@ -388,6 +388,7 @@ export default class FormInfoVar extends Component {
       if(Global.MAP===Global.GoogleMap){
         this.watchID = navigator.geolocation.watchPosition((position) => {
             //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+            self.turnOffGps()
             self.pos=position.coords
             //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
