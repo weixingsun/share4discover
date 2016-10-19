@@ -11,7 +11,7 @@
 #import "RCTRootView.h"
 #import "CodePush.h"
 #import "RCTOneSignal.h"
-#import "RNGoogleSignin.h"
+//#import "RNGoogleSignin.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
@@ -79,7 +79,7 @@ BMKMapManager* mapManager;
                  annotation:annotation];
     }
     // GoogleSignin
-    else if ([[url scheme] hasPrefix:@"com.googleusercontent.apps"])
+    /*else if ([[url scheme] hasPrefix:@"com.googleusercontent.apps"])
     {
       NSLog(@"google url: %@", [url scheme]);
       return [RNGoogleSignin
@@ -87,7 +87,7 @@ BMKMapManager* mapManager;
                     openURL:url
           sourceApplication:sourceApplication
                  annotation:annotation];
-    }
+    }*/
     // Weibo
     else if ([[url scheme] hasPrefix:@"wb"])
     {
