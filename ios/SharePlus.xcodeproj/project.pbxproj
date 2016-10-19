@@ -275,6 +275,7 @@
 		03CD51C81D7E97F500FC1209 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		03D2FFF41CAF5507001823F9 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		03D334E71D9BB17A002DB329 /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = WeiboSDK.bundle; path = "../node_modules/react-native-weibo/ios/libWeiboSDK/WeiboSDK.bundle"; sourceTree = "<group>"; };
+		03D5BD501DB795E700C8B2FB /* SharePlus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharePlus.entitlements; sourceTree = "<group>"; };
 		03F77A301CFA4784001D0743 /* RCTBaiduMap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBaiduMap.xcodeproj; path = "../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap.xcodeproj"; sourceTree = "<group>"; };
 		03F77A371CFA4BF0001D0743 /* BaiduMapAPI_Base.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Base.framework; path = "../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap/BaiduMap/BaiduMapAPI_Base.framework"; sourceTree = "<group>"; };
 		03F77A381CFA4BF0001D0743 /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = "../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap/BaiduMap/BaiduMapAPI_Location.framework"; sourceTree = "<group>"; };
@@ -642,6 +643,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				03D5BD501DB795E700C8B2FB /* SharePlus.entitlements */,
 				03D334E71D9BB17A002DB329 /* WeiboSDK.bundle */,
 				03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */,
 				03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */,
@@ -739,6 +741,11 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8NZCFB3GNR;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1129,6 +1136,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SharePlus.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
@@ -1188,6 +1196,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SharePlus.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8NZCFB3GNR;
