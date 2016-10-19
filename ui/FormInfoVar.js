@@ -33,6 +33,7 @@ export default class FormInfoVar extends Component {
             form:{},
             grantedPermissions:{},
             type:'house',
+            pos:{latitude:'',longitude:''},
         };
         this.updatePics=this.updatePics.bind(this)
         this.hidden_fields={}
@@ -388,9 +389,10 @@ export default class FormInfoVar extends Component {
       let self=this
       if(Global.MAP===Global.GoogleMap){
         this.watchID = navigator.geolocation.watchPosition((position) => {
+        //navigator.geolocation.getCurrentPosition((position) => {
             //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+            self.setState({ pos:position.coords })
             self.turnOffGps()
-            self.pos=position.coords
             //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
           (error) => {
@@ -401,18 +403,19 @@ export default class FormInfoVar extends Component {
         );
       }else if(Global.MAP===Global.BaiduMap){
         this.watchID = KKLocation.watchPosition((position) => {
-          //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
-          self.pos=position.coords
-          //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
+            //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+            self.setState({ pos:position.coords })
+            self.turnOffGps()
+            //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
         });
       }
       //this.setState({gps:true});
     }
     checkTooFarAway(position){
         let maxDelta = 0.2
-        if(!this.pos) return false
-        let latDiff = Math.abs(position.latitude-this.pos.latitude)
-        let lngDiff = Math.abs(position.longitude-this.pos.longitude)
+        if(!this.state.pos) return false
+        let latDiff = Math.abs(position.latitude-this.state.pos.latitude)
+        let lngDiff = Math.abs(position.longitude-this.state.pos.longitude)
         if(latDiff>maxDelta || lngDiff>maxDelta){
             return true
         }else return false
@@ -503,7 +506,10 @@ export default class FormInfoVar extends Component {
                 query={{
                     ak:this.ak,mcode:this.mcode,
                     //gdkey:gdkey,
-                    key:this.ggkey
+                    key:this.ggkey,
+                    location:this.state.pos.latitude+','+this.state.pos.longitude,
+                    radius:1500,
+                    //components:{country:'NZ'},
                 }}
                 onClose={ (loc)=> {
                     this.hidden_fields[name+'_lat']=loc.lat
@@ -645,7 +651,7 @@ export default class FormInfoVar extends Component {
                             name='cat'
                             display={this.state.form.cat===''?'':I18n.t(this.state.form.cat)}
                             value={this.state.form.cat}
-                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'ion-ios-menu'} size={28} /></View>}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'ion-ios-list'} size={30} /></View>}
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
@@ -670,7 +676,10 @@ export default class FormInfoVar extends Component {
                             query={{
                                 ak:this.ak,mcode:this.mcode,
                                 //gdkey:gdkey,
-                                key:this.ggkey
+                                key:this.ggkey,
+                                location:this.state.pos.latitude+','+this.state.pos.longitude,
+                                radius:1500,
+                                //components:{country:'NZ'},
                             }}
                             onClose={ (loc)=> {
                                 this.setState({form:{ ...this.state.form, lat:loc.lat, lng:loc.lng }})} 
