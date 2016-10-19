@@ -26,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.share.2016</string>
+			<string>open.shareplus</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.share.2016</string>
+				<string>open.shareplus</string>
 			</array>
 		</dict>
 		<dict>
@@ -40,26 +40,6 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb1682496612023647</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>840928054415-qc4abj1mu0l2k6e86n30of3gktig10id.apps.googleusercontent.com</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.googleusercontent.apps.840928054415-qc4abj1mu0l2k6e86n30of3gktig10id</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.840928054415-qc4abj1mu0l2k6e86n30of3gktig10id</string>
 			</array>
 		</dict>
 		<dict>

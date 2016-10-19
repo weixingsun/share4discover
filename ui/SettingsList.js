@@ -187,12 +187,12 @@ export default class SettingsList extends React.Component {
                       </View>
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
-                  {this.renderFeed()}
                   {this.renderUSB()}
                   {this.renderLogin()}
               </ScrollView>
           </View>
         );
+        //{this.renderFeed()}
         //{this.renderBLE()}
     }
 }

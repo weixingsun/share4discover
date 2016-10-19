@@ -2,7 +2,6 @@ package com.share;
 
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.react.bridge.ActivityEventListener;
 import android.content.Intent;
 import android.os.Bundle;

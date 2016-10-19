@@ -211,19 +211,6 @@ export default class LoginSettings extends React.Component{
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Google'
-                            name='gg'
-                            display={this.state.form.gg}
-                            value={this.state.form.gg}
-                            //validationResults={this.state.validationResults}
-                        >
-                            <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='gg' title='gg' multiple={false}>
-                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
-                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
-                            </GiftedForm.SelectWidget>
-                        </GiftedForm.ModalWidget>
-                        <GiftedForm.ModalWidget
                             title='Weibo'
                             name='wb'
                             display={this.state.form.wb}
@@ -242,3 +229,18 @@ export default class LoginSettings extends React.Component{
         )
     }
 };
+/*
+                        <GiftedForm.ModalWidget
+                            title='Google'
+                            name='gg'
+                            display={this.state.form.gg}
+                            value={this.state.form.gg}
+                            //validationResults={this.state.validationResults}
+                        >
+                            <GiftedForm.SeparatorWidget />
+                            <GiftedForm.SelectWidget name='gg' title='gg' multiple={false}>
+                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
+                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
+                            </GiftedForm.SelectWidget>
+                        </GiftedForm.ModalWidget>
+*/

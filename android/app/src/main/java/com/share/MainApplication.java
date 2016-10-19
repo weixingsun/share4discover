@@ -2,8 +2,8 @@ package com.share;
 
 import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
 import cn.reactnative.modules.weibo.WeiboPackage;
-import co.apptailor.googlesignin.RNGoogleSigninModule;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
+//import co.apptailor.googlesignin.RNGoogleSigninModule;
+//import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
@@ -90,19 +90,17 @@ public class MainApplication extends Application implements ReactApplication {
         new ImagePickerPackage(),
         new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
         //new ReactNativeLocalizationPackage(),
-        new UsbReactPackage(),
-        new RNGoogleSigninPackage(),
-        new RNPermissionsPackage(),  //Android 6.0 permission
         //new FacebookLoginPackage(),
+        //new RNGoogleSigninPackage(),
+        //new BleManagerPackage(),
+        //new BeaconsAndroidPackage(),
+        new UsbReactPackage(),
+        new RNPermissionsPackage(),  //Android 6.0 permission
         new FBSDKPackage(mCallbackManager),  //mCallbackManager
         new WeChatPackage(),
         new WeiboPackage(),
         new VectorIconsPackage(),
-        //new PhotoViewPackage(),
         new KCKeepAwakePackage(),
-        //new BleManagerPackage(),
-        //new BeaconsAndroidPackage(),
-        //new RNGLPackage(),
         new ReactMapPackage(),  //BaiduMap
         new MapsPackage()   //GoogleMap
       );

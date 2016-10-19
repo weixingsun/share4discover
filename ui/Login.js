@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import {Dimensions, NativeModules, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
-import LoginGG from './LoginGG'
+//import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
 import LoginWB from './LoginWB'
@@ -19,14 +19,14 @@ export default class SettingsList extends React.Component {
       super(props);
       this.state = {
           user_fb:Global.userObjects.fb,
-          user_gg:Global.userObjects.gg,
+          //user_gg:Global.userObjects.gg,
           user_wx:Global.userObjects.wx,
           user_wb:Global.userObjects.wb,
       };
       this.login_fb  = this.login_fb.bind(this);
       this.logout_fb = this.logout_fb.bind(this);
-      this.login_gg  = this.login_gg.bind(this);
-      this.logout_gg = this.logout_gg.bind(this);
+      //this.login_gg  = this.login_gg.bind(this);
+      //this.logout_gg = this.logout_gg.bind(this);
       this.login_wx  = this.login_wx.bind(this);
       this.logout_wx = this.logout_wx.bind(this);
       this.login_wb  = this.login_wb.bind(this);
@@ -39,7 +39,7 @@ export default class SettingsList extends React.Component {
     }
     componentDidMount(){
     }
-    login_gg(user){
+    /*login_gg(user){
         this.setState({user_gg:user});
         Global.userObjects['gg'] = user
         Global.logins.gg = user.email
@@ -51,7 +51,7 @@ export default class SettingsList extends React.Component {
         delete Global.userObjects.gg
         delete Global.logins.gg
         Global.mainlogin = Global.getMainLogin()
-    }
+    }*/
     login_fb(user){
         this.setState({user_fb:user});
         Global.userObjects.fb = user
@@ -120,9 +120,6 @@ export default class SettingsList extends React.Component {
                       <Text>{I18n.t('post')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   <View style={Style.left_card}>
-                    <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
-                  </View>
-                  <View style={Style.left_card}>
                     <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
                   </View>
                   <View style={Style.left_card}>
@@ -136,5 +133,6 @@ export default class SettingsList extends React.Component {
 /*
                   <View style={Style.left_card}>
                     <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
+                    <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
                   </View>
 */
