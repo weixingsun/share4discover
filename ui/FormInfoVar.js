@@ -628,7 +628,7 @@ export default class FormInfoVar extends Component {
                   <KeyboardAvoidingView behavior='position' style={{flex:1,}}>
                   <GiftedForm
                     formName={this.formName}
-                    style={{flex:1,marginLeft:10,marginRight:10}}  //height:form_height
+                    style={{flex:1,}} //marginLeft:2,marginRight:2}}  //height:form_height
                     openModal={(route) => { route.giftedForm = true; this.props.navigator.push(route) }}
                     onValueChange={this.handleValueChange.bind(this)}
                     validators={ this.validators }
