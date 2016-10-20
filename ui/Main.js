@@ -69,6 +69,13 @@ export default class Main extends Component {
       var _this = this;
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+      }else{
+          OneSignal.checkPermissions((permissions) => {
+              //alert('OneSignal.checkPermissions '+JSON.stringify(permissions));
+          });
+          //let permissions = { alert: true, badge: true, sound: true }
+          //OneSignal.requestPermissions(permissions);
+          //OneSignal.registerForPushNotifications();
       }
       this.checkSettingsChange();
       this.notification();
@@ -85,11 +92,14 @@ export default class Main extends Component {
               }
           });
         }else
-            alert('This share has been deleted.')
+            alert('The information does not exist.')
       });
   }
   openNotification(str){
-      let note = JSON.parse(decodeURI(str))
+      if(Platform.OS === 'ios') 
+          str = str.replace(/%25/g,'%').replace(/%23/g,'#') //replaceAll('%26','&')
+      let strJson = decodeURI(str)
+      let note = JSON.parse(strJson)
       this.props.navigator.push({
           component: Note,
           passProps: {
@@ -134,6 +144,7 @@ export default class Main extends Component {
   }
   notification(){
       let self=this
+      OneSignal.enableInAppAlertNotification(true);
       OneSignal.configure({
           onIdsAvailable: function(device) {
             //let userid = 'UserId = '+ device.userId;
@@ -141,7 +152,7 @@ export default class Main extends Component {
             //alert('onesignal.notification:\n'+userid+'\n'+token)
           },
           onNotificationOpened: function(message, data, isActive) {
-            //console.log(JSON.stringify(data))
+            //alert('onesignal:'+JSON.stringify(data))
             if(data.custom){
               self.openCustomNoteURL(data)
             }else if (data.p2p_notification && data.p2p_notification.key) {
@@ -153,6 +164,7 @@ export default class Main extends Component {
   openCustomNoteURL(note){ //{custom:1,title,content}
       let str64=encodeURI(JSON.stringify(note))
       let url='share://shareplus.co.nf/c/'+str64;
+      //alert('url='+str64)
       //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
       Linking.openURL(url);
   }

@@ -5,7 +5,7 @@ import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
-//import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import Gallery from 'react-native-gallery';
 import Style from './Style';

@@ -101,7 +101,7 @@ BMKMapManager* mapManager;
     // Open App from URL
     else if ([[url scheme] hasPrefix:@"share"])
     {
-      NSLog(@"open app from url: %@", url );
+      //NSLog(@"open app from url: %@", url );
       return [RCTLinkingManager
               application:application
                   openURL:url

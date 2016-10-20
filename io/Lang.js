@@ -75,6 +75,7 @@ I18n.translations = {
     //notes
     host:'Host',
     condition:'Condition',
+    sound:'Sound',
   },
   zh_CN: {
     shareplus: '分享家',
@@ -149,5 +150,6 @@ I18n.translations = {
     //notes
     host:'主机',
     condition:'条件',
+    sound:'声音',
   },
 }
