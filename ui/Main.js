@@ -64,6 +64,9 @@ export default class Main extends Component {
       //});
       this.ExtUrl()
       this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),1000));
+      if (this.props.initialNotification) {
+        alert('notification: '+JSON.stringify(this.props.initialNotification));
+      }
   }
   componentWillMount(){
       var _this = this;
@@ -80,33 +83,31 @@ export default class Main extends Component {
       this.checkSettingsChange();
       this.notification();
   }
+  openPage(page,data){
+      this.props.navigator.push({
+          component: page,
+          passProps: {
+              msg:data,
+          }
+      });
+  }
   openShareInfo(key){
       var self = this;
       Net.getMsg(key).then((json)=> {
         if(json!=null){
           //alert(JSON.stringify(json))
-          self.props.navigator.push({
-              component: Detail,
-              passProps: {
-                  msg:json,
-              }
-          });
+          self.openPage(Detail,json)
         }else
-            alert('The information does not exist.')
+          alert('The information does not exist.')
       });
   }
   openNotification(str){
       if(Platform.OS === 'ios') 
           str = str.replace(/%25/g,'%').replace(/%23/g,'#') //replaceAll('%26','&')
+      //console.log('openNotification:'+str)
       let strJson = decodeURI(str)
       let note = JSON.parse(strJson)
-      this.props.navigator.push({
-          component: Note,
-          passProps: {
-              msg:note,
-          }
-      })
-      //alert(str)
+      this.openPage(Note,note)
   }
   openLogic(url){
       if(url.indexOf('/i/')>-1) {
@@ -122,6 +123,7 @@ export default class Main extends Component {
     if(Platform.OS === 'ios'){
       Linking.addEventListener('url', (event)=>{
           if(event.url) self.openLogic(event.url) 
+          //console.log(event.url)
       });
     }else if(Platform.OS === 'android'){  //for android, AndroidManifest.xml launchMode=standard
       Linking.getInitialURL().then((url)=>{
@@ -144,7 +146,7 @@ export default class Main extends Component {
   }
   notification(){
       let self=this
-      OneSignal.enableInAppAlertNotification(true);
+      //OneSignal.enableInAppAlertNotification(true);
       OneSignal.configure({
           onIdsAvailable: function(device) {
             //let userid = 'UserId = '+ device.userId;
@@ -154,21 +156,23 @@ export default class Main extends Component {
           onNotificationOpened: function(message, data, isActive) {
             //alert('onesignal:'+JSON.stringify(data))
             if(data.custom){
-              self.openCustomNoteURL(data)
+              if(Platform.OS === 'ios') self.openPage(Note,data)
+              else self.sendCustomNoteURL(data)
             }else if (data.p2p_notification && data.p2p_notification.key) {
-              self.openShareReadReplyURL(data.p2p_notification)
+              if(Platform.OS === 'ios') self.openPage(Detail,data.p2p_notification)
+              else self.sendShareReadReplyURL(data.p2p_notification)
             }
           }
       });
   }
-  openCustomNoteURL(note){ //{custom:1,title,content}
+  sendCustomNoteURL(note){ //{custom:1,title,content}
       let str64=encodeURI(JSON.stringify(note))
       let url='share://shareplus.co.nf/c/'+str64;
       //alert('url='+str64)
       //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
       Linking.openURL(url);
   }
-  openShareReadReplyURL(reply){
+  sendShareReadReplyURL(reply){
       let replyKey= reply.key //car:lat,lng:ctime#rtime
       let replyValue= reply.value //{t:'r1',l:'fb:email',c:'content'}
       this.readMsg(replyKey,replyValue);

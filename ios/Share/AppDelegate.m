@@ -34,6 +34,14 @@ BMKMapManager* mapManager;
   //  jsCodeLocation = [CodePush bundleURL];
   //#endif
 
+  /*NSMutableDictionary *appProperties = [NSMutableDictionary dictionary];
+  if (launchOptions != nil) {
+      // Get Local Notification used to launch application.
+      NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+      if (notification) {
+        [ appProperties setObject:notification forKey:@"initialNotification" ];
+      }
+  }*/
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"SharePlus"
                                                initialProperties:nil
@@ -46,6 +54,7 @@ BMKMapManager* mapManager;
 
   self.oneSignal = [[RCTOneSignal alloc] initWithLaunchOptions:launchOptions
                                                          appId:@"beed51f1-1763-4ab3-bcd2-da4364786ceb"];
+  //[OneSignal initWiLaunchOptions:launchOptions appId:@"beed51f1-1763-4ab3-bcd2-da4364786ceb"];
     BMKMapManager *mapManager = [[BMKMapManager alloc] init];
     //BOOL ret = [mapManager start:@"6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L" generalDelegate:nil];
     BOOL ret = [mapManager start:@"Cyq8AKxGeAVNZSzV0Dk74dGpRsImpIHu" generalDelegate:nil];
@@ -56,7 +65,7 @@ BMKMapManager* mapManager;
   //Add the navigation controller's view to the window and display.
   //[self.window addSubview:navigationController.view];
   [self.window makeKeyAndVisible];
-  //return YES;
+  //rootView.appProperties = appProperties;
   return [[FBSDKApplicationDelegate sharedInstance] application:application
           didFinishLaunchingWithOptions:launchOptions];
 }

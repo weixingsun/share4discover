@@ -18,7 +18,6 @@
 		0304880C1C9447BE00AA2D90 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0304880B1C9447BE00AA2D90 /* libc++.tbd */; };
 		0304880E1C9447D800AA2D90 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0304880D1C9447D800AA2D90 /* libz.tbd */; };
 		030488201C94EEC700AA2D90 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0304881F1C94EEC700AA2D90 /* AddressBook.framework */; };
-		030488221C94EED200AA2D90 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488211C94EED200AA2D90 /* StoreKit.framework */; };
 		030F81C31CFA416B00508D46 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 030F81C21CFA40C600508D46 /* libCodePush.a */; };
 		0383F6821D4C1DC400FA3DE0 /* OneSignal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */; };
 		03CD51C91D7E97F500FC1209 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */; };
@@ -267,7 +266,6 @@
 		0304880B1C9447BE00AA2D90 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		0304880D1C9447D800AA2D90 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		0304881F1C94EEC700AA2D90 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		030488211C94EED200AA2D90 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		030F81BD1CFA40C600508D46 /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = "../node_modules/react-native-onesignal/ios/Frameworks/OneSignal.framework"; sourceTree = "<group>"; };
 		03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -357,7 +355,6 @@
 				03D2FFF51CAF5507001823F9 /* SafariServices.framework in Frameworks */,
 				03CD51CA1D7E97F500FC1209 /* FBSDKLoginKit.framework in Frameworks */,
 				030488061C94472D00AA2D90 /* SystemConfiguration.framework in Frameworks */,
-				030488221C94EED200AA2D90 /* StoreKit.framework in Frameworks */,
 				030488201C94EEC700AA2D90 /* AddressBook.framework in Frameworks */,
 				0304880C1C9447BE00AA2D90 /* libc++.tbd in Frameworks */,
 				0304880A1C9447A000AA2D90 /* libsqlite3.0.tbd in Frameworks */,
@@ -661,7 +658,6 @@
 				03F77A391CFA4BF0001D0743 /* BaiduMapAPI_Map.framework */,
 				03F77A3A1CFA4BF0001D0743 /* BaiduMapAPI_Utils.framework */,
 				03D2FFF41CAF5507001823F9 /* SafariServices.framework */,
-				030488211C94EED200AA2D90 /* StoreKit.framework */,
 				0304881F1C94EEC700AA2D90 /* AddressBook.framework */,
 				0304880D1C9447D800AA2D90 /* libz.tbd */,
 				0304880B1C9447BE00AA2D90 /* libc++.tbd */,
@@ -742,6 +738,9 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8NZCFB3GNR;
 						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
