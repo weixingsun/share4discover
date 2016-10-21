@@ -14,6 +14,10 @@ export default class Nav extends Component {
     componentDidMount() {
         //CodePush.sync();
         //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,(evt)=>this.refresh());
+      if (this.props.initialNotification) {
+          alert('notification: '+JSON.stringify(this.props.initialNotification));
+          console.log('notification: '+JSON.stringify(this.props.initialNotification));
+      }
     }
     _renderScene(route, navigator) {
       if(route.giftedForm == true) return route.renderScene(navigator)

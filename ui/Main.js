@@ -44,6 +44,8 @@ export default class Main extends Component {
       
     }; 
     this.openShareInfo=this.openShareInfo.bind(this)
+    this.openLogic=this.openLogic.bind(this)
+    this.openPage=this.openPage.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
   }
@@ -57,6 +59,7 @@ export default class Main extends Component {
       }
       //clearInterval(this.timer)
       this.event_notify.remove()
+      Linking.removeEventListener('url', this.openLogic);
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -66,6 +69,7 @@ export default class Main extends Component {
       this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),1000));
       if (this.props.initialNotification) {
         alert('notification: '+JSON.stringify(this.props.initialNotification));
+        console.log('notification: '+JSON.stringify(this.props.initialNotification));
       }
   }
   componentWillMount(){
@@ -109,7 +113,8 @@ export default class Main extends Component {
       let note = JSON.parse(strJson)
       this.openPage(Note,note)
   }
-  openLogic(url){
+  openLogic(URL){
+      let url = typeof URL === 'string'?URL:URL.url
       if(url.indexOf('/i/')>-1) {
           let key = url.split('/i/')[1]
           if(key.length>0) this.openShareInfo(key)
@@ -120,16 +125,12 @@ export default class Main extends Component {
   }
   ExtUrl(){
       let self=this
-    if(Platform.OS === 'ios'){
-      Linking.addEventListener('url', (event)=>{
-          if(event.url) self.openLogic(event.url) 
-          //console.log(event.url)
-      });
-    }else if(Platform.OS === 'android'){  //for android, AndroidManifest.xml launchMode=standard
-      Linking.getInitialURL().then((url)=>{
+    ///if(Platform.OS === 'ios'){
+      Linking.addEventListener('url', this.openLogic);  //for handling url when app running in background
+    //}else if(Platform.OS === 'android'){  //for android, AndroidManifest.xml launchMode=standard
+      Linking.getInitialURL().then((url)=>{  //for cold start
           if(url) self.openLogic(url)
       }).catch(err=>alert('err:'+err))
-    }
   }
   onBackAndroid(){
       var routers = this.props.navigator.getCurrentRoutes();
@@ -159,8 +160,11 @@ export default class Main extends Component {
               if(Platform.OS === 'ios') self.openPage(Note,data)
               else self.sendCustomNoteURL(data)
             }else if (data.p2p_notification && data.p2p_notification.key) {
-              if(Platform.OS === 'ios') self.openPage(Detail,data.p2p_notification)
-              else self.sendShareReadReplyURL(data.p2p_notification)
+              //if(Platform.OS === 'ios'){
+              //    self.openShareInfo(data.p2p_notification.key.split('#')[0])
+              //}else{
+                  self.sendShareReadReplyURL(data.p2p_notification)
+              //}
             }
           }
       });

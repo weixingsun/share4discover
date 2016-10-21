@@ -27,7 +27,7 @@ export default class Detail extends Component {
         //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = []
         this.isLogin = (Global.mainlogin.length>0)
-        this.isMyMsg = this.checkSns(Global.mainlogin, this.props.msg.owner)
+        this.isMyMsg = this.checkSns(Global.mainlogin)
         this.close_image = null;
         this.state={ 
             reply: '',
@@ -138,7 +138,8 @@ export default class Detail extends Component {
         this.setState({show_pic_modal:false})
         
     }
-    checkSns(mainlogin,owner){
+    checkSns(mainlogin){
+        let owner = this.props.msg.owner
         if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
           return true
         else

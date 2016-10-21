@@ -34,19 +34,22 @@ BMKMapManager* mapManager;
   //  jsCodeLocation = [CodePush bundleURL];
   //#endif
 
-  /*NSMutableDictionary *appProperties = [NSMutableDictionary dictionary];
+  NSMutableDictionary *appProperties = [NSMutableDictionary dictionary];
   if (launchOptions != nil) {
       // Get Local Notification used to launch application.
       NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
       if (notification) {
         [ appProperties setObject:notification forKey:@"initialNotification" ];
       }
-  }*/
+      //NSLog(@"%@", appProperties);
+      //NSURL *url = nil;
+      //[RCTLinkingManager application:application openURL:url sourceApplication:nil, annotation:nil];
+  }
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"SharePlus"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-
+  rootView.appProperties = appProperties;
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -65,7 +68,6 @@ BMKMapManager* mapManager;
   //Add the navigation controller's view to the window and display.
   //[self.window addSubview:navigationController.view];
   [self.window makeKeyAndVisible];
-  //rootView.appProperties = appProperties;
   return [[FBSDKApplicationDelegate sharedInstance] application:application
           didFinishLaunchingWithOptions:launchOptions];
 }
@@ -123,6 +125,7 @@ BMKMapManager* mapManager;
 
 // Required for the notification event.
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
+    NSLog(@"didReceiveRemoteNotification  %@", notification);
     [RCTOneSignal didReceiveRemoteNotification:notification];
 }
 //[Universal Links]
