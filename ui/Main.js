@@ -68,8 +68,8 @@ export default class Main extends Component {
       this.ExtUrl()
       this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),1000));
       if (this.props.initialNotification) {
-        alert('notification: '+JSON.stringify(this.props.initialNotification));
-        console.log('notification: '+JSON.stringify(this.props.initialNotification));
+        //alert('notification: '+JSON.stringify(this.props.initialNotification));
+        //console.log('notification: '+JSON.stringify(this.props.initialNotification));
       }
   }
   componentWillMount(){
@@ -147,7 +147,7 @@ export default class Main extends Component {
   }
   notification(){
       let self=this
-      //OneSignal.enableInAppAlertNotification(true);
+      OneSignal.enableInAppAlertNotification(true);
       OneSignal.configure({
           onIdsAvailable: function(device) {
             //let userid = 'UserId = '+ device.userId;
