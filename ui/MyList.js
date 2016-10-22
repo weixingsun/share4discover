@@ -26,7 +26,7 @@ export default class MyList extends Component {
   }
   componentDidMount() {
       DeviceEventEmitter.removeAllListeners('refresh:MyList')
-      this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),500));
+      this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),400));
   }
   componentWillUnmount() {
       this.updateOnUI=false
