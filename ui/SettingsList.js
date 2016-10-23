@@ -142,9 +142,22 @@ export default class SettingsList extends React.Component {
                     <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
                         <Icon name={'fa-user'} size={30} color={login_color}/>
                     </View>
-                    <Text>{I18n.t('login')}</Text>
+                    <Text>{I18n.t('login')+' '+I18n.t('settings')}</Text>
                 </TouchableOpacity>
             )
+    }
+    renderUpdate(){
+        if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
+        return (
+            <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
+                <View style={{width:DEVICE_WIDTH/3}} />
+                <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
+                    <Icon name={'ion-ios-arrow-up'} size={35}/>
+                </View>
+                <Text>{I18n.t('update')}</Text>
+            </TouchableOpacity>
+        )
+        }
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
@@ -156,13 +169,7 @@ export default class SettingsList extends React.Component {
                   //automaticallyAdjustContentInsets={false}
                   //scrollEventThrottle={200}
               >
-                  <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-arrow-up'} size={35}/>
-                      </View>
-                      <Text>{I18n.t('update')}</Text>
-                  </TouchableOpacity>
+                  {this.renderUpdate()}
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.help()}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
@@ -187,11 +194,11 @@ export default class SettingsList extends React.Component {
                       </View>
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
-                  {this.renderUSB()}
                   {this.renderLogin()}
               </ScrollView>
           </View>
         );
+        //{this.renderUSB()}
         //{this.renderFeed()}
         //{this.renderBLE()}
     }

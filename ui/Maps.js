@@ -242,7 +242,6 @@ export default class Maps extends Component {
       .catch((e)=>{
           //alert('Problem:'+JSON.stringify(e))
       });
-      this.enableDownload(false)
     }
     distance(latDelta,lngDelta){
        return Math.floor(111111 * Math.min(latDelta,lngDelta)/2); //range circle in bbox
@@ -275,8 +274,6 @@ export default class Maps extends Component {
               <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                 {this.renderGpsIcon()}
                 <View style={{width:40}} />
-                {this.renderDownloadIcon()}
-                <View style={{width:40}} />
                 {this.renderAddIcon()}
                 <View style={{width:10}} />
               </View>
@@ -284,11 +281,11 @@ export default class Maps extends Component {
           />
         );
     }
-    renderDownloadIcon(){
-        let c = Style.font_colors.disabled
-        if(this.state.download) c = Style.font_colors.enabled
-        return <Icon name={'ion-ios-cloud-download-outline'} color={c} size={40} onPress={this.downloadMsg.bind(this)} />
-    }
+    //renderDownloadIcon(){
+    //    let c = Style.font_colors.disabled
+    //    if(this.state.download) c = Style.font_colors.enabled
+    //    return <Icon name={'ion-ios-cloud-download-outline'} color={c} size={40} onPress={this.downloadMsg.bind(this)} />
+    //}
     renderGpsIcon(){
       let c = Style.font_colors.disabled
       if(!this.state.gps)
@@ -329,7 +326,7 @@ export default class Maps extends Component {
     _pressType(sid,rid,data){
         this.setState({type:data,showTypes:false})
         this.loadIcons(Global.TYPE_ICONS[data])
-        this.enableDownload(true)
+        this.downloadMsg()
         this.clearMarkers()
     }
     onTypeChange(key: string, value: string) {
@@ -337,13 +334,13 @@ export default class Maps extends Component {
         newState[key] = value;
         this.setState(newState);
         this.loadIcons(Global.TYPE_ICONS[value])
-        this.enableDownload(true)
+        this.downloadMsg()
         this.clearMarkers()
     }
     onRegionChange(r) {
       this.setState({region: r});
       Store.save('region', r);
-      this.enableDownload(true);
+      this.downloadMsg();
       //alert(JSON.stringify(r))
       //console.log('onRegionChange...................')
     }
@@ -357,9 +354,9 @@ export default class Maps extends Component {
         let key = Global.getKeyFromMsg(msg)
         this.showMsgByKey(key)
     }
-    enableDownload(flag){
-        this.setState({download:flag});
-    }
+    //enableDownload(flag){
+    //    this.setState({download:flag});
+    //}
     /*onLongPress(event) {
         this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
     }*/
