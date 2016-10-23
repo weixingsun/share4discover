@@ -149,7 +149,8 @@ export default class Main extends Component {
       return true;
   }
   notification(){
-    if(Platform.OS === 'android'){
+    //if(Platform.OS === 'android'){
+    if(false){
       let self=this
       OneSignal.enableInAppAlertNotification(true);
       OneSignal.configure({
