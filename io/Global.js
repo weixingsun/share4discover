@@ -104,6 +104,13 @@ module.exports = {
       yql:'fa-yahoo',
       web:'fa-internet-explorer',
     },
+    CAT_COLORS:{
+      buy:  '#990000',
+      rent0:'#666600',
+      rent1:'#006666',
+      sell: '#000099',
+      service:'#000000',
+    },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))
         let arrKey = Object.keys(this.logins)

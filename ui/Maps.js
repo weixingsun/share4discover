@@ -28,12 +28,10 @@ export default class Maps extends Component {
       this.state = {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         type:'car',
+        cat:'rent0',
         ccid:0,
         circles: [],
-        //initialPosition: null,
-        //lastPosition: null,
         region:this.props.region,
-        download:true,
         gps: this.props.gps,
         reload:false,
         showTypes:false,
@@ -46,13 +44,13 @@ export default class Maps extends Component {
       this.turnOffGps = this.turnOffGps.bind(this)
       this.turnOnGps = this.turnOnGps.bind(this)
     }
-    loadIcons(name){
-        var _this = this;
-        getImageSource(name, 40, 'blue').then((source) => {
-            this.bluePlaceIcon= source
-        });
-        getImageSource(name, 40, 'gray').then((source) => {
-            this.grayPlaceIcon= source
+    loadIcons(type,cat){
+        let name=Global.TYPE_ICONS[type]
+        let color=Global.CAT_COLORS[cat]
+        alert('type='+type+' name='+name+' cat='+cat+' color='+color)
+        var self = this;
+        getImageSource(name, 40, color).then((source) => {
+            self.PlaceIcon= source
         });
     }
     singlePermission(name){
@@ -92,7 +90,7 @@ export default class Maps extends Component {
     componentWillMount(){
         this.permission();
         //this.checkUsbDevice();
-        this.loadIcons(Global.TYPE_ICONS[this.state.type]);
+        this.loadIcons(this.state.type,this.state.cat);
 	//AppState.addEventListener('change', this._handleAppStateChange);
         I18n.locale = NativeModules.RNI18n.locale
     }
@@ -160,8 +158,7 @@ export default class Maps extends Component {
     renderPlaceMarkersGmap(){
         return this.state.markers.map( (marker) => {
             var self=this
-            var color='blue'
-            if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
+            var color=Global.CAT_COLORS[marker.cat]
             let key = Global.getKeyFromMsg(marker)
             let T = marker.type.substring(0,1).toUpperCase()
             return (
@@ -180,7 +177,6 @@ export default class Maps extends Component {
         return this.state.markers.map( (marker) => {
             var self=this
             var color='blue'
-            if(marker.ask === 'true') color='gray'  //placeIcon = this.grayPlaceIcon
             let key = Global.getKeyFromMsg(marker)
             return (
               <BMapView.Marker
@@ -229,15 +225,23 @@ export default class Maps extends Component {
             lngIn=true
         return latIn && lngIn;
     }
-    downloadMsg() {
-      if(!this.state.download) return
+    downloadMsg(type,cat) {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
-      Net.rangeMsg(this.state.type, this.state.region, range).then((rows)=> {
-          self.clearMarkers();
-          self.loadMarkers(rows);
+      Net.rangeMsg(type, this.state.region, range).then((rows)=> {
           //alert(rows.length)
+          if(self.state.markers.length>0) self.setState({ markers:[] });
+          var markers = rows.map((row)=>{
+            //row ={ lat,lng,type,title,content,ctime, }
+            //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+            //row['view']   = <Icon name={'ion-ios-navigate-outline'} color={'#222222'} size={40} />
+            row['image']=self.PlaceIcon
+            row['latitude']=parseFloat(row.lat)
+            row['longitude']=parseFloat(row.lng)
+            return row;
+         })
+         this.setState({ markers: markers });
       })
       .catch((e)=>{
           //alert('Problem:'+JSON.stringify(e))
@@ -281,11 +285,6 @@ export default class Maps extends Component {
           />
         );
     }
-    //renderDownloadIcon(){
-    //    let c = Style.font_colors.disabled
-    //    if(this.state.download) c = Style.font_colors.enabled
-    //    return <Icon name={'ion-ios-cloud-download-outline'} color={c} size={40} onPress={this.downloadMsg.bind(this)} />
-    //}
     renderGpsIcon(){
       let c = Style.font_colors.disabled
       if(!this.state.gps)
@@ -323,24 +322,15 @@ export default class Maps extends Component {
       </TouchableHighlight>
       )
     }
-    _pressType(sid,rid,data){
-        this.setState({type:data,showTypes:false})
-        this.loadIcons(Global.TYPE_ICONS[data])
-        this.downloadMsg()
-        this.clearMarkers()
-    }
-    onTypeChange(key: string, value: string) {
-        const newState = {};
-        newState[key] = value;
-        this.setState(newState);
-        this.loadIcons(Global.TYPE_ICONS[value])
-        this.downloadMsg()
-        this.clearMarkers()
+    _pressType(sid,rid,type){
+        this.loadIcons(type,this.state.cat)
+        this.setState({type:type,showTypes:false,markers:[]})
+        this.downloadMsg(type,this.state.cat)
     }
     onRegionChange(r) {
       this.setState({region: r});
       Store.save('region', r);
-      this.downloadMsg();
+      this.downloadMsg(this.state.type,this.state.cat);
       //alert(JSON.stringify(r))
       //console.log('onRegionChange...................')
     }
@@ -353,28 +343,6 @@ export default class Maps extends Component {
 	}
         let key = Global.getKeyFromMsg(msg)
         this.showMsgByKey(key)
-    }
-    //enableDownload(flag){
-    //    this.setState({download:flag});
-    //}
-    /*onLongPress(event) {
-        this.addCircle({id: ccid++, c:event.nativeEvent.coordinate,r:100,s:'#ff0000' });
-    }*/
-    clearMarkers(){
-        this.setState({ markers: [] });
-    }
-    loadMarkers(rows){
-       var markers = rows.map((row)=>{
-         //row ={ lat,lng,type,title,content,ctime, }
-         if(row.ask === 'true') row['image']=this.grayPlaceIcon
-         else row['image']=this.bluePlaceIcon
-         //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
-         //row['view']   = <Icon name={'ion-ios-navigate-outline'} color={'#222222'} size={40} />
-         row['latitude']=parseFloat(row.lat)
-         row['longitude']=parseFloat(row.lng)
-         return row;
-       })
-       this.setState({ markers: markers });
     }
     addCircle(circle){
       var {circles} = this.state;

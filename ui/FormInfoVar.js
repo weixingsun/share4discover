@@ -32,13 +32,15 @@ export default class FormInfoVar extends Component {
         this.state={ 
             form:{},
             grantedPermissions:{},
-            type:'house',
+            type:'car',
+            cat:'rent0',
             pos:{latitude:'',longitude:''},
         };
         this.updatePics=this.updatePics.bind(this)
         this.hidden_fields={}
         this.formName='infoForm'
         this.lasttype=''
+        this.lastcat=''
         this.time_format='YYYY-MM-DD HH:mm'
         this.rent_cats = ['rent0','rent1','service']
         this.sec_types_no_rent = [
@@ -74,13 +76,21 @@ export default class FormInfoVar extends Component {
             house:{
                 bedroom: {type:'nmbr',title:I18n.t('bedroom'), validator:this.number_validator, img:'fa-bed'},
                 bathroom:{type:'nmbr',title:I18n.t('bathroom'),validator:this.number_validator, img:'fa-tint'},
+                garage:  {type:'nmbr',title:I18n.t('garage'),  validator:this.number_validator, img:'fa-car'},
+                area:    {type:'nmbr',title:I18n.t('area'),    validator:this.number_validator, img:'fa-square-o'},
             },
             car:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-                dest:  {type:'addr',title:I18n.t('dest'), validator:this.str_validator(','), img:'fa-flag'},
-            },
-            book:{
-                time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+                rent0:{
+                  time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+                  dest:  {type:'addr',title:I18n.t('dest'), validator:this.str_validator(','), img:'fa-flag'},
+                },
+                rent1:{
+                  time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
+                  dest:  {type:'addr',title:I18n.t('dest'), validator:this.str_validator(','), img:'fa-flag'},
+                },
+                buy:{},
+                sell:{},
+                service:{},
             },
             tool:{
             },
@@ -141,20 +151,16 @@ export default class FormInfoVar extends Component {
     genValidator(name,validateJson){
         this.validators[name] = {title:I18n.t(name), validate:[validateJson]}
     }
-    genTypeValidators(type){
+    genTypeValidators(type,cat){
         let self=this
-        let keys = Object.keys(this.info_types[type])
+        let fields = this.info_types[type]
+        if(fields[cat]) fields=fields[cat]
+        let keys = Object.keys(fields)
         keys.map((key)=>{
-            let obj = this.info_types[type][key]
+            let obj = fields[key]
             this.genValidator(key,obj.validator)
         })
         //this.setState({validators:this.validators})
-        /*for (var i=0;i<keys.length;i++){
-            let key = keys[i]
-            let obj = this.info_types[type][key]
-            alert('add validator for type:'+type+' name='+key+' title='+obj)
-            this.genValidator(key,obj.title,obj.validator)
-        }*/
     }
     changePriceValidator(){
         if(this.lastcat!=='' && this.rent_cats.indexOf(this.lastcat)>-1){
@@ -162,9 +168,9 @@ export default class FormInfoVar extends Component {
         }
     }
     changeValidator(){
-      if(this.lasttype !== ''){
+      if(this.lasttype !== ''&&this.lastcat !== ''){
         this.initAllValidators()
-        this.genTypeValidators(this.lasttype)
+        this.genTypeValidators(this.lasttype,this.lastcat)
         this.changePriceValidator()
         GiftedFormManager.stores[this.formName].validators = {};
         for (var key in this.validators) {
@@ -178,9 +184,8 @@ export default class FormInfoVar extends Component {
         let logins = Global.getLoginStr()
         GiftedFormManager.reset(this.formName);
         if(!this.props.msg){
-            var myDefaults = {  //ask
-              type: 'house', //typeTitle: 'House',
-              cat: '',       //catTitle:'',
+            var myDefaults = {
+              type: 'car', cat: 'rent0',
               title: '',     content: '', 
               address: '',   price: '',
               phone: '',     ctime: this.ctime,
@@ -188,31 +193,23 @@ export default class FormInfoVar extends Component {
               //time:  '',     dest:  '',
               pics:  [],     owner: logins,
             };
-            this.setState({type:'house', form:myDefaults})
-            this.genTypeValidators('house')
+            this.setState({type:'car', form:myDefaults})
+            this.genTypeValidators('car','rent0')
         }else{
             //alert(JSON.stringify(this.props.msg))
-            var myDefaults=this.props.msg;
-            //var typekey = 'type{'+this.props.msg.type+'}';
-            //myDefaults[typekey] = true;
-            //var askkey  = 'ask{' +this.props.msg.ask+'}';
-            //myDefaults[askkey]  = true;
-            //myDefaults['typeTitle'] = I18n.t(this.props.msg.type)
-            //myDefaults['askTitle']  = (this.props.msg.ask==='true')?'Ask':'Offer'
-            //myDefaults['catTitle']  = I18n.t(this.props.msg.cat)
-            //myDefaults['owner_name'] = Global.getMainLoginName()
-            //myDefaults['ask'] = [this.props.msg.ask]
-            if(typeof this.props.msg.pics === 'string') myDefaults['pics']=this.props.msg.pics.split(',')
-            this.ctime=parseInt(this.props.msg.ctime)
-            this.setState({ type:this.props.msg.type, form: myDefaults })
-            this.genTypeValidators(this.props.msg.type)
-            this.lastcat=this.props.msg.cat
+            let myDefaults=this.props.msg;
+            let {type,cat,ctime,pics}=myDefaults;
+            //alert('type='+type+' cat='+cat)
+            if(typeof pics === 'string') myDefaults['pics']=pics.split(',')
+            this.ctime=parseInt(ctime)
+            this.setState({ type:type,cat:cat, form: myDefaults })
+            this.genTypeValidators(type,cat)
+            this.lastcat=cat
             this.changePriceValidator()
         }
     }
     singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
-          //console.log(name+" Granted!", result);
           let perm = this.state.grantedPermissions;
           perm[name] = true
           this.setState({grantedPermissions:perm})
@@ -242,28 +239,20 @@ export default class FormInfoVar extends Component {
           alert('Please login first, go to settings')
           return
         }
-        //if(values.hasOwnProperty('ask')  && typeof values.ask ==='object')   values.ask = values.ask[0]
-        //if(values.ask === 'Ask' || values.ask === 'true')  values.ask = true
-        //else values.ask = false
         if(values.hasOwnProperty('cat') && typeof values.cat ==='object')  values.cat = values.cat[0]
         values.cat=values.cat.toLowerCase()
         if(values.hasOwnProperty('type') && typeof values.type ==='object')  values.type = values.type[0]
         values.type=values.type.toLowerCase()
         if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
         if(values.hasOwnProperty('ask')) delete values.ask
-        //if(values.hasOwnProperty('catTitle')) delete values.catTitle
-        //if(values.hasOwnProperty('typeTitle')) delete values.typeTitle
-        //if(values.hasOwnProperty('contentTitle')) delete values.contentTitle
-        //if(values.hasOwnProperty('dest') && values.dest.length===0) delete values.dest
-        //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
+        //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         //alert(JSON.stringify(values))
         this.merge_into(values,this.hidden_fields)
         if(this.s1uid) values['s1uid']=this.s1uid
     }
     merge_into(obj,obj_to_merge){
-        //for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
         for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
     }
     onSubmit(values) {
@@ -273,10 +262,6 @@ export default class FormInfoVar extends Component {
             alert('Your location is too far away')
             return
         }
-        //values.birthday = moment(values.birthday).format('YYYY-MM-DD');
-        /* postSubmit(['An error occurred, please try again']); // disable the loader and display an error message
-        ** postSubmit(['Username already taken', 'Email already taken']); // disable the loader and display an error message
-        */
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
         Alert.alert(
@@ -461,7 +446,8 @@ export default class FormInfoVar extends Component {
             if(values.cat[0]!==this.lastcat){
                 this.lastcat=values.cat[0]
                 this.lasttype=this.state.form.type
-                this.setState({form:{...this.state.form,cat:this.lastcat}})
+                //alert('type='+this.lasttype+' cat='+this.lastcat)
+                this.setState({cat:this.lastcat,  form:{...this.state.form,cat:this.lastcat}})
                 this.changeValidator()
                 if(values.price)this.setState({validationResults:GiftedFormManager.validate(this.formName)});
             }
@@ -586,6 +572,7 @@ export default class FormInfoVar extends Component {
     }
     renderOptionalFields(json){
         let keys = Object.keys(json)
+        //alert('renderOptionalFields '+JSON.stringify(keys))
         return keys.map((key)=>{
             let obj = json[key]
             return this.renderField(obj.type,key,obj.title,obj.validator,obj.img)
@@ -611,6 +598,9 @@ export default class FormInfoVar extends Component {
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         if(this.props.msg!=null) title_nav = 'Edit this Share'
         else title_nav = 'Create a Share'
+        let fields = this.info_types[this.state.type]
+        if(fields[this.state.cat]) fields=fields[this.state.cat]
+        //console.log('form.render() type='+this.state.type+' cat='+this.state.cat+' fields = '+JSON.stringify(fields))
         return (
             <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
@@ -662,7 +652,7 @@ export default class FormInfoVar extends Component {
                         {this.renderTextField('title',I18n.t('title'), this.length_validator(5,55),'fa-header')}
                         {this.renderTextField('phone',I18n.t('phone'), this.number_validator,'fa-phone')}
                         {this.renderTextField('price',I18n.t('price'), this.price_validator,'fa-usd')}
-                        {this.renderOptionalFields(this.info_types[this.state.type])}
+                        {this.renderOptionalFields(fields)}
                         <GiftedForm.PlaceSearchWidget
                             name='address'
                             title={I18n.t('address')}
@@ -723,7 +713,6 @@ export default class FormInfoVar extends Component {
                                   postSubmit();
                                 }else{
                                   //alert(JSON.stringify(values))
-                                  //alert(this.s1uid)
                                 }
                             }}
                         />

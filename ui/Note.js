@@ -184,16 +184,15 @@ export default class Detail extends Component {
       )
     }
     renderTitle(){
-        var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
-        let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
-        let asking = 'rent0,buy'.indexOf(this.props.msg.cat)>0
+        //var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
+        let typeIcon = 'ion-ios-alarm-outline'
         return (
             <View style={Style.detail_card} >
                 <View style={{flexDirection:'row',marginLeft:20}} >
                     <Icon
                         style={{marginLeft:15,marginRight:15}}
                         size={44}
-                        color={asking?'gray':'blue'}
+                        color={'blue'}
                         name={typeIcon}
                     />
                     <View style={{flex:1,marginLeft:20}}>

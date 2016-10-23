@@ -147,6 +147,8 @@ export default class SettingsList extends React.Component {
             )
     }
     renderUpdate(){
+        return null
+        var DEVICE_WIDTH = Dimensions.get('window').width
         if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
         return (
             <TouchableOpacity style={Style.left_card} onPress={()=> this.checkUpdate()} >
