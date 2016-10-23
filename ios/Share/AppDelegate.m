@@ -17,6 +17,7 @@
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 //#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 #import "RCTLinkingManager.h"
+#import "RCTPushNotificationManager.h"
 
 BMKMapManager* mapManager;
 
@@ -39,11 +40,15 @@ BMKMapManager* mapManager;
       // Get Local Notification used to launch application.
       NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
       if (notification) {
-        [ appProperties setObject:notification forKey:@"initialNotification" ];
+        [appProperties setObject:notification forKey:@"initialNotification"];
+        //NSMutableDictionary *kv=notification[@"custom"][@"a"][@"p2p_notification"][@"key"];
+        //type:lat,lng:ctime#rtime
+        //NSString *str=[NSString stringWithFormat:@"share://shareplus.co.nf/i/%@", kv];
+        //str=@"share://shareplus.co.nf/c/"; //encodeURI(dict.toString)
+        //NSURL *url = [NSURL URLWithString:str];
+        //NSDictionary *options = @{UIApplicationOpenURLOptionUniversalLinksOnly : @YES};
+        //[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil ];
       }
-      //NSLog(@"%@", appProperties);
-      //NSURL *url = nil;
-      //[RCTLinkingManager application:application openURL:url sourceApplication:nil, annotation:nil];
   }
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"SharePlus"
@@ -123,11 +128,6 @@ BMKMapManager* mapManager;
   return YES;
 }
 
-// Required for the notification event.
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
-    NSLog(@"didReceiveRemoteNotification  %@", notification);
-    [RCTOneSignal didReceiveRemoteNotification:notification];
-}
 //[Universal Links]
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
 {
@@ -136,4 +136,27 @@ BMKMapManager* mapManager;
                    continueUserActivity:userActivity
                      restorationHandler:restorationHandler];
 }
+
+  // Required to register for notifications
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+  [RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings]; 
+}
+  // Required for the register event.
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [RCTPushNotificationManager didRegisterForRemoteNotificationsWithDeviceToken:deviceToken]; 
+}
+  // Required for the registrationError event.
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  [RCTPushNotificationManager didFailToRegisterForRemoteNotificationsWithError:error]; 
+}
+  // Required for the notification event.
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
+  //[RCTPushNotificationManager didReceiveRemoteNotification:notification];
+  [RCTOneSignal didReceiveRemoteNotification:notification];
+}
+  // Required for the localNotification event.
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+  [RCTPushNotificationManager didReceiveLocalNotification:notification]; 
+}
+
 @end

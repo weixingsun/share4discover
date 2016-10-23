@@ -8,22 +8,31 @@ import Main from './ui/Main'
 //import Drawer from './ui/Drawer'
 //import Detail from './ui/Detail'
 //import Filter from './ui/Filter'
-import CodePush from "react-native-code-push"
-
+//import CodePush from "react-native-code-push"
+var __navigator = null
 export default class Nav extends Component {
+    
+    static openPage(page,data){
+        __navigator.push({
+          component: page,
+          passProps: {
+              msg:data,
+          }
+        });
+    }
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
     componentDidMount() {
         //CodePush.sync();
         //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,(evt)=>this.refresh());
-      if (this.props.initialNotification) {
-          alert('notification: '+JSON.stringify(this.props.initialNotification));
-          console.log('notification: '+JSON.stringify(this.props.initialNotification));
-      }
     }
     _renderScene(route, navigator) {
+      __navigator=navigator
       if(route.giftedForm == true) return route.renderScene(navigator)
       return <route.component route={route} navigator={navigator} {...route.passProps} />
     }
-    
     _configureScene(route) {
       if(route.giftedForm) 
           return route.configureScene();

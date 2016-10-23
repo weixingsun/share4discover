@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {DeviceEventEmitter,Linking,ToastAndroid,BackAndroid, InteractionManager, Platform, Text, View, Navigator, } from 'react-native'
+import {AlertIOS,DeviceEventEmitter,Linking,ToastAndroid,BackAndroid, InteractionManager, Platform,PushNotificationIOS, Text, View, Navigator, } from 'react-native'
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 //import Drawer from 'react-native-drawer'
@@ -66,10 +66,10 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.ExtUrl()
-      this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
+      this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),1000));
       if (this.props.initialNotification) {
-        //alert('notification: '+JSON.stringify(this.props.initialNotification));
-        //console.log('notification: '+JSON.stringify(this.props.initialNotification));
+        alert('notification: '+JSON.stringify(this.props.initialNotification));
+        console.log('notification: '+JSON.stringify(this.props.initialNotification));
       }
   }
   componentWillMount(){
@@ -86,6 +86,32 @@ export default class Main extends Component {
       }
       this.checkSettingsChange();
       this.notification();
+      this.setupIosPush()
+  }
+  setupIosPush(){
+      PushNotificationIOS.addEventListener('register', this._onRegistered);
+      PushNotificationIOS.addEventListener('registrationError', this._onRegistrationError);
+      PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
+      PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
+      PushNotificationIOS.requestPermissions();
+  }
+  removeIosPush(){
+      PushNotificationIOS.removeEventListener('register', this._onRegistered);
+      PushNotificationIOS.removeEventListener('registrationError', this._onRegistrationError);
+      PushNotificationIOS.removeEventListener('notification', this._onRemoteNotification);
+      PushNotificationIOS.removeEventListener('localNotification', this._onLocalNotification);
+  }
+  _onRegistered(deviceToken) { 
+      //AlertIOS.alert( 'Registered For Remote Push', `Device Token: ${deviceToken}`, [{ text: 'Dismiss', onPress: null, }] ); 
+  }
+  _onRegistrationError(error) { 
+      AlertIOS.alert( 'Failed To Register For Remote Push', `Error (${error.code}): ${error.message}`, [{ text: 'Dismiss', onPress: null, }] ); 
+  }
+  _onRemoteNotification(notification) { 
+      //AlertIOS.alert( 'Push Notification Received', 'Alert message: ' + notification.getMessage(), [{ text: 'Dismiss', onPress: null, }] ); 
+  }
+  _onLocalNotification(notification){ 
+      //AlertIOS.alert( 'Local Notification Received', 'Alert message: ' + notification.getMessage(), [{ text: 'Dismiss', onPress: null, }] ); 
   }
   openPage(page,data){
       this.props.navigator.push({
@@ -117,10 +143,7 @@ export default class Main extends Component {
       let url = typeof URL === 'string'?URL:URL.url
       if(url.indexOf('/i/')>-1) {
           let key = url.split('/i/')[1]
-          if(key.length>0){
-              if(key.indexOf('#')>-1) key=key.split('#')[0]
-              this.openShareInfo(key)
-          }
+          if(key.length>0) this.openShareInfo(key)
       }else if(url.indexOf('/c/')>-1){
           let str = url.split('/c/')[1]
           this.openNotification(str)
@@ -149,27 +172,28 @@ export default class Main extends Component {
       return true;
   }
   notification(){
-    if(Platform.OS === 'android'){
       let self=this
       OneSignal.enableInAppAlertNotification(true);
       OneSignal.configure({
-          //onIdsAvailable: function(device) {
+          onIdsAvailable: function(device) {
             //let userid = 'UserId = '+ device.userId;
             //let token  = 'PushToken = '+ device.pushToken;
             //alert('onesignal.notification:\n'+userid+'\n'+token)
-          //},
+          },
           onNotificationOpened: function(message, data, isActive) {
             //alert('onesignal:'+JSON.stringify(data))
             if(data.custom){
-              //self.openPage(Note,data)
-              self.sendCustomNoteURL(data)
+              if(Platform.OS === 'ios') self.openPage(Note,data)
+              else self.sendCustomNoteURL(data)
             }else if (data.p2p_notification && data.p2p_notification.key) {
-              //self.openShareInfo(data.p2p_notification.key.split('#')[0])
-              self.sendShareReadReplyURL(data.p2p_notification)
+              //if(Platform.OS === 'ios'){
+              //    self.openShareInfo(data.p2p_notification.key.split('#')[0])
+              //}else{
+                  self.sendShareReadReplyURL(data.p2p_notification)
+              //}
             }
           }
       });
-    }
   }
   sendCustomNoteURL(note){ //{custom:1,title,content}
       let str64=encodeURI(JSON.stringify(note))
