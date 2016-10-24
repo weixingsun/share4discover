@@ -68,7 +68,7 @@ export default class Detail extends Component {
             return;
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
+	var time = Math.round(+new Date()/1000) //+new Date();
         let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         let loginsObj = Global.getLogins(this.props.msg.owner)
@@ -92,7 +92,7 @@ export default class Detail extends Component {
     }
     onClose() {
         //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
+	var time = Math.round(+new Date()/1000) //+new Date();
         var value={key:this.key, field:'close', value:Global.mainlogin+'|'+time}
         let loginsObj = Global.getLogins(this.props.msg.owner)
 	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
@@ -163,15 +163,17 @@ export default class Detail extends Component {
                 color={'red'}
                 size={40}
                 onPress={this.onDelete.bind(this) } />
+              <View style={{width:10}} />
+            </View>
+          )
+/*
               <View style={{width:40}} />
               <Icon
                 name={'ion-ios-checkmark-circle-outline'}
                 color={'green'}
                 size={40}
                 onPress={this.onClose.bind(this) } />
-              <View style={{width:10}} />
-            </View>
-          )
+*/
         }
     }
     showSlides(){

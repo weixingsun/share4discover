@@ -169,12 +169,12 @@ module.exports = {
         return reply.type+'_'+reply.cat+':'+reply.latlng+':'+reply.ctime
     },
     getDateTimeFormat(datetimeInt){
-        let now = +new Date();   //date.getTimezoneOffset() / 60
+        let now = Math.round(+new Date()/1000) //+new Date();   //date.getTimezoneOffset() / 60
 	//let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
         //moment.locale(lang);
         loadLang(ReactNativeI18n.locale.replace('_', '-').toLowerCase())
-        let momentDate = moment(datetimeInt) //.format("YYYY-MM-DD hh:MM:ss");
-        if(now-datetimeInt<86400000){        //1 day
+        let momentDate = moment(datetimeInt*1000) //.format("YYYY-MM-DD hh:MM:ss");
+        if(now-datetimeInt<86400){        //1 day
             return momentDate.fromNow()
 	}else{
 	    return momentDate.format('YYYY-MM-DD')

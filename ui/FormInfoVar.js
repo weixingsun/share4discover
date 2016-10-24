@@ -27,7 +27,7 @@ import Attachments from './Attachments';
 export default class FormInfoVar extends Component {
     constructor(props) {
         super(props);
-        this.ctime = +new Date();
+        this.ctime = Math.round(+new Date()/1000)
         this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
         this.state={ 
             form:{},
