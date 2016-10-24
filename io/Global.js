@@ -163,10 +163,10 @@ module.exports = {
         return '@'+this.mainlogin
     },
     getKeyFromMsg(msg){
-        return msg.type.toLowerCase()+':'+msg.lat+','+msg.lng+':'+msg.ctime
+        return msg.type+'_'+msg.cat+':'+msg.lat+','+msg.lng+':'+msg.ctime
     },
     getKeyFromReply(reply){
-        return reply.type+':'+reply.latlng+':'+reply.ctime
+        return reply.type+'_'+reply.cat+':'+reply.latlng+':'+reply.ctime
     },
     getDateTimeFormat(datetimeInt){
         let now = +new Date();   //date.getTimezoneOffset() / 60

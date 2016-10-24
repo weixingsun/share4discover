@@ -39,54 +39,6 @@ export default class Detail extends Component {
         }
         I18n.locale = NativeModules.RNI18n.locale
     }
-    onReply() {
-        if(this.state.reply.length<5) {
-            alert('Please reply with more characters.')
-            return;
-        }
-        //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
-        let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
-        var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-        let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
-        var _this = this;
-        Alert.alert(
-            "Reply",
-            "Do you want to reply this information ? ",
-            //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.putHash(value)
-                    Net.putHash(notify_value)
-                    _this.s1Note(_this.props.msg,notify_value)
-                    _this.props.navigator.pop();
-                }},
-            ]
-        );
-    }
-    onClose() {
-        //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = +new Date();
-        var value={key:this.key, field:'close', value:Global.mainlogin+'|'+time}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
-        var _this = this;
-        Alert.alert(
-            "Complete",
-            "Do you want to complete this request ? ",
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.putHash(value)
-                    //Net.putHash(notify_value)
-                    _this.props.navigator.pop();
-                }},
-            ]
-        );
-    }
     onDelete() {
 	var _this = this;
         //var key = Global.getKeyFromMsg(this.props.msg)
@@ -97,9 +49,9 @@ export default class Detail extends Component {
             [
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
-                    Net.delMsg(_this.key)
-                    Net.delHash(myjson);
-                    DeviceEventEmitter.emit('refresh:MyList',0);
+                    //Net.delMsg(_this.key)
+                    //Net.delHash(myjson);
+                    //DeviceEventEmitter.emit('refresh:MyList',0);
                     _this.props.navigator.pop();
                 }},
             ]
@@ -126,22 +78,10 @@ export default class Detail extends Component {
           return (
             <View style={{flexDirection:'row',}}>
               <Icon
-                name={'ion-ios-create-outline'}
-                color={'blue'}
-                size={40}
-                onPress={this.onEdit.bind(this) } />
-	      <View style={{width:40}} />
-              <Icon
                 name={'ion-ios-trash-outline'}
                 color={'red'}
                 size={40}
                 onPress={this.onDelete.bind(this) } />
-              <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-checkmark-circle-outline'}
-                color={'green'}
-                size={40}
-                onPress={this.onClose.bind(this) } />
               <View style={{width:10}} />
             </View>
           )

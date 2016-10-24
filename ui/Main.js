@@ -320,9 +320,11 @@ export default class Main extends Component {
       var keys = Object.keys(kv)  //.reverse()
       keys.map((key)=>{
           //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-          var key_arr = key.split(':')
-          var type   = key_arr[0]
-          var latlng = key_arr[1]
+          var key_arr  = key.split(':')
+          var type_cat_arr = key_arr[0].split('_')
+          var type    = type_cat_arr[0]
+          var cat     = type_cat_arr[1]
+          var latlng  = key_arr[1]
           var times   = key_arr[2]
           var ctime   = times.split('#')[0]
           var rtime   = times.split('#')[1]
@@ -332,7 +334,7 @@ export default class Main extends Component {
             var status = value_obj.t.substring(1)      //1
             var user = value_obj.l
             var content = value_obj.c
-            var obj = {type:type, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
+            var obj = {type:type,cat:cat, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
             //alert(JSON.stringify(obj))
             arr.push( obj )
           }

@@ -8,7 +8,6 @@ import Button from 'apsl-react-native-button'
 import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
-import Net from '../io/Net'
 import DetailImg from './DetailImg';
 import I18n from 'react-native-i18n';
 import OneSignal from 'react-native-onesignal';
@@ -46,24 +45,6 @@ export default class Attachment extends Component {
                 })
         }
         I18n.locale = NativeModules.RNI18n.locale
-    }
-    onDelete() {
-	var _this = this;
-        //var key = Global.getKeyFromMsg(this.props.msg)
-        let myjson = {key:'*'+Global.mainlogin,field:this.key}
-        Alert.alert(
-            "Delete",
-            "Do you want to delete this information ? ",
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.delMsg(_this.key)
-                    Net.delHash(myjson);
-                    DeviceEventEmitter.emit('refresh:MyList',0);
-                    _this.props.navigator.pop();
-                }},
-            ]
-        );
     }
     onEdit(){
         this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })

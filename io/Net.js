@@ -65,9 +65,9 @@ var Net = {
       var url = HOST+'api/msg_types';
       return this._get(url);
     },
-    rangeMsg(type,pos,dist){
+    rangeMsg(type,cat,pos,dist){
       var strLatlng = pos.latitude+','+pos.longitude
-      var url = this.HOST+'api/msgs/'+type+'&'+strLatlng+'&'+dist;
+      var url = this.HOST+'api/msgs/'+type+'_'+cat+'&'+strLatlng+'&'+dist;
       return this._get(url);
     },
     getMsg(key){

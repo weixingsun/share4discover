@@ -234,7 +234,7 @@ export default class Maps extends Component {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
-      Net.rangeMsg(type, this.state.region, range).then((rows)=> {
+      Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
           //alert(rows.length)
           if(self.state.markers.length>0) self.setState({ markers:[] });
           var markers = rows.map((row)=>{
