@@ -109,7 +109,7 @@ module.exports = {
       rent0:'#666600',
       rent1:'#006666',
       sell: '#000099',
-      service:'#000000',
+      //service:'#000000',
     },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))

@@ -28,9 +28,8 @@ class Icon extends Component {
       //  if(name.startsWith('ion')) return IIcon.getImageSource(name.substring(4),size,color)
       //  if(name.startsWith('fa')) return FIcon.getImageSource(name.substring(3),size,color)
     }*/
-    renderIcon(){
-        let name = this.props.name
-        if(this.props.name == null) //throw new Error('Icon: Invalid Chars');
+    renderIcon(name){  //this.props.name
+        if(name == null) //throw new Error('Icon: Invalid Chars');
             name = 'fa-circle-thin'
 	var margin = this.props.badge? {marginRight:10}:{};
 	//console.log("Icon["+this.props.name+"]color="+this.props.color+",margin="+JSON.stringify(margin))
@@ -39,10 +38,14 @@ class Icon extends Component {
         if(name.substring(0,2)==='fa')
             return <FIcon name={name.substring(3)} size={this.props.size} color={this.props.color} onPress={this.props.onPress} style={this.props.style,margin} />
     }
-    renderBadge(){
-	if(!this.props.badge || this.props.badge.text==='' || this.props.badge.text==='0'){
-            return null;
-	}else{
+    renderBadge(badge){
+        if(this.badge){
+            return this.renderBadgeInner(this.badge.text,this.badge.color)
+	}else if(badge && badge.text!=='' && badge.text!=='0'){
+            return this.renderBadgeInner(badge.text,badge.color)
+	}
+    }
+    renderBadgeInner(chr,bc){
           var styles={
             position:'absolute',
             top:1,
@@ -52,17 +55,25 @@ class Icon extends Component {
             borderRadius:this.props.size/2,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: this.props.badge.color,
+            backgroundColor: bc,
           };
           return (
             <TouchableHighlight style={styles} onPress={this.props.onPress}>
-                <Text style={{color:'#FFFFFF'}}>{this.props.badge.text}</Text>
+                <Text style={{color:'#FFFFFF'}}>{chr}</Text>
             </TouchableHighlight>
           );
-	}
     }
-    renderSpinIcon(){
-        if(!this.props.spin) return this.renderIcon()
+    renderSpinIcon(name){
+        //let name = fullname
+        /*if(name.indexOf(',')>-1){
+            name=fullname.split(',')[0]
+            this.badge = {
+                text:fullname.split(',')[1],
+                color:'gray',
+            }
+            //this.renderBadgeInner(badgeName,'gray')
+        }*/
+        if(!this.props.spin) return this.renderIcon(name)
         else{
             const getStartValue = () => '0deg'
             const getEndValue = () => '360deg'
@@ -72,7 +83,7 @@ class Icon extends Component {
             })
             return (
               <Animated.View style={{justifyContent:'center',alignItems:'center',transform: [{rotate: spin}]}}>
-                {this.renderIcon()}
+                {this.renderIcon(name)}
               </Animated.View>
             )
         }
@@ -84,10 +95,12 @@ class Icon extends Component {
            inputRange: [0, 1],
            outputRange: [getStartValue(), getEndValue()]
         })
+        let iconName = this.props.name
+        let badgeName = this.props.name
 	return (
           <View>
-            {this.renderSpinIcon()}
-            {this.renderBadge()}
+            {this.renderSpinIcon(this.props.name)}
+            {this.renderBadge(this.props.badge)}
           </View>
 	);
     }

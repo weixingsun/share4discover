@@ -18,6 +18,7 @@ import Detail from "./Detail"
 import FormInfo from "./FormInfoVar"
 import Modal from 'react-native-root-modal';
 import I18n from 'react-native-i18n';
+import Button from 'apsl-react-native-button'
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 export default class Maps extends Component {
@@ -27,6 +28,7 @@ export default class Maps extends Component {
       this.pos = null;
       this.state = {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
+        catDataSource: this.ds.cloneWithRows(Object.keys(Global.CAT_COLORS)),
         type:'car',
         cat:'rent0',
         ccid:0,
@@ -35,6 +37,7 @@ export default class Maps extends Component {
         gps: this.props.gps,
         reload:false,
         showTypes:false,
+        showCats:false,
         showPlaceSearch: false,
         markers:[],
         grantedPermissions:{},
@@ -45,9 +48,10 @@ export default class Maps extends Component {
       this.turnOnGps = this.turnOnGps.bind(this)
     }
     loadIcons(type,cat){
+        if(Global.MAP===Global.GoogleMap) return
         let name=Global.TYPE_ICONS[type]
         let color=Global.CAT_COLORS[cat]
-        alert('type='+type+' name='+name+' cat='+cat+' color='+color)
+        //alert('type='+type+' name='+name+' cat='+cat+' color='+color)
         var self = this;
         getImageSource(name, 40, color).then((source) => {
             self.PlaceIcon= source
@@ -161,6 +165,7 @@ export default class Maps extends Component {
             var color=Global.CAT_COLORS[marker.cat]
             let key = Global.getKeyFromMsg(marker)
             let T = marker.type.substring(0,1).toUpperCase()
+            //badge={{text:T,color:_color}}
             return (
               <GMapView.Marker
                   key={marker.ctime}
@@ -168,7 +173,7 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:T,color:'gray'}} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} />
               </GMapView.Marker>
             )
         });
@@ -259,18 +264,45 @@ export default class Maps extends Component {
       return Math.floor(m);
     }
     renderNavBar() {
+        let iconType = Global.TYPE_ICONS[this.state.type]
+        //let iconCat  = Global.CAT_COLORS[this.state.cat]
+        let color = Global.CAT_COLORS[this.state.cat]
+/*
+                <View style={{width:40}} />
+                <Icon name={iconCat} color={color} size={40} onPress={()=>this.setState({showCats:!this.state.showCats})} />
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showCats:!this.state.showCats})} />
+                <Modal
+                    visible={this.state.showCats}
+                    onPress={() => this.setState({showCats:false})}
+                >
+                    {this.renderCatsModal()}
+                </Modal>
+*/
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
-              <View style={{flexDirection:'row'}}>
-                <Icon name={Global.TYPE_ICONS[this.state.type]} color={Style.font_colors.enabled} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
-                <Icon name={'ion-ios-arrow-down'} color={Style.font_colors.enabled} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
-                <Modal 
-                    //style={{top:0,bottom:50,left:0,right:0,backgroundColor:'rgba(0, 0, 0, 0.2)',justifyContent:'center',transform: [{scale: this.state.scaleAnimation}]}}
-                    visible={this.state.showTypes}
-                    onPress={() => this.setState({showTypes:false})}
+              <View style={{flexDirection:'row',justifyContent:'center'}}>
+                <Icon name={iconType} color={color} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <View style={{width:40}} />
+                <View style={{marginBottom:4}} >
+                    <View style={{height:10}} />
+                    <Button 
+                        style={{height:30,borderColor:'white',backgroundColor:color}} 
+                        textStyle={{fontSize: 13,color:'white'}} 
+                        onPress={()=>this.setState({showCats:!this.state.showCats})}>
+                          {' '+I18n.t(this.state.cat)+' '}
+                    </Button>
+                </View>
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showCats:!this.state.showCats})} />
+                <Modal
+                    visible={this.state.showTypes||this.state.showCats}
+                    onPress={() => {
+                        if(this.state.showTypes) this.setState({showTypes:false})
+                        if(this.state.showCats) this.setState({showCats:false})
+                    }}
                 >
-                    {this.renderTypesModal()}
+                    {this.renderModal()}
                 </Modal>
               </View>
             }
@@ -294,6 +326,10 @@ export default class Maps extends Component {
     renderAddIcon(){
       if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
       else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+    }
+    renderModal(){
+        if(this.state.showTypes) return this.renderTypesModal()
+        else if(this.state.showCats) return this.renderCatsModal()
     }
     renderTypesModal(){
         return (
@@ -326,6 +362,38 @@ export default class Maps extends Component {
         this.loadIcons(type,this.state.cat)
         this.setState({type:type,showTypes:false,markers:[]})
         this.downloadMsg(type,this.state.cat)
+    }
+    renderCatsModal(){
+        return (
+          <TouchableHighlight style={{ height:Style.DEVICE_HEIGHT*1/3, alignItems: 'center', justifyContent: 'center' }} >
+            <ListView
+                dataSource={ this.state.catDataSource }
+                renderRow={ this.renderCatRow.bind(this) }
+                renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{height: 1,backgroundColor:Style.font_colors.enabled }} />}
+            />
+          </TouchableHighlight>
+        );
+    }
+    renderCatRow(row: string, sectionID: number, rowID: number){
+      //alignItems: 'center'
+      return (
+      <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressCat(sectionID,rowID,row)}>
+        <View>
+          <View style={{flexDirection:'row',backgroundColor:'white', justifyContent:'center', padding:15, alignItems:'center' }}>
+            <View style={{width:200,marginLeft:70,}}>
+              <Text style={{ fontSize:20,}}>
+                { I18n.t(row) }
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
+      )
+    }
+    _pressCat(sid,rid,cat){
+        this.loadIcons(this.state.type,cat)
+        this.setState({cat:cat,showCats:false,markers:[]})
+        this.downloadMsg(this.state.type,cat)
     }
     onRegionChange(r) {
       this.setState({region: r});

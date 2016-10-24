@@ -6,7 +6,7 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "apsl-react-native-button": "^3.0.0",
+    "apsl-react-native-button": "^3.0.1",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-react-native-stage-0": "^1.0.1",

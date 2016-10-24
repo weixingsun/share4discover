@@ -185,7 +185,7 @@ export default class Detail extends Component {
     }
     renderTitle(){
         //var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
-        let typeIcon = 'ion-ios-alarm-outline'
+        let typeIcon = 'fa-bell-o'
         return (
             <View style={Style.detail_card} >
                 <View style={{flexDirection:'row',marginLeft:20}} >
