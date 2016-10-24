@@ -236,8 +236,9 @@ export default class Maps extends Component {
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
       Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
           //alert(rows.length)
+          let notnull = rows.filter((row)=>{return row!=null})
           if(self.state.markers.length>0) self.setState({ markers:[] });
-          var markers = rows.map((row)=>{
+          var markers = notnull.map((row)=>{
             //row ={ lat,lng,type,title,content,ctime, }
             //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
             //row['view']   = <Icon name={'ion-ios-navigate-outline'} color={'#222222'} size={40} />
