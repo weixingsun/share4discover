@@ -58,7 +58,7 @@ export default class FormInfoVar extends Component {
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
         this.number_validator={ validator: 'isNumeric', message:'{TITLE} is numeric' }
         this.phone_validator={ validator: 'matches', arguments: /^\d{6,12}$/, message:'{TITLE} is invalid' }
-        this.price1_validator={ validator:'contains',arguments:['/'], message:'{TITLE} format like 100/week' }
+        this.price1_validator={ validator:'contains',arguments:['/'], message:'{TITLE} format like 100/day' }
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.str_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
         this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
@@ -145,8 +145,8 @@ export default class FormInfoVar extends Component {
         this.genValidator('content',  this.length_validator(10,255))
         this.genValidator('address',  this.length_validator(10,255))
         this.genValidator('phone',    this.phone_validator)
-        this.genValidator('price',    this.number_validator)
-        //this.genValidator('price',  this.price1_validator)
+        this.genValidator('price',    this.price1_validator)
+        //this.genValidator('price',  this.number_validator)
     }
     genValidator(name,validateJson){
         this.validators[name] = {title:I18n.t(name), validate:[validateJson]}

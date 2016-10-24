@@ -38,8 +38,10 @@ export default class MyList extends Component {
       if(Global.mainlogin.length>0) {
           Net.getMyMsgs('*'+Global.mainlogin).then((rows)=>{
               //alert(JSON.stringify(rows))
-              if(this.updateOnUI)
-                  self.setState({myMsgList:rows})
+              if(self.updateOnUI){
+                  let notnull = rows.filter((row)=>{return row!=null})
+                  self.setState({myMsgList:notnull})
+              }
           }).catch((e)=>{
               alert('Network Problem!')
           });
