@@ -395,13 +395,13 @@ export default class Maps extends Component {
         );
     }
     renderCatRow(row: string, sectionID: number, rowID: number){
-      //alignItems: 'center'
+      let color = Global.CAT_COLORS[row]
       return (
-      <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressCat(sectionID,rowID,row)}>
+      <TouchableHighlight onPress={() => this._pressCat(sectionID,rowID,row)}>
         <View>
-          <View style={{flexDirection:'row',backgroundColor:'white', justifyContent:'center', padding:15, alignItems:'center' }}>
-            <View style={{width:200,marginLeft:70,}}>
-              <Text style={{ fontSize:20,}}>
+          <View style={{flexDirection:'row',backgroundColor:color, justifyContent:'center', padding:15, alignItems:'center' }}>
+            <View style={{width:160,marginLeft:80,}}>
+              <Text style={{ fontSize:20,color:'white'}}>
                 { I18n.t(row) }
               </Text>
             </View>
