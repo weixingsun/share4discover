@@ -18,6 +18,7 @@ import NavigationBar from 'react-native-navbar'
 import CodePush from "react-native-code-push"
 import {Icon} from './Icon'
 import I18n from 'react-native-i18n';
+import Button from 'apsl-react-native-button'
 
 export default class SettingsList extends React.Component {
     constructor(props) {
@@ -161,12 +162,32 @@ export default class SettingsList extends React.Component {
         )
         }
     }
+    renderAddIcon(){
+      //let color = Global.CAT_COLORS[this.state.cat]
+      let func = () => alert('Please login to publish')
+      if(Global.mainlogin!=='')
+          func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
+      return <Button
+                 style={{height:41,width:50,borderColor:'#5080ff'}}
+             >
+                 
+            </Button>
+    }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
 	//alert('w:'+DEVICE_WIDTH)
         return (
           <View style={Style.main}>
-              <NavigationBar style={Style.navbar} title={{title:I18n.t('settings'),tintColor:Style.font_colors.enabled}} />
+              <NavigationBar 
+                  style={Style.navbar} 
+                  title={{title:I18n.t('settings'),
+                  tintColor:Style.font_colors.enabled}}
+                  rightButton={
+                      <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                          {this.renderAddIcon()}
+                      </View>
+                  }
+              />
               <ScrollView
                   //automaticallyAdjustContentInsets={false}
                   //scrollEventThrottle={200}

@@ -249,23 +249,23 @@ export default class NotifyList extends Component {
         );
     }
   renderActionIcon(){
-    /*if(Global.mainlogin==='') 
+    if(Global.mainlogin==='') 
       return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-add'} size={50} color={'gray'} />
-                <View style={{width:20}} />
+                <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} />
+                <View style={{width:10}} />
             </View>
       )
     else{
       return (
             <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-add'} size={50} color={'black'} 
+                <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} 
                     onPress={() => this.props.navigator.push({ component: FormInfo, passProps: {navigator:this.props.navigator} })}
                 />
-                <View style={{width:20}} />
+                <View style={{width:10}} />
             </View>
       )
-    }*/
+    }
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
@@ -285,7 +285,7 @@ export default class NotifyList extends Component {
       <View>
         <NavigationBar style={Style.navbar} title={{title:'My Messages',tintColor:Style.font_colors.enabled}} 
             //leftButton={}
-            //rightButton= {this.renderActionIcon()}
+            rightButton= {this.renderActionIcon()}
 	/>
           <SGListView
               enableEmptySections={true}

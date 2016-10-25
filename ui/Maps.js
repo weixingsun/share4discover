@@ -46,6 +46,7 @@ export default class Maps extends Component {
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
       this.turnOnGps = this.turnOnGps.bind(this)
+      this.updateOnUI=true
     }
     loadIcons(type,cat){
         if(Global.MAP===Global.GoogleMap) return
@@ -111,6 +112,7 @@ export default class Maps extends Component {
       this.turnOffGps();
       //AppState.removeEventListener('change', this._handleAppStateChange);
       //serial.close();
+      this.updateOnUI=false
     }
     turnOnGps(){
       let self=this
@@ -160,6 +162,7 @@ export default class Maps extends Component {
     }
     }*/
     renderPlaceMarkersGmap(){
+      if(this.updateOnUI)
         return this.state.markers.map( (marker) => {
             var self=this
             var color=Global.CAT_COLORS[marker.cat]
@@ -266,16 +269,26 @@ export default class Maps extends Component {
     }
     renderNavBar() {
         let iconType = Global.TYPE_ICONS[this.state.type]
-        //let iconCat  = Global.CAT_COLORS[this.state.cat]
         let color = Global.CAT_COLORS[this.state.cat]
         let ModalTypeFunc = ()=>this.setState({showTypes:!this.state.showTypes})
         let ModalCatFunc  = ()=>this.setState({showCats:!this.state.showCats})
         return (
-          <NavigationBar style={Style.navbar} //title={{title:this.title}}
+          <NavigationBar style={{
+              flex:1,
+              paddingLeft:12,
+              paddingRight:12,
+              paddingTop:8,
+              paddingBottom:6,
+              flexDirection:'row',
+              alignItems: 'center',
+              //justifyContent: 'center',
+              height: Style.NAVBAR_HEIGHT,
+              backgroundColor:color
+              }} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row',justifyContent:'center'}}>
                 <Button
-                    style={{height:41,width:50,borderColor:Style.font_colors.enabled,backgroundColor:color}}
+                    style={{height:41,width:50,borderColor:Style.font_colors.enabled}}
                     textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
                     onPress={ModalTypeFunc}>
                       <Icon name={iconType} color={Style.font_colors.enabled} size={40} onPress={ModalTypeFunc} />
@@ -285,7 +298,7 @@ export default class Maps extends Component {
                 <View style={{marginBottom:2}} >
                     <View style={{height:11}} />
                     <Button 
-                        style={{height:30,borderColor:Style.font_colors.enabled,backgroundColor:color}} 
+                        style={{height:30,borderColor:Style.font_colors.enabled}} 
                         textStyle={{fontSize: 13,color:Style.font_colors.enabled}} 
                         onPress={ModalCatFunc}>
                           {' '+I18n.t(this.state.cat)+' '}
@@ -308,9 +321,8 @@ export default class Maps extends Component {
                 {this.renderGpsIcon()}
                 <View style={{width:40}} />
                 {this.renderAddIcon()}
-                <View style={{width:10}} />
               </View>
-            }
+            }  //<View style={{width:10}} />
           />
         );
     }
@@ -321,12 +333,12 @@ export default class Maps extends Component {
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
-      let color = Global.CAT_COLORS[this.state.cat]
+      //let color = Global.CAT_COLORS[this.state.cat]
       let func = () => alert('Please login to publish')
       if(Global.mainlogin!=='')
           func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
       return <Button
-                 style={{height:41,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled,backgroundColor:color}}
+                 style={{height:41,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled}}
                  textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
                  onPress={func}>
                       <Icon
