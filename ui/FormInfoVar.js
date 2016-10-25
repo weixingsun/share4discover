@@ -262,6 +262,7 @@ export default class FormInfoVar extends Component {
             alert('Your location is too far away')
             return
         }
+        let newkey = Global.getKeyFromMsg(values)
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
         Alert.alert(
@@ -272,20 +273,26 @@ export default class FormInfoVar extends Component {
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
                   Net.setMsg(values).then((ret)=> {
+                      let alertmsg = ''
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
-                              self.changeReply( Global.getKeyFromMsg(this.props.msg), Global.getKeyFromMsg(values) )
-                              alert('Edit successfully');
-                          }else{
-                              var my_value={
-                                  key:'*'+Global.mainlogin, 
-                                  field:Global.getKeyFromMsg(values), 
-                                  value:'owner|open'
+                              let oldkey = Global.getKeyFromMsg(this.props.msg)
+                              if( oldkey !== newkey ){
+                                self.changeReply( oldkey, newkey )
+                                Net.delMsg(oldkey)
+                                let myjson = {key:'*'+Global.mainlogin,field:oldkey}
+                                Net.delHash(myjson);
+                                alertmsg = 'Changed successfully'
+                              }else{
+                                alertmsg = 'Edit successfully'
                               }
-                              Net.putHash(my_value);
+                          }else{
                               let sns_ret = self.postSNS(values);
-                              if(sns_ret.length>0) alert('Create successfully');
+                              alertmsg = 'Create successfully'
                           }
+                          var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
+                          Net.putHash(my_value);
+                          alert(alertmsg);
                           self.back()
                       }else{
                           alert('Error:'+ret)
@@ -341,6 +348,11 @@ export default class FormInfoVar extends Component {
             alert('Post on Weibo failed with error: ' + err);
         }).done();
         //alert('weibo.share: '+JSON.stringify(data))
+    }
+    deleteMsg(key){
+        Net.delMsg(key)
+        let myjson = {key:'*'+Global.mainlogin,field:key}
+        Net.delHash(myjson);
     }
     changeReply(old_key,new_key){
         if(old_key != new_key){

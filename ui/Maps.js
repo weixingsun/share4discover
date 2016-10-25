@@ -168,7 +168,7 @@ export default class Maps extends Component {
             //badge={{text:T,color:_color}}
             return (
               <GMapView.Marker
-                  key={marker.ctime}
+                  key={key}
                   coordinate={{latitude:parseFloat(marker.lat), longitude:parseFloat(marker.lng)}}
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
