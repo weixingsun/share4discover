@@ -321,8 +321,21 @@ export default class Maps extends Component {
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
-      if(Global.mainlogin==='') return <Icon name={'ion-ios-add'} size={50} color={'gray'} onPress={() => alert('Please login to publish') }/>
-      else return <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+      let color = Global.CAT_COLORS[this.state.cat]
+      let func = () => alert('Please login to publish')
+      if(Global.mainlogin!=='')
+          func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
+      return <Button
+                 style={{height:41,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled,backgroundColor:color}}
+                 textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
+                 onPress={func}>
+                      <Icon
+                          name={'ion-ios-add'}
+                          size={40}
+                          style={{justifyContent:'center'}}
+                          color={Style.font_colors.enabled}
+                          onPress={func} />
+            </Button>
     }
     renderModal(){
         if(this.state.showTypes) return this.renderTypesModal()
