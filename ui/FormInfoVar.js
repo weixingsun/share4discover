@@ -86,7 +86,6 @@ export default class FormInfoVar extends Component {
                 },
                 rent1:{
                   time:  {type:'time',title:I18n.t('time'), validator:this.time_validator(30), img:'fa-clock-o'},
-                  dest:  {type:'addr',title:I18n.t('dest'), validator:this.str_validator(','), img:'fa-flag'},
                 },
                 buy:{},
                 sell:{},
@@ -163,8 +162,12 @@ export default class FormInfoVar extends Component {
         //this.setState({validators:this.validators})
     }
     changePriceValidator(){
-        if(this.lastcat!=='' && this.rent_cats.indexOf(this.lastcat)>-1){
-            this.genValidator('price', this.price1_validator)
+        if(this.lastcat!==''){
+            if(this.rent_cats.indexOf(this.lastcat)>-1){
+                this.genValidator('price', this.price1_validator)
+            }else{
+                this.genValidator('price', this.number_validator)
+            }
         }
     }
     changeValidator(){
@@ -361,6 +364,7 @@ export default class FormInfoVar extends Component {
             let mainlogin = Global.getMainLogin(logins);
             Net.getNotify(mainlogin).then((rows)=> {
               //alert('all notifies='+JSON.stringify(rows))
+              if(rows && rows.length>0)
               Object.keys(rows).map((field)=>{
                 let key_arr = field.split('#')
                 if(old_key==key_arr[0]){

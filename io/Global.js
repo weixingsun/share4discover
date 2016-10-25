@@ -106,9 +106,9 @@ module.exports = {
     },
     CAT_COLORS:{
       buy:  '#990000',
+      sell: '#000099',
       rent0:'#666600',
       rent1:'#006666',
-      sell: '#000099',
       //service:'#000000',
     },
     getLoginStr(){

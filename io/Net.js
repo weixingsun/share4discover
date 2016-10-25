@@ -27,7 +27,7 @@ var Net = {
         return responseJson;
       } catch(err) {
         //console.error(err);
-        alert('network operation error: '+JSON.stringify(err))
+        alert('Network Problem')
       }
     },
     _get(url) {

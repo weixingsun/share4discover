@@ -268,34 +268,30 @@ export default class Maps extends Component {
         let iconType = Global.TYPE_ICONS[this.state.type]
         //let iconCat  = Global.CAT_COLORS[this.state.cat]
         let color = Global.CAT_COLORS[this.state.cat]
-/*
-                <View style={{width:40}} />
-                <Icon name={iconCat} color={color} size={40} onPress={()=>this.setState({showCats:!this.state.showCats})} />
-                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showCats:!this.state.showCats})} />
-                <Modal
-                    visible={this.state.showCats}
-                    onPress={() => this.setState({showCats:false})}
-                >
-                    {this.renderCatsModal()}
-                </Modal>
-*/
+        let ModalTypeFunc = ()=>this.setState({showTypes:!this.state.showTypes})
+        let ModalCatFunc  = ()=>this.setState({showCats:!this.state.showCats})
         return (
           <NavigationBar style={Style.navbar} //title={{title:this.title}}
             leftButton={
               <View style={{flexDirection:'row',justifyContent:'center'}}>
-                <Icon name={iconType} color={color} size={40} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
-                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showTypes:!this.state.showTypes})} />
+                <Button
+                    style={{height:41,width:50,borderColor:Style.font_colors.enabled,backgroundColor:color}}
+                    textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
+                    onPress={ModalTypeFunc}>
+                      <Icon name={iconType} color={Style.font_colors.enabled} size={40} onPress={ModalTypeFunc} />
+                </Button>
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalTypeFunc} />
                 <View style={{width:40}} />
-                <View style={{marginBottom:4}} >
-                    <View style={{height:10}} />
+                <View style={{marginBottom:2}} >
+                    <View style={{height:11}} />
                     <Button 
-                        style={{height:30,borderColor:'white',backgroundColor:color}} 
-                        textStyle={{fontSize: 13,color:'white'}} 
-                        onPress={()=>this.setState({showCats:!this.state.showCats})}>
+                        style={{height:30,borderColor:Style.font_colors.enabled,backgroundColor:color}} 
+                        textStyle={{fontSize: 13,color:Style.font_colors.enabled}} 
+                        onPress={ModalCatFunc}>
                           {' '+I18n.t(this.state.cat)+' '}
                     </Button>
                 </View>
-                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={()=>this.setState({showCats:!this.state.showCats})} />
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalCatFunc} />
                 <Modal
                     visible={this.state.showTypes||this.state.showCats}
                     onPress={() => {
