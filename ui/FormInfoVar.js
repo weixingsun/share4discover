@@ -75,7 +75,7 @@ export default class FormInfoVar extends Component {
             //},
             house:{
                 bedroom: {type:'nmbr',title:I18n.t('bedroom'), validator:this.number_validator, img:'fa-bed'},
-                bathroom:{type:'nmbr',title:I18n.t('bathroom'),validator:this.number_validator, img:'fa-tint'},
+                bathroom:{type:'nmbr',title:I18n.t('bathroom'),validator:this.number_validator, img:'fa-bath'},
                 garage:  {type:'nmbr',title:I18n.t('garage'),  validator:this.number_validator, img:'fa-car'},
                 area:    {type:'nmbr',title:I18n.t('area'),    validator:this.number_validator, img:'fa-square-o'},
             },

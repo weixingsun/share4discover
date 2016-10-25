@@ -288,10 +288,9 @@ export default class Maps extends Component {
             leftButton={
               <View style={{flexDirection:'row',justifyContent:'center'}}>
                 <Button
-                    style={{height:41,width:50,borderColor:Style.font_colors.enabled}}
-                    textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
+                    style={{height:38,width:50,borderColor:Style.font_colors.enabled}}
                     onPress={ModalTypeFunc}>
-                      <Icon name={iconType} color={Style.font_colors.enabled} size={40} onPress={ModalTypeFunc} />
+                      <Icon name={iconType} color={Style.font_colors.enabled} size={38} onPress={ModalTypeFunc} />
                 </Button>
                 <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalTypeFunc} />
                 <View style={{width:40}} />
@@ -338,13 +337,12 @@ export default class Maps extends Component {
       if(Global.mainlogin!=='')
           func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
       return <Button
-                 style={{height:41,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled}}
-                 textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
+                 style={{height:38,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled}}
                  onPress={func}>
                       <Icon
                           name={'ion-ios-add'}
-                          size={40}
-                          style={{justifyContent:'center'}}
+                          size={38}
+                          style={{flexDirection:'row',justifyContent:'center'}}
                           color={Style.font_colors.enabled}
                           onPress={func} />
             </Button>

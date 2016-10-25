@@ -82,7 +82,7 @@ class Icon extends Component {
                outputRange: [getStartValue(), getEndValue()]
             })
             return (
-              <Animated.View style={{justifyContent:'center',alignItems:'center',transform: [{rotate: spin}]}}>
+              <Animated.View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',transform: [{rotate: spin}]}}>
                 {this.renderIcon(name)}
               </Animated.View>
             )
@@ -98,7 +98,7 @@ class Icon extends Component {
         let iconName = this.props.name
         let badgeName = this.props.name
 	return (
-          <View>
+          <View style={{flexDirection:'row',justifyContent:'center',padding:1,margin:1}}>
             {this.renderSpinIcon(this.props.name)}
             {this.renderBadge(this.props.badge)}
           </View>
