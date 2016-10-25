@@ -290,12 +290,12 @@ export default class Maps extends Component {
                 <Button
                     style={{height:38,width:50,borderColor:Style.font_colors.enabled}}
                     onPress={ModalTypeFunc}>
-                      <Icon name={iconType} color={Style.font_colors.enabled} size={38} onPress={ModalTypeFunc} />
+                      <Icon name={iconType} color={Style.font_colors.enabled} size={36} onPress={ModalTypeFunc} />
                 </Button>
                 <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalTypeFunc} />
                 <View style={{width:40}} />
                 <View style={{marginBottom:2}} >
-                    <View style={{height:11}} />
+                    <View style={{height:6}} />
                     <Button 
                         style={{height:30,borderColor:Style.font_colors.enabled}} 
                         textStyle={{fontSize: 13,color:Style.font_colors.enabled}} 
@@ -341,7 +341,7 @@ export default class Maps extends Component {
                  onPress={func}>
                       <Icon
                           name={'ion-ios-add'}
-                          size={38}
+                          size={36}
                           style={{flexDirection:'row',justifyContent:'center'}}
                           color={Style.font_colors.enabled}
                           onPress={func} />
@@ -353,7 +353,7 @@ export default class Maps extends Component {
     }
     renderTypesModal(){
         return (
-          <TouchableHighlight style={{ height:Style.DEVICE_HEIGHT*2/3, alignItems: 'center', justifyContent: 'center' }} >
+          <TouchableHighlight style={{ width:280, height:Style.DEVICE_HEIGHT/3, justifyContent: 'center' }} >
             <ListView
                 dataSource={ this.state.typeDataSource }
                 renderRow={ this.renderTypeRow.bind(this) }
@@ -365,16 +365,16 @@ export default class Maps extends Component {
     renderTypeRow(row: string, sectionID: number, rowID: number){
       return (
       <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressType(sectionID,rowID,row)}>
-        <View>
-          <View style={{flexDirection:'row',backgroundColor:'white', justifyContent:'center', padding:10, marginLeft:30,marginRight:30, alignItems:'center' }}>
-            <Icon name={Global.TYPE_ICONS[row]} size={40} color={'gray'} />
-            <View style={{width:Style.DEVICE_WIDTH/3}}>
-              <Text style={{ fontSize:20,marginLeft:30 }}>
+          <View style={{flexDirection:'row',width:280,height:50,backgroundColor:'white', padding:6, }}>
+            <View style={{flexDirection:'row',justifyContent:'center',marginLeft:30,width:70}}>
+              <Icon name={Global.TYPE_ICONS[row]} size={36} color={'gray'} /> 
+            </View>
+            <View style={{flexDirection:'row',width:70}}>
+              <Text style={{ fontSize:20,padding:7}}>
                 { I18n.t(row) }
               </Text>
             </View>
           </View>
-        </View>
       </TouchableHighlight>
       )
     }
@@ -385,7 +385,7 @@ export default class Maps extends Component {
     }
     renderCatsModal(){
         return (
-          <TouchableHighlight style={{ height:Style.DEVICE_HEIGHT*1/3, alignItems: 'center', justifyContent: 'center' }} >
+          <TouchableHighlight style={{ width:220, height:Style.DEVICE_HEIGHT/3, justifyContent: 'center' }} >
             <ListView
                 dataSource={ this.state.catDataSource }
                 renderRow={ this.renderCatRow.bind(this) }
@@ -399,8 +399,8 @@ export default class Maps extends Component {
       return (
       <TouchableHighlight onPress={() => this._pressCat(sectionID,rowID,row)}>
         <View>
-          <View style={{flexDirection:'row',backgroundColor:color, justifyContent:'center', padding:15, alignItems:'center' }}>
-            <View style={{width:160,marginLeft:80,}}>
+          <View style={{flexDirection:'row',height:50,backgroundColor:color, justifyContent:'center', padding:15, alignItems:'center' }}>
+            <View style={{width:220,marginLeft:150,}}>
               <Text style={{ fontSize:20,color:'white'}}>
                 { I18n.t(row) }
               </Text>
