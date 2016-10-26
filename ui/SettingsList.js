@@ -163,15 +163,7 @@ export default class SettingsList extends React.Component {
         }
     }
     renderAddIcon(){
-      //let color = Global.CAT_COLORS[this.state.cat]
-      let func = () => alert('Please login to publish')
-      if(Global.mainlogin!=='')
-          func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
-      return <Button
-                 style={{height:41,width:50,borderColor:'#5080ff'}}
-             >
-                 
-            </Button>
+      return <Button style={{height:41,width:50,borderColor:'#5080ff'}} />
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width

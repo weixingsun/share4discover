@@ -16,6 +16,7 @@ import RssReader from './RssReader';
 import YqlReader from './YqlReader';
 import FormFeed from './FormFeed';
 import SGListView from 'react-native-sglistview';
+import Button from 'apsl-react-native-button'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -249,23 +250,7 @@ export default class NotifyList extends Component {
         );
     }
   renderActionIcon(){
-    if(Global.mainlogin==='') 
-      return (
-            <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} />
-                <View style={{width:10}} />
-            </View>
-      )
-    else{
-      return (
-            <View style={{flexDirection:'row',}}>
-                <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} 
-                    onPress={() => this.props.navigator.push({ component: FormInfo, passProps: {navigator:this.props.navigator} })}
-                />
-                <View style={{width:10}} />
-            </View>
-      )
-    }
+      return <Button style={{height:41,width:50,borderColor:'#5080ff'}} />
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']

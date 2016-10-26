@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {AppState, Image, ListView, NativeModules, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {DeviceEventEmitter, Image, ListView, NativeModules, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -107,6 +107,8 @@ export default class Maps extends Component {
         {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
       );*/ 
       //this.turnOnGps();
+      let load = ()=>this.downloadMsg(this.state.type,this.state.cat)
+      this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),400));
     }
     componentWillUnmount() { 
       this.turnOffGps();
@@ -162,7 +164,6 @@ export default class Maps extends Component {
     }
     }*/
     renderPlaceMarkersGmap(){
-      if(this.updateOnUI)
         return this.state.markers.map( (marker) => {
             var self=this
             var color=Global.CAT_COLORS[marker.cat]
@@ -238,7 +239,7 @@ export default class Maps extends Component {
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
       Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
-          //alert(rows.length)
+        if(self.updateOnUI){
           let notnull = rows.filter((row)=>{return row!=null})
           if(self.state.markers.length>0) self.setState({ markers:[] });
           var markers = notnull.map((row)=>{
@@ -249,8 +250,9 @@ export default class Maps extends Component {
             row['latitude']=parseFloat(row.lat)
             row['longitude']=parseFloat(row.lng)
             return row;
-         })
-         this.setState({ markers: markers });
+          })
+          this.setState({ markers: markers });
+        }
       })
       .catch((e)=>{
           //alert('Problem:'+JSON.stringify(e))

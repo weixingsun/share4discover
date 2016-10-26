@@ -296,6 +296,7 @@ export default class FormInfoVar extends Component {
                           var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
                           Net.putHash(my_value);
                           alert(alertmsg);
+                          DeviceEventEmitter.emit('refresh:MyList',0);
                           self.back()
                       }else{
                           alert('Error:'+ret)
@@ -425,6 +426,7 @@ export default class FormInfoVar extends Component {
         //<Icon name={'fa-weibo'} size={40} color={'red'} onPress={()=>this.postWB({type:'text',title:'this is a test'}) } />
         let size = this.state.form.pics?this.state.form.pics.length:''
         if(size===0) size=''
+        if(size===1&&this.state.form.pics[0]==='') size=''
         return (
             <View style={{flexDirection:'row',}}>
                 <Icon 
@@ -489,6 +491,7 @@ export default class FormInfoVar extends Component {
     }
     back(){
       this.turnOffGps()
+      this.props.navigator.pop();
       this.props.navigator.pop();
     }
     renderAddrField(name,title,validator,img=null){

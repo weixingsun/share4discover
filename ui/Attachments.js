@@ -45,6 +45,7 @@ export default class Attachment extends Component {
                 })
         }
         I18n.locale = NativeModules.RNI18n.locale
+        //alert(JSON.stringify(this.props.pics))
     }
     onEdit(){
         this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
@@ -215,8 +216,10 @@ export default class Attachment extends Component {
     }
     showSlides(){
         if(typeof this.state.pics === 'object' && this.state.pics.length>0) {
+            //alert(JSON.stringify(this.state.pics))
             let pre = Global.host_image_info+this.ctime+'/'
             //console.log('showSlides() pics:'+JSON.stringify(this.state.pics))
+            if(this.state.pics[0]==='') return null
             let list = this.state.pics.map((img)=>{
                 return pre+img;
             })
