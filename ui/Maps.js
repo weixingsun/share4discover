@@ -107,13 +107,13 @@ export default class Maps extends Component {
         {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
       );*/ 
       //this.turnOnGps();
-      let load = ()=>this.downloadMsg(this.state.type,this.state.cat)
-      this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),400));
+      DeviceEventEmitter.removeAllListeners('refresh:Maps')
+      this.event = DeviceEventEmitter.addListener('refresh:Maps',(evt)=>setTimeout(()=>this.downloadMsg(this.state.type,this.state.cat),400));
     }
     componentWillUnmount() { 
       this.turnOffGps();
-      //AppState.removeEventListener('change', this._handleAppStateChange);
       //serial.close();
+      DeviceEventEmitter.removeAllListeners('refresh:Maps')
       this.updateOnUI=false
     }
     turnOnGps(){

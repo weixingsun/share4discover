@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "SharePlus.app"
-               BlueprintName = "SharePlus"
-               ReferencedContainer = "container:SharePlus.xcodeproj">
+               BlueprintName = "OpenShare"
+               ReferencedContainer = "container:OpenShare.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "ShareTests.xctest"
                BlueprintName = "ShareTests"
-               ReferencedContainer = "container:SharePlus.xcodeproj">
+               ReferencedContainer = "container:OpenShare.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,7 +49,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "ShareTests.xctest"
                BlueprintName = "ShareTests"
-               ReferencedContainer = "container:SharePlus.xcodeproj">
+               ReferencedContainer = "container:OpenShare.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,8 +58,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "SharePlus.app"
-            BlueprintName = "SharePlus"
-            ReferencedContainer = "container:SharePlus.xcodeproj">
+            BlueprintName = "OpenShare"
+            ReferencedContainer = "container:OpenShare.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -81,10 +81,17 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "SharePlus.app"
-            BlueprintName = "SharePlus"
-            ReferencedContainer = "container:SharePlus.xcodeproj">
+            BlueprintName = "OpenShare"
+            ReferencedContainer = "container:OpenShare.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -100,8 +107,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "SharePlus.app"
-            BlueprintName = "SharePlus"
-            ReferencedContainer = "container:SharePlus.xcodeproj">
+            BlueprintName = "OpenShare"
+            ReferencedContainer = "container:OpenShare.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

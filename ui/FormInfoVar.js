@@ -265,7 +265,6 @@ export default class FormInfoVar extends Component {
             alert('Your location is too far away')
             return
         }
-        let newkey = Global.getKeyFromMsg(values)
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
         Alert.alert(
@@ -277,6 +276,7 @@ export default class FormInfoVar extends Component {
                   self.fixFormData(values);
                   Net.setMsg(values).then((ret)=> {
                       let alertmsg = ''
+                      let newkey = Global.getKeyFromMsg(ret)
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
                               let oldkey = Global.getKeyFromMsg(this.props.msg)
@@ -296,7 +296,9 @@ export default class FormInfoVar extends Component {
                           var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
                           Net.putHash(my_value);
                           alert(alertmsg);
+                          DeviceEventEmitter.emit('refresh:Maps',0);
                           DeviceEventEmitter.emit('refresh:MyList',0);
+                          self.props.navigator.pop();
                           self.back()
                       }else{
                           alert('Error:'+ret)
@@ -491,7 +493,6 @@ export default class FormInfoVar extends Component {
     }
     back(){
       this.turnOffGps()
-      this.props.navigator.pop();
       this.props.navigator.pop();
     }
     renderAddrField(name,title,validator,img=null){
