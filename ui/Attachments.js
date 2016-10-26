@@ -24,7 +24,6 @@ export default class Attachment extends Component {
         //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.state={ 
             show_pic_modal:false,
-            close_image:'',
             uploading:null,
             pics:[],
         }
@@ -34,9 +33,6 @@ export default class Attachment extends Component {
     }
     componentWillMount(){
         let self = this;
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
-            this.setState({close_image:source})
-        });
         //alert((typeof this.props.pics)+' pics='+JSON.stringify(this.props.pics))
         if(typeof this.props.pics ==='string'){
             if(this.props.pics!=='') this.setState({ pics:this.props.pics.split(',') })
@@ -174,12 +170,7 @@ export default class Attachment extends Component {
                               </View> 
                               :
                               <View style={Style.close,{height:25,flexDirection:'row'}}>
-                              <View style={{flex:1}}/>
-                              <TouchableHighlight
-                                  onPress={()=>this.deletePic(id)}
-                                  style={{ width:25,height:25,backgroundColor:'black',alignItems:'center',justifyContent:'center' }}>
-                                  <Image style={{width:16,height:16,margin:5}} source={this.state.close_image} />
-                              </TouchableHighlight>
+                              <Icon style={{padding:0}} name={'fa-minus-circle'} color={'red'} size={20} onPress={()=>this.deletePic(id)}/>
                               </View>
                             }
                         </Image>
@@ -192,14 +183,13 @@ export default class Attachment extends Component {
     }
     showSlides(){
         if(this.state.pics.length>0) {
-            //alert(JSON.stringify(this.state.pics))
             let pre = Global.host_image_info+this.ctime+'/'
             //console.log('showSlides() pics:'+JSON.stringify(this.state.pics))
             let list = this.state.pics.map((img)=>{
                 return pre+img;
             })
             if(this.state.uploading&&this.state.uploading<100) list.push(Global.empty_image)
-            //alert('uploading='+this.state.uploading+'\n'+JSON.stringify(list))
+            //alert('uploading='+this.state.uploading+'\npics='+JSON.stringify(this.state.pics)+'\nlist='+JSON.stringify(list))
             return this.showImages(list);
             /*return(
               <ScrollView>
