@@ -169,8 +169,8 @@ export default class Attachment extends Component {
                                   <ActivityIndicator style={{marginLeft:5}} />
                               </View> 
                               :
-                              <View style={Style.close,{height:25,flexDirection:'row'}}>
-                              <Icon style={{padding:0}} name={'fa-minus-circle'} color={'red'} size={20} onPress={()=>this.deletePic(id)}/>
+                              <View style={{alignItems:'flex-end',justifyContent:'flex-start',height:25,flexDirection:'row',backgroundColor:'transparent'}}>
+                              <Icon style={{padding:0,backgroundColor:'transparent'}} name={'fa-minus-circle'} color={'red'} size={20} onPress={()=>this.deletePic(id)}/>
                               </View>
                             }
                         </Image>
