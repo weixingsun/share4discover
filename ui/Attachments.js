@@ -25,8 +25,8 @@ export default class Attachment extends Component {
         this.state={ 
             show_pic_modal:false,
             close_image:'',
-            uploading:[],
-            pics:this.props.pics?this.props.pics:[],
+            uploading:null,
+            pics:[],
         }
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
@@ -37,18 +37,13 @@ export default class Attachment extends Component {
         getImageSource('ion-ios-close', 40, 'white').then((source) => {  //for deleting image in slides
             this.setState({close_image:source})
         });
-        //alert(this.props.pics)
-        if(typeof this.state.pics ==='string'){
-            if(this.state.pics!=='') 
-                this.setState({
-                    pics:this.props.msg.pics.split(','),
-                })
+        //alert((typeof this.props.pics)+' pics='+JSON.stringify(this.props.pics))
+        if(typeof this.props.pics ==='string'){
+            if(this.props.pics!=='') this.setState({ pics:this.props.pics.split(',') })
+        }else if(this.props.pics){
+            if(this.props.pics[0]!=='') this.setState({pics:this.props.pics})
         }
         I18n.locale = NativeModules.RNI18n.locale
-        //alert(JSON.stringify(this.props.pics))
-    }
-    onEdit(){
-        this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
     }
     openZoom(){
         this.setState({show_pic_modal:true})
@@ -84,15 +79,17 @@ export default class Attachment extends Component {
     }
     _upload(file) {
       //alert('uri:'+file.uri)
-      let time = new Date().getTime()
+      let time = Math.round(+new Date()/1000)
       var index = this.state.pics?this.state.pics.length:0;
-      var filename = this.ctime+'-'+time+'.png'
+      var filename = this.ctime+'-'+time+'.png'  //ctime is for creating folder
       var xhr = new XMLHttpRequest();
       xhr.open('POST', Global.host_image+'/svc.php');
       xhr.onload = () => {
-        let uploadingJson = this.state.uploading
-        uploadingJson[index]=100
-        this.setState({uploading:uploadingJson });
+        this.setState({
+            uploading:null,
+            pics: [...this.state.pics, time+'.png'],
+        });
+        //alert(JSON.stringify(this.state.pics))
         if (xhr.status !== 200) {
             alert('Upload error: ' + xhr.status)
             return;  //redo upload
@@ -105,30 +102,18 @@ export default class Attachment extends Component {
             alert('Upload failed: '+xhr.responseText)
             return;  //redo upload
         }
-        // http://nzmessengers.co.nz/service/info/car:39.915814,116.478772:1468417311586/2.jpg
+        // http://nzmessengers.co.nz/service/info/1468417311/1468418245.jpg
       };
       var formdata = new FormData();
       formdata.append('image', {uri:file.uri, type:'image/png', name:filename });
       xhr.upload.onprogress = (event) => {
         //console.log('upload onprogress', event);
-        if (event.lengthComputable) {
-          let uploadingJson = this.state.uploading
-          uploadingJson[index]=100*(event.loaded / event.total)
-          this.setState({uploading: uploadingJson});
+        if (event.lengthComputable && event.loaded!==event.total) {
+          let percent = Math.floor(100*(event.loaded / event.total))
+          this.setState({uploading:percent });
         }
       };
       xhr.send(formdata);
-      let uploadingJson = this.state.uploading
-      uploadingJson[index]=0
-      let pics_arr = this.state.pics
-      if(typeof pics_arr==='string' && pics_arr==='') pics_arr=[]
-      else if(typeof pics_arr==='object' && pics_arr.length===1 && pics_arr[0].length===0) pics_arr=[]
-      //alert('pics_arr:'+JSON.stringify(pics_arr)+'\nnew_pic: '+this.ctime+'/'+time+'.png')
-      this.setState({
-          uploading:uploadingJson,
-          //pics_changed:true,      new pic will consistent if not submit/publish
-          pics: [...pics_arr, time+'.png'],
-      });
     }
     openImagePicker(){
         const options = {
@@ -155,14 +140,7 @@ export default class Attachment extends Component {
        });
     }
     showActionIcons(){
-/*
-              <Icon
-                name={'ion-ios-create-outline'}
-                color={'blue'}
-                size={40}
-                onPress={this.onEdit.bind(this) } />
-              <View style={{width:40}} />
-*/
+        if(this.state.uploading===null)
         return (
             <View style={{flexDirection:'row',}}>
               <Icon
@@ -175,15 +153,12 @@ export default class Attachment extends Component {
         )
     }
     showImages(list){
-        //alert('uploading[]='+JSON.stringify(this.state.uploading)+'\nlist[]='+JSON.stringify(list))
         return (
           <View style={{marginLeft:10,height:Style.THUMB_HEIGHT+10,justifyContent:'center'}}>
             <View style={{height:5}}/>
             <ScrollView style={{height:Style.THUMB_HEIGHT,}} horizontal={true}>
                 {
                   list.map((pic,id)=>{
-                    //let source = {uri:pic}
-                    if(this.state.uploading[id]<100) pic=Global.empty_image
                     let source={uri:pic}
                     //console.log('showImages() source='+JSON.stringify(source))
                     return (
@@ -192,11 +167,12 @@ export default class Attachment extends Component {
                             indicator={ProgressBar}
                         >
                             {
-                              this.state.uploading[id]<100 ?
+                              pic===Global.empty_image ?
                               <View style={{flex: 1,alignItems: 'center',justifyContent: 'center',}}>
-                                  <Text style={{fontWeight: 'bold',color:'blue'}}>{Math.floor(this.state.uploading[id])}%</Text>
+                                  <Text style={{fontWeight: 'bold',color:'blue'}}>{this.state.uploading}%</Text>
                                   <ActivityIndicator style={{marginLeft:5}} />
-                              </View> :
+                              </View> 
+                              :
                               <View style={Style.close,{height:25,flexDirection:'row'}}>
                               <View style={{flex:1}}/>
                               <TouchableHighlight
@@ -215,14 +191,15 @@ export default class Attachment extends Component {
         )
     }
     showSlides(){
-        if(typeof this.state.pics === 'object' && this.state.pics.length>0) {
+        if(this.state.pics.length>0) {
             //alert(JSON.stringify(this.state.pics))
             let pre = Global.host_image_info+this.ctime+'/'
             //console.log('showSlides() pics:'+JSON.stringify(this.state.pics))
-            if(this.state.pics[0]==='') return null
             let list = this.state.pics.map((img)=>{
                 return pre+img;
             })
+            if(this.state.uploading&&this.state.uploading<100) list.push(Global.empty_image)
+            //alert('uploading='+this.state.uploading+'\n'+JSON.stringify(list))
             return this.showImages(list);
             /*return(
               <ScrollView>
@@ -238,10 +215,10 @@ export default class Attachment extends Component {
                 </Grid>
               </ScrollView>
             )*/
-        }
+        }else return null
     }
     renderModal(){
-      //let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
+      if(this.state.pics.length===0) return null
       let pre = Global.host_image_info+this.ctime+'/'
       let images = this.state.pics.map((item)=>{
           return pre+item
