@@ -182,7 +182,7 @@ export default class Attachment extends Component {
         )
     }
     showSlides(){
-        if(this.state.pics.length>0) {
+        if(this.state.pics.length>0 || this.state.uploading!==null) {
             let pre = Global.host_image_info+this.ctime+'/'
             //console.log('showSlides() pics:'+JSON.stringify(this.state.pics))
             let list = this.state.pics.map((img)=>{

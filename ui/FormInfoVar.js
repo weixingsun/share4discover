@@ -282,16 +282,14 @@ export default class FormInfoVar extends Component {
                               let oldkey = Global.getKeyFromMsg(this.props.msg)
                               if( oldkey !== newkey ){
                                 self.changeReply( oldkey, newkey )
-                                Net.delMsg(oldkey)
-                                let myjson = {key:'*'+Global.mainlogin,field:oldkey}
-                                Net.delHash(myjson);
+                                self.deleteMsg(oldkey)
                                 alertmsg = 'Changed successfully'
                               }else{
                                 alertmsg = 'Edit successfully'
                               }
                           }else{
                               let sns_ret = self.postSNS(values);
-                              alertmsg = 'Create successfully'
+                              alertmsg = 'Create successfully' +sns_ret
                           }
                           var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
                           Net.putHash(my_value);
