@@ -32,9 +32,9 @@ module.exports = {
     demo_mcode: 'DA:4C:B6:A9:55:62:1D:AD:12:29:DD:7B:69:31:67:47:C5:B2:4E:E1;szj.com.ditu',
     ggkey:'AIzaSyApl-_heZUCRD6bJ5TltYPn4gcSCy1LY3A',
 
-    GoogleMap:'GoogleMap',
-    BaiduMap: 'BaiduMap',
-    GaodeMap: 'GaodeMap',
+    GoogleMap:'gg',
+    BaiduMap: 'baidu',
+    GaodeMap: 'gaode',
     MAP_TYPE_NORMAL:   'standard',
     MAP_TYPE_SATELLITE:'satellite',
     MAP_TRAFFIC_FALSE: false,

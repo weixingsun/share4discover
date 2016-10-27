@@ -502,7 +502,7 @@ export default class Maps extends Component {
     renderGmap(){
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
-      let map_traffic = Global.MAP_TRAFFIC=='false'?false:true
+      let map_traffic = Global.MAP_TRAFFIC==='no'?false:true
       //alert('map_traffic='+map_traffic)
       return (
             <GMapView
