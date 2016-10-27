@@ -39,7 +39,7 @@ export default class USBList extends React.Component {
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> UUID: </Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uuid')}: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}}>{ this.state.onesignal_id }</Text>
               </View>
             </View>
@@ -49,7 +49,7 @@ export default class USBList extends React.Component {
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> Home: </Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('home')}: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={()=>Linking.openURL('http://shareplus.co.nf')}>http://shareplus.co.nf</Text>
               </View>
             </View>
@@ -64,7 +64,7 @@ export default class USBList extends React.Component {
                     style={{width: 100, height: 100}}
                     source={require('../img/icon.png')}
                 />
-                <Text style={{justifyContent:'center'}} >Share+ {DeviceInfo.getVersion()}</Text>
+                <Text style={{justifyContent:'center'}} >{I18n.t('shareplus')} {DeviceInfo.getVersion()}</Text>
                 <Text style={{justifyContent:'center'}} > </Text>
                 <Text style={{justifyContent:'center'}} > </Text>
             </View>
@@ -74,7 +74,7 @@ export default class USBList extends React.Component {
         return (
             <View style={{flex:1,justifyContent: 'center',alignItems:'center'}}>
                 <Text style={{justifyContent:'center'}} > </Text>
-                <Text style={{justifyContent:'center'}} >Copyright @2016 Share+ </Text>
+                <Text style={{justifyContent:'center'}} >Copyright @2016 {I18n.t('shareplus')}</Text>
                 <Text style={{justifyContent:'center'}} > </Text>
             </View>
         )
