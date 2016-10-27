@@ -48,10 +48,6 @@ export default class LoginSettings extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.map_list = [Global.GoogleMap,Global.BaiduMap];
-        this.map_traffic_list = ['true','false'];
-        this.map_type_list = [Global.MAP_TYPE_NORMAL,Global.MAP_TYPE_SATELLITE];
-        this.place_list = [];
         this.state = {
             //isLoading:true,
             form: {
@@ -74,62 +70,6 @@ export default class LoginSettings extends React.Component{
     componentDidMount() {
     }
     //componentWillUnmount() {}
-    /*deleteItem(seq,name){
-        Alert.alert(
-          "Delete",
-          "Do you want to delete "+name+" ?",
-          [
-            {text:"Cancel", },
-            {text:"OK", onPress:()=>{
-              this.place_list.splice(seq,1);
-              this.reload();
-            }},
-          ]
-        );
-    }
-    getLockIcon(){
-        if(!this.state.editable) return 'ion-ios-lock-outline'
-        return 'ion-ios-unlock-outline'
-    }
-    reload(){
-        if(this.place_list.length>0){
-            this.setState({
-                isLoading:false,
-                dataSource: this.state.dataSource.cloneWithRows(this.place_list),
-            });
-        }
-    }
-    _renderDeleteButton(id,name){
-        if(this.state.editable)
-            return <Icon name="ion-minus-circled" size={30} color="#C00" onPress={()=>this.deleteItem(id,name)} />
-        else return null;
-    }
-    _renderRow(data, sectionID, rowID) {
-        //alert(JSON.stringify(data))
-        //let Arr = this.place_list.map((k, n) => {
-        //    return <View key={n} style={{ height:Style.CARD_ITEM_HEIGHT, width:this.column_width, alignItems:'center', justifyContent: 'center', }}>
-        //             <Text>{ k }</Text>
-        //           </View>
-        //})
-        let Arr = <Text>{ data.split(':')[0] }</Text>
-	return (
-          <View style={Style.slim_card}>
-            <TouchableOpacity style={{flex:1,marginLeft:10}} onPress={()=>{ this.props.navigator.push({  component: PlaceForm,  passProps: {data:data}  }); }} >
-              <View style={{flexDirection:'row'}}>
-                { Arr }
-              </View>
-            </TouchableOpacity>
-            {this._renderDeleteButton(this.seq-1,data.Name)}
-          </View>
-        );
-    }
-    _renderSectionHeader(sectionData, sectionID) {
-      return (
-        <View style={styles.header}>
-          <Text style={styles.sectionText}>{sectionID}</Text>
-        </View>
-      )
-    }*/
 
     clone(hash) {
         var json = JSON.stringify(hash);
@@ -160,7 +100,6 @@ export default class LoginSettings extends React.Component{
                 logins.wb=login
             }
         }
-        //alert('form:'+JSON.stringify(form)+"logins:"+JSON.stringify(logins))
         if(JSON.stringify(logins) != JSON.stringify(oldlogins)){
             Store.save(Store.SETTINGS_LOGINS,logins)
             //alert(JSON.stringify(logins))
@@ -171,11 +110,6 @@ export default class LoginSettings extends React.Component{
         //if(this.state.isLoading) return <Loading />
         //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
         let titleName = I18n.t('login')+' '+I18n.t('settings')
-        /*
-             <TouchableOpacity style={styles.header} >
-                 <Text>Map & Search Engine Provider</Text>
-             </TouchableOpacity>
-        */
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: titleName}}
@@ -187,7 +121,7 @@ export default class LoginSettings extends React.Component{
           />
           <View style={styles.container}>
              <TouchableOpacity style={styles.header} >
-                 <Text>Sharing on your Social Networks</Text>
+                 <Text>{I18n.t('share_via_sns')}</Text>
              </TouchableOpacity>
                 <GiftedForm
                     formName='loginSettingsForm'
@@ -198,29 +132,29 @@ export default class LoginSettings extends React.Component{
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
-                            title='Facebook'
+                            title={I18n.t('fb')}
                             name='fb'
-                            display={this.state.form.fb}
+                            display={I18n.t(this.state.form.fb)}
                             value={this.state.form.fb}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='fb' title='fb' multiple={false}>
-                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
-                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
+                                <GiftedForm.OptionWidget title={I18n.t(Global.none)} value={Global.none} />
+                                <GiftedForm.OptionWidget title={I18n.t(Global.post)} value={Global.post} />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
-                            title='Weibo'
+                            title={I18n.t('wb')}
                             name='wb'
-                            display={this.state.form.wb}
+                            display={I18n.t(this.state.form.wb)}
                             value={this.state.form.wb}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='wb' title='wb' multiple={false}>
-                                <GiftedForm.OptionWidget title={Global.none} value={Global.none} />
-                                <GiftedForm.OptionWidget title={Global.post} value={Global.post} />
+                                <GiftedForm.OptionWidget title={I18n.t(Global.none)} value={Global.none} />
+                                <GiftedForm.OptionWidget title={I18n.t(Global.post)} value={Global.post} />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                 </GiftedForm>
