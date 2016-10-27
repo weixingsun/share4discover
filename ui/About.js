@@ -19,7 +19,7 @@ export default class USBList extends React.Component {
           //dataSource:this.ds.cloneWithRows(this.api_list),
           onesignal_id:'',
       };
-      I18n.locale = NativeModules.RNI18n.locale
+      //I18n.locale = NativeModules.RNI18n.locale
       //this.openJsonAPI = this.openJsonAPI.bind(this);
       //this.openWebList = this.openWebList.bind(this);
     }

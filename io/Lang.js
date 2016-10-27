@@ -3,6 +3,9 @@ import I18n from 'react-native-i18n';
 I18n.fallbacks = true;
 I18n.translations = {
   en: {
+    share: 'Share',
+    msgs: 'Messages',
+    my: 'My',
     shareplus: 'Share+',
     hi: 'Hi',
     help:'Help',
@@ -87,6 +90,9 @@ I18n.translations = {
     sound:'Sound',
   },
   fr: {
+    share: 'Share',
+    msgs: 'Messages',
+    my: 'My',
     shareplus: 'Share+',
     hi: 'Salut',
     help:'Aidez-moi',
@@ -170,7 +176,10 @@ I18n.translations = {
     condition:'Condition',
     sound:'Sonner',
   },
-  zh_CN: {
+  zh: {
+    share: '分享',
+    msgs: '消息',
+    my: '我的',
     shareplus: '分享家',
     hi: '你好',
     help: '帮助',

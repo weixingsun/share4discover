@@ -25,11 +25,9 @@ export default class SettingsList extends React.Component {
       super(props);
       this.state = {
       };
-      //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
-        //I18n.locale = I18n.locale    //en-US, not compatible with json key format
-        I18n.locale = NativeModules.RNI18n.locale  //en_US
+        //I18n.locale = NativeModules.RNI18n.locale  //en_US,zh_CN,fr_FR
     }
     componentDidMount(){
         CodePush.notifyApplicationReady();

@@ -9,8 +9,7 @@ import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
 import FormInfo from "./FormInfoVar"
-//import Drawer from 'react-native-drawer'
-//import ControlPanel from './ControlPanel'
+import I18n from 'react-native-i18n';
 
 export default class MyList extends Component {
   constructor(props) {
@@ -90,9 +89,10 @@ export default class MyList extends Component {
            )
   }
   render() {
+    let title = I18n.t('my')+' '+I18n.t('share')
     return (
       <View>
-        <NavigationBar style={Style.navbar} title={{title:'My Shares',tintColor:Style.font_colors.enabled}} 
+        <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             rightButton={
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>

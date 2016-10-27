@@ -21,7 +21,6 @@ import Gallery from 'react-native-gallery';
 export default class Attachment extends Component {
     constructor(props) {
         super(props);
-        //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.state={ 
             show_pic_modal:false,
             uploading:null,
@@ -39,7 +38,7 @@ export default class Attachment extends Component {
         }else if(this.props.pics){
             if(this.props.pics[0]!=='') this.setState({pics:this.props.pics})
         }
-        I18n.locale = NativeModules.RNI18n.locale
+        //I18n.locale = NativeModules.RNI18n.locale
     }
     openZoom(){
         this.setState({show_pic_modal:true})

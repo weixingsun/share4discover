@@ -21,7 +21,6 @@ import Button from 'apsl-react-native-button'
 export default class NotifyList extends Component {
   constructor(props) {
       super(props);
-      //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()  //zh_CN  -> zh-cn
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.all_notes=[]
       this.state={
@@ -30,7 +29,6 @@ export default class NotifyList extends Component {
       this.share_types = Object.keys(Global.TYPE_ICONS)
   }
   componentWillMount(){
-      //alert(NativeModules.RNI18n.locale)
       this.load()
   }
   load(){
@@ -266,9 +264,10 @@ export default class NotifyList extends Component {
     //alert(JSON.stringify(this.all_notes))
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
+    let title = I18n.t('my')+' '+I18n.t('msgs')
     return (
       <View>
-        <NavigationBar style={Style.navbar} title={{title:'My Messages',tintColor:Style.font_colors.enabled}} 
+        <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             rightButton= {this.renderActionIcon()}
 	/>

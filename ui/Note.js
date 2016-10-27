@@ -21,7 +21,6 @@ var {height, width} = Dimensions.get('window');
 export default class Detail extends Component {
     constructor(props) {
         super(props);
-        //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
         this.images = []
         this.state={ 
             show_pic_modal:false,
@@ -37,7 +36,7 @@ export default class Detail extends Component {
             if(this.props.msg.pics!=='') this.images = this.props.msg.pics.split(',')
             //alert(JSON.stringify(this.props.msg))
         }
-        I18n.locale = NativeModules.RNI18n.locale
+        //I18n.locale = NativeModules.RNI18n.locale
     }
     onDelete() {
 	var _this = this;

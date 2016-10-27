@@ -21,7 +21,6 @@ export default class FeedReader extends React.Component {
           rowHasChanged: (row1, row2) => row1 !== row2,
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
-      //this.lang = NativeModules.RNI18n.locale.replace('_', '-').toLowerCase()
       this.items = []
       this.state = {
           dataSource:this.ds.cloneWithRows(this.items),

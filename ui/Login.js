@@ -31,11 +31,9 @@ export default class SettingsList extends React.Component {
       this.logout_wx = this.logout_wx.bind(this);
       this.login_wb  = this.login_wb.bind(this);
       this.logout_wb = this.logout_wb.bind(this);
-      //this.lang = NativeModules.RNI18n.locale //.replace('_', '-').toLowerCase()
     }
     componentWillMount(){
-        //I18n.locale = I18n.locale    //en-US, not compatible with json key format
-        I18n.locale = NativeModules.RNI18n.locale  //en_US
+        //I18n.locale = NativeModules.RNI18n.locale  //en_US
     }
     componentDidMount(){
     }

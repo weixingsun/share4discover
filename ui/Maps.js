@@ -97,7 +97,7 @@ export default class Maps extends Component {
         //this.checkUsbDevice();
         this.loadIcons(this.state.type,this.state.cat);
 	//AppState.addEventListener('change', this._handleAppStateChange);
-        I18n.locale = NativeModules.RNI18n.locale
+        //I18n.locale = NativeModules.RNI18n.locale
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
