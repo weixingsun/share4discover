@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {Alert, Platform,StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import {Alert, Platform, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
 import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
@@ -81,7 +81,9 @@ var Login = React.createClass({
   },
   _signIn() {
     let self=this
-    let config = {scope:'all',redirectURI:'http://www.weibo.com',appid:'964503517'}
+    let appKey = 964503517
+    if(Platform.OS==='ios') appKey=177728027
+    let config = {scope:'all',redirectURI:'http://www.weibo.com',appid:appKey}
     WeiboAPI.login(config).then((data) => {
       //alert('loginWB:'+JSON.stringify(data)); //{type,errCode,refreshToken,userID,expirationDate,accessToken}
       //var user = {id:data.id, name:data.name, email:data.email, type:'wb', token:data.serverAuthCode}
