@@ -118,6 +118,9 @@ var Net = {
       var url = this.USER_HOST;
       return this._post(url, json);
     },
+    getLocation(){
+      return this._get(Global.IP2LOC_HOST)
+    },
     chooseMapFromNetwork(){
       this._get(Global.IP2LOC_HOST).then((result)=>{
         let inchina = result.country_code.toUpperCase() == 'CN'

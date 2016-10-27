@@ -31,15 +31,7 @@ export default class Main extends Component {
       badge:'',
       refresh:false,
       mails:[],
-      //isLoading:true,
-      region: {
-        latitude: 39.9042,
-        longitude: 116.4074,
-        latitudeDelta: 1,
-        longitudeDelta: 1,
-        zoom: 16,
-      },
-      //drawerPanEnabled:false,
+      region: null,
       gps:false,
       
     }; 
@@ -53,7 +45,6 @@ export default class Main extends Component {
       //auto binding function
   }
   componentWillUnmount() {
-      this.turnOffGps();
       if(Platform.OS === 'android') {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
@@ -200,7 +191,7 @@ export default class Main extends Component {
   checkLogin(type){
       //var self = this
       //alert('type='+type+' last2='+type.split('_')[1])
-      Store.get(type).then(function(user){  //{type,email}
+      Store.get(type).then((user)=>{  //{type,email}
           let last2 = type.split('_')[1]
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;
@@ -219,9 +210,9 @@ export default class Main extends Component {
               //}
           }
       });
-      Store.get(Store.SETTINGS_LOGINS).then(function(login_settings){
+      Store.get(Store.SETTINGS_LOGINS).then((login_settings)=>{    //{fb:none,wb:post}
           if(login_settings) Global.SETTINGS_LOGINS=login_settings
-          else Global.SETTINGS_LOGINS={fb:Global.none,gg:Global.none,wx:Global.none,wb:Global.none}
+          else Global.SETTINGS_LOGINS={fb:Global.none,wb:Global.none}  //wx:Global.none,
           
       })
   }
@@ -239,25 +230,40 @@ export default class Main extends Component {
       Store.get('region').then((region_value) => {
         if(region_value !=null && region_value.latitude !=null){
           if(region_value.zoom == null){
-              region_value['zoom'] = 14
+              region_value['zoom'] = 16
           }
           if(region_value.latitudeDelta == null){
-              region_value['latitudeDelta'] = 0.01
-              region_value['longitudeDelta'] = 0.01
+              region_value['latitudeDelta'] = 0.02
+              region_value['longitudeDelta'] = 0.02
           }
-          if(this.state.region.latitude != region_value.latitude)
-              _this.setState({ region:region_value,  });
+          if(!this.state.region){
+              //alert('fs faster than net ')
+              _this.setState({ region:region_value });
+          }
         }
       });
       //Store.get('user').then((user_value) => {
       //  _this.setState({ user:user_value });
       //});
+      if(!this.state.region) Net.getLocation().then((gps)=>{
+         let inchina = gps.country_code.toUpperCase() == 'CN'
+         if(inchina)  Global.MAP = Global.BaiduMap;
+         else Global.MAP = Global.GoogleMap;
+         let loc={
+             latitude:gps.latitude,
+             longitude:gps.longitude,
+             latitudeDelta:0.05,
+             longitudeDelta:0.05,
+             zoom:16,
+         }
+         if(!this.state.region && gps.latitude) _this.setState({ region:loc });
+      });
       if(Global.MAP == null)
       Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
         if(map_value != null){
             Global.MAP = map_value
         }else{
-            Net.chooseMapFromNetwork()
+            Global.MAP = Global.GoogleMap
         }
       });
       Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
@@ -352,20 +358,6 @@ export default class Main extends Component {
   goBack(){
     this.props.navigator.pop();
   }
-  turnOffGps(){
-      navigator.geolocation.clearWatch(this.watchID);
-      this.setState({gps:false});
-  }
-  turnOnGps(){
-      this.watchID = navigator.geolocation.watchPosition(
-        (position) => {
-          this.updateMyPos(position.coords);
-        },
-        (error) => console.log(error.message),
-        {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000, distanceFilter:30},
-      );
-      this.setState({gps:true});
-  }
   pages(){
     if(this.state.page ===Store.msgTab){
       return <NotifyList navigator={this.props.navigator} mails={this.state.mails} />
@@ -379,9 +371,9 @@ export default class Main extends Component {
   }
   checkSettingsChange(){
       this.checkLogin('user_fb')
-      this.checkLogin('user_gg')
-      //this.checkLogin('user_wx')
       this.checkLogin('user_wb')
+      //this.checkLogin('user_gg')
+      //this.checkLogin('user_wx')
       this.checkMapSettings()
       this.checkFirstTime()
       if(Global.mainlogin.length===0) this.setState({mails:[]})
