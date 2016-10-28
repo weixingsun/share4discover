@@ -228,7 +228,6 @@ export default class FormInfoVar extends Component {
         }
     }
     initKeys(){
-        this.map=Global.MAP
         this.mcode = Global.ios_mcode;
         this.ak = Global.ios_ak;
         if (Platform.OS === 'android') {
@@ -470,8 +469,8 @@ export default class FormInfoVar extends Component {
                 if(values.price)this.setState({validationResults:GiftedFormManager.validate(this.formName)});
             }
         }
-        if (this.state.validationResults!=null && !this.state.validationResults.isValid) {
-            //alert(JSON.stringify(this.state.validationResults))
+        if (this.state.validationResults!=null) {
+            //alert(JSON.stringify(this.state.form.dest))
             //this.setState({validationResults:GiftedFormManager.validate(this.formName)});
         }
     }
@@ -506,7 +505,7 @@ export default class FormInfoVar extends Component {
                 value={this.state.form[name]}
                 validationResults={this.state.validationResults}
                 image={imgView}
-                map={this.map}
+                map={Global.MAP}
                 query={{
                     ak:this.ak,mcode:this.mcode,
                     //gdkey:gdkey,
@@ -680,7 +679,7 @@ export default class FormInfoVar extends Component {
                             value={this.state.form.address}
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-location-arrow'} size={25} /></View>}
                             validationResults={this.state.validationResults}
-                            map={this.map}
+                            map={Global.MAP}
                             query={{
                                 ak:this.ak,mcode:this.mcode,
                                 //gdkey:gdkey,
