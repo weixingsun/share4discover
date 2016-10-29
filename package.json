@@ -41,7 +41,7 @@
     "react-native-usbserial": "git+https://github.com/weixingsun/react-native-usbserial.git",
     "react-native-vector-icons": "^3.0.0",
     "react-native-wechat": "^1.7.0",
-    "react-native-weibo": "^1.0.5",
+    "react-native-weibo": "https://github.com/weixingsun/react-native-weibo.git",
     "xml2js": "^0.4.17",
     "xml2js-xpath": "^0.7.0"
   }
