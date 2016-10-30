@@ -365,14 +365,15 @@ export default class Maps extends Component {
         );
     }
     renderTypeRow(row: string, sectionID: number, rowID: number){
+      let color = Global.CAT_COLORS[this.state.cat]
       return (
-      <TouchableHighlight style={{backgroundColor:'white'}} onPress={() => this._pressType(sectionID,rowID,row)}>
-          <View style={{flexDirection:'row',width:280,height:50,backgroundColor:'white', padding:6, }}>
+      <TouchableHighlight onPress={() => this._pressType(sectionID,rowID,row)}>
+          <View style={{flexDirection:'row',width:280,height:50,backgroundColor:color, padding:6, }}>
             <View style={{flexDirection:'row',justifyContent:'center',marginLeft:30,width:70}}>
-              <Icon name={Global.TYPE_ICONS[row]} size={36} color={'gray'} /> 
+              <Icon name={Global.TYPE_ICONS[row]} size={36} color={'white'} /> 
             </View>
-            <View style={{flexDirection:'row',width:70}}>
-              <Text style={{ fontSize:20,padding:7}}>
+            <View style={{flexDirection:'row',width:160}}>
+              <Text style={{ fontSize:20,padding:7,color:'white'}}>
                 { I18n.t(row) }
               </Text>
             </View>
