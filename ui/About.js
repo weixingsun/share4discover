@@ -57,7 +57,7 @@ export default class USBList extends React.Component {
     }
     renderIcon(){
         return (
-            <View style={{flex:1,justifyContent: 'center',alignItems:'center'}}>
+            <View style={{flex:1,height:150,justifyContent: 'center',alignItems:'center'}}>
                 <Text style={{justifyContent:'center'}} > </Text>
                 <Text style={{justifyContent:'center'}} > </Text>
                 <Image 

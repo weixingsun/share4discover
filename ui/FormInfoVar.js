@@ -32,8 +32,6 @@ export default class FormInfoVar extends Component {
         this.state={ 
             form:{},
             grantedPermissions:{},
-            type:'car',
-            cat:'rent0',
             pos:{latitude:'',longitude:''},
         };
         this.updatePics=this.updatePics.bind(this)
@@ -196,7 +194,7 @@ export default class FormInfoVar extends Component {
               //time:  '',     dest:  '',
               pics:  [],     owner: logins,
             };
-            this.setState({type:'car', form:myDefaults})
+            this.setState({form:myDefaults})
             this.genTypeValidators('car','rent0')
         }else{
             //alert(JSON.stringify(this.props.msg))
@@ -205,7 +203,7 @@ export default class FormInfoVar extends Component {
             //alert('type='+type+' cat='+cat)
             if(typeof pics === 'string') myDefaults['pics']=pics.split(',')
             this.ctime=parseInt(ctime)
-            this.setState({ type:type,cat:cat, form: myDefaults })
+            this.setState({ form: myDefaults })
             this.genTypeValidators(type,cat)
             this.lastcat=cat
             this.changePriceValidator()
@@ -454,7 +452,7 @@ export default class FormInfoVar extends Component {
             if(values.type[0]!==this.lasttype){
                 this.lasttype=values.type[0]
                 //alert('change type:'+this.lasttype)
-                this.setState({type:this.lasttype,form:{...this.state.form,type:this.lasttype}})
+                this.setState({form:{...this.state.form,type:this.lasttype}})
                 this.changeValidator()
                 //GiftedFormManager.updateValue(this.formName, 'type', this.lasttype)
             }
@@ -464,7 +462,7 @@ export default class FormInfoVar extends Component {
                 this.lastcat=values.cat[0]
                 this.lasttype=this.state.form.type
                 //alert('type='+this.lasttype+' cat='+this.lastcat)
-                this.setState({cat:this.lastcat,  form:{...this.state.form,cat:this.lastcat}})
+                this.setState({form:{...this.state.form,cat:this.lastcat}})
                 this.changeValidator()
                 if(values.price)this.setState({validationResults:GiftedFormManager.validate(this.formName)});
             }
@@ -537,7 +535,7 @@ export default class FormInfoVar extends Component {
             />
         )
     }
-    renderSelectOptions(list){
+    /*renderSelectOptions(list){
         return list.map((key,i)=>{
             return <GiftedForm.OptionWidget
                        key={i}
@@ -565,7 +563,7 @@ export default class FormInfoVar extends Component {
                 </GiftedForm.SelectWidget>
             </GiftedForm.ModalWidget>
         )
-    }
+    }*/
     renderTextField(name,title,validator,img=null){
         let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={20} /></View>
         return (
@@ -596,16 +594,16 @@ export default class FormInfoVar extends Component {
         })
     }
     renderSecondTypeOptionList(){
-        let no_rent = this.no_rent_types.indexOf(this.state.type)>-1?true:false
-        let types = no_rent?this.sec_types_no_rent:this.sec_types_all
-        return types.map((type,id)=>{
+        let no_rent = this.no_rent_types.indexOf(this.state.form.type)>-1?true:false
+        let cats = no_rent?this.sec_types_no_rent:this.sec_types_all
+        return cats.map((key,id)=>{
             return <GiftedForm.OptionWidget
                     key={id} 
-                    title={I18n.t(type.value)} 
-                    value={type.value}
+                    title={I18n.t(key.value)} 
+                    value={key.value}
                     image={(
                          <View style={{width:80,alignItems:'center'}}>
-                             <Icon name={type.icon} size={30} />
+                             <Icon name={key.icon} size={30} />
                          </View>
                     )} />
         })
@@ -615,9 +613,19 @@ export default class FormInfoVar extends Component {
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
         if(this.props.msg!=null) title_nav = 'Edit this Share'
         else title_nav = 'Create a Share'
-        let fields = this.info_types[this.state.type]
-        if(fields[this.state.cat]) fields=fields[this.state.cat]
+        let fields = this.info_types[this.state.form.type]
+        if(fields[this.state.form.cat]) fields=fields[this.state.form.cat]
         //console.log('form.render() type='+this.state.type+' cat='+this.state.cat+' fields = '+JSON.stringify(fields))
+        let self=this
+        //alert('form.render() state.type='+this.state.type+' form.type='+this.state.form.type)
+        let selectType = (key)=>{
+            //self.setState({type:key,form:{...self.state.form,type:key}})
+            self.props.navigator.pop()
+        }
+        let selectCat = (key)=>{
+            //self.setState({cat:key,form:{...self.state.form,cat:key}})
+            self.props.navigator.pop()
+        }
         return (
             <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
@@ -644,12 +652,12 @@ export default class FormInfoVar extends Component {
                         <GiftedForm.ModalWidget
                             title={I18n.t('cat')}
                             name='type'
-                            display={I18n.t(this.state.type)}
+                            display={I18n.t(this.state.form.type)}
                             value={this.state.form.type}
-                            image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.type]} size={30} /></View>}
+                            image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.form.type]} size={30} /></View>}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='type' title='Category' multiple={false}>
+                            <GiftedForm.SelectWidget name='type' title='Category' multiple={false} onSelect={selectType}>
                                 {this.renderTypeOptions()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
@@ -662,7 +670,7 @@ export default class FormInfoVar extends Component {
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='cat' title='Type' multiple={false}>
+                            <GiftedForm.SelectWidget name='cat' title='Type' multiple={false} onSelect={selectCat}>
                                 {this.renderSecondTypeOptionList()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
