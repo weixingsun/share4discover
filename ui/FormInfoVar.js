@@ -616,16 +616,6 @@ export default class FormInfoVar extends Component {
         let fields = this.info_types[this.state.form.type]
         if(fields[this.state.form.cat]) fields=fields[this.state.form.cat]
         //console.log('form.render() type='+this.state.type+' cat='+this.state.cat+' fields = '+JSON.stringify(fields))
-        let self=this
-        //alert('form.render() state.type='+this.state.type+' form.type='+this.state.form.type)
-        let selectType = (key)=>{
-            //self.setState({type:key,form:{...self.state.form,type:key}})
-            self.props.navigator.pop()
-        }
-        let selectCat = (key)=>{
-            //self.setState({cat:key,form:{...self.state.form,cat:key}})
-            self.props.navigator.pop()
-        }
         return (
             <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
@@ -657,7 +647,7 @@ export default class FormInfoVar extends Component {
                             image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.form.type]} size={30} /></View>}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='type' title='Category' multiple={false} onSelect={selectType}>
+                            <GiftedForm.SelectWidget name='type' title='Category' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 {this.renderTypeOptions()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
@@ -670,7 +660,7 @@ export default class FormInfoVar extends Component {
                             validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='cat' title='Type' multiple={false} onSelect={selectCat}>
+                            <GiftedForm.SelectWidget name='cat' title='Type' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 {this.renderSecondTypeOptionList()}
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>

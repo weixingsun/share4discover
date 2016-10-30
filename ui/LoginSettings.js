@@ -139,7 +139,7 @@ export default class LoginSettings extends React.Component{
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='fb' title='fb' multiple={false}>
+                            <GiftedForm.SelectWidget name='fb' title='fb' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title={I18n.t(Global.none)} value={Global.none} />
                                 <GiftedForm.OptionWidget title={I18n.t(Global.post)} value={Global.post} />
                             </GiftedForm.SelectWidget>
@@ -152,7 +152,7 @@ export default class LoginSettings extends React.Component{
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='wb' title='wb' multiple={false}>
+                            <GiftedForm.SelectWidget name='wb' title='wb' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title={I18n.t(Global.none)} value={Global.none} />
                                 <GiftedForm.OptionWidget title={I18n.t(Global.post)} value={Global.post} />
                             </GiftedForm.SelectWidget>

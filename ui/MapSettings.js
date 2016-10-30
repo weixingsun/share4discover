@@ -125,7 +125,7 @@ export default class Settings extends React.Component{
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map' title='Map' multiple={false}>
+                            <GiftedForm.SelectWidget name='map' title='Map' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title={google} value='gg' />
                                 <GiftedForm.OptionWidget title={I18n.t('baidu')}  value='baidu' />
                             </GiftedForm.SelectWidget>
@@ -138,7 +138,7 @@ export default class Settings extends React.Component{
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map_type' title='Map Type' multiple={false}>
+                            <GiftedForm.SelectWidget name='map_type' title='Map Type' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title={I18n.t('standard')} value='standard' />
                                 <GiftedForm.OptionWidget title={I18n.t('satellite')} value='satellite' />
                             </GiftedForm.SelectWidget>
@@ -151,7 +151,7 @@ export default class Settings extends React.Component{
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='map_traffic' title='Real Time Traffic' multiple={false}>
+                            <GiftedForm.SelectWidget name='map_traffic' title='Real Time Traffic' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title={I18n.t('yes')} value='yes' />
                                 <GiftedForm.OptionWidget title={I18n.t('no')} value='no' />
                             </GiftedForm.SelectWidget>
