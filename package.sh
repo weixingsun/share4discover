@@ -5,6 +5,14 @@ cp android/app/google-services-release.json android/app/google-services.json
 #keytool -genkey -v -keystore share-release-key.keystore -alias share-key-alias -keyalg RSA -keysize 2048 -validity 10000
 #CN=Weixing Sun, OU=Dev, O=DaBo, L=Beijing, ST=BJ, C=CN
 
+##################################################################
+#ver=$1
+ver0=`grep version package.json|awk '{print $2}'`  ###  "1.0.6",
+ver1=`echo $ver0| sed "s/.$//"`    ###  "1.0.6"
+cat android/app/build.gradle |sed -e "s/\"[[:digit:]].[[:digit:]].[[:digit:]]\"/$ver1/g" > android/app/build.gradle.latest
+cp android/app/build.gradle.latest android/app/build.gradle
+##################################################################
+
 cd android && ./gradlew clean && ./gradlew assembleRelease
 sleep 5
 cd ..
