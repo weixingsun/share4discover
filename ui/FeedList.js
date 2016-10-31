@@ -12,6 +12,7 @@ import Swipeout from 'react-native-swipeout';
 import RssReader from './RssReader';
 import YqlReader from './YqlReader';
 import FormFeed from './FormFeed';
+import OneSignal from 'react-native-onesignal';
 
 export default class FeedList extends React.Component {
     constructor(props) {
@@ -38,14 +39,17 @@ export default class FeedList extends React.Component {
     componentWillMount(){
         this.load();
     }
-    emptyDB(){
+    deleteAllFeeds(){
         let self=this
         Alert.alert(
             "Delete",
-            "Do you want to delete all rows ? ",
+            "Do you want to delete all feed sources ? ",
             [
                 {text:"Cancel" },
-                {text:"OK", onPress:()=>Store.emptyFeedList() },
+                {text:"OK", onPress:()=>{
+                    Store.emptyFeedList() 
+                    self.deleteAllTags()
+                }},
             ]
         );
     }
@@ -66,8 +70,8 @@ export default class FeedList extends React.Component {
         let total ={}
         arr.map((item)=>{
           let obj = JSON.parse(item)
-          if(total[obj.type]) total[obj.type].push(item)
-          else total[obj.type] = [item]
+          if(total[obj.source]) total[obj.source].push(item)
+          else total[obj.source] = [item]
         })
         //alert(JSON.stringify(total))
         var keys = Object.keys(total);
@@ -87,26 +91,26 @@ export default class FeedList extends React.Component {
         })
     }
     openFeed(json){
-        if(json.type==='rss'){
+        if(json.source==='rss'){
             this.props.navigator.push({
                 component: RssReader,
                 passProps: {navigator:this.props.navigator,url:json.url},
             });
-        }else if(json.type==='yql'){
+        }else if(json.source==='yql'){
             this.props.navigator.push({
                 component: YqlReader,
                 passProps: {navigator:this.props.navigator,json:json},
             });
-        }else if(json.type==='web'){
-            this.props.navigator.push({
-                component: WebReader,
-                passProps: {navigator:this.props.navigator,url:json.url},
-            });
-        }else if(json.type==='share'){
-            this.props.navigator.push({
-                component: ShareReader,
-                passProps: {navigator:this.props.navigator,url:json.url},
-            });
+        //}else if(json.source==='web'){
+        //    this.props.navigator.push({
+        //        component: WebReader,
+        //        passProps: {navigator:this.props.navigator,url:json.url},
+        //    });
+        }else if(json.source==='share'){
+            //this.props.navigator.push({
+            //    component: ShareReader,
+            //    passProps: {navigator:this.props.navigator,url:json.url},
+            //});
         }
     }
     openJsonAPI(name){
@@ -136,11 +140,41 @@ export default class FeedList extends React.Component {
             "Do you want to delete this row ? ",
             [
                 {text:"Cancel" },
-                {text:"OK", onPress:()=>self.deleteFeed(data) },
+                {text:"OK", onPress:()=>{
+                    self.deleteFeed(data) 
+                    self.delTag(data)
+                }},
             ]
         );
     }
+    sendTag(json){
+        //alert('sendTag() '+JSON.stringify(json))
+        OneSignal.sendTag(json.name, json.area);
+    }
+    getAllTags(){
+        OneSignal.getTags((receivedTags) => {
+            alert('getTags() '+JSON.stringify(receivedTags))
+        });
+    }
+    delTag(str){
+        let json = JSON.parse(str)
+        alert('delTag() '+json.name)
+        OneSignal.deleteTag(json.name);
+    }
+    deleteAllTags(){
+        //alert('clearAllTags() '+JSON.stringify(json))
+        //OneSignal.deleteTag(json.name);
+        OneSignal.getTags((receivedTags) => {
+            Object.keys(receivedTags).forEach(function(key,index) {
+                OneSignal.deleteTag(key);
+            });
+        });
+    }
+    sendNotificationTag(json){
+        OneSignal.postNotificationTag()
+    }
     _renderSwipeoutRow(rowData){
+      let json = JSON.parse(rowData)
       let rightButton = [{
           text:'Modify',
           backgroundColor:'#ff6f00',
@@ -150,9 +184,19 @@ export default class FeedList extends React.Component {
           backgroundColor:'#ff0000',
           onPress:()=>this.deleteFeedAlert(rowData),
         },]
+      let leftButton = []
+      //if(json.source)alert(JSON.stringify(json))
+      if(json.source==='share'){
+        leftButton = [{
+            text:'sendNotificationTag',
+            backgroundColor:'#0000ff',
+            onPress:()=>this.sendNotificationTag(json),
+          }
+        ]
+      }
       return (
       <Swipeout
-        //left={rowData.left}
+        left={leftButton}
         right={rightButton}
         rowID={rowData}
         //sectionID={sectionID}
@@ -162,16 +206,16 @@ export default class FeedList extends React.Component {
         //onOpen={(sectionID, rowID) => this._handleSwipeout(sectionID, rowID) }
         //scroll={event => this._allowScroll(event)}
       >
-          {this._renderRow(rowData)}
+          {this._renderRow(json)}
       </Swipeout>
       )
     }
-    _renderRow(data) {
-        let json = JSON.parse(data)
+    _renderRow(json) {
+        //let json = JSON.parse(data)
         if(!json.name) return
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
-        let type = json.type
+        //let source = json.source?json.source:json.type
         let name = Global.trimTitle(json.name)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
@@ -184,7 +228,7 @@ export default class FeedList extends React.Component {
                     size={20}
                     //color={this.props.msg.ask=='false'?'blue':'gray'}
                     color={'gray'}
-                    name={Global.FEED_ICONS[type]}
+                    name={Global.FEED_ICONS[json.source]}
                   />
                 </View>
                 <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
@@ -212,7 +256,9 @@ export default class FeedList extends React.Component {
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={40} onPress={()=>this.emptyDB()} />
+                    <Icon name={'fa-bell-o'} color={'#333333'} size={40} onPress={()=>this.getAllTags()} />
+                    <View style={{width:20}} />
+                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={40} onPress={()=>this.deleteAllFeeds()} />
                     <View style={{width:20}} />
                     <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addRss()} />
                     <View style={{width:10}} />
@@ -246,6 +292,7 @@ var styles = StyleSheet.create({
     listViewContainer: {
         flex: 1,
         flexDirection: 'column',
+        height:Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-Style.BOTTOM_BAR_HEIGHT-20,
     },
     buttonContainer: {
         flex: 1,

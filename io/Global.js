@@ -103,6 +103,7 @@ module.exports = {
       rss:'fa-rss',
       yql:'fa-yahoo',
       web:'fa-internet-explorer',
+      share:'fa-bell',
     },
     CAT_COLORS:{
       buy:  '#990000',

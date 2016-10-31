@@ -90,6 +90,7 @@ I18n.translations = {
     host:'Host',
     condition:'Condition',
     sound:'Sound',
+    source:'Source',
   },
   fr: {
     share: 'Share',
@@ -179,6 +180,7 @@ I18n.translations = {
     host:'Hôte',
     condition:'Condition',
     sound:'Sonner',
+    source:'Source',
   },
   zh: {
     share: '分享',
@@ -268,5 +270,6 @@ I18n.translations = {
     host:'主机',
     condition:'条件',
     sound:'声音',
+    source:'来源',
   },
 }

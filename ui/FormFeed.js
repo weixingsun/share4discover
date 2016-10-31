@@ -4,6 +4,7 @@ import {Alert, DeviceEventEmitter, Image, Linking, ListView, Picker, Platform, S
 //import jsonpath from '../io/jsonpath'
 import Store from '../io/Store'
 import Global from '../io/Global'
+import Net from '../io/Net'
 import Style from './Style'
 import Loading from './Loading'
 //import PlaceForm from './PlaceForm'
@@ -13,6 +14,7 @@ import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
 import xml2js from 'xml2js'
 import xpath from 'xml2js-xpath'
+import OneSignal from 'react-native-onesignal';
 
 var styles = StyleSheet.create({
     container: {
@@ -50,14 +52,14 @@ export default class FormFeed extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.feed_types = { 
+        this.feed_sources = { 
+          share:{type:true,cat:true,area:false,name:false},  //freq:false
             rss:{url:true,name:false}, 
             yql:{yql:true,name:true}, 
-            web:{url:true,name:false},
-          share:{cat:true,loc:false,name:false},
+            //web:{url:true,name:false},
         }
         this.state = {
-            type: 'rss',
+            source: 'rss',
             form: {
                 url:   '',
                 name:  '',
@@ -66,9 +68,9 @@ export default class FormFeed extends React.Component{
     }
     getValueObj(str){
         let fields = JSON.parse(this.props.feed)
-        let type = fields.type
-        delete fields.type
-        return {type:type, fields:fields}
+        let source = fields.source
+        delete fields.source
+        return {source:source, fields:fields}
     }
     componentWillMount() {
         if(this.props.feed){
@@ -76,7 +78,7 @@ export default class FormFeed extends React.Component{
             let obj = this.getValueObj(this.props.feed)
             //alert(JSON.stringify(obj))
             this.setState({
-                type: obj.type,
+                source: obj.source,
                 form: obj.fields,
             });
         }
@@ -87,10 +89,10 @@ export default class FormFeed extends React.Component{
         //this.event.remove();
     }
     handleValueChange(form){
-        if(typeof form.type === 'object'){
-            if(form.type[0] !=null && typeof form.type[0] === 'string'){
+        if(typeof form.source === 'object'){
+            if(form.source[0] !=null && typeof form.source[0] === 'string'){
                 //form.type = form.type[0]
-                this.setState({ type:form.type[0] })
+                this.setState({ source:form.source[0] })
             }
         }
         //alert('form:'+JSON.stringify(form))
@@ -98,13 +100,14 @@ export default class FormFeed extends React.Component{
     onSubmit(values){
         //alert(JSON.stringify(values))
         Store.insertFeed(values)
+        OneSignal.sendTag(values.name, values.area);
         DeviceEventEmitter.emit('refresh:FeedList',values);
         this.props.navigator.pop()
     }
     getFeedName(formValues){
         let self=this
         //alert(JSON.stringify(formValues))
-        if(formValues.type==='rss'){
+        if(formValues.source==='rss'){
           fetch(formValues.url).then(function(result){
             if (result.status===200){
                 xml2js.parseString(result._bodyText, function(err,json){
@@ -115,16 +118,20 @@ export default class FormFeed extends React.Component{
                 })
             }
           })
-        }else if(formValues.type==='yql'){
+        }else if(formValues.source==='yql'){
           let title = formValues.yql.split('from')[1]
           //let table = arr[0].split('from')[1]
           self.setState({ form:{ ...self.state.form, name:title }, })
-        }else if(formValues.type==='web'){
+        }else if(formValues.source==='web'){
           let title = formValues.url
           self.setState({ form:{ ...self.state.form, name:title }, })
-        }else if(formValues.type==='share'){
-          let title = formValues.cat
-          self.setState({ form:{ ...self.state.form, name:title }, })
+        }else if(formValues.source==='share'){
+          Net.getLocation().then((gps)=>{
+              //alert(JSON.stringify(gps))
+              let title = formValues.type+'_'+formValues.cat
+              let area  = (gps.country_code+'_'+gps.city).toLowerCase() //+'_'+formValues.freq
+              self.setState({ form:{ ...self.state.form, area:area, name:title } })
+          })
         }
     }
     cap1(str){
@@ -151,7 +158,6 @@ export default class FormFeed extends React.Component{
         })
     }
     render() {
-        //alert('render.map:'+this.state.map+'\nmap.type='+this.state.map_type+'\nmap.traffic='+this.state.map_traffic)
         let title1 = this.props.feed==null?'Create a Feed Source':'Edit Feed: '+this.state.form.name
         let submit_name = (this.state.form.name==='')?'Validate':'Submit'
         return(
@@ -178,21 +184,20 @@ export default class FormFeed extends React.Component{
                     defaults={this.state.form}
                     >
                         <GiftedForm.ModalWidget
-                            title='Type'
-                            name='type'
-                            display={this.state.type.toUpperCase()}
-                            value={this.state.type}
+                            title={I18n.t('source')}
+                            name='source'
+                            display={this.state.source.toUpperCase()}
+                            value={this.state.source}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='type' title='Type' multiple={false}>
+                            <GiftedForm.SelectWidget name='source' title='Source' multiple={false} onSelect={()=>this.props.navigator.pop()}>
                                 <GiftedForm.OptionWidget title='RSS' value='rss' />
-                                <GiftedForm.OptionWidget title='WEB' value='web' />
                                 <GiftedForm.OptionWidget title='YQL' value='yql' />
                                 <GiftedForm.OptionWidget title='Share' value='share' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        {this.renderTypeFields(this.feed_types[this.state.type])}
+                        {this.renderTypeFields(this.feed_sources[this.state.source])}
                         <GiftedForm.SubmitWidget
                             title={submit_name}
                             widgetStyles={{
@@ -204,7 +209,7 @@ export default class FormFeed extends React.Component{
                                 if (isValid === true) {
                                     //alert(JSON.stringify(values))
                                     postSubmit();
-                                    if(typeof values.type === 'object') values.type=values.type[0]
+                                    if(typeof values.source === 'object') values.source=values.source[0]
                                     //alert(JSON.stringify(values))
                                     if(values.name===''){
                                         this.getFeedName(values)
@@ -220,3 +225,4 @@ export default class FormFeed extends React.Component{
         )
     }
 };
+//<GiftedForm.OptionWidget title='WEB' value='web' />
