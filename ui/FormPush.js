@@ -232,11 +232,8 @@ export default class FormFeed extends React.Component{
                   <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                 </View>
              }
-             rightButton={
-                <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={this.getAllTags}  />
-                </View>
-             }
+             //<Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={this.getAllTags}  />
+             //rightButton={}
           />
           <View style={styles.container}>
                 <GiftedForm

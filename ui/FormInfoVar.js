@@ -271,10 +271,7 @@ export default class FormInfoVar extends Component {
     onSubmit(values) {
         var self = this;
         let latlng = {latitude:values.lat, longitude:values.lng}
-        if(this.checkTooFarAway(latlng)){
-            alert('Your location is too far away')
-            return
-        }
+        if(this.checkTooFarAway(latlng)<0) return
         self.deleteEmptyFields(values)
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
@@ -425,13 +422,17 @@ export default class FormInfoVar extends Component {
       //this.setState({gps:true});
     }
     checkTooFarAway(position){
-        let maxDelta = 0.2
-        if(!this.state.pos) return false
+        let maxDelta = 0.3
+        if(!this.state.pos) {
+            alert('Getting your location...')
+            return -1
+        }
         let latDiff = Math.abs(position.latitude-this.state.pos.latitude)
         let lngDiff = Math.abs(position.longitude-this.state.pos.longitude)
         if(latDiff>maxDelta || lngDiff>maxDelta){
-            return true
-        }else return false
+            alert('You are creating a remote event, which is only 1/day')
+            return 1
+        }else return 0
     }
     showActionIcons(){
         //<Icon name={'fa-weibo'} size={40} color={'red'} onPress={()=>this.postWB({type:'text',title:'this is a test'}) } />

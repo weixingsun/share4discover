@@ -37,20 +37,6 @@ export default class PushList extends React.Component {
     componentWillMount(){
         this.load();
     }
-    deleteAllFeeds(){
-        let self=this
-        Alert.alert(
-            "Delete",
-            "Do you want to delete all push listeners ? ",
-            [
-                {text:"Cancel" },
-                {text:"OK", onPress:()=>{
-                    Store.deleteAllPush() 
-                    self.deleteAllTags()
-                }},
-            ]
-        );
-    }
     load(){
         var _this=this;
         //Store.delete(Store.FEED_LIST)
@@ -121,12 +107,32 @@ export default class PushList extends React.Component {
     }
     getAllTags(){
         OneSignal.getTags((receivedTags) => {
-            alert('getTags() '+JSON.stringify(receivedTags))
+          if(receivedTags==null) {
+            alert('No Push Listener')
+          }else{
+            let tag_keys = Object.keys(receivedTags)
+            let total = ''
+            tag_keys.map((key)=>{
+                let names = key.split('_')
+                let name = I18n.t(names[0]) +' '+ I18n.t(names[1])
+                total+= ' --> '+name+': '+receivedTags[key]+'\n'
+            })
+            let self=this
+            Alert.alert(
+                "Delete",
+                "Do you want to delete following push listeners? \n"+total,
+                [
+                  {text:"Cancel" },
+                  {text:"OK", onPress:()=>{
+                    Store.deleteAllPush()
+                    self.deleteAllTags()
+                    self.push_list=[]
+                    self.setState({ dataSource:this.ds.cloneWithRows([]) })
+                  }},
+                ]
+            );
+          }
         });
-    }
-    delTag(str){
-        let json = JSON.parse(str)
-        OneSignal.deleteTag(json.name);
     }
     deleteAllTags(){
         //alert('clearAllTags() '+JSON.stringify(json))
@@ -136,6 +142,10 @@ export default class PushList extends React.Component {
                 OneSignal.deleteTag(key);
             });
         });
+    }
+    delTag(str){
+        let json = JSON.parse(str)
+        OneSignal.deleteTag(json.name);
     }
     _renderSwipeoutRow(rowData){
       let json = JSON.parse(rowData)
@@ -219,7 +229,7 @@ export default class PushList extends React.Component {
               //<Icon name={'fa-bell-o'} color={'#333333'} size={30} onPress={()=>this.getAllTags()} />
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.deleteAllFeeds()} />
+                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.getAllTags()} />
                     <View style={{width:30}} />
                     <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addPush()} />
                     <View style={{width:10}} />
