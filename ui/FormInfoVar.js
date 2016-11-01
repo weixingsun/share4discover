@@ -118,6 +118,7 @@ export default class FormInfoVar extends Component {
                 this.s1uid=device.userId
             }
         });
+        this.getCountryCode()
     }
     componentDidMount(){
         DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
@@ -128,6 +129,13 @@ export default class FormInfoVar extends Component {
         this.evt.remove()
         DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
         //DeviceEventEmitter.removeListener('refresh:FormInfoVar',(data)=>this.updatePics(data));
+    }
+    getCountryCode(){
+        let self=this
+        Net.getLocation().then((gps)=>{
+            self.country=gps.country_code.toLowerCase()
+            self.city   =gps.city.toLowerCase()
+        })
     }
     updatePics(pics){
         //alert('updatePics()'+JSON.stringify(pics))
@@ -234,6 +242,10 @@ export default class FormInfoVar extends Component {
         }
         this.ggkey=Global.ggkey
     }
+    deleteEmptyFields(obj){
+        Object.keys(obj).forEach((key) =>
+          (obj[key] === undefined || obj[key] === null || obj[key] === '') && delete obj[key]);
+    }
     fixFormData(values){
         if(values.owner == null) {
           alert('Please login first, go to settings')
@@ -244,11 +256,12 @@ export default class FormInfoVar extends Component {
         if(values.hasOwnProperty('type') && typeof values.type ==='object')  values.type = values.type[0]
         values.type=values.type.toLowerCase()
         if(values.hasOwnProperty('pics') && typeof values.pics ==='object')  values.pics = values.pics.join(',')
-        if(values.hasOwnProperty('ask')) delete values.ask
+        //if(values.hasOwnProperty('ask')) delete values.ask
         values.lat = parseFloat(values.lat).toFixed(6)
         values.lng = parseFloat(values.lng).toFixed(6)
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
-        //alert(JSON.stringify(values))
+        values.country=this.country
+        values.city=this.city
         this.merge_into(values,this.hidden_fields)
         if(this.s1uid) values['s1uid']=this.s1uid
     }
@@ -262,6 +275,7 @@ export default class FormInfoVar extends Component {
             alert('Your location is too far away')
             return
         }
+        self.deleteEmptyFields(values)
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
         Alert.alert(

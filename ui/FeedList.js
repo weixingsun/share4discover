@@ -158,7 +158,6 @@ export default class FeedList extends React.Component {
     }
     delTag(str){
         let json = JSON.parse(str)
-        alert('delTag() '+json.name)
         OneSignal.deleteTag(json.name);
     }
     deleteAllTags(){
@@ -169,9 +168,6 @@ export default class FeedList extends React.Component {
                 OneSignal.deleteTag(key);
             });
         });
-    }
-    sendNotificationTag(json){
-        OneSignal.postNotificationTag()
     }
     _renderSwipeoutRow(rowData){
       let json = JSON.parse(rowData)
@@ -186,14 +182,14 @@ export default class FeedList extends React.Component {
         },]
       let leftButton = []
       //if(json.source)alert(JSON.stringify(json))
-      if(json.source==='share'){
-        leftButton = [{
-            text:'sendNotificationTag',
-            backgroundColor:'#0000ff',
-            onPress:()=>this.sendNotificationTag(json),
-          }
-        ]
-      }
+      //if(json.source==='share'){
+        //leftButton = [{
+        //    text:'sendNotificationTag',
+        //    backgroundColor:'#0000ff',
+        //    onPress:()=>this.sendNotificationTag(json),
+        //  }
+        //]
+      //}
       return (
       <Swipeout
         left={leftButton}
@@ -254,12 +250,11 @@ export default class FeedList extends React.Component {
                     <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
+              //<Icon name={'fa-bell-o'} color={'#333333'} size={30} onPress={()=>this.getAllTags()} />
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'fa-bell-o'} color={'#333333'} size={40} onPress={()=>this.getAllTags()} />
-                    <View style={{width:20}} />
-                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={40} onPress={()=>this.deleteAllFeeds()} />
-                    <View style={{width:20}} />
+                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.deleteAllFeeds()} />
+                    <View style={{width:30}} />
                     <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addRss()} />
                     <View style={{width:10}} />
                  </View>
