@@ -76,7 +76,6 @@ export default class Main extends Component {
           //OneSignal.registerForPushNotifications();
       }
       this.checkSettingsChange();
-      this.notification();
   }
   openPage(page,data){
       this.props.navigator.push({
@@ -140,18 +139,7 @@ export default class Main extends Component {
       return true;
   }
   notification(){
-    //if(Platform.OS === 'android'){
-    if(false){
-      let self=this
-      OneSignal.enableInAppAlertNotification(true);
-      OneSignal.configure({
-          //onIdsAvailable: function(device) {
-            //let userid = 'UserId = '+ device.userId;
-            //let token  = 'PushToken = '+ device.pushToken;
-            //alert('onesignal.notification:\n'+userid+'\n'+token)
-          //},
-          onNotificationOpened: function(message, data, isActive) {
-            //alert('onesignal:'+JSON.stringify(data))
+      /*onNotificationOpened: function(message, data, isActive) {
             if(data.custom){
               //self.openPage(Note,data)
               self.sendCustomNoteURL(data)
@@ -160,10 +148,7 @@ export default class Main extends Component {
             }else if (data.p2p_notification && data.p2p_notification.key) {
               //self.openShareInfo(data.p2p_notification.key.split('#')[0])
               self.sendShareReadReplyURL(data.p2p_notification)
-            }
-          }
-      });
-    }
+            }*/
   }
   sendCustomNoteURL(note){ //{custom:1,title,content}
       let str64=encodeURI(JSON.stringify(note))
