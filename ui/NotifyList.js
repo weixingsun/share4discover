@@ -14,7 +14,7 @@ import Detail from "./Detail"
 import FormInfo from './FormInfoVar'
 import RssReader from './RssReader';
 import YqlReader from './YqlReader';
-import FormFeed from './FormFeed';
+//import FormFeed from './FormFeed';
 import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
 
@@ -260,7 +260,7 @@ export default class NotifyList extends Component {
   }
   render() {
     //let ds=this.ds.cloneWithRows(this.all_notes)
-    this.all_notes = this.props.mails.concat(this.state.feed_list)
+    this.all_notes = this.props.mails //.concat(this.state.feed_list)
     //alert(JSON.stringify(this.all_notes))
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)

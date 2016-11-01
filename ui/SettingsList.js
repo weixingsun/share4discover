@@ -6,8 +6,9 @@ import Login from './Login'
 import Net from '../io/Net'
 import Style from './Style'
 import ListJson from './ListJson'
-import FeedList from './FeedList'
-import UsbList from './UsbList'
+import PushList from './PushList'
+//import FeedList from './FeedList'
+//import UsbList from './UsbList'
 //import BleList from './BleList'
 import MapSettings from './MapSettings'
 import About from './About'
@@ -78,19 +79,19 @@ export default class SettingsList extends React.Component {
         )
         //}
     }
-    renderJson(){
+    renderPush(){
         //if(Global.mainlogin=='fb:weixing.sun@gmail.com'){
         var DEVICE_WIDTH = Dimensions.get('window').width
         return (
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
-                      component: ListJson,
+                      component: PushList,
                       passProps: {navigator:this.props.navigator,},
                   })}>
                       <View style={{width:DEVICE_WIDTH/3}} />
                       <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-plug'} size={30}/>
+                          <Icon name={'fa-bell'} size={30}/>
                       </View>
-                      <Text>{I18n.t('plugin')+' '+I18n.t('settings')}</Text>
+                      <Text>{I18n.t('push')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
         )
         //}
@@ -208,11 +209,12 @@ export default class SettingsList extends React.Component {
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   {this.renderLogin()}
-                  {this.renderFeed()}
+                  {this.renderPush()}
               </ScrollView>
           </View>
         );
         //{this.renderUSB()}
         //{this.renderBLE()}
+        //{this.renderFeed()}
     }
 }

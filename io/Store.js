@@ -3,6 +3,7 @@ import { AsyncStorage } from 'react-native';
 var deviceStorage = {
         API_LIST:  "api_list",
         FEED_LIST: "feed_list",
+        PUSH_LIST: "push_list",
         MAP_LIST:  "map_list",
         PLACE_LIST:"place_list",
         SETTINGS:  "settings",
@@ -43,12 +44,28 @@ var deviceStorage = {
 			return value;
 		});
 	},
-        insertFeedData: function() {
-                //this.insertFeed('rss|http://rss.sina.com.cn/news/china/focus15.xml');
-                //this.insertFeed('rss|http://rss.cnn.com/rss/edition.rss');
-                //this.insertFeed('rss|http://feeds.bbci.co.uk/news/rss.xml');
-                let array = ['rss|http://rss.cnn.com/rss/edition.rss','rss|http://feeds.bbci.co.uk/news/rss.xml','rss|http://rss.sina.com.cn/news/china/focus15.xml']
-                this.save(this.FEED_LIST,array)
+        deleteAllPush: function(){
+                this.delete(this.PUSH_LIST)
+        },
+        insertPush: function(obj){
+                let strObj = JSON.stringify(obj)
+                let self = this
+                this.get(this.PUSH_LIST).then(function(json){
+                    let list = []
+                    if(json) list = json
+                    self.removeArrayElement(list,strObj)
+                    list.push(strObj)
+                    self.save(self.PUSH_LIST,list);
+                })
+        },
+        deletePush: function(data){
+                let self = this
+                this.get(this.PUSH_LIST).then(function(array){
+                    if(array){
+                        self.removeArrayElement(array,data)
+                        self.save(self.PUSH_LIST,array);
+                    }
+                })
         },
         removeArrayElement: function(arr, item) {
                 for(var i = arr.length; i--;) {

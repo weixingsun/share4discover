@@ -52,38 +52,30 @@ export default class FormFeed extends React.Component{
             rowHasChanged: (row1, row2) => row1 !== row2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
-        this.feed_sources = { 
-          share:{type:true,cat:true,city:false,name:false},  //freq:false
-            rss:{url:true,name:false}, 
-            yql:{yql:true,name:true}, 
-            //web:{url:true,name:false},
+        this.push_fields = { 
+            type:true,
+            cat:true,
+            city:false,
+            name:false
         }
         this.state = {
-            source: 'share',
             form: {
                 type:'car',
                 cat:'rent0',
+                city:'',
                 name:'',
             }
         };
-        this.formName='newFeedForm'
-    }
-    getValueObj(str){
-        let fields = JSON.parse(this.props.feed)
-        let source = fields.source
-        delete fields.source
-        return {source:source, fields:fields}
+        this.formName='newPushForm'
     }
     componentWillMount() {
         GiftedFormManager.reset(this.formName);
-        if(this.props.feed){
-            //alert(JSON.stringify(this.props.feed))
-            let obj = this.getValueObj(this.props.feed)
-            //alert(JSON.stringify(obj))
+        if(this.props.push){
             this.setState({
-                source: obj.source,
-                form: obj.fields,
+                form: this.props.push
             });
+        }else{
+            this.getFeedName()
         }
     }
     componentDidMount(){
@@ -91,51 +83,53 @@ export default class FormFeed extends React.Component{
     componentWillUnmount(){
         //this.event.remove();
     }
+    getAllTags(){
+        OneSignal.getTags((receivedTags) => {
+          if(receivedTags==null) {
+            alert('No Push Listener')
+          }else{
+            let tag_keys = Object.keys(receivedTags)
+            let total = ''
+            tag_keys.map((key)=>{
+                let names = key.split('_')
+                let name = I18n.t(names[0]) +' '+ I18n.t(names[1])
+                total+= ' --> '+name+': '+receivedTags[key]+'\n'
+            })
+            alert('Current Push Listeners: \n'+total)
+          }
+        });
+    }
     handleValueChange(form){
-        if(typeof form.source === 'object'){
-            if(form.source[0] !=null && typeof form.source[0] === 'string'){
-                //form.type = form.type[0]
-                this.setState({ source:form.source[0] })
+        if(typeof form.type === 'object'){
+            if(form.type[0] !=null && typeof form.type[0] === 'string'){
+                this.setState({ form:{...this.state.form,type:form.type[0]} })
+                this.getFeedName(form)
+            }
+        }else if(typeof form.cat === 'object'){
+            if(form.cat[0] !=null && typeof form.cat[0] === 'string'){
+                this.setState({ form:{...this.state.form,cat:form.cat[0]} })
+                this.getFeedName(form)
             }
         }
         //alert('form:'+JSON.stringify(form))
     }
     onSubmit(values){
         //alert(JSON.stringify(values))
-        Store.insertFeed(values)
+        Store.insertPush(values)
         OneSignal.sendTag(values.name, values.city);
         DeviceEventEmitter.emit('refresh:FeedList',values);
         this.props.navigator.pop()
     }
-    getFeedName(formValues){
-        let self=this
-        //alert(JSON.stringify(formValues))
-        if(formValues.source==='rss'){
-          fetch(formValues.url).then(function(result){
-            if (result.status===200){
-                xml2js.parseString(result._bodyText, function(err,json){
-                    let title = xpath.find(json, "/rss/channel/title")[0];
-                    self.setState({
-                        form:{ ...self.state.form, name:title },
-                    })
-                })
-            }
-          })
-        }else if(formValues.source==='yql'){
-          let title = formValues.yql.split('from')[1]
-          //let table = arr[0].split('from')[1]
-          self.setState({ form:{ ...self.state.form, name:title }, })
-        }else if(formValues.source==='web'){
-          let title = formValues.url
-          self.setState({ form:{ ...self.state.form, name:title }, })
-        }else if(formValues.source==='share'){
-          Net.getLocation().then((gps)=>{
-              //alert(JSON.stringify(gps))
-              let title = formValues.type+'_'+formValues.cat
-              let area  = (gps.country_code+'_'+gps.city).toLowerCase() //+'_'+formValues.freq
-              self.setState({ form:{ ...self.state.form, city:area, name:title } })
-          })
-        }
+    getFeedName(form){
+      let self=this
+      if(form){
+          self.setState({ form:{ ...self.state.form, name:form.type+'_'+form.cat } }) 
+      }else Net.getLocation().then((gps)=>{
+            //alert(JSON.stringify(gps))
+            let title = this.state.form.type+'_'+this.state.form.cat
+            let area  = (gps.country_code+' '+gps.city).toLowerCase() //+'_'+formValues.freq
+            self.setState({ form:{ ...self.state.form, city:area, name:title } })
+        })
     }
     renderField(name,editable){
       if(name==='type')
@@ -229,11 +223,7 @@ export default class FormFeed extends React.Component{
         })
     }
     render() {
-        let title1 = this.props.feed==null?'Create a Feed Source':'Edit Feed: '+this.state.form.name
-        let isShare = this.state.form.source==='share'
-        let shareNotComplete = this.state.form.name===''||this.state.form.city===''
-        let shareN = isShare&&shareNotComplete
-        let submit_name = (shareN||!isShare)?'Validate':'Submit'
+        let title1 = this.props.feed==null?'Create a Push Listener':'Edit Listener: '+this.state.form.name
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: title1}}
@@ -244,7 +234,7 @@ export default class FormFeed extends React.Component{
              }
              rightButton={
                 <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={() => Linking.openURL('http://ctrlq.org/rss') } />
+                  <Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={this.getAllTags}  />
                 </View>
              }
           />
@@ -257,23 +247,9 @@ export default class FormFeed extends React.Component{
                     //validators={ this.validators }
                     defaults={this.state.form}
                     >
-                        <GiftedForm.ModalWidget
-                            title={I18n.t('source')}
-                            name='source'
-                            display={I18n.t(this.state.source)}
-                            value={this.state.source}
-                            //validationResults={this.state.validationResults}
-                        >
-                            <GiftedForm.SeparatorWidget />
-                            <GiftedForm.SelectWidget name='source' title='Source' multiple={false} onSelect={()=>this.props.navigator.pop()}>
-                                <GiftedForm.OptionWidget title='RSS' value='rss' />
-                                <GiftedForm.OptionWidget title='YQL' value='yql' />
-                                <GiftedForm.OptionWidget title='Share' value='share' />
-                            </GiftedForm.SelectWidget>
-                        </GiftedForm.ModalWidget>
-                        {this.renderFieldsBySource(this.feed_sources[this.state.source])}
+                        {this.renderFieldsBySource(this.push_fields)}
                         <GiftedForm.SubmitWidget
-                            title={submit_name}
+                            title={I18n.t('submit')}
                             widgetStyles={{
                                 submitButton: {
                                     backgroundColor: '#6495ED',
@@ -283,13 +259,7 @@ export default class FormFeed extends React.Component{
                                 if (isValid === true) {
                                     //alert(JSON.stringify(values))
                                     postSubmit();
-                                    if(typeof values.source === 'object') values.source=values.source[0]
-                                    //alert(JSON.stringify(values))
-                                    if(values.name==='' || values.city===''){
-                                        this.getFeedName(values)
-                                    }else{
-                                        //this.onSubmit(values)
-                                    }
+                                    this.onSubmit(values)
                                 }
                             }}
                        />

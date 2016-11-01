@@ -10,6 +10,7 @@ I18n.translations = {
     home:'Home',
     uuid:'UUID',
     hi: 'Hi',
+    list: 'List',
     help:'Help',
     update: 'Update',
     about: 'About',
@@ -39,6 +40,7 @@ I18n.translations = {
     ble: 'Bluetooth LE',
     map: 'Map',
     //form
+    submit:'Submit',
     ask: 'Ask',
     title: 'Title',
     type: 'Type',
@@ -91,6 +93,9 @@ I18n.translations = {
     condition:'Condition',
     sound:'Sound',
     source:'Source',
+    city:'City',
+    name:'Name',
+    push:'Push',
   },
   fr: {
     share: 'Share',
@@ -100,6 +105,7 @@ I18n.translations = {
     home:'Home',
     uuid:'UUID',
     hi: 'Salut',
+    list: 'List',
     help:'Aidez-moi',
     update: 'Mettre à jour',
     about: 'Sur',
@@ -129,6 +135,7 @@ I18n.translations = {
     ble: 'Bluetooth LE',
     map: 'Carte',
     //form
+    submit:'Submit',
     ask: 'Demander',
     title: 'Titre',
     type: 'Type',
@@ -181,6 +188,9 @@ I18n.translations = {
     condition:'Condition',
     sound:'Sonner',
     source:'Source',
+    city:'City',
+    name:'Name',
+    push:'Push',
   },
   zh: {
     share: '分享',
@@ -190,6 +200,7 @@ I18n.translations = {
     home:'主页',
     uuid:'标码',
     hi: '你好',
+    list: '列表',
     help: '帮助',
     update: '更新',
     about: '关于',
@@ -219,6 +230,7 @@ I18n.translations = {
     ble: '蓝牙',
     map: '地图',
     //form
+    submit:'提交',
     ask: '求',
     title: '标题',
     type: '类型',
@@ -271,5 +283,8 @@ I18n.translations = {
     condition:'条件',
     sound:'声音',
     source:'来源',
+    city:'城市',
+    name:'名字',
+    push:'推送',
   },
 }
