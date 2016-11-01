@@ -155,6 +155,8 @@ export default class Main extends Component {
             if(data.custom){
               //self.openPage(Note,data)
               self.sendCustomNoteURL(data)
+            }else if (data.tag_notification) {
+              self.sendShareReadURL(data.tag_notification)
             }else if (data.p2p_notification && data.p2p_notification.key) {
               //self.openShareInfo(data.p2p_notification.key.split('#')[0])
               self.sendShareReadReplyURL(data.p2p_notification)
@@ -168,6 +170,10 @@ export default class Main extends Component {
       let url='share://shareplus.co.nf/c/'+str64;
       //alert('url='+str64)
       //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
+      Linking.openURL(url);
+  }
+  sendShareReadURL(key){
+      let url='share://shareplus.co.nf/i/'+key;
       Linking.openURL(url);
   }
   sendShareReadReplyURL(reply){

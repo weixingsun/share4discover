@@ -70,6 +70,18 @@ module.exports = {
       LIGHTBLUE: '#6EA8DA',
       DARKGRAY: '#999',
     },
+    no_rent_types: ['ticket','service'],
+    rent_cats: ['rent0','rent1','service'],
+    sec_types_no_rent: [
+            {value:'buy',icon:'ion-ios-log-in'},
+            {value:'sell',icon:'ion-ios-log-out'},
+            {value:'service',icon:'ion-ios-planet'}],
+    sec_types_all: [
+            {value:'buy',icon:'ion-ios-log-in'},
+            {value:'sell',icon:'ion-ios-log-out'},
+            {value:'rent0',icon:'ion-ios-log-in'},
+            {value:'rent1',icon:'ion-ios-log-out'},
+            {value:'service',icon:'ion-ios-planet'}],
     TYPE_ICONS: {
       house: 'ion-ios-home',
       car:   'ion-ios-car',

@@ -59,10 +59,11 @@ export default class FormFeed extends React.Component{
             //web:{url:true,name:false},
         }
         this.state = {
-            source: 'rss',
+            source: 'share',
             form: {
-                url:   '',
-                name:  '',
+                type:'car',
+                cat:'rent0',
+                name:'',
             }
         };
     }
@@ -138,6 +139,77 @@ export default class FormFeed extends React.Component{
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     renderField(name,editable){
+      if(name==='type')
+        return this.renderTypeField()
+      else if(name==='cat')
+        return this.renderCatField()
+      else
+        return this.renderTextField(name,editable)
+    }
+    renderTypeField(){
+        return (
+            <GiftedForm.ModalWidget
+                title={I18n.t('cat')}
+                name='type'
+                key='type'
+                display={I18n.t(this.state.form.type)}
+                value={this.state.form.type}
+                image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.form.type]} size={30} /></View>}
+            >
+                <GiftedForm.SeparatorWidget />
+                <GiftedForm.SelectWidget name='type' title='Category' multiple={false} onSelect={()=>this.props.navigator.pop()}>
+                    {this.renderTypeOptions()}
+                </GiftedForm.SelectWidget>
+            </GiftedForm.ModalWidget>
+        )
+    }
+    renderTypeOptions(){
+        let arr = Object.keys(Global.TYPE_ICONS)
+        return arr.map((key,i)=>{
+            return <GiftedForm.OptionWidget
+                       key={'type'+i}
+                       title={I18n.t(key)}
+                       value={key}
+                       image={(
+                           <View style={{width:80,alignItems:'center'}}>
+                               <Icon name={Global.TYPE_ICONS[key]} size={40} />
+                           </View>
+                       )} />
+        })
+    }
+    renderCatField(){
+        return (
+            <GiftedForm.ModalWidget
+                title={I18n.t('type')}
+                name='cat'
+                key='cat'
+                display={I18n.t(this.state.form.cat)}
+                value={this.state.form.cat}
+                image={<View style={{width:30,alignItems:'center'}}><Icon name={'ion-ios-list'} size={30} /></View>}
+                >
+                <GiftedForm.SeparatorWidget />
+                <GiftedForm.SelectWidget name='cat' title='Type' multiple={false} onSelect={()=>this.props.navigator.pop()}>
+                    {this.renderCatOptions()}
+                </GiftedForm.SelectWidget>
+            </GiftedForm.ModalWidget>
+        )
+    }
+    renderCatOptions(){
+        let no_rent = Global.no_rent_types.indexOf(this.state.form.type)>-1?true:false
+        let cats = no_rent?Global.sec_types_no_rent:Global.sec_types_all
+        return cats.map((key,id)=>{
+            return <GiftedForm.OptionWidget
+                    key={'cat'+id}
+                    title={I18n.t(key.value)}
+                    value={key.value}
+                    image={(
+                         <View style={{width:80,alignItems:'center'}}>
+                             <Icon name={key.icon} size={30} />
+                         </View>
+                    )} />
+        })
+    }
+    renderTextField(name,editable){
         return (
             <GiftedForm.TextInputWidget
                 key={name}
@@ -151,7 +223,7 @@ export default class FormFeed extends React.Component{
                 //validationResults={this.state.validationResults}
             />)
     }
-    renderTypeFields(obj){
+    renderFieldsBySource(obj){
         let keys = Object.keys(obj)
         return keys.map((key)=>{
             return this.renderField(key,obj[key])
@@ -186,7 +258,7 @@ export default class FormFeed extends React.Component{
                         <GiftedForm.ModalWidget
                             title={I18n.t('source')}
                             name='source'
-                            display={this.state.source.toUpperCase()}
+                            display={this.state.source}
                             value={this.state.source}
                             //validationResults={this.state.validationResults}
                         >
@@ -197,7 +269,7 @@ export default class FormFeed extends React.Component{
                                 <GiftedForm.OptionWidget title='Share' value='share' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
-                        {this.renderTypeFields(this.feed_sources[this.state.source])}
+                        {this.renderFieldsBySource(this.feed_sources[this.state.source])}
                         <GiftedForm.SubmitWidget
                             title={submit_name}
                             widgetStyles={{

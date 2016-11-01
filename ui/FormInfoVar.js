@@ -40,17 +40,17 @@ export default class FormInfoVar extends Component {
         this.lasttype=''
         this.lastcat=''
         this.time_format='YYYY-MM-DD HH:mm'
-        this.rent_cats = ['rent0','rent1','service']
-        this.sec_types_no_rent = [
-            {value:'buy',icon:'ion-ios-log-in'},
-            {value:'sell',icon:'ion-ios-log-out'},
-            {value:'service',icon:'ion-ios-planet'}]
-        this.sec_types_all = [
-            {value:'buy',icon:'ion-ios-log-in'},
-            {value:'sell',icon:'ion-ios-log-out'},
-            {value:'rent0',icon:'ion-ios-log-in'},
-            {value:'rent1',icon:'ion-ios-log-out'},
-            {value:'service',icon:'ion-ios-planet'}]
+        //this.rent_cats = ['rent0','rent1','service']
+        //this.sec_types_no_rent = [
+        //    {value:'buy',icon:'ion-ios-log-in'},
+        //    {value:'sell',icon:'ion-ios-log-out'},
+        //    {value:'service',icon:'ion-ios-planet'}]
+        //this.sec_types_all = [
+        //    {value:'buy',icon:'ion-ios-log-in'},
+        //    {value:'sell',icon:'ion-ios-log-out'},
+        //    {value:'rent0',icon:'ion-ios-log-in'},
+        //    {value:'rent1',icon:'ion-ios-log-out'},
+        //    {value:'service',icon:'ion-ios-planet'}]
         //this.GpsTick=0
         this.validators={}
         this.select_validator={ validator:(...args) => { return (args[0]==='')? false:true; }, message:'{TITLE} is required' }
@@ -60,7 +60,7 @@ export default class FormInfoVar extends Component {
         this.length_validator=(min,max)=>{ return { validator: 'isLength', arguments:[min,max],  message:'{TITLE} needs {ARGS[0]} and {ARGS[1]} chars' }}
         this.str_validator=(sep)=>{ return { validator:'contains',arguments:[sep], message:'{TITLE} is invalid' }}
         this.time_validator=(day)=>{ return { validator:'indays', arguments: [day, this.time_format], message:'{TITLE} in next {ARGS[0]} days' }}
-        this.no_rent_types = ['ticket','service'];
+        //this.no_rent_types = ['ticket','service'];
         this.rent_price_circles = ['year','quarter','month','week','day'];
         this.price_units = ['usd','gbp','eur','cny','cad','aud'];
         this.info_types = {   //type= {txt1,nmbr,txt3,addr,time}
@@ -169,7 +169,7 @@ export default class FormInfoVar extends Component {
     }
     changePriceValidator(){
         if(this.lastcat!==''){
-            if(this.rent_cats.indexOf(this.lastcat)>-1){
+            if(Global.rent_cats.indexOf(this.lastcat)>-1){
                 this.genValidator('price', this.price1_validator)
             }else{
                 this.genValidator('price', this.number_validator)
@@ -608,8 +608,8 @@ export default class FormInfoVar extends Component {
         })
     }
     renderSecondTypeOptionList(){
-        let no_rent = this.no_rent_types.indexOf(this.state.form.type)>-1?true:false
-        let cats = no_rent?this.sec_types_no_rent:this.sec_types_all
+        let no_rent = Global.no_rent_types.indexOf(this.state.form.type)>-1?true:false
+        let cats = no_rent?Global.sec_types_no_rent:Global.sec_types_all
         return cats.map((key,id)=>{
             return <GiftedForm.OptionWidget
                     key={id} 
