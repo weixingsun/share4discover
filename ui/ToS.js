@@ -3,7 +3,6 @@ import React, {Component} from 'react'
 import {Image,ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity,NativeModules,Linking } from 'react-native'
 import {Icon} from './Icon'
 import Style from './Style'
-import ToS from './ToS'
 import NavigationBar from 'react-native-navbar'
 import OneSignal from 'react-native-onesignal';
 import I18n from 'react-native-i18n';
@@ -25,22 +24,6 @@ export default class USBList extends React.Component {
       //this.openWebList = this.openWebList.bind(this);
     }
     componentWillMount() {
-        this.onesignal()
-    }
-    goToS(){
-        this.props.navigator.push({
-            component: ToS,
-            passProps: {navigator:this.props.navigator,},
-        })
-    }
-    onesignal(){
-        let self=this
-        OneSignal.configure({
-            onIdsAvailable: function(device) {
-              self.setState({ onesignal_id:device.userId })
-              //let token  = 'PushToken = '+ device.pushToken;
-            },
-        })
     }
     renderOnesignal(){
         return (
@@ -62,27 +45,9 @@ export default class USBList extends React.Component {
             </View>
         )
     }
-    renderIcon(){
-        return (
-            <View style={{flex:1,height:200,justifyContent: 'center',alignItems:'center'}}>
-                <Text style={{justifyContent:'center'}} > </Text>
-                <Text style={{justifyContent:'center'}} > </Text>
-                <Image 
-                    style={{width: 100, height: 100}}
-                    source={require('../img/icon.png')}
-                />
-                <Text style={{justifyContent:'center'}} >{I18n.t('shareplus')} {DeviceInfo.getVersion()}</Text>
-                <Text style={{justifyContent:'center'}} > </Text>
-                <Text style={{justifyContent:'center'}} > </Text>
-            </View>
-        )
-    }
     renderCopyright(){
         return (
-            <View style={{flex:1,height:200,justifyContent: 'center',alignItems:'center'}}>
-                <Text style={{justifyContent:'center'}} > </Text>
-                <Text style={{justifyContent:'center'}} > </Text>
-                <Text style={{color:'blue',textDecorationLine:'underline',textDecorationStyle:'solid',justifyContent:'center'}} onPress={() => this.goToS()} >{I18n.t('tos')}</Text>
+            <View style={{flex:1,justifyContent: 'center',alignItems:'center'}}>
                 <Text style={{justifyContent:'center'}} > </Text>
                 <Text style={{justifyContent:'center'}} >Copyright @2016 {I18n.t('shareplus')}</Text>
                 <Text style={{justifyContent:'center'}} > </Text>
@@ -90,7 +55,7 @@ export default class USBList extends React.Component {
         )
     }
     render(){
-      let titleName = I18n.t('about')+' '+I18n.t('shareplus')
+      let titleName = I18n.t('tos')
       return (
       <View>
           <NavigationBar style={Style.navbar} title={{title:titleName,}} 
@@ -100,10 +65,8 @@ export default class USBList extends React.Component {
                  </View>
               }
           />
-          {this.renderIcon()}
           {this.renderHomepage()}
           {this.renderOnesignal()}
-          {this.renderCopyright()}
       </View>
       );
     }

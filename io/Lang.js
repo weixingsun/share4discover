@@ -4,6 +4,7 @@ I18n.fallbacks = true;
 I18n.translations = {
   en: {
     share: 'Share',
+    tos: 'Terms of Service',
     msgs: 'Messages',
     my: 'My',
     shareplus: 'OpenShare',
@@ -99,6 +100,7 @@ I18n.translations = {
   },
   fr: {
     share: 'Share',
+    tos: 'Terms of Service',
     msgs: 'Messages',
     my: 'My',
     shareplus: 'OpenShare',
@@ -194,6 +196,7 @@ I18n.translations = {
   },
   zh: {
     share: '分享',
+    tos: '服务条款',
     msgs: '消息',
     my: '我的',
     shareplus: '分享家',
