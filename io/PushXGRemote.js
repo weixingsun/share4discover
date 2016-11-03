@@ -44,7 +44,7 @@ function formatTs(ts) {
     ':' + date.getSeconds();
 }
 
-function buildMessage(params, title, content) {
+function buildMessage(params, title, content, kv) {
   if (Platform.OS === 'ios') {
     params.environment = 2;
     params.message_type = 0;
@@ -59,6 +59,7 @@ function buildMessage(params, title, content) {
       content,
       title,
       vibrate: 1,
+      custom_content:kv,
     });
   }
   //let now = Date.now()
@@ -73,9 +74,9 @@ function getSecretKey() {
   return Platform.OS === 'ios' ? '111111111111111111111111111111' : '561f8ace1d11a0dacdfb4ea993e565f3';
 }
 
-function push(devToken, title, content) {
+function p2p(devToken, title, content, kv) {
   if (!devToken) return;
-  var params = buildMessage(buildGeneralParams(devToken), title, content);
+  var params = buildMessage(buildGeneralParams(devToken), title, content, kv);
   params.sign = calcSignature(
     'POST',
     'http://openapi.xg.qq.com/v2/push/single_device',
@@ -137,7 +138,7 @@ function tags(tags,op,title,content) {
 
 //////////////////////////////////////////////////////////////////////////////
 exports = module.exports = {
-  push,
+  p2p,
   broadcast,
   tags,
 };

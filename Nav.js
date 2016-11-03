@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
 import Main from './ui/Main'
 import Net from './io/Net'
+import Store from './io/Store'
 import Note from './ui/Note'
 import Detail from './ui/Detail'
 import Push from './io/Push'
@@ -35,6 +36,12 @@ export default class Nav extends Component {
             let key = data.p2p_notification.key.split('#')[0]
             this.openShare(key)
         }
+    }
+    //p2p = {alertBody:'click to view more',title:'hello'}
+    onPushReceived(data){
+        //alert('onPushReceived:'+JSON.stringify(data))
+        data.id=Math.round(+new Date()/1000)
+        Store.append(Store.PUSH_LIST+':'+data.t,data)
     }
     constructor(props) {
       super(props);

@@ -14,7 +14,6 @@ import Detail from "./Detail"
 import FormInfo from './FormInfoVar'
 import RssReader from './RssReader';
 import YqlReader from './YqlReader';
-//import FormFeed from './FormFeed';
 import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
 
@@ -24,7 +23,7 @@ export default class NotifyList extends Component {
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.all_notes=[]
       this.state={
-          feed_list:[],
+          push_list:[],
       }
       this.share_types = Object.keys(Global.TYPE_ICONS)
   }
@@ -33,11 +32,9 @@ export default class NotifyList extends Component {
   }
   load(){
       var _this=this;
-      Store.get(Store.FEED_LIST).then(function(list){
+      Store.get(Store.PUSH_LIST+':'+'r').then(function(list){
           if(list){
-              let sorted = _this.sort(list)
-              //alert(JSON.stringify(sorted))
-              _this.setState({feed_list: sorted})
+              _this.setState({push_list: list})
               //_this.setState({dataSource: _this.ds.cloneWithRows(list)});
           }
       })
@@ -68,7 +65,11 @@ export default class NotifyList extends Component {
       }
       return s_dict;
   }
-  openFeed(json){
+  openPush(json){
+      alert(JSON.stringify(json))
+      if(json.t==='r') {
+          this.getMsg(json.i)
+      }
       if(json.type==='rss'){
           this.props.navigator.push({
               component: RssReader,
@@ -131,25 +132,44 @@ export default class NotifyList extends Component {
           ]
       );
   }
-    EditFeed(data){
-        this.props.navigator.push({
-            component: FormFeed,
-            passProps: {navigator:this.props.navigator,feed:data,} //refresh:this.load},
-        })
+    removeArrayElement(arr, kv) {
+        let k=Object.keys(kv)[0]
+        for(var i = arr.length; i--;) {
+            //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
+            if(arr[i][k] === kv[k]) {
+                arr.splice(i, 1);
+            }
+        }
     }
-    deleteFeed(data){
-        Store.deleteFeed(data)
-        this.feed_list = this.feed_list.filter(function(name){ return name != data})
-        this.setState({dataSource: this.ds.cloneWithRows(this.feed_list)});
+    deletePush(id){
+        Store.deletePush({id:id})
+        this.push_list = this.state.push_list //.filter(function(item){ return item.id != id})
+        this.removeArrayElement(this.push_list,{id:id})
+        //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
+        this.setState({push_list: this.push_list});
     }
-    deleteFeedAlert(data){
+    deleteAllPush(){
+        Store.deleteAllPush()
+        this.setState({push_list: []})
+    }
+    deletePushAlert(data){
         let self=this
         Alert.alert(
             "Delete",
-            "Do you want to delete this row ? ",
+            "Do you want to delete this push message ? ",
             [
                 {text:"Cancel" },
-                {text:"OK", onPress:()=>self.deleteFeed(data) },
+                {text:"OK", onPress:()=>self.deletePush(data.id) },
+            ]
+        );
+    }
+    deleteAllPushAlert(){
+        Alert.alert(
+            "Delete",
+            "Do you want to delete all these messages ? ",
+            [
+                {text:"Cancel" },
+                {text:"OK", onPress:()=>this.deleteAllPush() },
             ]
         );
     }
@@ -161,14 +181,10 @@ export default class NotifyList extends Component {
         }]
     if(this.share_types.indexOf(rowData.type)<0)
         rightButton = [{
-          text:'Modify',
-          backgroundColor:'#ff6f00',
-          onPress:()=>this.EditFeed(rowData),
-        },{
           text:'Delete',
           backgroundColor:'#ff0000',
-          onPress:()=>this.deleteFeedAlert(rowData),
-        },]
+          onPress:()=>this.deletePushAlert(rowData),
+        }]
     return (
       <Swipeout
         //left={rowData.left}
@@ -214,25 +230,26 @@ export default class NotifyList extends Component {
       </TouchableHighlight>
     );
   }
-    _renderFeedRowView(data) {
-        let json = JSON.parse(data)
-        if(!json.name) return
-        let number = ''
+    _renderPushRowView(data) {
+        if(!data.title) return
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
-        let type = json.type
-        let name = Global.trimTitle(json.name)
+        let push_type = data.t
+        let key = data.i
+        let type = key.split('_')[0]
+        let name = Global.trimTitle(data.title)
+        let number = ''
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
-            onPress={()=>this.openFeed(json)} >
+            onPress={()=>this.openPush(data)} >
           <View >
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
                   <Icon
                     style={{marginLeft:15,marginRight:6}}
-                    size={20}
+                    size={40}
                     //color={this.props.msg.ask=='false'?'blue':'gray'}
                     color={'gray'}
-                    name={Global.FEED_ICONS[type]}
+                    name={Global.TYPE_ICONS[type]}
                   />
                 </View>
                 <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
@@ -248,20 +265,23 @@ export default class NotifyList extends Component {
         );
     }
   renderActionIcon(){
-      return <Button style={{height:41,width:50,borderColor:'#5080ff'}} />
+      return (
+             <View style={{flexDirection:'row',}}>
+                 <Icon name={'ion-ios-trash-outline'} color={'#ffffff'} size={36} onPress={()=>this.deleteAllPushAlert()} />
+                 <View style={{width:10}} />
+             </View>
+      )
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
       if(this.share_types.indexOf(data.type)<0){
-          return this._renderFeedRowView(data)
+          return this._renderPushRowView(data)
       }else{
           return this._renderShareRowView(data)
       }
   }
   render() {
-    //let ds=this.ds.cloneWithRows(this.all_notes)
-    this.all_notes = this.props.mails //.concat(this.state.feed_list)
-    //alert(JSON.stringify(this.all_notes))
+    this.all_notes = this.props.mails.concat(this.state.push_list)
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     let title = I18n.t('my')+' '+I18n.t('msgs')

@@ -48,7 +48,7 @@ export default class Main extends Component {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       }
       //clearInterval(this.timer)
-      this.event_notify.remove()
+      //this.event_notify.remove()
       Linking.removeEventListener('url', this.openLogic);
   }
   componentDidMount() {
@@ -56,7 +56,7 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.ExtUrl()
-      this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
+      //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){
       var _this = this;
@@ -252,9 +252,9 @@ export default class Main extends Component {
         }
       });
   }
-  loadNotifyByLogin(){
-      if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());
-  }
+  //loadNotifyByLogin(){
+  //    if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());
+  //}
   isJsonString(str) {
       try {
         JSON.parse(str);
@@ -263,7 +263,7 @@ export default class Main extends Component {
       }
       return true;
   }
-  loadNotify(key) {
+  /*loadNotify(key) {
     //alert('loadNotify('+key+') length:'+key.length)
     var self = this;
     Net.getNotify(key).then((rows)=> {
@@ -285,13 +285,13 @@ export default class Main extends Component {
         }
       }
     })
-    /*.catch((e)=>{
+    .catch((e)=>{
         alert('Network Problem!'+JSON.stringify(e))
-    });*/
-  }
+    });
+  }*/
   //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
   //key='car:lat,lng:ctime#rtime'  value={t:'r1', l:'fb:email', c:'content'}
-  Kv2Json(kv){
+  /*Kv2Json(kv){
       var arr = []
       if(kv == null) return arr;
       var keys = Object.keys(kv)  //.reverse()
@@ -325,7 +325,7 @@ export default class Main extends Component {
       return arr.filter((json)=>{
           return (json.status==='1')
       })
-  }
+  }*/
   goBack(){
     this.props.navigator.pop();
   }
@@ -362,7 +362,7 @@ export default class Main extends Component {
     //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
     //>
     //alert('main.render() mails='+ JSON.stringify(this.state.mails))
-    if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
+    //if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>
           {this.pages()}

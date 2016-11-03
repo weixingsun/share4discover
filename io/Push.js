@@ -50,6 +50,8 @@ module.exports = {
         //console.log(XG.allEvents());
         var registerHolder = XG.addEventListener('register', devToken => {
             self.xguid=devToken
+            //let url = 'share://shareplus.co.nf/i/car_sell:-43.524177,172.584926:1477797667'
+            //self.postOne(self.xguid,'hello','click to view more',{t:'r',i:'car_sell:-43.524177,172.584926:1477797667'})
             //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','p2p_title','p2p_data')
         });
         var remoteHolder = XG.addEventListener('notification', xgInstance => {
@@ -73,10 +75,10 @@ module.exports = {
             alert('permission '+JSON.stringify(permission))
         })
     },
-    //self.postOne(self.xguid,'p2p_title','p2p_data')
-    postOne(uid,title,data){
+    //postOne(self.xguid,'hello','click to view more',{share:'car_sell:-43.524177,172.584926:1477797667'})
+    postOne(uid,title,data,kv){
         //OneSignal.postNotification(title, data, uid);
-        Remote.push(uid, title, data);
+        Remote.p2p(uid, title, data, kv);
     },
     //self.postAll('broadcast_title','broadcast_data')
     postAll(title,data){
