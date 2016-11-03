@@ -9,8 +9,9 @@ import {Icon} from './Icon'
 import Store from "../io/Store"
 import Net from "../io/Net"
 import Global from "../io/Global"
-import Style       from "./Style"
-import Loading     from "./Loading"
+import Push from '../io/Push'
+import Style from "./Style"
+import Loading from "./Loading"
 import Maps from "./Maps"
 
 import ControlPanel from "./ControlPanel"
@@ -51,6 +52,7 @@ export default class Main extends Component {
       //clearInterval(this.timer)
       this.event_notify.remove()
       Linking.removeEventListener('url', this.openLogic);
+      Push.logoutXG()
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -58,10 +60,7 @@ export default class Main extends Component {
       //});
       this.ExtUrl()
       this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
-      if (this.props.initialNotification) {
-        //alert('notification: '+JSON.stringify(this.props.initialNotification));
-        //console.log('notification: '+JSON.stringify(this.props.initialNotification));
-      }
+      Push.listenXG()
   }
   componentWillMount(){
       var _this = this;
@@ -76,6 +75,7 @@ export default class Main extends Component {
           //OneSignal.registerForPushNotifications();
       }
       this.checkSettingsChange();
+      Push.loginXG()
   }
   openPage(page,data){
       this.props.navigator.push({
@@ -164,20 +164,12 @@ export default class Main extends Component {
   sendShareReadReplyURL(reply){
       let replyKey= reply.key //car:lat,lng:ctime#rtime
       let replyValue= reply.value //{t:'r1',l:'fb:email',c:'content'}
-      this.readMsg(replyKey,replyValue);
+      //this.readMsg(replyKey,replyValue);
       let msgKey= replyKey.split('#')[0] //car:lat,lng:ctime
       //console.log('title='+JSON.stringify(message)+'\tdata='+JSON.stringify(data))
       let url='share://shareplus.co.nf/i/'+msgKey;
       //url = 'intent://shareplus.co.nf/i/'+data.p2p_notification.key+'#Intent;scheme=share;package=com.share;end'
       Linking.openURL(url);
-  }
-  readMsg(noteKey,noteValue){
-      //key='car:lat,lng:ctime#rtime'  value='{t:'r1', l:Global.mainlogin,c:this.state.reply}'
-      let jsonValue = JSON.parse(noteValue)
-      jsonValue.t='r0'
-      //alert(JSON.stringify(notify_value))
-      var notify_value={key:Global.getNotifyKey(), field:noteKey, value:JSON.stringify(jsonValue)}
-      Net.putHash(notify_value)
   }
   checkLogin(type){
       //var self = this

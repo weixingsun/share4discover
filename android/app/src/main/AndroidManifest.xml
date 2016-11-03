@@ -2,22 +2,33 @@
     package="com.share">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />  
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />  
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-feature    android:name="android.hardware.camera"           android:required="false"/>
     <uses-feature    android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <!-- Tencent XG push -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Tencent XG Optional -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
 
     <application
       android:name=".MainApplication"
@@ -76,6 +87,58 @@
         android:name="it.innove.AdvertiserService"
         android:enabled="true"
         android:process=":remote" />
-    </application>
+      <!-- Tencent XG Push -->
+      <!-- Disable Official receiver -->
+      <!--<receiver
+        android:name="com.tencent.android.tpush.XGPushReceiver"
+        android:process=":xg_service_v2" >
+        <intent-filter android:priority="0x7fffffff" >
+            <action android:name="com.tencent.android.tpush.action.SDK" />
+            <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE" />
+            <action android:name="android.intent.action.USER_PRESENT" />
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+            <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+        </intent-filter>
+      </receiver>-->
+      <receiver android:name="com.kh.tencentxg.XGMessageReceiver">
+        <intent-filter>
+          <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE" />
+          <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
+        </intent-filter>
+      </receiver>
+      <activity
+         android:name="com.tencent.android.tpush.XGPushActivity"
+         android:exported="false" >
+         <intent-filter>
+            <action android:name="android.intent.action" />
+         </intent-filter>
+     </activity>
+     <!-- 【必须】 信鸽service -->
+     <service
+        android:name="com.tencent.android.tpush.service.XGPushService"
+        android:exported="true"
+        android:persistent="true"
+        android:process=":xg_service_v2" />
+  
+     <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
+     <service
+        android:name="com.tencent.android.tpush.rpc.XGRemoteService"
+        android:exported="true" >
+        <intent-filter>
+            <action android:name="com.share.PUSH_ACTION" />
+        </intent-filter>
+     </service>
+ 
+     <!-- 【必须】 请将YOUR_ACCESS_ID修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
+     <meta-data 
+        android:name="XG_V2_ACCESS_ID"
+        android:value="2100240971" />
+     <!-- 【必须】 请将YOUR_ACCESS_KEY修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 -->
+     <meta-data 
+        android:name="XG_V2_ACCESS_KEY"
+        android:value="A3TG58G18CAT" />
+     </application>
 
 </manifest>

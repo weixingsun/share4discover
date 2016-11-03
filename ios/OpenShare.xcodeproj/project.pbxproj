@@ -49,6 +49,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		1C31029FA42E422E81D49598 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 709D0E9795584C0FAECFF75E /* libCodePush.a */; };
+		25B9D2F454994C5C84BC4D94 /* libReactNativeTencentXG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94948ACF8EF24797A8A3DF0E /* libReactNativeTencentXG.a */; };
 		51F75C7781D5463E883A9747 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 567DD0EA77294195BD789AFE /* EvilIcons.ttf */; };
 		5880A692D42A48A899386020 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4B21AC51939441191C069D8 /* Foundation.ttf */; };
 		5D3F8F455C994E979F82CF80 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 743505B54D54401DB2D495F8 /* MaterialIcons.ttf */; };
@@ -195,6 +196,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 3245CDED1BFEE35C00EABF68;
 			remoteInfo = RCTOneSignal;
+		};
+		0385E6A51DCA0753002AED0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 749780281A4945D58658DDB2 /* ReactNativeTencentXG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EAB2B2091C7FE3FD00D6D4F3;
+			remoteInfo = ReactNativeTencentXG;
 		};
 		03AAABC71D6EF57600A2957E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -365,9 +373,11 @@
 		71C8ABAFB9A947B1A2805816 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		73078FA52EAA4D3B857F2930 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOneSignal.xcodeproj; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; };
 		743505B54D54401DB2D495F8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		749780281A4945D58658DDB2 /* ReactNativeTencentXG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeTencentXG.xcodeproj; path = "../node_modules/react-native-tencent-xg/ios/ReactNativeTencentXG.xcodeproj"; sourceTree = "<group>"; };
 		75785ACC49264972AC465D3C /* KCKeepAwake.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = KCKeepAwake.xcodeproj; path = "../node_modules/react-native-keep-awake/ios/KCKeepAwake.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		94948ACF8EF24797A8A3DF0E /* libReactNativeTencentXG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeTencentXG.a; sourceTree = "<group>"; };
 		965A3544CB674EE5AABE484C /* RCTBaiduMap.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBaiduMap.xcodeproj; path = "../node_modules/react-native-baidumap/ios/RCTBaiduMap/RCTBaiduMap.xcodeproj"; sourceTree = "<group>"; };
 		9A6FCF2F66E8417C8ABEFA9D /* libKCKeepAwake.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libKCKeepAwake.a; sourceTree = "<group>"; };
 		A20452CB669445E3B9D5A9B4 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
@@ -434,6 +444,7 @@
 				E8BA60B2C02B4EF8BC633A33 /* libRNSVG.a in Frameworks */,
 				A12C1FD1E895454BA07B527B /* libRNSound.a in Frameworks */,
 				0B7799DD5DF84E1493EC8991 /* libRNDeviceInfo.a in Frameworks */,
+				25B9D2F454994C5C84BC4D94 /* libReactNativeTencentXG.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +590,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0385E6881DCA0753002AED0B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0385E6A61DCA0753002AED0B /* libReactNativeTencentXG.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		03AAABC11D6EF57600A2957E /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -680,6 +699,7 @@
 				583479CD5437462B9AA84EDD /* RNSVG.xcodeproj */,
 				E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */,
 				3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */,
+				749780281A4945D58658DDB2 /* ReactNativeTencentXG.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -893,6 +913,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = 0385E6881DCA0753002AED0B /* Products */;
+					ProjectRef = 749780281A4945D58658DDB2 /* ReactNativeTencentXG.xcodeproj */;
+				},
+				{
 					ProductGroup = 035725E21DAF88EB000DB40E /* Products */;
 					ProjectRef = 3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */;
 				},
@@ -1049,6 +1073,13 @@
 			fileType = archive.ar;
 			path = libRCTOneSignal.a;
 			remoteRef = 0383F6721D4B83D500FA3DE0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0385E6A61DCA0753002AED0B /* libReactNativeTencentXG.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeTencentXG.a;
+			remoteRef = 0385E6A51DCA0753002AED0B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		03AAABC81D6EF57600A2957E /* libKCKeepAwake.a */ = {
@@ -1273,6 +1304,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1282,6 +1314,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
 					"\"$(SRCROOT)/SharePlus\"",
+					"\"$(SRCROOT)/OpenShare\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1332,6 +1365,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1341,6 +1375,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
 					"\"$(SRCROOT)/SharePlus\"",
+					"\"$(SRCROOT)/OpenShare\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = open.shareplus;
@@ -1416,6 +1451,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1482,6 +1518,7 @@
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

@@ -33,6 +33,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.kh.tencentxg.TencentXGPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 //import com.magus.fblogin.FacebookLoginPackage;
 import com.zmxv.RNSound.RNSoundPackage;
@@ -82,6 +83,7 @@ public class MainApplication extends Application implements ReactApplication {
       String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new TencentXGPackage(),
         new RNDeviceInfo(),
         new RNSoundPackage(),
         new RNSvgPackage(),

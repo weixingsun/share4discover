@@ -8,7 +8,7 @@ import OneSignal from 'react-native-onesignal';
 import I18n from 'react-native-i18n';
 import DeviceInfo from 'react-native-device-info'
 
-export default class USBList extends React.Component {
+export default class ToS extends React.Component {
     constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({
@@ -16,28 +16,14 @@ export default class USBList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
-          //dataSource:this.ds.cloneWithRows(this.api_list),
-          onesignal_id:'',
       };
       //I18n.locale = NativeModules.RNI18n.locale
-      //this.openJsonAPI = this.openJsonAPI.bind(this);
       //this.openWebList = this.openWebList.bind(this);
     }
-    componentWillMount() {
-    }
-    renderOnesignal(){
+    componentWillMount() {}
+    renderSection(){
         return (
-            <View style={Style.detail_card} >
-              <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uuid')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ this.state.onesignal_id }</Text>
-              </View>
-            </View>
-        )
-    }
-    renderHomepage(){
-        return (
-            <View style={Style.detail_card} >
+            <View style={{backgroundColor:'#ddeeff'}} >
               <View style={{flexDirection:'row'}}>
                   <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('home')}: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={()=>Linking.openURL('http://shareplus.co.nf')}>http://shareplus.co.nf</Text>
@@ -45,7 +31,7 @@ export default class USBList extends React.Component {
             </View>
         )
     }
-    renderCopyright(){
+    renderLast(){
         return (
             <View style={{flex:1,justifyContent: 'center',alignItems:'center'}}>
                 <Text style={{justifyContent:'center'}} > </Text>
@@ -65,8 +51,8 @@ export default class USBList extends React.Component {
                  </View>
               }
           />
-          {this.renderHomepage()}
-          {this.renderOnesignal()}
+          {this.renderSection()}
+          {this.renderLast()}
       </View>
       );
     }

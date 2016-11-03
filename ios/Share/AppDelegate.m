@@ -11,7 +11,7 @@
 #import "RCTRootView.h"
 #import "CodePush.h"
 #import "RCTOneSignal.h"
-//#import "RNGoogleSignin.h"
+#import "ReactNativeTencentXG.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
@@ -137,11 +137,31 @@ BMKMapManager* mapManager;
                      restorationHandler:restorationHandler];
 }
 
-  // Required for the notification event.
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
-  //[RCTPushNotificationManager didReceiveRemoteNotification:notification];
-  [RCTOneSignal didReceiveRemoteNotification:notification];
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+  [TencentXG didRegisterUserNotificationSettings:notificationSettings];
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  [TencentXG didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err
+{
+  [TencentXG didFailToRegisterForRemoteNotificationsWithError:err];
+}
+
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)notification
+{
+  [TencentXG didReceiveRemoteNotification:notification];
+  //[RCTPushNotificationManager didReceiveRemoteNotification:notification];
+  //[RCTOneSignal didReceiveRemoteNotification:notification];
+}
+
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+  [TencentXG didReceiveLocalNotification:notification];
+}
 
 @end

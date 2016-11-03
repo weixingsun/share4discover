@@ -143,7 +143,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-tencent-xg')
     compile project(':react-native-device-info')
     compile "com.facebook.react:react-native:+"
     compile (project(':react-native-sound'))   
