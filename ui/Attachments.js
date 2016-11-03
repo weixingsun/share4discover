@@ -10,7 +10,6 @@ import Store from '../io/Store';
 import Global from '../io/Global';
 import DetailImg from './DetailImg';
 import I18n from 'react-native-i18n';
-import OneSignal from 'react-native-onesignal';
 //import { Col, Row, Grid } from "react-native-easy-grid";
 var {height, width} = Dimensions.get('window');
 import ImagePicker from 'react-native-image-picker'

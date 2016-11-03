@@ -61,8 +61,11 @@ function buildMessage(params, title, content) {
       vibrate: 1,
     });
   }
-
-  params.send_time = formatTs(Date.now() + 5000);
+  //let now = Date.now()
+  //now -= 5*60*1000
+  //params.send_time = formatTs(now + 5000);
+  //var tz = now.getTimezoneOffset()/60;
+  //  currentTimezone = tz * -1;
   return params;
 }
 

@@ -1,24 +1,40 @@
 import React, {Component} from 'react'
 import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
-//var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
-//import NavigationBar from 'react-native-navbar';
-//import Register from './ui/Register'
-//import Error from './ui/Error'
 import Main from './ui/Main'
-//import Drawer from './ui/Drawer'
-//import Detail from './ui/Detail'
-//import Filter from './ui/Filter'
-//import CodePush from "react-native-code-push"
+import Net from './io/Net'
+import Note from './ui/Note'
+import Detail from './ui/Detail'
+import Push from './io/Push'
+//var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 var __navigator = null
 export default class Nav extends Component {
-    
-    static openPage(page,data){
+    openPage(page,data){
         __navigator.push({
           component: page,
           passProps: {
               msg:data,
           }
         });
+    }
+    openShare(key){
+      Net.getMsg(key).then((json)=> {
+        if(json!=null){
+            //alert(JSON.stringify(json))
+            self.openPage(Detail,json)
+        }else alert('The information does not exist.')
+      });
+    }
+    openPush(data){
+        if(data.custom){
+            this.openPage(Note,data)
+            //self.sendCustomNoteURL(data)
+        }else if (data.tag_notification){
+            let key = data.tag_notification
+            this.openShare(key)
+        }else if (data.p2p_notification && data.p2p_notification.key) {
+            let key = data.p2p_notification.key.split('#')[0]
+            this.openShare(key)
+        }
     }
     constructor(props) {
       super(props);
@@ -27,6 +43,11 @@ export default class Nav extends Component {
     componentDidMount() {
         //CodePush.sync();
         //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,(evt)=>this.refresh());
+        Push.loginXG()
+        Push.listenXG(this.onPushReceived)
+    }
+    componentWillUnmount() {
+        Push.logoutXG()
     }
     _renderScene(route, navigator) {
       __navigator=navigator

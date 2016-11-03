@@ -4,8 +4,8 @@ import {Image,ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity,Nat
 import {Icon} from './Icon'
 import Style from './Style'
 import ToS from './ToS'
+import Push from '../io/Push'
 import NavigationBar from 'react-native-navbar'
-import OneSignal from 'react-native-onesignal';
 import I18n from 'react-native-i18n';
 import DeviceInfo from 'react-native-device-info'
 
@@ -17,15 +17,15 @@ export default class USBList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
-          //dataSource:this.ds.cloneWithRows(this.api_list),
           onesignal_id:'',
+          xg_id:'',
       };
       //I18n.locale = NativeModules.RNI18n.locale
       //this.openJsonAPI = this.openJsonAPI.bind(this);
       //this.openWebList = this.openWebList.bind(this);
     }
     componentWillMount() {
-        this.onesignal()
+        //Push.getS1Id()
     }
     goToS(){
         this.props.navigator.push({
@@ -33,21 +33,22 @@ export default class USBList extends React.Component {
             passProps: {navigator:this.props.navigator,},
         })
     }
-    onesignal(){
-        let self=this
-        OneSignal.configure({
-            onIdsAvailable: function(device) {
-              self.setState({ onesignal_id:device.userId })
-              //let token  = 'PushToken = '+ device.pushToken;
-            },
-        })
-    }
     renderOnesignal(){
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uuid')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ this.state.onesignal_id }</Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('s1id')}: </Text>
+                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.s1uid }</Text>
+              </View>
+            </View>
+        )
+    }
+    renderXG(){
+        return (
+            <View style={Style.detail_card} >
+              <View style={{flexDirection:'row'}}>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('xgid')}: </Text>
+                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.xguid }</Text>
               </View>
             </View>
         )
@@ -102,7 +103,7 @@ export default class USBList extends React.Component {
           />
           {this.renderIcon()}
           {this.renderHomepage()}
-          {this.renderOnesignal()}
+          {this.renderXG()}
           {this.renderCopyright()}
       </View>
       );

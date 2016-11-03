@@ -39,7 +39,7 @@ module.exports = {
         XG.unregister()
         this.events.filter(h => !!h).forEach(holder => holder.remove());
     },
-    listenXG(){
+    listenXG(onPush){
         let self=this
         var errorHolder = XG.addEventListener('error', err => {
           alert('error '+JSON.stringify(err))
@@ -49,13 +49,12 @@ module.exports = {
         XG.enableDebug(true);
         //console.log(XG.allEvents());
         var registerHolder = XG.addEventListener('register', devToken => {
-            //alert('register '+ JSON.stringify(devToken))  //works
             self.xguid=devToken
-            //self.postOne(self.xguid,'p2p_title','p2p_data')
-            self.postAll('broadcast_title','broadcast_data')
+            //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','p2p_title','p2p_data')
         });
         var remoteHolder = XG.addEventListener('notification', xgInstance => {
-            alert('notification '+ JSON.stringify(xgInstance))
+            //alert('notification '+ JSON.stringify(xgInstance))
+            if(onPush) onPush(xgInstance)
         });
         if (!remoteHolder) throw new Error('Fail to add event to handle remote notification');
         var localHolder = XG.addEventListener('localNotification', xgInstance => {
@@ -74,14 +73,17 @@ module.exports = {
             alert('permission '+JSON.stringify(permission))
         })
     },
+    //self.postOne(self.xguid,'p2p_title','p2p_data')
     postOne(uid,title,data){
         //OneSignal.postNotification(title, data, uid);
         Remote.push(uid, title, data);
     },
+    //self.postAll('broadcast_title','broadcast_data')
     postAll(title,data){
         //OneSignal.postNotification(title, data, uid);
         Remote.broadcast(title, data);
     },
+    //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','p2p_title','p2p_data')
     postTag(tag,op,title,data){  //onesignal in server side
         //OneSignal.postNotification(title, data, tag);
         Remote.tags(tags,op,title,data)

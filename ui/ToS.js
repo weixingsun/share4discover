@@ -4,7 +4,6 @@ import {Image,ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity,Nat
 import {Icon} from './Icon'
 import Style from './Style'
 import NavigationBar from 'react-native-navbar'
-import OneSignal from 'react-native-onesignal';
 import I18n from 'react-native-i18n';
 import DeviceInfo from 'react-native-device-info'
 

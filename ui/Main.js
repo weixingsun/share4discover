@@ -3,13 +3,11 @@ import {DeviceEventEmitter,Linking,ToastAndroid,BackAndroid, InteractionManager,
 //import TimerMixin from 'react-timer-mixin';
 import Tabs from 'react-native-tabs'
 //import Drawer from 'react-native-drawer'
-import OneSignal from 'react-native-onesignal';
 //import UsbSerial from 'react-native-usbserial';
 import {Icon} from './Icon'
 import Store from "../io/Store"
 import Net from "../io/Net"
 import Global from "../io/Global"
-import Push from '../io/Push'
 import Style from "./Style"
 import Loading from "./Loading"
 import Maps from "./Maps"
@@ -52,7 +50,6 @@ export default class Main extends Component {
       //clearInterval(this.timer)
       this.event_notify.remove()
       Linking.removeEventListener('url', this.openLogic);
-      Push.logoutXG()
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -60,22 +57,13 @@ export default class Main extends Component {
       //});
       this.ExtUrl()
       this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
-      Push.listenXG()
   }
   componentWillMount(){
       var _this = this;
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
-      }else{
-          OneSignal.checkPermissions((permissions) => {
-              //alert('OneSignal.checkPermissions '+JSON.stringify(permissions));
-          });
-          //let permissions = { alert: true, badge: true, sound: true }
-          //OneSignal.requestPermissions(permissions);
-          //OneSignal.registerForPushNotifications();
       }
       this.checkSettingsChange();
-      Push.loginXG()
   }
   openPage(page,data){
       this.props.navigator.push({

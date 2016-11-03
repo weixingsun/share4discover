@@ -15,7 +15,6 @@ import Net from '../io/Net'
 import DetailImg from './DetailImg';
 import FormInfo from "./FormInfoVar"
 import I18n from 'react-native-i18n';
-import OneSignal from 'react-native-onesignal';
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
