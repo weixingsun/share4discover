@@ -39,9 +39,10 @@ export default class Nav extends Component {
     }
     //p2p = {alertBody:'click to view more',title:'hello'}
     onPushReceived(data){
-        //alert('onPushReceived:'+JSON.stringify(data))
-        data.id=Math.round(+new Date()/1000)
-        Store.append(Store.PUSH_LIST+':'+data.t,data)
+        alert('onPushReceived:'+JSON.stringify(data))
+        //data.id=Math.round(+new Date()/1000)
+        Store.append(Store.P2P_PUSH_LIST,data)
+        DeviceEventEmitter.emit('refresh:PushList',0);
     }
     constructor(props) {
       super(props);

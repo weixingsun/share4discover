@@ -30,6 +30,12 @@ export default class NotifyList extends Component {
   componentWillMount(){
       this.load()
   }
+  componentWillUnmount(){
+      this.event_notify.remove()
+  }
+  componentDidMount(){
+      this.event_notify = DeviceEventEmitter.addListener('refresh:PushList',(evt)=>setTimeout(()=>this.load(),400))
+  }
   load(){
       var _this=this;
       Store.get(Store.PUSH_LIST+':'+'r').then(function(list){
@@ -66,8 +72,9 @@ export default class NotifyList extends Component {
       return s_dict;
   }
   openPush(json){
-      alert(JSON.stringify(json))
-      if(json.t==='r') {
+      //alert('openPush: '+JSON.stringify(json))
+      if(json.t===Global.push_p2p || json.t===Global.push_tags) {
+          if(!json.read)this.readMsg(json.id)
           this.getMsg(json.i)
       }
       if(json.type==='rss'){
@@ -106,16 +113,13 @@ export default class NotifyList extends Component {
             alert('This share has been deleted.')
       });
   }
-  readMsg(reply){
-      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-      var key = Global.getKeyFromReply(reply)
-      let v = {t:'r0',l:reply.user,c:reply.content}
-      var notify_value={key:Global.getNotifyKey(), field:key+'#'+reply.rtime, value:JSON.stringify(v)}
-      Net.putHash(notify_value)
-      //alert(JSON.stringify(notify_value))
+  readMsg(id){
+      DeviceEventEmitter.emit('refresh:PushList',0);
+      Store.readPush({id:id})
   }
   _onPress(rowData) {
-      if(rowData.status==='1')this.readMsg(rowData)
+      alert('_onPress: '+JSON.stringify(rowData))
+      if(!rowData.read)this.readMsg(rowData.id)
       this.getMsg(Global.getKeyFromReply(rowData))
   }
   onDeleteReply(rowData){
@@ -232,8 +236,8 @@ export default class NotifyList extends Component {
   }
     _renderPushRowView(data) {
         if(!data.title) return
-        let bold = {fontSize:16,fontWeight:'bold',color:'black'}
-        let push_type = data.t
+        let bold = data.read? {fontSize:16} : {fontSize:16,fontWeight:'bold',color:'black'}
+        //let push_type = data.t
         let key = data.i
         let type = key.split('_')[0]
         let name = Global.trimTitle(data.title)

@@ -5,6 +5,7 @@ import {Alert, DeviceEventEmitter, Image, Linking, ListView, Picker, Platform, S
 import Store from '../io/Store'
 import Global from '../io/Global'
 import Net from '../io/Net'
+import Push from '../io/Push'
 import Style from './Style'
 import Loading from './Loading'
 //import PlaceForm from './PlaceForm'
@@ -14,7 +15,6 @@ import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
 import xml2js from 'xml2js'
 import xpath from 'xml2js-xpath'
-import OneSignal from 'react-native-onesignal';
 
 var styles = StyleSheet.create({
     container: {
@@ -56,14 +56,14 @@ export default class FormFeed extends React.Component{
             type:true,
             cat:true,
             city:false,
-            name:false
+            country:false
         }
         this.state = {
             form: {
                 type:'car',
                 cat:'rent0',
                 city:'',
-                name:'',
+                country:'',
             }
         };
         this.formName='newPushForm'
@@ -75,7 +75,7 @@ export default class FormFeed extends React.Component{
                 form: this.props.push
             });
         }else{
-            this.getFeedName()
+            this.getLocation()
         }
     }
     componentDidMount(){
@@ -103,32 +103,28 @@ export default class FormFeed extends React.Component{
         if(typeof form.type === 'object'){
             if(form.type[0] !=null && typeof form.type[0] === 'string'){
                 this.setState({ form:{...this.state.form,type:form.type[0]} })
-                this.getFeedName(form)
+                //this.getFeedName(form)
             }
         }else if(typeof form.cat === 'object'){
             if(form.cat[0] !=null && typeof form.cat[0] === 'string'){
                 this.setState({ form:{...this.state.form,cat:form.cat[0]} })
-                this.getFeedName(form)
+                //this.getFeedName(form)
             }
         }
         //alert('form:'+JSON.stringify(form))
     }
     onSubmit(values){
         //alert(JSON.stringify(values))
-        Store.insertPush(values)
-        OneSignal.sendTag(values.name, values.city);
-        DeviceEventEmitter.emit('refresh:FeedList',values);
+        //Store.insertPushTag(values)
+        Push.setTag(Global.getListeningTag(values));  //{country,city,type,cat}
+        DeviceEventEmitter.emit('refresh:PushList',values);
         this.props.navigator.pop()
     }
-    getFeedName(form){
-      let self=this
-      if(form){
-          self.setState({ form:{ ...self.state.form, name:form.type+'_'+form.cat } }) 
-      }else Net.getLocation().then((gps)=>{
+    getLocation(form){
+        let self=this
+        Net.getLocation().then((gps)=>{
             //alert(JSON.stringify(gps))
-            let title = this.state.form.type+'_'+this.state.form.cat
-            let area  = (gps.country_code+' '+gps.city).toLowerCase() //+'_'+formValues.freq
-            self.setState({ form:{ ...self.state.form, city:area, name:title } })
+            self.setState({ form:{ ...self.state.form, city:gps.city.toLowerCase(), country:gps.country_code.toLowerCase() } })
         })
     }
     renderField(name,editable){

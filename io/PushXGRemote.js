@@ -73,8 +73,32 @@ function buildMessage(params, title, content, kv) {
 function getSecretKey() {
   return Platform.OS === 'ios' ? '111111111111111111111111111111' : '561f8ace1d11a0dacdfb4ea993e565f3';
 }
+function getalltags(xguid){
+  let url = 'http://openapi.xg.qq.com/v2/tags/query_token_tags'
+  let url2 = 'http://openapi.xg.qq.com/v2/tags/query_token_tags?params'
+  //alert('xguid='+xguid)
+  var params = buildGeneralParams(xguid)
+  params.sign = calcSignature(
+    'POST',
+    url,
+    params, getSecretKey());
+  fetch( url2, {
+        method: 'POST',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        body: querystring.stringify(params)
+    })
+    .then(res => alert('tags return:'+JSON.stringify(res.text())))
+    .catch(err => alert('tags err:'+JSON.stringify(err)))
+}
+/*function addtag(xguid,tagname){
 
-function p2p(devToken, title, content, kv) {
+}
+function deltag(xguid,tagname){
+
+}*/
+function pushp2p(devToken, title, content, kv) {
   if (!devToken) return;
   var params = buildMessage(buildGeneralParams(devToken), title, content, kv);
   params.sign = calcSignature(
@@ -114,8 +138,8 @@ function broadcast(title,content) {
     .then(res => console.log(res.text()))
     .catch(err => console.log(err));
 }
-function tags(tags,op,title,content) {
-  var params = buildMessage(buildTagParams(tags,op), title, content);
+function pushtags(tags,op,title,content, kv) {
+  var params = buildMessage(buildTagParams(tags,op), title, content, kv);
   params.sign = calcSignature(
     'POST',
     'http://openapi.xg.qq.com/v2/push/tags_device',
@@ -133,15 +157,15 @@ function tags(tags,op,title,content) {
     .then(res => console.log(res.text()))
     .catch(err => console.log(err));
 }
-//////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////////
 exports = module.exports = {
-  p2p,
+  pushp2p,
   broadcast,
-  tags,
+  pushtags,
+  getalltags,
+  //addtag,
+  //deltag,
 };
+//////////////////////////////////////////////////////////////////////////////
 function md5cycle(x, k) {
   var a = x[0],
     b = x[1],

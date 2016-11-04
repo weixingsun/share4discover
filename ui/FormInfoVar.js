@@ -9,19 +9,17 @@ import Style from './Style';
 import Store from '../io/Store';
 import Global from '../io/Global';
 import Net from '../io/Net'
-import Immutable from 'immutable'
+import Push from '../io/Push'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import PlaceSearch from './PlaceSearch'
 import ImagePicker from 'react-native-image-picker'
 import Image from 'react-native-image-progress';
-//import Progress from 'react-native-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import I18n from 'react-native-i18n';
 import moment from 'moment'
-import OneSignal from 'react-native-onesignal';
 import Attachments from './Attachments';
  
 export default class FormInfoVar extends Component {
@@ -113,11 +111,6 @@ export default class FormInfoVar extends Component {
         this.initAllValidators()
         this.processProps();
         this.turnOnGps()
-        OneSignal.configure({
-            onIdsAvailable: (device)=> {  //userId,pushToken
-                this.s1uid=device.userId
-            }
-        });
         this.getCountryCode()
     }
     componentDidMount(){
@@ -263,7 +256,7 @@ export default class FormInfoVar extends Component {
         values.country=this.country
         values.city=this.city
         this.merge_into(values,this.hidden_fields)
-        if(this.s1uid) values['s1uid']=this.s1uid
+        if(Push.xguid) values['xguid']=Push.xguid
     }
     merge_into(obj,obj_to_merge){
         for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
@@ -289,13 +282,14 @@ export default class FormInfoVar extends Component {
                           if(this.props.msg!=null){ //edit
                               let oldkey = Global.getKeyFromMsg(this.props.msg)
                               if( oldkey !== newkey ){
-                                self.changeReply( oldkey, newkey )
+                                //self.changeReply( oldkey, newkey )
                                 self.deleteMsg(oldkey)
                                 alertmsg = 'Changed successfully'
                               }else{
                                 alertmsg = 'Edit successfully'
                               }
                           }else{
+                              self.pushToTags(values);
                               let sns_ret = self.postSNS(values);
                               alertmsg = 'Create successfully' +sns_ret
                           }
@@ -312,6 +306,16 @@ export default class FormInfoVar extends Component {
                   })
               }},
             ]
+        )
+    }
+    pushToTags(msg){
+        //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now}
+        Push.postTags(
+            [ Global.getListeningTag(msg) ],  //'listen:'+msg.country+'_'+msg.city+':'+msg.type+'_'+msg.cat
+            'AND',
+            msg.title,
+            I18n.t('click_more'),
+            {t:'tags',i:Global.getKeyFromMsg(msg),f:Push.xguid,r:msg.ctime}
         )
     }
     postSNS(json){

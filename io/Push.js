@@ -41,18 +41,16 @@ module.exports = {
     },
     listenXG(onPush){
         let self=this
+        //console.log(XG.allEvents());
         var errorHolder = XG.addEventListener('error', err => {
-          alert('error '+JSON.stringify(err))
+          alert('event listener error:'+JSON.stringify(err))
         });
         if (!errorHolder) throw new Error('Fail to register listener of error');
-        //errorHolder.remove();
-        XG.enableDebug(true);
-        //console.log(XG.allEvents());
+        if(__DEV__) XG.enableDebug(true);
         var registerHolder = XG.addEventListener('register', devToken => {
             self.xguid=devToken
             //let url = 'share://shareplus.co.nf/i/car_sell:-43.524177,172.584926:1477797667'
-            //self.postOne(self.xguid,'hello','click to view more',{t:'r',i:'car_sell:-43.524177,172.584926:1477797667'})
-            //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','p2p_title','p2p_data')
+            //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','tag_title','tag_data')
         });
         var remoteHolder = XG.addEventListener('notification', xgInstance => {
             //alert('notification '+ JSON.stringify(xgInstance))
@@ -75,28 +73,27 @@ module.exports = {
             alert('permission '+JSON.stringify(permission))
         })
     },
-    //postOne(self.xguid,'hello','click to view more',{share:'car_sell:-43.524177,172.584926:1477797667'})
+    //postOne(self.xguid,'hello','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
     postOne(uid,title,data,kv){
         //OneSignal.postNotification(title, data, uid);
-        Remote.p2p(uid, title, data, kv);
+        Remote.pushp2p(uid, title, data, kv);
     },
-    //self.postAll('broadcast_title','broadcast_data')
+    //postAll('broadcast_title','broadcast_data')
     postAll(title,data){
         //OneSignal.postNotification(title, data, uid);
         Remote.broadcast(title, data);
     },
-    //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','p2p_title','p2p_data')
-    postTag(tag,op,title,data){  //onesignal in server side
+    //postTag({'listen:car_sell','listen:car_rent0'},'OR','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
+    postTags(tags,op,title,data,kv){  //onesignal in server side
         //OneSignal.postNotification(title, data, tag);
-        Remote.tags(tags,op,title,data)
+        Remote.pushtags(tags,op,title,data,kv)
     },
     setTag(tag){
         XG.setTag(tag)
     },
-    getTag(tag){
-        //XG.getTag(tag)
+    getAllTags() {
+        Remote.getalltags(this.xguid)
     },
-    getAllTags() {},
     delTag(tag){
         XG.delTag(tag)
     },

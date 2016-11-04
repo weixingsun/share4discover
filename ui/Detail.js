@@ -5,20 +5,17 @@ import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
-//import {ImageCrop} from 'react-native-image-cropper'
-//import PhotoView from 'react-native-photo-view';
+import I18n from 'react-native-i18n';
 import Gallery from 'react-native-gallery';
-//import ZoomableImage from './ZoomableImage2';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 //import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
-import Style from './Style';
-import Store from '../io/Store';
+import Store  from '../io/Store';
 import Global from '../io/Global';
-import Net from '../io/Net'
+import Push   from '../io/Push';
+import Net    from '../io/Net'
+import Style     from './Style';
 import DetailImg from './DetailImg';
-import FormInfo from "./FormInfoVar"
-import I18n from 'react-native-i18n';
-import OneSignal from 'react-native-onesignal';
+import FormInfo  from "./FormInfoVar"
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -53,12 +50,15 @@ export default class Detail extends Component {
         //I18n.locale = NativeModules.RNI18n.locale
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
-    s1Note(msg,notify){
-        if(this.props.msg.s1uid){
-            let note = JSON.parse(notify.value)
-            let title = {'en':msg.title+'\n '+note.c}
-            let data = {key:notify.field,value:notify.value}
-            OneSignal.postNotification(title, data, this.props.msg.s1uid);
+    p2p(now){
+        //if(this.props.msg.s1uid) OneSignal.postNotification(title, data, this.props.msg.s1uid);
+        if(this.props.msg.xguid) {
+            Push.postOne(
+                this.props.msg.xguid,
+                this.state.reply,
+                I18n.t('click_more'),
+                {t:Global.push_p2p,i:this.key,f:Push.xguid,r:now}
+            )
         }
     }
     onReply() {
@@ -70,9 +70,9 @@ export default class Detail extends Component {
 	var time = Math.round(+new Date()/1000) //+new Date();
         let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-        let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
-        var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
+        //let loginsObj = Global.getLogins(this.props.msg.owner)
+        //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
+        //var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
         var _this = this;
         Alert.alert(
             "Reply",
@@ -82,8 +82,8 @@ export default class Detail extends Component {
                 {text:"Cancel", },
                 {text:"OK", onPress:()=>{
                     Net.putHash(value)
-                    Net.putHash(notify_value)
-                    _this.s1Note(_this.props.msg,notify_value)
+                    //Net.putHash(notify_value)
+                    _this.p2p(time)
                     _this.props.navigator.pop();
                 }},
             ]
@@ -318,7 +318,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','s1uid','country','city']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','xguid','country','city']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)

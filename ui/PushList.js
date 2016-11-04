@@ -4,12 +4,12 @@ import {Alert, DeviceEventEmitter, ListView, View, Text, StyleSheet, ScrollView,
 import {Icon} from './Icon'
 import Store from '../io/Store'
 import Global from '../io/Global'
+import Push from '../io/Push';
 import Style from './Style'
 import NavigationBar from 'react-native-navbar'
 //import {parseString} from 'xml2js'
 import Swipeout from 'react-native-swipeout';
 import FormPush from './FormPush';
-import OneSignal from 'react-native-onesignal';
 import I18n from 'react-native-i18n';
 
 export default class PushList extends React.Component {
@@ -106,7 +106,8 @@ export default class PushList extends React.Component {
         OneSignal.sendTag(json.name, json.area);
     }
     getAllTags(){
-        OneSignal.getTags((receivedTags) => {
+        Push.getAllTags()
+        /* (receivedTags) => {
           if(receivedTags==null) {
             alert('No Push Listener')
           }else{
@@ -132,7 +133,7 @@ export default class PushList extends React.Component {
                 ]
             );
           }
-        });
+        });*/
     }
     deleteAllTags(){
         //alert('clearAllTags() '+JSON.stringify(json))
@@ -226,7 +227,6 @@ export default class PushList extends React.Component {
                     <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
-              //<Icon name={'fa-bell-o'} color={'#333333'} size={30} onPress={()=>this.getAllTags()} />
               rightButton={
                  <View style={{flexDirection:'row',}}>
                     <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.getAllTags()} />

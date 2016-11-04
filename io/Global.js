@@ -50,7 +50,8 @@ module.exports = {
     IP2LOC_HOST: 'http://freegeoip.net/json',
     post:'post',
     none:'none',
-    
+    push_p2p:'p2p',
+    push_tags:'tags',
     mainlogin: '',
     login_names:{},
     logins: {},
@@ -123,6 +124,9 @@ module.exports = {
       rent0:'#666600',
       rent1:'#006666',
       //service:'#000000',
+    },
+    getListeningTag(msg) {
+      return 'listen_'+msg.country+'_'+msg.city+'_'+msg.type+'_'+msg.cat
     },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))

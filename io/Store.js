@@ -89,6 +89,24 @@ var deviceStorage = {
                     }
                 }
         },
+        addArrayElement: function(arr, kv, obj) {
+                let k=Object.keys(kv)[0]
+                for(var i = arr.length; i--;) {
+                    //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
+                    if(arr[i][k] === kv[k]) {
+                        let k1=Object.keys(obj)[0]
+                        arr[i][k1]=obj[k1]
+                    }
+                }
+        },
+        readPush: function(kv) {
+                let self = this
+                this.get(this.P2P_PUSH_LIST).then(function(array){
+                    self.addArrayElement(array,kv,{read:1})
+                    self.save(self.P2P_PUSH_LIST,array);
+                    //alert('rm:'+id+'\nlist='+JSON.stringify(array))
+                })
+        },
         emptyFeedList: function(){
                 this.delete(this.FEED_LIST)
         },
