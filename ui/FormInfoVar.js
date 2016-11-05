@@ -256,7 +256,7 @@ export default class FormInfoVar extends Component {
         values.country=this.country
         values.city=this.city
         this.merge_into(values,this.hidden_fields)
-        if(Push.xguid) values['xguid']=Push.xguid
+        if(Push.uid) values['uid']=Push.uid
     }
     merge_into(obj,obj_to_merge){
         for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
@@ -277,6 +277,7 @@ export default class FormInfoVar extends Component {
                   self.fixFormData(values);
                   Net.setMsg(values).then((ret)=> {
                       let alertmsg = ''
+                      //console.log('Net.setMsg() ret='+JSON.stringify(ret))
                       let newkey = Global.getKeyFromMsg(ret)
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
@@ -289,12 +290,12 @@ export default class FormInfoVar extends Component {
                                 alertmsg = 'Edit successfully'
                               }
                           }else{
-                              self.pushToTags(values);
+                              //self.pushToTags(values);
                               let sns_ret = self.postSNS(values);
                               alertmsg = 'Create successfully' +sns_ret
                           }
-                          var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
-                          Net.putHash(my_value);
+                          //var my_value={key:'*'+Global.mainlogin,field:newkey,value:'owner|open'}
+                          //Net.putHash(my_value);
                           alert(alertmsg);
                           DeviceEventEmitter.emit('refresh:Maps',0);
                           DeviceEventEmitter.emit('refresh:MyList',0);
@@ -309,13 +310,13 @@ export default class FormInfoVar extends Component {
         )
     }
     pushToTags(msg){
-        //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now}
+        //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now}
         Push.postTags(
             [ Global.getListeningTag(msg) ],  //'listen:'+msg.country+'_'+msg.city+':'+msg.type+'_'+msg.cat
             'AND',
             msg.title,
             I18n.t('click_more'),
-            {t:'tags',i:Global.getKeyFromMsg(msg),f:Push.xguid,r:msg.ctime}
+            {t:'tags',i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime}
         )
     }
     postSNS(json){

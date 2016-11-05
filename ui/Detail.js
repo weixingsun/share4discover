@@ -52,12 +52,13 @@ export default class Detail extends Component {
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     p2p(now){
         //if(this.props.msg.s1uid) OneSignal.postNotification(title, data, this.props.msg.s1uid);
-        if(this.props.msg.xguid) {
+        if(this.props.msg.uid) {
             Push.postOne(
-                this.props.msg.xguid,
-                this.state.reply,
-                I18n.t('click_more'),
-                {t:Global.push_p2p,i:this.key,f:Push.xguid,r:now}
+                this.props.msg.uid,
+                this.state.reply,     //title
+                I18n.t('click_more'), //content
+                {t:Global.push_p2p,i:this.key,f:Push.uid,r:now},
+                //{action_type:3,intent:'share://shareplus.co.nf/i/'+this.key}  //action
             )
         }
     }
@@ -318,7 +319,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','xguid','country','city']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','uid','country','city']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)

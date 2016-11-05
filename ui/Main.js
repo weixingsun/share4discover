@@ -20,6 +20,7 @@ import MyList from './MyList'
 import Help from './Help'
 import Detail from './Detail'
 import Note from './Note'
+import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 export default class Main extends Component {
   constructor(props) {
@@ -56,6 +57,7 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.ExtUrl()
+      //checkPermission()
       //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){

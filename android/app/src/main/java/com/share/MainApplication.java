@@ -2,40 +2,32 @@ package com.share;
 
 import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
 import cn.reactnative.modules.weibo.WeiboPackage;
-//import co.apptailor.googlesignin.RNGoogleSigninModule;
-//import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
-//import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.microsoft.codepush.react.CodePush;
-//import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-//import com.magus.fblogin.FacebookLoginPackage;
 import com.theweflex.react.WeChatPackage;
-//import com.projectseptember.RNGL.RNGLPackage;
 import com.wxsun.usbserial.UsbReactPackage;
-//import com.reactnative.photoview.PhotoViewPackage;
 import com.keyee.datetime.*;
 //import it.innove.BleManagerPackage;
-//import com.beacon.BeaconsAndroidPackage;
 import com.corbt.keepawake.KCKeepAwakePackage;
-
 import android.app.Application;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
-import com.kh.tencentxg.TencentXGPackage;
+import in.sriraman.sharedpreferences.RNSharedPreferencesReactPackage;
+
+import com.example.baidupush.PushPackage;
+//import com.kh.tencentxg.TencentXGPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-//import com.magus.fblogin.FacebookLoginPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.keyee.datetime.RCTDateTimePickerPackage;
 import com.horcrux.svg.RNSvgPackage;
@@ -83,7 +75,9 @@ public class MainApplication extends Application implements ReactApplication {
       String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new TencentXGPackage(),
+            new RNSharedPreferencesReactPackage(),
+        new PushPackage(),
+        //new TencentXGPackage(),
         new RNDeviceInfo(),
         new RNSoundPackage(),
         new RNSvgPackage(),

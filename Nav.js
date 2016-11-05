@@ -1,11 +1,21 @@
 import React, {Component} from 'react'
-import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
+import {
+    AppRegistry, 
+    DeviceEventEmitter, 
+    Navigator, 
+    Platform, 
+    StyleSheet,
+    Text, 
+    View, 
+    Dimensions, 
+} from 'react-native'
 import Main from './ui/Main'
 import Net from './io/Net'
 import Store from './io/Store'
 import Note from './ui/Note'
 import Detail from './ui/Detail'
 import Push from './io/Push'
+import SharedPreferences from 'react-native-shared-preferences'
 //var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 var __navigator = null
 export default class Nav extends Component {
@@ -39,10 +49,16 @@ export default class Nav extends Component {
     }
     //p2p = {alertBody:'click to view more',title:'hello'}
     onPushReceived(data){
-        alert('onPushReceived:'+JSON.stringify(data))
-        //data.id=Math.round(+new Date()/1000)
-        Store.append(Store.P2P_PUSH_LIST,data)
-        DeviceEventEmitter.emit('refresh:PushList',0);
+        //alert('onPushReceived:'+JSON.stringify(data))
+        console.log('RNBaiduPush:onPushOpened:',data)
+        //Store.append(Store.P2P_PUSH_LIST,data)
+        //DeviceEventEmitter.emit('refresh:PushList',0);
+    }
+    onMsgReceived(data){
+        //alert('onMsgReceived:'+JSON.stringify(data))
+        console.log('RNBaiduPush:onMsgReceived:',data)
+        //Store.append(Store.P2P_PUSH_LIST,data)
+        //DeviceEventEmitter.emit('refresh:PushList',0);
     }
     constructor(props) {
       super(props);
@@ -50,12 +66,30 @@ export default class Nav extends Component {
     }
     componentDidMount() {
         //CodePush.sync();
-        //this.event = DeviceEventEmitter.addListener('refresh:'+this.className,(evt)=>this.refresh());
-        Push.loginXG()
-        Push.listenXG(this.onPushReceived)
+        /*Push.instance.penetrateEvent((msg)=>{
+          this.onMsgReceived(msg)
+        });
+        Push.instance.pushEvent((msg)=>{
+          this.onPushReceived(msg)
+        })*/
+    }
+    componentWillMount() {
+        Push.init()
+        Push.instance.penetrateEvent((msg)=>{
+          this.onMsgReceived(msg)
+        });
+        Push.instance.pushEvent((msg)=>{
+          this.onPushReceived(msg)
+        });
+        if(Platform.OS==='android')
+        SharedPreferences.getItem("push_clicked", function(value){
+          //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
+          console.log("RNBaiduPush:push_clicked="+JSON.stringify(value));  
+          SharedPreferences.clear();
+        });
     }
     componentWillUnmount() {
-        Push.logoutXG()
+        //Push.logout()
     }
     _renderScene(route, navigator) {
       __navigator=navigator

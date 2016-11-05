@@ -24,9 +24,9 @@ function loadLang(lang){
   //require('moment/locale/zh-cn')
 }
 module.exports = {
-    ios_ak:   'Cyq8AKxGeAVNZSzV0Dk74dGpRsImpIHu',
+    ios_ak:   'WAqWASmCo1GO6uA2AWkjs868PVDRaQOO',
     and_ak:   '6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L',
-    ios_mcode:'com.share.2016',
+    ios_mcode:'open.shareplus',
     rel_and_mcode: 'F9:F3:46:15:55:59:22:6A:FB:75:92:FF:23:B4:75:AF:20:E7:22:D6;com.share',
     dev_and_mcode: '81:1E:3F:40:F6:F6:4F:68:D7:6E:79:BC:18:CA:AC:26:84:14:1C:F7;com.share',
     demo_mcode: 'DA:4C:B6:A9:55:62:1D:AD:12:29:DD:7B:69:31:67:47:C5:B2:4E:E1;szj.com.ditu',

@@ -17,8 +17,8 @@ export default class USBList extends React.Component {
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
       this.state = {
-          onesignal_id:'',
-          xg_id:'',
+          //onesignal_id:'',
+          uid:'',
       };
       //I18n.locale = NativeModules.RNI18n.locale
       //this.openJsonAPI = this.openJsonAPI.bind(this);
@@ -43,12 +43,12 @@ export default class USBList extends React.Component {
             </View>
         )
     }
-    renderXG(){
+    renderPush(){
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('xgid')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.xguid }</Text>
+                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uid')}: </Text>
+                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.uid }</Text>
               </View>
             </View>
         )
@@ -103,7 +103,7 @@ export default class USBList extends React.Component {
           />
           {this.renderIcon()}
           {this.renderHomepage()}
-          {this.renderXG()}
+          {this.renderPush()}
           {this.renderCopyright()}
       </View>
       );

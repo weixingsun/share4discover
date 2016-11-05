@@ -209,12 +209,11 @@ export default class SettingsList extends React.Component {
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   {this.renderLogin()}
-                  {this.renderPush()}
               </ScrollView>
           </View>
         );
+        //{this.renderPush()}
         //{this.renderUSB()}
         //{this.renderBLE()}
-        //{this.renderFeed()}
     }
 }

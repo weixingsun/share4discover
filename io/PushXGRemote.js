@@ -44,7 +44,7 @@ function formatTs(ts) {
     ':' + date.getSeconds();
 }
 
-function buildMessage(params, title, content, kv) {
+function buildMessage(params, title, content, kv, action) {
   if (Platform.OS === 'ios') {
     params.environment = 2;
     params.message_type = 0;
@@ -60,6 +60,7 @@ function buildMessage(params, title, content, kv) {
       title,
       vibrate: 1,
       custom_content:kv,
+      action,
     });
   }
   //let now = Date.now()
@@ -98,9 +99,9 @@ function getalltags(xguid){
 function deltag(xguid,tagname){
 
 }*/
-function pushp2p(devToken, title, content, kv) {
+function pushp2p(devToken, title, content, kv, action) {
   if (!devToken) return;
-  var params = buildMessage(buildGeneralParams(devToken), title, content, kv);
+  var params = buildMessage(buildGeneralParams(devToken), title, content, kv, action);
   params.sign = calcSignature(
     'POST',
     'http://openapi.xg.qq.com/v2/push/single_device',
@@ -139,7 +140,7 @@ function broadcast(title,content) {
     .catch(err => console.log(err));
 }
 function pushtags(tags,op,title,content, kv) {
-  var params = buildMessage(buildTagParams(tags,op), title, content, kv);
+  var params = buildMessage(buildTagParams(tags,op), title, content, kv, action);
   params.sign = calcSignature(
     'POST',
     'http://openapi.xg.qq.com/v2/push/tags_device',

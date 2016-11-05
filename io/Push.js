@@ -1,72 +1,75 @@
 import React, {Component} from 'react'
 import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
-import * as XG from 'react-native-tencent-xg';
-import Remote from './PushXGRemote';
-import OneSignal from 'react-native-onesignal';
-//export default class Push {
-//vendor:'xg',1signal,baidu,
-/*
-xg_format:{
-  alertBody: 'The content you sent',
-  title: 'title on Android',
-  badget: 5,
-  userInfo: {
-    customThing: 'something custom'
-  },
-  xgCustomKey: 'xgCustomValue',
-  fireDate: set when you send local notification. Such as Date.now() + 5000
-}
-*/
+//import * as XG from 'react-native-tencent-xg';
+//import Remote from './PushXGRemote';
+//import OneSignal from 'react-native-onesignal';
+import BaiduPush from 'react-native-bdpush'
+
 module.exports = {
     events:[],
-    vendor:'',
-    xguid:'',
-    s1uid:'',
+    uid:'',
+    instance:null,
     getS1Id(){
         let self=this
         OneSignal.configure({
             onIdsAvailable: (device)=> {  //userId,pushToken
-                self.s1uid=device.userId
+                self.uid=device.userId
             }
         });
     },
-    loginXG(){
+    login(){
         //if(id) XG.setCredential(id, key)
-        XG.setCredential(2100240971, 'A3TG58G18CAT')
-        XG.register('OpenShare');
+        //XG.setCredential(2100240971, 'A3TG58G18CAT')
+        //XG.register('OpenShare');
     },
-    logoutXG(){
-        XG.unregister()
-        this.events.filter(h => !!h).forEach(holder => holder.remove());
+    logout(){
+        //XG.unregister()
+        //this.events.filter(h => !!h).forEach(holder => holder.remove());
     },
-    listenXG(onPush){
-        let self=this
-        //console.log(XG.allEvents());
-        var errorHolder = XG.addEventListener('error', err => {
-          alert('event listener error:'+JSON.stringify(err))
+    init(){
+        this.instance = new BaiduPush((evt)=> {
+          if(typeof evt === 'object'){
+            this.uid=evt.channel_id
+            //alert('channel_id='+this.uid)
+            //设置tag
+            // this.bdpush.setTag("hello11",(state)=>{
+            //     if(state == 0){
+            //         console.log("tag设置成功");
+            //     }else{
+            //         console.log("tag设置失败");
+            //     }
+            // });
+
+            //删除tag
+            // this.bdpush.delTag("hello",(state)=>{
+            //   if(state == 0){
+            //     console.log("tag删除成功");
+            //   }else{
+            //     console.log("tag删除失败");
+            //   }
+            // });
+
+            //停止推送
+            // this.bdpush.unbindChannelWithCompleteHandler((state)=>{
+            //     if(state == 0){
+            //         console.log("停止推送成功");
+            //     }else{
+            //         console.log("停止推送失败");
+            //     }
+            // });
+
+            //重新开启推送
+            // this.bdpush.bindChannelWithCompleteHandler((state)=>{
+            //   if(state == 0){
+            //     console.log("重新开启推送成功");
+            //   }else{
+            //     console.log("重新开启推送失败");
+            //   }
+            // });
+          }else{
+            alert((typeof evt)+ JSON.stringify(evt));
+          }
         });
-        if (!errorHolder) throw new Error('Fail to register listener of error');
-        if(__DEV__) XG.enableDebug(true);
-        var registerHolder = XG.addEventListener('register', devToken => {
-            self.xguid=devToken
-            //let url = 'share://shareplus.co.nf/i/car_sell:-43.524177,172.584926:1477797667'
-            //self.postTag({'listen:car_sell','listen:car_rent0'},'OR','tag_title','tag_data')
-        });
-        var remoteHolder = XG.addEventListener('notification', xgInstance => {
-            //alert('notification '+ JSON.stringify(xgInstance))
-            if(onPush) onPush(xgInstance)
-        });
-        if (!remoteHolder) throw new Error('Fail to add event to handle remote notification');
-        var localHolder = XG.addEventListener('localNotification', xgInstance => {
-            alert('localNotification '+ JSON.stringify(xgInstance))
-        });
-        //if (!localHolder) throw new Error('Fail to add event to local notification');
-        this.events = [
-          registerHolder,
-          errorHolder,
-          remoteHolder,
-          localHolder
-        ]
     },
     permission(){
         XG.checkPermissions().then(permission => {
