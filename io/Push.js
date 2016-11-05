@@ -31,14 +31,9 @@ module.exports = {
           if(typeof evt === 'object'){
             this.uid=evt.channel_id
             //alert('channel_id='+this.uid)
-            //设置tag
-            // this.bdpush.setTag("hello11",(state)=>{
-            //     if(state == 0){
-            //         console.log("tag设置成功");
-            //     }else{
-            //         console.log("tag设置失败");
-            //     }
-            // });
+            //this.instance.setTag("tag1",(state)=>{
+            //    alert(" tag设置:"+JSON.stringify(state));
+            //});
 
             //删除tag
             // this.bdpush.delTag("hello",(state)=>{
@@ -94,8 +89,8 @@ module.exports = {
     setTag(tag){
         XG.setTag(tag)
     },
-    getAllTags() {
-        Remote.getalltags(this.xguid)
+    listTags(evt) {
+        this.instance.listTags(evt);
     },
     delTag(tag){
         XG.delTag(tag)

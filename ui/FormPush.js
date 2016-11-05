@@ -83,22 +83,6 @@ export default class FormFeed extends React.Component{
     componentWillUnmount(){
         //this.event.remove();
     }
-    getAllTags(){
-        OneSignal.getTags((receivedTags) => {
-          if(receivedTags==null) {
-            alert('No Push Listener')
-          }else{
-            let tag_keys = Object.keys(receivedTags)
-            let total = ''
-            tag_keys.map((key)=>{
-                let names = key.split('_')
-                let name = I18n.t(names[0]) +' '+ I18n.t(names[1])
-                total+= ' --> '+name+': '+receivedTags[key]+'\n'
-            })
-            alert('Current Push Listeners: \n'+total)
-          }
-        });
-    }
     handleValueChange(form){
         if(typeof form.type === 'object'){
             if(form.type[0] !=null && typeof form.type[0] === 'string'){
@@ -116,7 +100,11 @@ export default class FormFeed extends React.Component{
     onSubmit(values){
         //alert(JSON.stringify(values))
         //Store.insertPushTag(values)
-        Push.setTag(Global.getListeningTag(values));  //{country,city,type,cat}
+        let tag = Global.getListeningTag(values)  //{country,city,type,cat}
+        Push.instance.setTag(tag,(state)=>{
+            if(state.status===0) alert("Tag "+tag+" added")
+            else alert("Add tag "+tag+" failed.");
+        });
         DeviceEventEmitter.emit('refresh:PushList',values);
         this.props.navigator.pop()
     }

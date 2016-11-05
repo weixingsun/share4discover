@@ -1,6 +1,8 @@
 rootProject.name = 'SharePlus'
 
 include ':app'
+//include ':react-native-randombytes'
+//project(':react-native-randombytes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-randombytes/android')
 include ':react-native-shared-preferences'
 project(':react-native-shared-preferences').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-shared-preferences/android')
 include ':react-native-bdpush'
@@ -19,10 +21,10 @@ include ':react-native-fbsdk'
 project(':react-native-fbsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk/android')
 include ':react-native-keep-awake'
 project(':react-native-keep-awake').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keep-awake/android')
-include ':react-native-usbserial'
-project(':react-native-usbserial').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-usbserial/android')
-include ':react-native-onesignal'
-project(':react-native-onesignal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-onesignal/android')
+//include ':react-native-usbserial'
+//project(':react-native-usbserial').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-usbserial/android')
+//include ':react-native-onesignal'
+//project(':react-native-onesignal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-onesignal/android')
 include ':react-native-android-permissions'
 project(':react-native-android-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-android-permissions/android')
 include ':react-native-maps'
@@ -45,9 +47,9 @@ project(':react-native-wechat').projectDir = new File(rootProject.projectDir, '.
 //project(':react-native-beacon').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-beacon/android')
 //include ':react-native-ble-manager'
 //project(':react-native-ble-manager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ble-manager/android')
-include ':react-native-localization'
-project(':react-native-localization').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-localization/android')
-include ':react-native-code-push'
-project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
+//include ':react-native-localization'
+//project(':react-native-localization').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-localization/android')
+//include ':react-native-code-push'
+//project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 include ':react-native-weibo'
 project(':react-native-weibo').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-weibo/android')

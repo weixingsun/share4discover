@@ -16,7 +16,7 @@ import Help from './Help'
 import Store from '../io/Store'
 import Global from '../io/Global'
 import NavigationBar from 'react-native-navbar'
-import CodePush from "react-native-code-push"
+//import CodePush from "react-native-code-push"
 import {Icon} from './Icon'
 import I18n from 'react-native-i18n';
 import Button from 'apsl-react-native-button'
@@ -31,10 +31,10 @@ export default class SettingsList extends React.Component {
         //I18n.locale = NativeModules.RNI18n.locale  //en_US,zh_CN,fr_FR
     }
     componentDidMount(){
-        CodePush.notifyApplicationReady();
+        //CodePush.notifyApplicationReady();
     }
     checkUpdate(){
-        CodePush.checkForUpdate().then( (update) =>{
+        /*CodePush.checkForUpdate().then( (update) =>{
             if( !update ){
 		alert('This is the latest version')
             }else {
@@ -48,7 +48,7 @@ export default class SettingsList extends React.Component {
 		});
 		//CodePush.sync()
             }
-        });
+        })*/
     }
     about(){
         this.props.navigator.push({
@@ -209,10 +209,10 @@ export default class SettingsList extends React.Component {
                       <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
                   </TouchableOpacity>
                   {this.renderLogin()}
+                  {this.renderPush()}
               </ScrollView>
           </View>
         );
-        //{this.renderPush()}
         //{this.renderUSB()}
         //{this.renderBLE()}
     }

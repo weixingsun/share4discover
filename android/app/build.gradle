@@ -143,6 +143,7 @@ android {
 }
 
 dependencies {
+    //compile project(':react-native-randombytes')
     compile project(':react-native-shared-preferences')
     compile project(':react-native-bdpush')
     //compile project(':react-native-tencent-xg')
@@ -153,12 +154,12 @@ dependencies {
     compile (project(':react-native-svg'))    
     compile (project(':react-native-keep-awake')) 
     //compile (project(':react-native-ble-manager'))
-    compile (project(':react-native-usbserial'))  
-    compile (project(':react-native-onesignal'))  
+    //compile (project(':react-native-usbserial'))  
+    //compile (project(':react-native-onesignal'))  
     compile (project(':react-native-android-permissions'))
     compile (project(':react-native-i18n'))          
     compile (project(':react-native-image-picker'))  
-    compile (project(':react-native-code-push'))     
+    //compile (project(':react-native-code-push'))     
     compile (project(':react-native-weibo'))         
     compile (project(':react-native-wechat'))        
     compile (project(':react-native-fbsdk'))         

@@ -1,6 +1,6 @@
 package com.share;
 
-import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
+//import com.geektime.reactnativeonesignal.ReactNativeOneSignalPackage;
 import cn.reactnative.modules.weibo.WeiboPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.burnweb.rnpermissions.RNPermissionsPackage;
@@ -8,10 +8,10 @@ import com.facebook.react.ReactActivity;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
 import com.imagepicker.ImagePickerPackage;
-import com.microsoft.codepush.react.CodePush;
+//import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.theweflex.react.WeChatPackage;
-import com.wxsun.usbserial.UsbReactPackage;
+//import com.wxsun.usbserial.UsbReactPackage;
 import com.keyee.datetime.*;
 //import it.innove.BleManagerPackage;
 import com.corbt.keepawake.KCKeepAwakePackage;
@@ -23,6 +23,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+//import com.bitgo.randombytes.RandomBytesPackage;
 import in.sriraman.sharedpreferences.RNSharedPreferencesReactPackage;
 
 import com.example.baidupush.PushPackage;
@@ -59,10 +60,10 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    protected String getJSBundleFile() {
-        return CodePush.getJSBundleFile();
-    }
+    //@Override
+    //protected String getJSBundleFile() {
+    //    return CodePush.getJSBundleFile();
+    //}
 
     @Override
     protected boolean getUseDeveloperSupport() {
@@ -71,26 +72,27 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      String stagingKey = "ZplJqL1U5atxj36CLDKSEzzVmCGq4yG-vGnJ-";
-      String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
+      //String stagingKey = "ZplJqL1U5atxj36CLDKSEzzVmCGq4yG-vGnJ-";
+      //String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new RNSharedPreferencesReactPackage(),
+        //new RandomBytesPackage(),
+        new RNSharedPreferencesReactPackage(),
         new PushPackage(),
         //new TencentXGPackage(),
         new RNDeviceInfo(),
         new RNSoundPackage(),
         new RNSvgPackage(),
         new ReactNativeI18n(),
-        new ReactNativeOneSignalPackage(),
+        //new ReactNativeOneSignalPackage(),
         new ImagePickerPackage(),
-        new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
+        //new CodePush(stagingKey, MainApplication.this, BuildConfig.DEBUG),
         //new ReactNativeLocalizationPackage(),
         //new FacebookLoginPackage(),
         //new RNGoogleSigninPackage(),
         //new BleManagerPackage(),
         //new BeaconsAndroidPackage(),
-        new UsbReactPackage(),
+        //new UsbReactPackage(),
         new RNPermissionsPackage(),  //Android 6.0 permission
         new FBSDKPackage(mCallbackManager),  //mCallbackManager
         new WeChatPackage(),

@@ -106,7 +106,38 @@ export default class PushList extends React.Component {
         OneSignal.sendTag(json.name, json.area);
     }
     getAllTags(){
-        Push.getAllTags()
+        //Push.listTags((event)=>{
+        //    if(event && event.tags && typeof event.tags ==='object') {
+                if(event.tags.length===0) alert('No Push Listener')
+                else{
+                    let tags = this.state.push_tags
+                    let total = ''
+                    tags.map((key)=>{
+                        let names = key.split('_')
+                        if(names.length>4){
+                          let name = I18n.t(names[3]) +' '+ I18n.t(names[4])
+                          total+= ' --> '+name
+                        }
+                    })
+                    let self=this
+                    Alert.alert(
+                      "Delete",
+                      "Do you want to delete following push listeners? \n"+total,
+                      [
+                        {text:"Cancel" },
+                        {text:"OK", onPress:()=>{
+                          //Store.deleteAllPush()
+                          tags.map((tag)=>{
+                             Push.instance.delTag(tag,()=>{})
+                          })
+                          self.push_list=[]
+                          self.setState({ dataSource:this.ds.cloneWithRows([]) })
+                        }},
+                      ]
+                    );
+                }
+        //    }
+        //})
         /* (receivedTags) => {
           if(receivedTags==null) {
             alert('No Push Listener')
