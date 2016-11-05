@@ -20,35 +20,30 @@ export default class PushList extends React.Component {
           rowHasChanged: (row1, row2) => row1 !== row2,
           sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
       });
-      this.push_list = []
+      this.tag_list = []
       this.state = {
-          dataSource:this.ds.cloneWithRows(this.push_list),
+          tag_list: [],
       };
       //this.load=this.load.bind(this)
     }
     componentDidMount(){
-        DeviceEventEmitter.removeAllListeners('refresh:FeedList')
-        this.event = DeviceEventEmitter.addListener('refresh:FeedList',(evt)=>setTimeout(()=>this.load(),500));
+        DeviceEventEmitter.removeAllListeners('refresh:PushList')
+        this.event = DeviceEventEmitter.addListener('refresh:PushList',(evt)=>setTimeout(()=>this.load(),500));
     }
     componentWillUnmount(){
         //this.event.remove();
-        DeviceEventEmitter.removeAllListeners('refresh:FeedList')
+        DeviceEventEmitter.removeAllListeners('refresh:PushList')
     }
     componentWillMount(){
         this.load();
     }
     load(){
-        var _this=this;
-        //Store.delete(Store.FEED_LIST)
-        Store.get(Store.PUSH_LIST).then(function(list){
-            if(list){
-                _this.push_list = _this.sort(list)
-                _this.setState({dataSource: _this.ds.cloneWithRows(_this.push_list)});
-            //}else{
-            //  Store.insertFeedData();
+        var self=this;
+        Push.listTags((event)=>{
+            if(event && event.tags && typeof event.tags ==='object') {
+                self.setState({tag_list:event.tags})
             }
         })
-        //Store.insertFeedData();
     }
     sort(arr){
         let total ={}
@@ -76,18 +71,45 @@ export default class PushList extends React.Component {
     }
     openPush(json){
     }
-    EditPush(data){
+    EditPush(json){
+        //let json = Global.getJsonFromTagName(data)
         this.props.navigator.push({
             component: FormPush,
-            passProps: {navigator:this.props.navigator,push:data,} //refresh:this.load},
+            passProps: {navigator:this.props.navigator,push:json,} //refresh:this.load},
         })
     }
-    deletePush(data){
-        Store.deletePush(data)
-        this.push_list = this.push_list.filter(function(name){ return name != data})
-        this.setState({dataSource: this.ds.cloneWithRows(this.push_list)});
+    deleteAllTagsAlert(){
+        if(this.state.tag_list.length===0) alert('No Push Listener')
+        else{
+            let total = ''
+            this.state.tag_list.map((key)=>{
+                let names = key.split('_')
+                if(names.length>4){
+                    let name = I18n.t(names[3]) +' '+ I18n.t(names[4])
+                    total+= ' --> '+name+'\n'
+                }
+            })
+            let self=this
+            Alert.alert(
+                "Delete",
+                "Do you want to delete following push listeners? \n"+total,
+                [
+                    {text:"Cancel" },
+                    {text:"OK", onPress:()=>{
+                        self.deleteAllTags()
+                    }},
+                ]
+            );
+        }
     }
-    deletePushAlert(data){
+    deleteAllTags(){
+        //alert('clearAllTags() '+JSON.stringify(json))
+        this.state.tag_list.map((tag)=>{
+            Push.instance.delTag(tag,()=>{})
+        })
+        this.setState({ tag_list:[] })
+    }
+    deleteTagAlert(data){
         let self=this
         Alert.alert(
             "Delete",
@@ -95,92 +117,18 @@ export default class PushList extends React.Component {
             [
                 {text:"Cancel" },
                 {text:"OK", onPress:()=>{
-                    self.deletePush(data) 
                     self.delTag(data)
                 }},
             ]
         );
     }
-    sendTag(json){
-        //alert('sendTag() '+JSON.stringify(json))
-        OneSignal.sendTag(json.name, json.area);
-    }
-    getAllTags(){
-        //Push.listTags((event)=>{
-        //    if(event && event.tags && typeof event.tags ==='object') {
-                if(event.tags.length===0) alert('No Push Listener')
-                else{
-                    let tags = this.state.push_tags
-                    let total = ''
-                    tags.map((key)=>{
-                        let names = key.split('_')
-                        if(names.length>4){
-                          let name = I18n.t(names[3]) +' '+ I18n.t(names[4])
-                          total+= ' --> '+name
-                        }
-                    })
-                    let self=this
-                    Alert.alert(
-                      "Delete",
-                      "Do you want to delete following push listeners? \n"+total,
-                      [
-                        {text:"Cancel" },
-                        {text:"OK", onPress:()=>{
-                          //Store.deleteAllPush()
-                          tags.map((tag)=>{
-                             Push.instance.delTag(tag,()=>{})
-                          })
-                          self.push_list=[]
-                          self.setState({ dataSource:this.ds.cloneWithRows([]) })
-                        }},
-                      ]
-                    );
-                }
-        //    }
-        //})
-        /* (receivedTags) => {
-          if(receivedTags==null) {
-            alert('No Push Listener')
-          }else{
-            let tag_keys = Object.keys(receivedTags)
-            let total = ''
-            tag_keys.map((key)=>{
-                let names = key.split('_')
-                let name = I18n.t(names[0]) +' '+ I18n.t(names[1])
-                total+= ' --> '+name+': '+receivedTags[key]+'\n'
-            })
-            let self=this
-            Alert.alert(
-                "Delete",
-                "Do you want to delete following push listeners? \n"+total,
-                [
-                  {text:"Cancel" },
-                  {text:"OK", onPress:()=>{
-                    Store.deleteAllPush()
-                    self.deleteAllTags()
-                    self.push_list=[]
-                    self.setState({ dataSource:this.ds.cloneWithRows([]) })
-                  }},
-                ]
-            );
-          }
-        });*/
-    }
-    deleteAllTags(){
-        //alert('clearAllTags() '+JSON.stringify(json))
-        //OneSignal.deleteTag(json.name);
-        OneSignal.getTags((receivedTags) => {
-            Object.keys(receivedTags).forEach(function(key,index) {
-                OneSignal.deleteTag(key);
-            });
-        });
-    }
-    delTag(str){
-        let json = JSON.parse(str)
-        OneSignal.deleteTag(json.name);
+    delTag(tag){
+        Push.instance.delTag(tag,()=>{})
+        let list = this.state.tag_list.filter(function(name){ return name != tag})
+        this.setState({tag_list: list});
     }
     _renderSwipeoutRow(rowData){
-      let json = JSON.parse(rowData)
+      let json = Global.getJsonFromTagName(rowData)
       let rightButton = [{
           text:'Modify',
           backgroundColor:'#ff6f00',
@@ -188,7 +136,7 @@ export default class PushList extends React.Component {
         },{
           text:'Delete',
           backgroundColor:'#ff0000',
-          onPress:()=>this.deletePushAlert(rowData),
+          onPress:()=>this.deleteTagAlert(rowData),
         },]
       let leftButton = []
         //leftButton = [{
@@ -215,12 +163,11 @@ export default class PushList extends React.Component {
     }
     _renderRow(json) {
         //let json = JSON.parse(data)
-        if(!json.name) return
+        //if(!json.name) return
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
-        let names = json.name.split('_')
-        let name = I18n.t(names[0]) +' '+ I18n.t(names[1])
+        let name = I18n.t(json.type) +' '+ I18n.t(json.cat)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
             onPress={()=>this.openPush(json)} >
@@ -249,7 +196,6 @@ export default class PushList extends React.Component {
     }
     render(){
       let title1=I18n.t('push')+' '+I18n.t('list')
-      //alert(JSON.stringify(this.api_list))
       return (
       <View>
           <NavigationBar style={Style.navbar} title={{title:title1,}} 
@@ -260,7 +206,7 @@ export default class PushList extends React.Component {
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.getAllTags()} />
+                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.deleteAllTagsAlert()} />
                     <View style={{width:30}} />
                     <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addPush()} />
                     <View style={{width:10}} />
@@ -270,7 +216,7 @@ export default class PushList extends React.Component {
           <ListView
               enableEmptySections={true}      //annoying warning
               style={styles.listViewContainer}
-              dataSource={this.state.dataSource}
+              dataSource={this.ds.cloneWithRows(this.state.tag_list)}
               renderRow={this._renderSwipeoutRow.bind(this)}
               //renderHeader={this._renderHeader.bind(this)}
               //renderSectionHeader = {this._renderSectionHeader.bind(this)}

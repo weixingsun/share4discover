@@ -125,8 +125,17 @@ module.exports = {
       rent1:'#006666',
       //service:'#000000',
     },
-    getListeningTag(msg) {
+    getTagNameFromJson(msg) {
       return 'listen_'+msg.country+'_'+msg.city+'_'+msg.type+'_'+msg.cat
+    },
+    getJsonFromTagName(name) {
+        let names = name.split('_')
+        return {
+            country:names[1],
+            city:names[2],
+            type:names[3],
+            cat:names[4],
+        }
     },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))

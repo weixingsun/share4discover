@@ -99,8 +99,7 @@ export default class FormFeed extends React.Component{
     }
     onSubmit(values){
         //alert(JSON.stringify(values))
-        //Store.insertPushTag(values)
-        let tag = Global.getListeningTag(values)  //{country,city,type,cat}
+        let tag = Global.getTagNameFromJson(values)  //{country,city,type,cat}
         Push.instance.setTag(tag,(state)=>{
             if(state.status===0) alert("Tag "+tag+" added")
             else alert("Add tag "+tag+" failed.");
