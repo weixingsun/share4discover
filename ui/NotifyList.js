@@ -56,9 +56,12 @@ export default class NotifyList extends Component {
           if(value!=null){
               //alert("pushes_received="+value);
               let json = JSON.parse(value)
-              if(json.length>0) self.setState({
-                  push_list: json
-              })
+              if(json.length>0){
+                  self.setState({
+                      push_list: json
+                  })
+                  //alert(JSON.stringify(json))
+              }
           }
           //SharedPreferences.clear();
         });
@@ -91,9 +94,9 @@ export default class NotifyList extends Component {
   }
   openPush(json){
       //alert('openPush: '+JSON.stringify(json))
-      if(json.t===Global.push_p2p || json.t===Global.push_tags) {
-          if(!json.read)this.readMsg(json.id)
-          this.getMsg(json.i)
+      if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tags) {
+          if(!json.read)this.readMsg(json.custom.r)
+          this.getMsg(json.custom.i)
       }
       if(json.type==='rss'){
           this.props.navigator.push({
@@ -133,7 +136,7 @@ export default class NotifyList extends Component {
   }
   readMsg(id){
       DeviceEventEmitter.emit('refresh:PushList',0);
-      Store.readPush({id:id})
+      //Store.readPush({id:id})
   }
   _onPress(rowData) {
       alert('_onPress: '+JSON.stringify(rowData))
@@ -254,10 +257,10 @@ export default class NotifyList extends Component {
     );
   }
     _renderPushRowView(data) {
-        if(!data.title||!data.i) return
+        if(!data.title||!data.custom.i) return
         let bold = data.read? {fontSize:16} : {fontSize:16,fontWeight:'bold',color:'black'}
         //let push_type = data.t
-        let key = data.i
+        let key = data.custom.i
         let type = key.split('_')[0]
         let name = Global.trimTitle(data.title)
         let number = ''
