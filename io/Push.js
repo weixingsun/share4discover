@@ -5,6 +5,7 @@ import Remote from './PushBaiduRemote';
 //import OneSignal from 'react-native-onesignal';
 import BaiduPush from 'react-native-bdpush'
 import querystring from 'query-string';
+import Global from './Global'
 const md5 = require('./md5');
 
 module.exports = {
@@ -36,7 +37,7 @@ module.exports = {
             //this.instance.setTag("tag1",(state)=>{
             //    alert(" tag设置:"+JSON.stringify(state));
             //});
-            this.postOne()
+            //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
             //删除tag
             // this.bdpush.delTag("hello",(state)=>{
             //   if(state == 0){
@@ -81,21 +82,17 @@ module.exports = {
     },
     //postOne(self.xguid,'hello','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
     postOne(uid,title,data,kv){
-        //POSThttp://api.tuisong.baidu.com/rest/3.0/test/echo
-           // + apikey=6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L
-           // + timestamp=1427180905
-           // + sign=87772555E1C16715EBA5C85341684C58
         let method= 'POST' 
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/single_device";
-        let apikey = '6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L'
-        let secret_key = '2GvcaUXXlWvMIOSWSSbaEnGo8lxg49Vy'
+        let apikey = Platform.OS==='ios'?Global.ios_ak:Global.and_ak
+        let secret_key = Platform.OS==='ios'?Global.ios_sk:Global.and_sk
         let timestamp = Math.round(Date.now() / 1000);
-        let channel_id = this.uid
+        let channel_id = uid
         let msg_type = 1 //1:push, 0:msg
         let msg = {
-            title:"title",
-            description: "content",
-            custom_content:{"key":"value"},
+            title: title,
+            description: data,
+            custom_content: kv,
         }
         let paramStr="",bodyStr="",param={apikey:apikey,timestamp:timestamp,channel_id:channel_id,msg_type:1,msg:msg}
         let keys = Object.keys(param).sort();
@@ -120,8 +117,8 @@ module.exports = {
             },
             body: bodyStr //querystring.stringify(param)
           }
-        ).then(res => alert('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
-         .catch(err => alert(JSON.stringify(err)))
+        ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
+        //.catch(err => alert(JSON.stringify(err)))
     },
     //postAll('broadcast_title','broadcast_data')
     postAll(title,data){
