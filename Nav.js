@@ -28,6 +28,7 @@ export default class Nav extends Component {
         });
     }
     openShare(key){
+      let self=this
       Net.getMsg(key).then((json)=> {
         if(json!=null){
             //alert(JSON.stringify(json))
@@ -36,15 +37,10 @@ export default class Nav extends Component {
       });
     }
     openPush(data){
-        if(data.custom){
+        if(data.custom.i){  //data.custom.t={p2p,tag}
+            this.openShare(data.custom.i)
+        }else if (data.custom.note){
             this.openPage(Note,data)
-            //self.sendCustomNoteURL(data)
-        }else if (data.tag_notification){
-            let key = data.tag_notification
-            this.openShare(key)
-        }else if (data.p2p_notification && data.p2p_notification.key) {
-            let key = data.p2p_notification.key.split('#')[0]
-            this.openShare(key)
         }
     }
     //p2p = {alertBody:'click to view more',title:'hello'}
@@ -81,14 +77,16 @@ export default class Nav extends Component {
         Push.instance.pushEvent((msg)=>{
           this.onPushReceived(msg)
         });
-        if(Platform.OS==='android'){
-          SharedPreferences.getItem("push_clicked", function(value){
-            //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
-            if(value!=null) alert("push_clicked type="+(typeof value)+" : "+JSON.stringify(value));  
-            //SharedPreferences.clear();
-            SharedPreferences.deleteItem("push_clicked");
-          });
-        }
+        let self=this
+        Store.getShared(Store.PUSH_CLICKED, (value)=>{
+            if(value!=null){
+                //alert("push_clicked type="+(typeof value)+" : "+value);  
+                let json = JSON.parse(value)
+                //alert('push_clicked:'+json.custom.i)
+                self.openPush(json) 
+                Store.deleteShared(Store.PUSH_CLICKED);
+            }
+        });
     }
     componentWillUnmount() {
         //Push.logout()

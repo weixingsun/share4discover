@@ -53,7 +53,7 @@ module.exports = {
     post:'post',
     none:'none',
     push_p2p:'p2p',
-    push_tags:'tags',
+    push_tag:'tag',
     mainlogin: '',
     login_names:{},
     logins: {},

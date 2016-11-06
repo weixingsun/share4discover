@@ -51,10 +51,10 @@ export default class NotifyList extends Component {
   load(){
       var self=this;
       if(Platform.OS==='android')
-        SharedPreferences.getItem("pushes_received", function(value){
+        //alert(JSON.parse('[,{"a":1}]'))
+        Store.getShared(Store.PUSH_RECEIVED, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           if(value!=null){
-              //alert("pushes_received="+value);
               let json = JSON.parse(value)
               if(json.length>0){
                   self.setState({
@@ -64,7 +64,7 @@ export default class NotifyList extends Component {
               }
           }
           //SharedPreferences.clear();
-        });
+        })
   }
   sort(arr){
       let total ={}
@@ -94,8 +94,8 @@ export default class NotifyList extends Component {
   }
   openPush(json){
       //alert('openPush: '+JSON.stringify(json))
-      if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tags) {
-          if(!json.read)this.readMsg(json.custom.r)
+      if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tag) {
+          if(!json.read)this.readPush(json.custom.r)
           this.getMsg(json.custom.i)
       }
       if(json.type==='rss'){
@@ -134,12 +134,12 @@ export default class NotifyList extends Component {
             alert('This share has been deleted.')
       });
   }
-  readMsg(id){
+  readPush(id){
+      Store.readPushShared({r:id})
       DeviceEventEmitter.emit('refresh:PushList',0);
-      //Store.readPush({id:id})
   }
   _onPress(rowData) {
-      alert('_onPress: '+JSON.stringify(rowData))
+      //alert('_onPress: '+JSON.stringify(rowData))
       if(!rowData.read)this.readMsg(rowData.id)
       this.getMsg(Global.getKeyFromReply(rowData))
   }
@@ -161,15 +161,15 @@ export default class NotifyList extends Component {
         let k=Object.keys(kv)[0]
         for(var i = arr.length; i--;) {
             //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-            if(arr[i][k] === kv[k]) {
+            if(arr[i][k] === kv[k] || arr[i].custom[k]===kv[k]) {
                 arr.splice(i, 1);
             }
         }
     }
     deletePush(id){
-        Store.deletePush({id:id})
+        Store.deletePushShared({r:id})
         this.push_list = this.state.push_list //.filter(function(item){ return item.id != id})
-        this.removeArrayElement(this.push_list,{id:id})
+        this.removeArrayElement(this.push_list,{r:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
         this.setState({push_list: this.push_list});
     }
@@ -180,12 +180,13 @@ export default class NotifyList extends Component {
     }
     deletePushAlert(data){
         let self=this
+        let id=Platform.OS==='android'?data.custom.r:data.r
         Alert.alert(
             "Delete",
             "Do you want to delete this push message ? ",
             [
                 {text:"Cancel" },
-                {text:"OK", onPress:()=>self.deletePush(data.id) },
+                {text:"OK", onPress:()=>self.deletePush(id) },
             ]
         );
     }
@@ -258,9 +259,15 @@ export default class NotifyList extends Component {
   }
     _renderPushRowView(data) {
         if(!data.title||!data.custom.i) return
-        let bold = data.read? {fontSize:16} : {fontSize:16,fontWeight:'bold',color:'black'}
-        //let push_type = data.t
-        let key = data.custom.i
+        let bold = {fontSize:16,fontWeight:'bold',color:'black'}
+        let normal={fontSize:16}
+        let text_style = bold, key=data.i
+        if(Platform.OS==='android'){
+            text_style= data.custom.read?normal:bold
+            //let push_type = data.custom.t
+            key = data.custom.i
+            //alert('data='+JSON.stringify(data)+'\ncustom='+JSON.stringify(data.custom))
+        }
         let type = key.split('_')[0]
         let name = Global.trimTitle(data.title)
         let number = ''
@@ -279,7 +286,7 @@ export default class NotifyList extends Component {
                   />
                 </View>
                 <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                    <Text style={ bold }>{name}</Text>
+                    <Text style={ text_style }>{name}</Text>
                 </View>
                 <View style={{marginRight:10,justifyContent:'center'}}>
                     <Text>{number}</Text>

@@ -33,36 +33,24 @@ module.exports = {
         this.instance = new BaiduPush((evt)=> {
           if(typeof evt === 'object'){
             this.uid=evt.channel_id
-            //alert('channel_id='+this.uid)
+            //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
+
             //this.instance.setTag("tag1",(state)=>{
             //    alert(" tag设置:"+JSON.stringify(state));
             //});
-            //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
             //删除tag
             // this.bdpush.delTag("hello",(state)=>{
-            //   if(state == 0){
-            //     console.log("tag删除成功");
-            //   }else{
-            //     console.log("tag删除失败");
-            //   }
+            //     console.log("tag删除成功"); //state==0
             // });
 
             //停止推送
             // this.bdpush.unbindChannelWithCompleteHandler((state)=>{
-            //     if(state == 0){
-            //         console.log("停止推送成功");
-            //     }else{
-            //         console.log("停止推送失败");
-            //     }
+            //     console.log("停止推送成功"); //state==0
             // });
 
             //重新开启推送
             // this.bdpush.bindChannelWithCompleteHandler((state)=>{
-            //   if(state == 0){
-            //     console.log("重新开启推送成功");
-            //   }else{
-            //     console.log("重新开启推送失败");
-            //   }
+            //     console.log("重新开启推送成功"); //state==0
             // });
           }else{
             alert((typeof evt)+ JSON.stringify(evt));
@@ -80,7 +68,7 @@ module.exports = {
       });
       return rv.replace(/\%20/g,'+');
     },
-    //postOne(self.xguid,'hello','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
+    //postOne(self.uid,'hello','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now})
     postOne(uid,title,data,kv){
         let method= 'POST' 
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/single_device";
@@ -120,29 +108,22 @@ module.exports = {
         ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
         //.catch(err => alert(JSON.stringify(err)))
     },
-    //postAll('broadcast_title','broadcast_data')
     postAll(title,data){
         //OneSignal.postNotification(title, data, uid);
         Remote.broadcast(title, data);
     },
-    //postTag({'listen:car_sell','listen:car_rent0'},'OR','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
-    postTags(tags,op,title,data,kv){  //onesignal in server side
+    //postTag({'listen_cn_beijing_car_sell'},'tags_title','click to view more',{t:'tag',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
+    postTags(tag,title,data,kv){  //onesignal in server side
         //OneSignal.postNotification(title, data, tag);
         Remote.pushtags(tags,op,title,data,kv)
     },
     setTag(tag){
-        XG.setTag(tag)
+        this.instance.setTag(tag)
     },
-    listTags(evt) {
-        this.instance.listTags(evt);
+    listTags(tags) {
+        this.instance.listTags(tags);
     },
     delTag(tag){
-        XG.delTag(tag)
-    },
-    delAllTags(){},
-    getBadge(){
-        XG.getApplicationIconBadgeNumber().then(badgeNum => {
-            //alert(badgeNum)
-        })
+        this.instance.delTag(tag)
     },
 }

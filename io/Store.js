@@ -1,9 +1,14 @@
-import { AsyncStorage } from 'react-native';
+import { 
+  AsyncStorage,
+  Platform,
+} from 'react-native';
+import SharedPreferences from 'react-native-shared-preferences'
 
 var deviceStorage = {
         API_LIST:  "api_list",
         FEED_LIST: "feed_list",
-        PUSH_LIST: "push_list",
+        PUSH_CLICKED: "push_clicked",
+        PUSH_RECEIVED: "pushes_received",
         P2P_PUSH_LIST: "push_list:r",
         MAP_LIST:  "map_list",
         PLACE_LIST:"place_list",
@@ -20,6 +25,63 @@ var deviceStorage = {
         mapTab:  'ion-ios-globe',
         confTab: 'ion-md-settings',
 
+        getShared(key,cbk){
+          if(Platform.OS==='android')
+            SharedPreferences.getItem(key, (value)=>cbk(value))
+        },
+        setShared(key,value){
+          if(Platform.OS==='android')
+            SharedPreferences.setItem(key, value)
+        },
+        deleteShared(key){
+          if(Platform.OS==='android')
+            SharedPreferences.deleteItem(key)
+        },
+        clearShared(){
+          if(Platform.OS==='android')
+            SharedPreferences.clear()
+        },
+        readPushShared(kv) {
+            let self = this
+            this.getShared(this.PUSH_RECEIVED,function(str){
+                let array = JSON.parse(str)
+                self.addArrayElementShared(array,kv,{read:1})
+                self.setShared(self.PUSH_RECEIVED,JSON.stringify(array));
+                //alert('rm:'+id+'\nlist='+JSON.stringify(array))
+            })
+        },
+        addArrayElementShared(arr, kv, obj) {
+            if(Platform.OS==='android'){
+                let k=Object.keys(kv)[0]
+                for(var i = arr.length; i--;) {
+                    if(arr[i].custom[k] === kv[k]) {
+                        //alert('key='+k+'\nvalue='+kv[k]+'\n in custom:'+JSON.stringify(arr[i].custom[k]))
+                        let k1=Object.keys(obj)[0]
+                        arr[i].custom[k1]=obj[k1]
+                    }
+                }
+                //alert('arr='+JSON.stringify(arr))
+            }else{}
+        },
+        deletePushShared(kv) {
+            let self = this
+            this.getShared(this.PUSH_RECEIVED,function(str){
+                let array = JSON.parse(str)
+                self.deleteArrayElementShared(array,kv)
+                self.setShared(self.PUSH_RECEIVED,JSON.stringify(array));
+                //alert('rm:'+id+'\nlist='+JSON.stringify(array))
+            })
+        },
+        deleteArrayElementShared(arr,kv){
+            let k=Object.keys(kv)[0]
+            for(var i = arr.length; i--;) {
+                //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
+                if(arr[i][k] === kv[k] || arr[i].custom[k] === kv[k]) {
+                    //alert('removing item:'+JSON.stringify(kv))
+                    arr.splice(i, 1);
+                }
+            }
+        },
 	get: function(key) {
 		return AsyncStorage.getItem(key).then(function(value) {
 			return JSON.parse(value);
