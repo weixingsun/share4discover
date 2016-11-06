@@ -97,14 +97,20 @@ module.exports = {
             description: "content",
             custom_content:{"key":"value"},
         }
-        let paramStr="",param={apikey:apikey,timestamp:timestamp,channel_id:channel_id,msg_type:1,msg:msg}
+        let paramStr="",bodyStr="",param={apikey:apikey,timestamp:timestamp,channel_id:channel_id,msg_type:1,msg:msg}
         let keys = Object.keys(param).sort();
         keys.forEach(function (key) {
-            paramStr += key + "=" + JSON.stringify(param[key]);
+            let temp = ''
+            if( typeof param[key] === 'object' ) temp = key + "=" + JSON.stringify(param[key]);
+            else temp = key + "=" + param[key];
+            paramStr+=temp
+            bodyStr+=temp+'&'
         })
-        let basekey = this.fullEncodeURIComponent( method + url + paramStr + secret_key)
-        param.sign = md5(basekey)
-        alert('sign='+param.sign)
+        //bodyStr = bodyStr.slice(0, bodyStr.length - 1);
+        let rawkey = method + url + paramStr + secret_key
+        let basekey = this.fullEncodeURIComponent( rawkey )
+        let sign = md5(basekey)
+        bodyStr+="sign="+sign
         fetch(
           url, {
             method: 'POST',
@@ -112,9 +118,9 @@ module.exports = {
               "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
               "User-Agent": 'BCCS_SDK/3.0 (Darwin; Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64; x86_64) PHP/5.6.3 (Baidu Push Server SDK V3.0.0 and so on..) cli/Unknown ZEND/2.6.0',
             },
-            body: querystring.stringify(param)
+            body: bodyStr //querystring.stringify(param)
           }
-        ).then(res => alert('return: '+JSON.stringify(res.text())))
+        ).then(res => alert('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
          .catch(err => alert(JSON.stringify(err)))
     },
     //postAll('broadcast_title','broadcast_data')
