@@ -12,6 +12,10 @@ module.exports = {
     events:[],
     uid:'',
     instance:null,
+    bd_header:{
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        "User-Agent": 'BCCS_SDK/3.0 (Darwin; Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64; x86_64) PHP/5.6.3 (Baidu Push Server SDK V3.0.0 and so on..) cli/Unknown ZEND/2.6.0',
+    },
     getS1Id(){
         let self=this
         OneSignal.configure({
@@ -99,10 +103,7 @@ module.exports = {
         fetch(
           url, {
             method: 'POST',
-            headers: {
-              "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-              "User-Agent": 'BCCS_SDK/3.0 (Darwin; Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64; x86_64) PHP/5.6.3 (Baidu Push Server SDK V3.0.0 and so on..) cli/Unknown ZEND/2.6.0',
-            },
+            headers: this.bd_header,
             body: bodyStr //querystring.stringify(param)
           }
         ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
@@ -115,7 +116,39 @@ module.exports = {
     //postTag({'listen_cn_beijing_car_sell'},'tags_title','click to view more',{t:'tag',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
     postTags(tag,title,data,kv){  //onesignal in server side
         //OneSignal.postNotification(title, data, tag);
-        Remote.pushtags(tags,op,title,data,kv)
+        let method= 'POST'
+        let url  = "http://api.tuisong.baidu.com/rest/3.0/push/tags";
+        let apikey = Platform.OS==='ios'?Global.ios_ak:Global.and_ak
+        let secret_key = Platform.OS==='ios'?Global.ios_sk:Global.and_sk
+        let timestamp = Math.round(Date.now() / 1000);
+        let msg_type = 1 //1:push, 0:msg
+        let msg = {
+            title: title,
+            description: data,
+            custom_content: kv,
+        }
+        let paramStr="",bodyStr="",param={apikey:apikey,timestamp:timestamp,tag:tag,type:1,msg_type:1,msg:msg}
+        let keys = Object.keys(param).sort();
+        keys.forEach(function (key) {
+            let temp = ''
+            if( typeof param[key] === 'object' ) temp = key + "=" + JSON.stringify(param[key]);
+            else temp = key + "=" + param[key];
+            paramStr+=temp
+            bodyStr+=temp+'&'
+        })
+        //bodyStr = bodyStr.slice(0, bodyStr.length - 1);
+        let rawkey = method + url + paramStr + secret_key
+        let basekey = this.fullEncodeURIComponent( rawkey )
+        let sign = md5(basekey)
+        bodyStr+="sign="+sign
+        fetch(
+          url, {
+            method: 'POST',
+            headers: this.bd_header,
+            body: bodyStr //querystring.stringify(param)
+          }
+        ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
+        //.catch(err => alert(JSON.stringify(err)))    
     },
     setTag(tag){
         this.instance.setTag(tag)

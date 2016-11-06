@@ -70,6 +70,7 @@ export default class PushList extends React.Component {
         })
     }
     openPush(json){
+        //alert('locale='+I18n.locale)
     }
     EditPush(json){
         //let json = Global.getJsonFromTagName(data)
@@ -167,7 +168,8 @@ export default class PushList extends React.Component {
         let number = ''
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
-        let name = I18n.t(json.type) +' '+ I18n.t(json.cat)
+        let locale = I18n.locale.substring(0,2)
+        let name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         return (
       <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
             onPress={()=>this.openPush(json)} >
