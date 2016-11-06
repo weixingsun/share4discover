@@ -81,12 +81,14 @@ export default class Nav extends Component {
         Push.instance.pushEvent((msg)=>{
           this.onPushReceived(msg)
         });
-        if(Platform.OS==='android')
-        SharedPreferences.getItem("push_clicked", function(value){
-          //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
-          console.log("RNBaiduPush:push_clicked="+JSON.stringify(value));  
-          SharedPreferences.clear();
-        });
+        if(Platform.OS==='android'){
+          SharedPreferences.getItem("push_clicked", function(value){
+            //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
+            if(value!=null) alert("push_clicked type="+(typeof value)+" : "+JSON.stringify(value));  
+            //SharedPreferences.clear();
+            SharedPreferences.deleteItem("push_clicked");
+          });
+        }
     }
     componentWillUnmount() {
         //Push.logout()

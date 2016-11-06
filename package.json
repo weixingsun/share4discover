@@ -33,7 +33,7 @@
     "react-native-progress": "^3.1.0",
     "react-native-root-modal": "git+https://github.com/weixingsun/react-native-root-modal.git",
     "react-native-sglistview": "^0.3.2",
-    "react-native-shared-preferences": "0.0.7",
+    "react-native-shared-preferences": "git+https://github.com/weixingsun/react-native-shared-preferences.git",
     "react-native-sound": "^0.8.3",
     "react-native-svg": "git+https://github.com/weixingsun/react-native-svg.git",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",

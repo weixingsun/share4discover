@@ -1,6 +1,17 @@
 'use strict';
 import React, { Component } from 'react'
-import { Alert, DeviceEventEmitter, NativeModules, ListView, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
+import { 
+  Alert, 
+  DeviceEventEmitter, 
+  NativeModules, 
+  ListView, 
+  Text, 
+  View, 
+  TouchableHighlight, 
+  Platform,
+  Image, 
+  StyleSheet 
+} from 'react-native';
 import I18n from 'react-native-i18n';
 import NavigationBar from 'react-native-navbar';
 import Swipeout from 'react-native-swipeout';
@@ -16,6 +27,7 @@ import RssReader from './RssReader';
 import YqlReader from './YqlReader';
 import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
+import SharedPreferences from 'react-native-shared-preferences'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -37,13 +49,19 @@ export default class NotifyList extends Component {
       this.event_notify = DeviceEventEmitter.addListener('refresh:PushList',(evt)=>setTimeout(()=>this.load(),400))
   }
   load(){
-      var _this=this;
-      Store.get(Store.PUSH_LIST+':'+'r').then(function(list){
-          if(list){
-              _this.setState({push_list: list})
-              //_this.setState({dataSource: _this.ds.cloneWithRows(list)});
+      var self=this;
+      if(Platform.OS==='android')
+        SharedPreferences.getItem("pushes_received", function(value){
+          //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
+          if(value!=null){
+              //alert("pushes_received="+value);
+              let json = JSON.parse(value)
+              if(json.length>0) self.setState({
+                  push_list: json
+              })
           }
-      })
+          //SharedPreferences.clear();
+        });
   }
   sort(arr){
       let total ={}
@@ -153,7 +171,8 @@ export default class NotifyList extends Component {
         this.setState({push_list: this.push_list});
     }
     deleteAllPush(){
-        Store.deleteAllPush()
+        //Store.deleteAllPush()
+        SharedPreferences.deleteItem("pushes_received");
         this.setState({push_list: []})
     }
     deletePushAlert(data){
@@ -235,7 +254,7 @@ export default class NotifyList extends Component {
     );
   }
     _renderPushRowView(data) {
-        if(!data.title) return
+        if(!data.title||!data.i) return
         let bold = data.read? {fontSize:16} : {fontSize:16,fontWeight:'bold',color:'black'}
         //let push_type = data.t
         let key = data.i
