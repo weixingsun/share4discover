@@ -24,8 +24,7 @@ export default class ToS extends React.Component {
         return (
             <View style={{backgroundColor:'#ddeeff'}} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('home')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={()=>Linking.openURL('http://shareplus.co.nf')}>http://shareplus.co.nf</Text>
+                  <Text style={{justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> 1. {I18n.t('tos_special')} </Text>
               </View>
             </View>
         )

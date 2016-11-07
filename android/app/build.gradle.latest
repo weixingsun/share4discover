@@ -89,7 +89,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.6"
+        versionName "1.0.7"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -143,7 +143,9 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-tencent-xg')
+    compile project(':react-native-shared-preferences')
+    compile project(':react-native-bdpush')
+    //compile project(':react-native-tencent-xg')
     compile project(':react-native-device-info')
     compile "com.facebook.react:react-native:+"
     compile (project(':react-native-sound'))   
@@ -151,12 +153,12 @@ dependencies {
     compile (project(':react-native-svg'))    
     compile (project(':react-native-keep-awake')) 
     //compile (project(':react-native-ble-manager'))
-    compile (project(':react-native-usbserial'))  
-    compile (project(':react-native-onesignal'))  
+    //compile (project(':react-native-usbserial'))  
+    //compile (project(':react-native-onesignal'))  
     compile (project(':react-native-android-permissions'))
     compile (project(':react-native-i18n'))          
     compile (project(':react-native-image-picker'))  
-    compile (project(':react-native-code-push'))     
+    //compile (project(':react-native-code-push'))     
     compile (project(':react-native-weibo'))         
     compile (project(':react-native-wechat'))        
     compile (project(':react-native-fbsdk'))         
