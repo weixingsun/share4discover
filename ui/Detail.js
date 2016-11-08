@@ -69,7 +69,7 @@ export default class Detail extends Component {
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = Math.round(+new Date()/1000) //+new Date();
-        let msgReplyValue={l:Global.mainlogin,c:this.state.reply}
+        let msgReplyValue={l:Global.mainlogin,c:this.state.reply,f:Push.uid}
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         //let loginsObj = Global.getLogins(this.props.msg.owner)
         //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}

@@ -16,14 +16,6 @@ module.exports = {
         "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
         "User-Agent": 'BCCS_SDK/3.0 (Darwin; Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64; x86_64) PHP/5.6.3 (Baidu Push Server SDK V3.0.0 and so on..) cli/Unknown ZEND/2.6.0',
     },
-    getS1Id(){
-        let self=this
-        OneSignal.configure({
-            onIdsAvailable: (device)=> {  //userId,pushToken
-                self.uid=device.userId
-            }
-        });
-    },
     login(){
         //if(id) XG.setCredential(id, key)
         //XG.setCredential(2100240971, 'A3TG58G18CAT')
@@ -37,6 +29,7 @@ module.exports = {
         this.instance = new BaiduPush((evt)=> {
           if(typeof evt === 'object'){
             this.uid=evt.channel_id
+            console.log('init() evt='+JSON.stringify(evt))
             //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
 
             //this.instance.setTag("tag1",(state)=>{
@@ -57,7 +50,7 @@ module.exports = {
             //     console.log("重新开启推送成功"); //state==0
             // });
           }else{
-            alert((typeof evt)+ JSON.stringify(evt));
+            console.log('bdpush. event-> type='+(typeof evt)+ JSON.stringify(evt));
           }
         });
     },
