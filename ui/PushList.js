@@ -24,6 +24,7 @@ export default class PushList extends React.Component {
       this.state = {
           tag_list: [],
       };
+      this.updateOnUI=true
       //this.load=this.load.bind(this)
     }
     componentDidMount(){
@@ -32,6 +33,7 @@ export default class PushList extends React.Component {
     }
     componentWillUnmount(){
         //this.event.remove();
+        this.updateOnUI=false
         DeviceEventEmitter.removeAllListeners('refresh:PushList')
     }
     componentWillMount(){
@@ -40,7 +42,8 @@ export default class PushList extends React.Component {
     load(){
         var self=this;
         Push.listTags((event)=>{
-            if(event && event.tags && typeof event.tags ==='object') {
+            //alert('received tags from PushList:'+JSON.stringify(event))
+            if(event && event.tags && typeof event.tags ==='object' && self.updateOnUI ) {
                 self.setState({tag_list:event.tags})
             }
         })

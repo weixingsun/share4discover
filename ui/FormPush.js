@@ -101,8 +101,8 @@ export default class FormFeed extends React.Component{
         //alert(JSON.stringify(values))
         let tag = Global.getTagNameFromJson(values)  //{country,city,type,cat}
         Push.instance.setTag(tag,(state)=>{
-            if(state.status===0) alert("Tag "+tag+" added")
-            else alert("Add tag "+tag+" failed.");
+            if(state.status==0 || state.error_code=='0') alert("Tag "+tag+" added")
+            else alert("Add tag "+tag+" failed. status="+state);
         });
         DeviceEventEmitter.emit('refresh:PushList',values);
         this.props.navigator.pop()
