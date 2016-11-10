@@ -29,7 +29,7 @@ module.exports = {
         this.instance = new BaiduPush((evt)=> {
           if(typeof evt === 'object'){
             this.uid=evt.channel_id
-            console.log('init() evt='+JSON.stringify(evt))
+            //alert('init() channel_id='+evt.channel_id)
             //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
 
             //this.instance.setTag("tag1",(state)=>{
@@ -50,7 +50,7 @@ module.exports = {
             //     console.log("重新开启推送成功"); //state==0
             // });
           }else{
-            console.log('bdpush. event-> type='+(typeof evt)+ JSON.stringify(evt));
+            alert('bdpush.init() evt='+ evt);
           }
         });
     },
@@ -146,8 +146,8 @@ module.exports = {
     setTag(tag){
         this.instance.setTag(tag)
     },
-    listTags(tags) {
-        this.instance.listTags(tags);
+    listTags(evt) {
+        this.instance.listTags(evt);
     },
     delTag(tag){
         this.instance.delTag(tag)

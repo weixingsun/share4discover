@@ -12,6 +12,7 @@
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
+		03003A771DD3EFDC00709D94 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 03003A761DD3EFDC00709D94 /* main.jsbundle */; };
 		030488061C94472D00AA2D90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488051C94472D00AA2D90 /* SystemConfiguration.framework */; };
 		030488081C94477800AA2D90 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488071C94477800AA2D90 /* CoreTelephony.framework */; };
 		0304880A1C9447A000AA2D90 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 030488091C9447A000AA2D90 /* libsqlite3.0.tbd */; };
@@ -22,6 +23,7 @@
 		0350AB7B1DD0449200498D6C /* test.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0350AB791DD0449200498D6C /* test.caf */; };
 		0350ABA01DD044AB00498D6C /* BaiDuPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0350AB9C1DD044AB00498D6C /* BaiDuPush.swift */; };
 		0350ABA11DD044AB00498D6C /* BaiDuPushBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0350AB9E1DD044AB00498D6C /* BaiDuPushBridge.m */; };
+		0377DCC81DD3D44000A3E93A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0377DCC71DD3D44000A3E93A /* SwiftyJSON.swift */; };
 		03CD51C91D7E97F500FC1209 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */; };
 		03CD51CA1D7E97F500FC1209 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */; };
 		03CD51CB1D7E97F500FC1209 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C81D7E97F500FC1209 /* FBSDKShareKit.framework */; };
@@ -295,6 +297,7 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
+		03003A761DD3EFDC00709D94 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = Share/main.jsbundle; sourceTree = "<group>"; };
 		030488051C94472D00AA2D90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		030488071C94477800AA2D90 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		030488091C9447A000AA2D90 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
@@ -308,6 +311,7 @@
 		0350AB9D1DD044AB00498D6C /* BaiDuPushBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiDuPushBridge.h; sourceTree = "<group>"; };
 		0350AB9E1DD044AB00498D6C /* BaiDuPushBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiDuPushBridge.m; sourceTree = "<group>"; };
 		0350AB9F1DD044AB00498D6C /* Push-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Push-Bridging-Header.h"; sourceTree = "<group>"; };
+		0377DCC71DD3D44000A3E93A /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = "../node_modules/react-native-onesignal/ios/Frameworks/OneSignal.framework"; sourceTree = "<group>"; };
 		03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -539,6 +543,7 @@
 		0350AB9B1DD044AB00498D6C /* baidupush */ = {
 			isa = PBXGroup;
 			children = (
+				0377DCC71DD3D44000A3E93A /* SwiftyJSON.swift */,
 				0350AB9C1DD044AB00498D6C /* BaiDuPush.swift */,
 				0350AB9D1DD044AB00498D6C /* BaiDuPushBridge.h */,
 				0350AB9E1DD044AB00498D6C /* BaiDuPushBridge.m */,
@@ -617,6 +622,7 @@
 		13B07FAE1A68108700A75B9A /* Share */ = {
 			isa = PBXGroup;
 			children = (
+				03003A761DD3EFDC00709D94 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -1140,6 +1146,7 @@
 				C912204C97C1476483377E2D /* Entypo.ttf in Resources */,
 				51F75C7781D5463E883A9747 /* EvilIcons.ttf in Resources */,
 				6C4E7798496A4B35BC5F42E9 /* FontAwesome.ttf in Resources */,
+				03003A771DD3EFDC00709D94 /* main.jsbundle in Resources */,
 				5880A692D42A48A899386020 /* Foundation.ttf in Resources */,
 				61A2F142B93F4D8090E697BE /* Ionicons.ttf in Resources */,
 				5D3F8F455C994E979F82CF80 /* MaterialIcons.ttf in Resources */,
@@ -1156,7 +1163,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1164,9 +1171,9 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
+			shellScript = "../node_modules/react-native/packager/react-native-xcode.sh";
 		};
 		03913F1A1D0BF5EE00C9C8CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1191,6 +1198,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				0350ABA11DD044AB00498D6C /* BaiDuPushBridge.m in Sources */,
+				0377DCC81DD3D44000A3E93A /* SwiftyJSON.swift in Sources */,
 				0350ABA01DD044AB00498D6C /* BaiDuPush.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1263,7 +1271,7 @@
 				PRODUCT_NAME = OpenShare;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "../node_modules/react-native-bdpush/ios/baidupush/Push-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7 armv7s i386";
 			};
@@ -1318,7 +1326,7 @@
 				PRODUCT_NAME = OpenShare;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "../node_modules/react-native-bdpush/ios/baidupush/Push-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7 armv7s i386";
 			};

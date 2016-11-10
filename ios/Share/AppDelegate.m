@@ -17,6 +17,7 @@
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 //#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 #import "RCTLinkingManager.h"
+//#import "UserNotifications.h"
 //#import "RCTPushNotificationManager.h"
 #import "OpenShare-Swift.h"
 BMKMapManager* mapManager;

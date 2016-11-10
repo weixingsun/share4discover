@@ -16,7 +16,7 @@
     "react-native": "^0.36.0",
     "react-native-android-permissions": "0.0.7",
     "react-native-baidumap": "git+https://github.com/weixingsun/react-native-baidumap.git",
-    "react-native-bdpush": "^1.0.1",
+    "react-native-bdpush": "git+https://github.com/weixingsun/react-native-bdpush.git",
     "react-native-datetime": "^0.1.2",
     "react-native-device-info": "^0.9.6",
     "react-native-fbsdk": "^0.3.0",
