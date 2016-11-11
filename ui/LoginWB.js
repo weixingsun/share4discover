@@ -39,11 +39,13 @@ var Login = React.createClass({
     }
   },
   renderLoginName() {
+    var onPress=this._signIn
     var name = I18n.t('login')+' '+I18n.t('wb');
     if(this.props.user != null ){
        name=this.props.user.name;
+       onPress=this._signOut
     }
-    return <View key='user_wb'><Text>{name}</Text></View>
+    return <View key='user_wb'><Text onPress={onPress}>{name}</Text></View>
   },
   saveUserDB(data) {
     //console.log('saveUserDB:'+JSON.stringify(data));
