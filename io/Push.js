@@ -110,7 +110,7 @@ module.exports = {
             headers: this.bd_header,
             body: bodyStr //querystring.stringify(param)
           }
-        ).then(res => alert('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
+        ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
         //.catch(err => alert(JSON.stringify(err)))
     },
     postAll(title,data){
@@ -162,7 +162,7 @@ module.exports = {
             headers: this.bd_header,
             body: bodyStr //querystring.stringify(param)
           }
-        ).then(res => alert('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
+        ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
         //.catch(err => alert(JSON.stringify(err)))    
     },
     setTag(tag){
