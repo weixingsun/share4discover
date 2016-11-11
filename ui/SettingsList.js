@@ -132,7 +132,7 @@ export default class SettingsList extends React.Component {
     }
     renderLogin(){
         var DEVICE_WIDTH = Dimensions.get('window').width
-        let login_color = Global.mainlogin.length>0?'blue':'grey'
+        let login_color = Global.mainlogin.length>0?Style.highlight_color:'grey'
         return (
                 <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                     component: Login,

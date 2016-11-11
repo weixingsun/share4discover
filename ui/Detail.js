@@ -231,6 +231,7 @@ export default class Detail extends Component {
               return <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
             }else{
               let replyObj = JSON.parse(this.props.msg[key])
+              //alert(JSON.stringify(replyObj))
               let owner = replyObj.l
               let reply = replyObj.c
               let time  = parseInt(key.substring(1)) //#time -> time

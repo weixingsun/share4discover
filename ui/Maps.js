@@ -28,9 +28,9 @@ export default class Maps extends Component {
       this.pos = null;
       this.state = {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
-        catDataSource: this.ds.cloneWithRows(Object.keys(Global.CAT_COLORS)),
+        catDataSource: this.ds.cloneWithRows(Object.keys(Style.CAT_COLORS)),
         type:'car',
-        cat:'rent0',
+        cat:'buy',
         ccid:0,
         circles: [],
         region:this.props.region,
@@ -51,7 +51,7 @@ export default class Maps extends Component {
     loadIcons(type,cat){
         if(Global.MAP===Global.GoogleMap) return
         let name=Global.TYPE_ICONS[type]
-        let color=Global.CAT_COLORS[cat]
+        let color=Style.CAT_COLORS[cat]
         //alert('type='+type+' name='+name+' cat='+cat+' color='+color)
         var self = this;
         getImageSource(name, 40, color).then((source) => {
@@ -166,7 +166,7 @@ export default class Maps extends Component {
     renderPlaceMarkersGmap(){
         return this.state.markers.map( (marker) => {
             var self=this
-            var color=Global.CAT_COLORS[marker.cat]
+            var color=Style.CAT_COLORS[marker.cat]
             let key = Global.getKeyFromMsg(marker)
             let T = marker.type.substring(0,1).toUpperCase()
             //badge={{text:T,color:_color}}
@@ -271,7 +271,7 @@ export default class Maps extends Component {
     }
     renderNavBar() {
         let iconType = Global.TYPE_ICONS[this.state.type]
-        let color = Global.CAT_COLORS[this.state.cat]
+        let color = Style.CAT_COLORS[this.state.cat]
         let ModalTypeFunc = ()=>this.setState({showTypes:!this.state.showTypes})
         let ModalCatFunc  = ()=>this.setState({showCats:!this.state.showCats})
         return (
@@ -334,7 +334,6 @@ export default class Maps extends Component {
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
-      //let color = Global.CAT_COLORS[this.state.cat]
       let func = () => alert('Please login to publish')
       if(Global.mainlogin!=='')
           func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
@@ -365,7 +364,7 @@ export default class Maps extends Component {
         );
     }
     renderTypeRow(row: string, sectionID: number, rowID: number){
-      let color = Global.CAT_COLORS[this.state.cat]
+      let color = Style.CAT_COLORS[this.state.cat]
       return (
       <TouchableHighlight onPress={() => this._pressType(sectionID,rowID,row)}>
           <View style={{flexDirection:'row',width:280,height:50,backgroundColor:color, padding:6, }}>
@@ -398,7 +397,7 @@ export default class Maps extends Component {
         );
     }
     renderCatRow(row: string, sectionID: number, rowID: number){
-      let color = Global.CAT_COLORS[row]
+      let color = Style.CAT_COLORS[row]
       return (
       <TouchableHighlight onPress={() => this._pressCat(sectionID,rowID,row)}>
         <View>

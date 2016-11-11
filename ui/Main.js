@@ -356,7 +356,10 @@ export default class Main extends Component {
       this.setState({ page: name });
   }
   getSelectedColor(id){
-    if(id === this.state.page) return 'blue';
+    if(id === this.state.page){
+        //alert('id='+id+' page='+this.state.page +' color='+Style.highlight_color)
+        return Style.highlight_color;
+    }
   }
   render() {
     //if(this.state.isLoading) return <Loading />
@@ -368,7 +371,7 @@ export default class Main extends Component {
     return (
         <View style={{flex:1}}>
           {this.pages()}
-          <Tabs selected={this.state.page} style={Style.bottomBar} selectedStyle={{color:'blue'}}
+          <Tabs selected={this.state.page} style={Style.bottomBar}
                 onSelect={(e)=> this.gotoPage(e.props.name)} >
             <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} />
             <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} />
