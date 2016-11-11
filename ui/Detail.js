@@ -58,7 +58,7 @@ export default class Detail extends Component {
                 this.state.reply,     //title
                 I18n.t('click_more'), //content
                 {t:Global.push_p2p,i:this.key,f:Push.uid,r:now},
-                //{action_type:3,intent:'share://shareplus.co.nf/i/'+this.key}  //action
+                this.props.msg.os,
             )
         }
     }
@@ -319,7 +319,7 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','catTitle','typeTitle','uid','country','city']
+        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','uid','country','city','os']
         var keys = Object.keys(this.props.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)

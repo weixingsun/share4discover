@@ -257,6 +257,10 @@ export default class FormInfoVar extends Component {
         values.city=this.city
         this.merge_into(values,this.hidden_fields)
         if(Push.uid) values['uid']=Push.uid
+        if(Platform.OS==='ios'){ 
+          if (__DEV__) values['os']='idev' 
+          else values['os']='ios' 
+        }
     }
     merge_into(obj,obj_to_merge){
         for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
@@ -276,8 +280,10 @@ export default class FormInfoVar extends Component {
               {text:"OK", onPress:()=>{
                   self.fixFormData(values);
                   Net.setMsg(values).then((ret)=> {
-                      let alertmsg = ''
-                      //console.log('Net.setMsg() ret='+JSON.stringify(ret))
+                    let alertmsg = ''
+                    console.log('Net.setMsg() ret='+JSON.stringify(ret))
+                    if(ret==null){ alert("Network problem")
+                    }else{
                       let newkey = Global.getKeyFromMsg(ret)
                       if(ret.phone == values.phone){
                           if(this.props.msg!=null){ //edit
@@ -306,6 +312,7 @@ export default class FormInfoVar extends Component {
                       }else{
                           alert('Error:'+ret)
                       }
+                    }
                   })
               }},
             ]
@@ -317,7 +324,8 @@ export default class FormInfoVar extends Component {
             Global.getTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city+':'+msg.type+'_'+msg.cat
             msg.title,
             I18n.t('click_more'),
-            {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime}
+            {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},
+            msg.os
         )
     }
     postSNS(json){

@@ -1,16 +1,14 @@
 'use strict';
 import React, { Component } from 'react'
 import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import FBSDK,{LoginManager,AccessToken,ShareApi} from 'react-native-fbsdk'
+import I18n from 'react-native-i18n'
 import {Icon} from './Icon'
-//import FBLogin,{FBLoginManager} from 'react-native-facebook-login'
-//import FBSDK,{LoginManager} from 'react-native-fbsdk'
-//import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import Style from "./Style"
 import Store from "../io/Store"
-//import FBLoginView from "./FBLoginView"
-import LoginFBOfficial from './LoginFBOfficial'
+import Global from '../io/Global'
+//import LoginFBOfficial from './LoginFBOfficial'
 //import LoginFBNonOfficial from './LoginFBNonOfficial'
-import I18n from 'react-native-i18n'
 
 var Login = React.createClass({
   renderLoginButton(){
