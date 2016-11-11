@@ -7,63 +7,80 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
 import Global from '../io/Global'
-//import LoginFBOfficial from './LoginFBOfficial'
-//import LoginFBNonOfficial from './LoginFBNonOfficial'
 
 var Login = React.createClass({
+  getInitialState: function(){
+    return {
+      user: this.props.user,
+      gray: '#dddddd',
+      blue: '#425bb4',
+    };
+  },
+  onPress: function(){
+    this.state.user? this.handleLogout():this.handleLogin()
+  },
+  handleLogin: function(){
+    var _this = this;
+    if(Global.SETTINGS_LOGINS.fb===Global.none){
+        LoginManager.logInWithReadPermissions(['public_profile']).then(  //'email', 'user_friends', 'public_profile'
+          function(result) {
+            if (result.isCancelled) {
+            } else {
+              let token = AccessToken.getCurrentAccessToken()
+              //alert('Login success token='+token+' with permissions:'+result.grantedPermissions.toString())
+              AccessToken.getCurrentAccessToken().then(
+                data => {
+                  //alert(JSON.stringify(data)) //{accessToken,permissions,declinedPermissions,applicationID,accessTokenSource,userID,expirationTime,lastRefreshTime}
+                  _this.setState({ user : data});
+                  _this._facebookSignIn(data);
+                }
+              );
+            }
+          },
+          function(error) {
+            alert('Login fail with error: ' + error);
+          }
+        );
+    }else{
+      //alert('post')
+      LoginManager.logInWithPublishPermissions(['publish_actions']).then(
+        function(result) {
+          if (result.isCancelled) {
+            //alert('Login cancelled');
+          } else {
+            let token = AccessToken.getCurrentAccessToken()
+            //alert('Login success token='+token+' with permissions:'+result.grantedPermissions.toString())
+            AccessToken.getCurrentAccessToken().then(
+              data => {
+                  //alert(JSON.stringify(data)) //{accessToken,permissions,declinedPermissions,applicationID,accessTokenSource,userID,expirationTime,lastRefreshTime}
+                  _this.setState({ user : data});
+                  _this._facebookSignIn(data);
+              }
+            );
+          }
+        },
+        function(error) {
+          alert('Login fail with error: ' + error);
+        }
+      );
+    }
+  },
+  handleLogout: function(){
+    this.logout()
+  },
   renderLoginButton(){
-    var _this=this;
+    var color = this.state.user? this.state.blue : this.state.gray ;
     return  (
-        <LoginFBOfficial style={{ marginBottom: 10, }}
-          onPress={function(){
-            //console.log("FBLoginMock clicked.");
-          }}
-          onLogin={function(data){
-            console.log("FBLoginMock logged in!");
-            _this._facebookSignIn(data);
-          }}
-          onLogout={function(){
-            console.log("FBLoginMock logged out.");
-            _this.logout();
-          }}
-	  user={this.props.user}
-        />
+        <Icon name={'fa-facebook-official'} size={35} color={color} onPress={this.onPress} />
       );
   },
-/*
-      <FBLogin
-          buttonView={<FBLoginView user={this.props.user} />}
-          permissions={["email","user_friends"]}
-          loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Native}
-          //loginBehavior={NativeModules.FBLoginManager.LoginBehaviors.Web}
-          onLogin={function(data){
-              _this._facebookSignIn(data);
-          }}
-          onLoginFound={function(data){
-              console.log('FB:onLoginFound:'+JSON.stringify(data));
-              //_this.setState({user: null });
-          }}
-          onLoginNotFound={function(data){
-              //console.log('FB:onLoginNotFound:'+JSON.stringify(data));
-              //_this.setState({user: null });
-          }}
-          onLogout={function(data){
-              _this.logout();
-          }}
-          onCancel={function(e){console.log(e)}}
-          onPermissionsMissing={function(e){
-              console.log("onPermissionsMissing:")
-              console.log(e)
-          }}
-      />
-*/
   renderLoginName() {
     //console.log('renderFacebook:name:'+JSON.stringify(this.props.user));
     var name = I18n.t('login')+' '+I18n.t('fb');
     if(this.props.user != null ){ //&& this.props.user.type === 'fb'){
          name = this.props.user.name;
     }
-    return (<View key='user_fb'><Text>{name}</Text></View>);
+    return (<View key='user_fb'><Text onPress={this.onPress}>{name}</Text></View>);
   },
   saveUserDB(data) {
     //console.log('saveUserDB:'+JSON.stringify(data));
@@ -77,6 +94,8 @@ var Login = React.createClass({
           {text:I18n.t('cancel'), onPress:()=>console.log("")},
           {text:I18n.t('ok'), onPress:()=>{
               Store.delete('user_fb');
+              LoginManager.logOut();
+              this.setState({ user : null});
               this.props.logout()
           }},
         ]
