@@ -24,12 +24,13 @@ export default class Detail extends Component {
         this.images = []
         this.isLogin = (Global.mainlogin.length>0)
         this.isMyMsg = this.checkSns(Global.mainlogin)
-        this.close_image = null;
         this.state={ 
             reply: '',
             reply_height: 35,
             //image_modal_name:this.images[0],
             show_pic_modal:false,
+            push_to:this.props.msg.uid,
+            talk_to:null,
         }
         this.key = Global.getKeyFromMsg(this.props.msg)
         this.openZoom=this.openZoom.bind(this)
@@ -37,9 +38,6 @@ export default class Detail extends Component {
     }
     componentWillMount(){
         let self = this;
-        getImageSource('ion-ios-close', 40, 'white').then((source) => {
-            self.close_image=source
-        });
         if(typeof this.props.msg.pics ==='object'){
             this.images = this.props.msg.pics
             //alert(JSON.stringify(this.props.msg))
@@ -49,12 +47,24 @@ export default class Detail extends Component {
         }
         //I18n.locale = NativeModules.RNI18n.locale
     }
+    talkTo(user_name,user_push_id){
+        this.setState({
+            reply:'@'+user_name+' ',
+            push_to:user_push_id,
+            talk_to:user_push_id
+        })
+    }
+    getTalkIcon(){
+        return 'ion-ios-text-outline'
+        //if(this.state.talk_to===from) icon='ion-ios-text'
+        //alert('from='+from+' push_to='+this.state.push_to)
+    }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     p2p(now){
         //if(this.props.msg.s1uid) OneSignal.postNotification(title, data, this.props.msg.s1uid);
         if(this.props.msg.uid) {
             Push.postOne(
-                this.props.msg.uid,
+                this.state.push_to,
                 this.state.reply,     //title
                 I18n.t('click_more'), //content
                 {t:Global.push_p2p,i:this.key,f:Push.uid,r:now},
@@ -69,7 +79,14 @@ export default class Detail extends Component {
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = Math.round(+new Date()/1000) //+new Date();
-        let msgReplyValue={l:Global.mainlogin,c:this.state.reply,f:Push.uid}
+        let msgReplyValue={
+            l:{
+              type:Global.getMainLoginType(),
+              name:Global.getMainLoginName()
+            },
+            c:this.state.reply,
+            f:Push.uid
+        }
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         //let loginsObj = Global.getLogins(this.props.msg.owner)
         //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
@@ -154,13 +171,13 @@ export default class Detail extends Component {
             <View style={{flexDirection:'row',}}>
               <Icon
                 name={'ion-ios-create-outline'}
-                color={'blue'}
+                color={Style.font_colors.enabled}
                 size={40}
                 onPress={this.onEdit.bind(this) } />
 	      <View style={{width:40}} />
               <Icon
                 name={'ion-ios-trash-outline'}
-                color={'red'}
+                color={Style.font_colors.enabled}
                 size={40}
                 onPress={this.onDelete.bind(this) } />
               <View style={{width:10}} />
@@ -235,8 +252,9 @@ export default class Detail extends Component {
               let owner = replyObj.l
               let reply = replyObj.c
               let time  = parseInt(key.substring(1)) //#time -> time
-              let sns_type = owner.split(':')[0]
-	      let sns_user = owner.split(':')[1]
+              let sns_type = owner.type
+	      let sns_user = owner.name
+	      let from = replyObj.f
 	      return (
 	        <View style={{marginLeft:20,flexDirection:'row',flex:1}} key={key}>
                     <Icon
@@ -245,14 +263,14 @@ export default class Detail extends Component {
                         color={'blue'}
                         name={Global.SNS_ICONS[sns_type]}
                     />
-                    <View style={{marginLeft:10,flex:1}}>
-  	              <View style={{flexDirection:'row'}}>
+                    <View style={{marginLeft:10,flex:1,flexDirection:'row'}}>
+  	              <View style={{flex:1}}>
                         <Text>{ sns_user }</Text>
                         <View style={{flex:1}} />
-                        <Text style={{color:'gray'}}>{ Global.getDateTimeFormat(time)}</Text>
+                        <Text>{ Global.getDateTimeFormat(time)+': '+reply }</Text>
                       </View>
                       <View >
-                        <Text>{ reply }</Text>
+                        <Icon name={this.getTalkIcon()} size={40} onPress={()=>this.talkTo(sns_user,from)}/>
                       </View>
                     </View>
                 </View>
@@ -372,7 +390,7 @@ export default class Detail extends Component {
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                       <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
                      </View>
                    }
                    rightButton={ this.showActionIcons() }

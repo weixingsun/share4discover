@@ -162,7 +162,7 @@ export default class SettingsList extends React.Component {
         }
     }
     renderAddIcon(){
-      return <Button style={{height:41,width:50,borderColor:'#5080ff'}} />
+      return <Button style={{height:41,width:50,borderColor:Style.highlight_color}} />
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width

@@ -181,11 +181,17 @@ module.exports = {
             if(logins.wb)  return 'wb:'+logins.wb
         }
     },
+    getMainLoginType(){
+            if(this.logins.fb)  return 'fb'
+            if(this.logins.wx)  return 'wx'
+            if(this.logins.gg)  return 'gg'
+            if(this.logins.wb)  return 'wb'
+    },
     getMainLoginName(){
-            if(this.logins.fb)  return this.user_fb.name
-            if(this.logins.wx)  return this.user_wx.name
-            if(this.logins.gg)  return this.user_gg.name
-            if(this.logins.wb)  return this.user_wb.name
+            if(this.logins.fb)  return this.userObjects.fb.name
+            if(this.logins.wx)  return this.userObjects.wx.name
+            if(this.logins.gg)  return this.userObjects.gg.name
+            if(this.logins.wb)  return this.userObjects.wb.name
     },
     getNotifyKey(){
         return '@'+this.mainlogin

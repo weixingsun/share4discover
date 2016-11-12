@@ -165,6 +165,7 @@ export default class Main extends Component {
       //var self = this
       //alert('type='+type+' last2='+type.split('_')[1])
       Store.get(type).then((user)=>{  //{type,email}
+          //if(user!=null)alert('type='+type+' json='+JSON.stringify(user))
           let last2 = type.split('_')[1]
           if(user != null && Global.logins[user.type]==null) {
               Global.logins[user.type]=user.email;

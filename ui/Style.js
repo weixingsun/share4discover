@@ -87,7 +87,7 @@ module.exports = {
       //service:'#000000',
   },
   //font_colors:{disabled:'#777777',enabled:'#dddddd'},
-  font_colors:{disabled:'#777777',enabled:'#ffffff'},
+  font_colors:{disabled:'#ffffff',enabled:'#ffffff'},
   //highlight_color: '#598987',
   highlight_color: '#599987',
   navbar: {
