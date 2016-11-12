@@ -30,7 +30,6 @@ export default class Detail extends Component {
             //image_modal_name:this.images[0],
             show_pic_modal:false,
             push_to:this.props.msg.uid,
-            talk_to:null,
         }
         this.key = Global.getKeyFromMsg(this.props.msg)
         this.openZoom=this.openZoom.bind(this)
@@ -49,14 +48,13 @@ export default class Detail extends Component {
     }
     talkTo(user_name,user_push_id){
         this.setState({
-            reply:'@'+user_name+' ',
+            reply:'@'+user_name+': ',
             push_to:user_push_id,
-            talk_to:user_push_id
         })
     }
     getTalkIcon(){
         return 'ion-ios-text-outline'
-        //if(this.state.talk_to===from) icon='ion-ios-text'
+        //if(this.state.push_to===from) icon='ion-ios-text'
         //alert('from='+from+' push_to='+this.state.push_to)
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
@@ -326,10 +324,14 @@ export default class Detail extends Component {
                             multiline={true}
                             value={this.state.reply}
                             onChange={(event) => {
+                                if(event.nativeEvent.text.length<1) push_to=this.props.msg.uid
+                                else push_to=this.state.push_to
                                 this.setState({
                                     reply: event.nativeEvent.text,
                                     reply_height: event.nativeEvent.contentSize.height,
+                                    push_to:push_to,
                                 });
+                                if(event.nativeEvent.text.length<1) push_to=this.props.msg.uid
                             }}
                         />
                     </View>

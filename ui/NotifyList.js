@@ -38,11 +38,13 @@ export default class NotifyList extends Component {
           push_list:[],
       }
       this.share_types = Object.keys(Global.TYPE_ICONS)
+      this.updateOnUI=true
   }
   componentWillMount(){
       this.load()
   }
   componentWillUnmount(){
+      this.updateOnUI=false
       this.event_notify.remove()
   }
   componentDidMount(){
@@ -56,7 +58,7 @@ export default class NotifyList extends Component {
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           if(value!=null){
               let json = JSON.parse(value)
-              if(json.length>0){
+              if(json.length>0 && self.updateOnUI){
                   self.setState({
                       push_list: json
                   })
