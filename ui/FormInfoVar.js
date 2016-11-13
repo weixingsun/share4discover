@@ -271,6 +271,7 @@ export default class FormInfoVar extends Component {
         values.lng = parseFloat(values.lng).toFixed(6)
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.country=this.country
+        values.city=this.city
         values.city_id=this.city_id
         this.merge_into(values,this.hidden_fields)
         if(Push.uid) values['uid']=Push.uid
