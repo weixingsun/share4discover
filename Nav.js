@@ -37,9 +37,9 @@ export default class Nav extends Component {
       });
     }
     openPush(data){
-        if(data.custom.i){  //data.custom.t={p2p,tag}
+        if(data&&data.custom&&data.custom.i){  //data.custom.t={p2p,tag}
             this.openShare(data.custom.i)
-        }else if (data.custom.note){
+        }else if (data&&data.custom&&data.custom.note){
             this.openPage(Note,data)
         }
     }

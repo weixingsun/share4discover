@@ -13,8 +13,7 @@ import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
-import xml2js from 'xml2js'
-import xpath from 'xml2js-xpath'
+import CityCode from '../data/china_city_code.json'
 
 var styles = StyleSheet.create({
     container: {
@@ -45,6 +44,10 @@ var styles = StyleSheet.create({
     },
 });
 
+String.prototype.firstUpperCase = function () {
+  return this.toString()[0].toUpperCase() + this.toString().slice(1);
+}
+
 export default class FormFeed extends React.Component{
     constructor(props){
         super(props);
@@ -72,8 +75,10 @@ export default class FormFeed extends React.Component{
     componentWillMount() {
         GiftedFormManager.reset(this.formName);
         if(this.props.push){
+            let form1=this.props.push
+            form1['city']=this.getCityNameFromId(form1.city_id)
             this.setState({
-                form: this.props.push
+                form:form1
             });
         }else{
             this.getLocation()
@@ -102,7 +107,7 @@ export default class FormFeed extends React.Component{
         //alert(JSON.stringify(values))
         let tag = Global.getTagNameFromJson(values)  //{country,city,type,cat}
         Push.instance.setTag(tag,(state)=>{
-            if(state.status==0 || state.error_code=='0') alert("Tag "+tag+" added")
+            if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
             else alert("Add tag "+tag+" failed. status="+state);
         });
         DeviceEventEmitter.emit('refresh:PushList',values);
@@ -145,6 +150,14 @@ export default class FormFeed extends React.Component{
               })
             }
         })
+    }
+    getCityNameFromId(id){
+        if(/^\d+$/.test(id)){
+            return ChinaCity[id]
+        }else{
+            //alert('id='+id+' bj code=131,name='+ChinaCity[131])
+            return id.replace('-',' ').firstUpperCase()
+        }
     }
     renderField(name,editable){
       if(name==='type')

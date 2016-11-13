@@ -111,7 +111,7 @@ export default class FormInfoVar extends Component {
         this.initAllValidators()
         this.processProps();
         this.turnOnGps()
-        this.getCountryCode()
+        this.getMyLocation()
     }
     componentDidMount(){
         DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
@@ -123,11 +123,28 @@ export default class FormInfoVar extends Component {
         DeviceEventEmitter.removeAllListeners('refresh:FormInfoVar')
         //DeviceEventEmitter.removeListener('refresh:FormInfoVar',(data)=>this.updatePics(data));
     }
-    getCountryCode(){
+    getMyLocation(){
         let self=this
-        Net.getLocation().then((gps)=>{
-            self.country=gps.country_code.toLowerCase()
-            self.city   =gps.city.toLowerCase()
+        Net.getBDLocation().then((gps)=>{
+            //alert(JSON.stringify(gps))
+            if(gps.status==0 && gps.content.address_detail.city_code){
+                self.city=gps.content.address_detail.city
+                self.city_id=gps.content.address_detail.city_code
+                self.country=gps.address.split('|')[0].toLowerCase()
+            }else{
+              Net.getGGLocation().then((gps)=>{
+                let arr = gps.results[0].address_components
+                //var city1='',city2='',province1='',country=''
+                arr.map((c)=>{
+                  if(c.types[0]==='locality'){
+                    self.city_id=c.short_name.replace(' ','-').toLowerCase()
+                    self.city=c.long_name
+                  }
+                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
+                  if(c.types[0]==='country') self.country=c.short_name.toLowerCase()
+                })
+              })
+            }
         })
     }
     updatePics(pics){
@@ -254,7 +271,7 @@ export default class FormInfoVar extends Component {
         values.lng = parseFloat(values.lng).toFixed(6)
         //if(values.hasOwnProperty('pics') && values.pics.length===0) delete values.pics
         values.country=this.country
-        values.city=this.city
+        values.city_id=this.city_id
         this.merge_into(values,this.hidden_fields)
         if(Push.uid) values['uid']=Push.uid
         if(Platform.OS==='ios'){ 
@@ -321,7 +338,7 @@ export default class FormInfoVar extends Component {
     pushToTags(msg){
         //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now}
         Push.postTags(
-            Global.getTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city+':'+msg.type+'_'+msg.cat
+            Global.getTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
             msg.title,
             I18n.t('click_more'),
             {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},

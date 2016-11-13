@@ -260,7 +260,7 @@ export default class NotifyList extends Component {
     );
   }
     _renderPushRowView(data) {
-        if(!data.title||!data.custom.i) return
+        if(!data.title||!data.custom||!data.custom.i) return
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
         let normal={fontSize:16}
         let text_style = bold, key=data.i

@@ -122,21 +122,14 @@ module.exports = {
       web:'fa-internet-explorer',
       share:'fa-bell',
     },
-    CAT_COLORS:{
-      buy:  '#990000',
-      sell: '#000099',
-      rent0:'#666600',
-      rent1:'#006666',
-      //service:'#000000',
-    },
     getTagNameFromJson(msg) {
-      return 'l_'+msg.country+'_'+msg.city+'_'+msg.type+'_'+msg.cat
+      return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.type+'_'+msg.cat
     },
     getJsonFromTagName(name) {
         let names = name.split('_')
         return {
             country:names[1],
-            city:names[2],
+            city_id:names[2],
             type:names[3],
             cat:names[4],
         }
