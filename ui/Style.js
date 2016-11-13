@@ -90,6 +90,7 @@ module.exports = {
   font_colors:{disabled:'#ffffff',enabled:'#ffffff'},
   //highlight_color: '#598987',
   highlight_color: '#599987',
+  normal_color: '#d3d6d9',
   navbar: {
       flex:1,
       //backgroundColor: '#ebeef0',

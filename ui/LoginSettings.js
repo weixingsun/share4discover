@@ -37,7 +37,7 @@ var styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 6,
-        backgroundColor: "#387ef5",
+        backgroundColor: Style.normal_color,
     },
 });
 
@@ -112,16 +112,16 @@ export default class LoginSettings extends React.Component{
         let titleName = I18n.t('login')+' '+I18n.t('settings')
         return(
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title: titleName}}
+          <NavigationBar style={Style.navbar} title={{title: titleName,tintColor:Style.font_colors.enabled}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
                 </View>
              }
           />
           <View style={styles.container}>
              <TouchableOpacity style={styles.header} >
-                 <Text>{I18n.t('share_via_sns')}</Text>
+                 <Text style={{color:Style.font_colors.enabled}}>{I18n.t('share_via_sns')}</Text>
              </TouchableOpacity>
                 <GiftedForm
                     formName='loginSettingsForm'

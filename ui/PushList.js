@@ -169,7 +169,7 @@ export default class PushList extends React.Component {
         //let json = JSON.parse(data)
         //if(!json.name) return
         let number = ''
-        let bold = {fontSize:16,fontWeight:'bold',color:'black'}
+        let bold = {fontSize:16,} //fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
         let locale = I18n.locale.substring(0,2)
         let name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
@@ -203,17 +203,17 @@ export default class PushList extends React.Component {
       let title1=I18n.t('push')+' '+I18n.t('list')
       return (
       <View>
-          <NavigationBar style={Style.navbar} title={{title:title1,}} 
+          <NavigationBar style={Style.navbar} title={{title:title1,tintColor:Style.font_colors.enabled}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                    <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
               rightButton={
                  <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-trash-outline'} color={'#333333'} size={36} onPress={()=>this.deleteAllTagsAlert()} />
+                    <Icon name={'ion-ios-trash-outline'} color={Style.font_colors.enabled} size={36} onPress={()=>this.deleteAllTagsAlert()} />
                     <View style={{width:30}} />
-                    <Icon name={'ion-ios-add'} color={'#333333'} size={45} onPress={()=>this.addPush()} />
+                    <Icon name={'ion-ios-add'} color={Style.font_colors.enabled} size={45} onPress={()=>this.addPush()} />
                     <View style={{width:10}} />
                  </View>
               }

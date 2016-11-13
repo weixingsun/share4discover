@@ -96,15 +96,15 @@ export default class Settings extends React.Component{
     render() {
         //alert('render.map:'+this.state.map+'\nmap.type='+this.state.map_type+'\nmap.traffic='+this.state.map_traffic)
         //if(this.state.isLoading) return <Loading />
-        //<Icon name={"ion-ios-timer-outline"} color={this.getColor(this.state.timerEnabled)} size={30} onPress={() => this.enableTimer() } />
         let titleName = I18n.t('map')+' '+I18n.t('settings')
-        let google = Platform.OS==='ios'?I18n.t('apple'):I18n.t('gg')
+        let google = Platform.OS==='ios'?'apple':'gg'
+        let vendor = this.state.form.map==='gg'?google:'baidu'
         return(
         <View style={{flex:1}}>
-          <NavigationBar style={Style.navbar} title={{title: titleName}}
+          <NavigationBar style={Style.navbar} title={{title: titleName,tintColor:Style.font_colors.enabled}}
              leftButton={
                 <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.props.navigator.pop() } />
+                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
                 </View>
              }
           />
@@ -120,21 +120,21 @@ export default class Settings extends React.Component{
                         <GiftedForm.ModalWidget
                             title={I18n.t('map')}
                             name='map'
-                            display={I18n.t(this.state.form.map)}
+                            display={I18n.t(vendor)}
                             value={this.state.form.map}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
                             <GiftedForm.SelectWidget name='map' title='Map' multiple={false} onSelect={()=>this.props.navigator.pop()}>
-                                <GiftedForm.OptionWidget title={google} value='gg' />
-                                <GiftedForm.OptionWidget title={I18n.t('baidu')}  value='baidu' />
+                                <GiftedForm.OptionWidget title={I18n.t(google)}  value='gg' />
+                                <GiftedForm.OptionWidget title={I18n.t('baidu')} value='baidu' />
                             </GiftedForm.SelectWidget>
                         </GiftedForm.ModalWidget>
                         <GiftedForm.ModalWidget
                             title={I18n.t('type')}
                             name='map_type'
                             display={I18n.t(this.state.form.map_type)}
-                            value={this.state.form.mapType}
+                            value={this.state.form.map_type}
                             //validationResults={this.state.validationResults}
                         >
                             <GiftedForm.SeparatorWidget />
@@ -161,9 +161,4 @@ export default class Settings extends React.Component{
         </View>
         )
     }
-/*
-             <TouchableOpacity style={styles.header} >
-                 <Text>Map & Search Engine Provider</Text>
-             </TouchableOpacity>
-*/
 };
