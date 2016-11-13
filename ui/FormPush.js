@@ -56,14 +56,15 @@ export default class FormFeed extends React.Component{
             type:true,
             cat:true,
             city:false,
-            country:false
+            //country:false
         }
         this.state = {
             form: {
                 type:'car',
                 cat:'rent0',
                 city:'',
-                country:'',
+                city_id:'',
+                country:'cn',
             }
         };
         this.formName='newPushForm'
@@ -109,9 +110,40 @@ export default class FormFeed extends React.Component{
     }
     getLocation(form){
         let self=this
-        Net.getLocation().then((gps)=>{
+        Net.getBDLocation().then((gps)=>{
             //alert(JSON.stringify(gps))
-            self.setState({ form:{ ...self.state.form, city:gps.city.toLowerCase(), country:gps.country_code.toLowerCase() } })
+            if(gps.status==0 && gps.content.address_detail.city_code){
+              self.setState({ 
+                 form:{ ...self.state.form, 
+                     city:gps.content.address_detail.city, 
+                     city_id:gps.content.address_detail.city_code, 
+                     country:gps.address.split('|')[0].toLowerCase(),
+                 } 
+              })
+            }else{
+              Net.getGGLocation().then((gps)=>{
+                let arr = gps.results[0].address_components
+                var city1='',city2='',province1='',country=''
+                arr.map((c)=>{
+                  if(c.types[0]==='locality'){
+                    city1=c.short_name.replace(' ','-').toLowerCase()
+                    city2=c.long_name
+                  }
+                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
+                  if(c.types[0]==='country') country=c.short_name.toLowerCase()
+                })
+                //alert('city1='+city1+' city2='+city2+' country='+country)
+                if(city1 && city2 && country){
+                  self.setState({
+                    form:{ ...self.state.form,
+                      city:city2,
+                      city_id:city1,
+                      country:country,
+                    }
+                  })
+                }
+              })
+            }
         })
     }
     renderField(name,editable){
@@ -228,11 +260,13 @@ export default class FormFeed extends React.Component{
                     defaults={this.state.form}
                     >
                         {this.renderFieldsBySource(this.push_fields)}
+                        <GiftedForm.HiddenWidget name='city_id' value={this.state.form.city_id} />
+                        <GiftedForm.HiddenWidget name='country' value={this.state.form.country} />
                         <GiftedForm.SubmitWidget
                             title={I18n.t('submit')}
                             widgetStyles={{
                                 submitButton: {
-                                    backgroundColor: '#6495ED',
+                                    backgroundColor: Style.highlight_color,
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {

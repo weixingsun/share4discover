@@ -30,6 +30,7 @@ export default class Detail extends Component {
             //image_modal_name:this.images[0],
             show_pic_modal:false,
             push_to:this.props.msg.uid,
+            highlight_color:Style.CAT_COLORS[this.props.msg.cat],
         }
         this.key = Global.getKeyFromMsg(this.props.msg)
         this.openZoom=this.openZoom.bind(this)
@@ -222,7 +223,7 @@ export default class Detail extends Component {
                           <Icon
                             style={{marginLeft:10,marginRight:6}}
                             size={24}
-                            color={'blue'}
+                            color={this.state.highlight_color}
                             name={Global.SNS_ICONS[sns_type]}
                           />
                         </View>
@@ -258,7 +259,7 @@ export default class Detail extends Component {
                     <Icon
                         style={{marginLeft:6}}
                         size={20}
-                        color={'blue'}
+                        color={this.state.highlight_color}
                         name={Global.SNS_ICONS[sns_type]}
                     />
                     <View style={{marginLeft:10,flex:1,flexDirection:'row'}}>
@@ -268,7 +269,7 @@ export default class Detail extends Component {
                         <Text>{ Global.getDateTimeFormat(time)+': '+reply }</Text>
                       </View>
                       <View >
-                        <Icon name={this.getTalkIcon()} size={40} onPress={()=>this.talkTo(sns_user,from)}/>
+                        <Icon name={this.getTalkIcon()} size={40} color={this.state.highlight_color} onPress={()=>this.talkTo(sns_user,from)}/>
                       </View>
                     </View>
                 </View>
@@ -317,7 +318,7 @@ export default class Detail extends Component {
                     <View style={{flexDirection:'row'}}>
                         <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('my_reply')}:  </Text>
                         <View style={{flex:1}} />
-                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:'#3498db',borderColor:'#2980b9'}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
+                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:this.state.highlight_color,borderColor:this.state.highlight_color}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
                     </View>
                         <TextInput
                             style={{marginLeft:20,height:this.state.reply_height}}
@@ -370,7 +371,7 @@ export default class Detail extends Component {
                     <Icon
                         style={{marginLeft:15,marginRight:15}}
                         size={44}
-                        color={asking?'gray':'blue'}
+                        color={this.state.highlight_color}
                         name={typeIcon}
                     />
                     <View style={{flex:1,marginLeft:20}}>
@@ -389,7 +390,18 @@ export default class Detail extends Component {
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
             <View style={{flex:1}}>
-                <NavigationBar style={Style.navbar} title={{title: '',}}
+                <NavigationBar style={{
+                      flex:1,
+                      paddingLeft:12,
+                      paddingRight:12,
+                      paddingTop:8,
+                      paddingBottom:6,
+                      flexDirection:'row',
+                      alignItems: 'center',
+                      //justifyContent: 'center',
+                      height: Style.NAVBAR_HEIGHT,
+                      backgroundColor:this.state.highlight_color,
+                   }} title={{title: '',}}
                    leftButton={
                      <View style={{flexDirection:'row',}}>
                        <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />

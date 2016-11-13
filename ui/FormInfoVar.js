@@ -746,7 +746,7 @@ export default class FormInfoVar extends Component {
                             title={I18n.t('publish')}
                             widgetStyles={{
                                 submitButton: {
-                                    backgroundColor: '#6495ED',
+                                    backgroundColor: Style.highlight_color,
                                 }
                             }}
                             onSubmit={(isValid, values, validationResults, postSubmit = null, modalNavigator = null) => {

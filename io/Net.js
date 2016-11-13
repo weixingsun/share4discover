@@ -121,6 +121,14 @@ var Net = {
     getLocation(){
       return this._get(Global.IP2LOC_HOST)
     },
+    getBDLocation(){
+      let url=Global.BD_IP2LOC_HOST+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
+      return this._get(url)
+    },
+    getGGLocation(){
+      let url=Global.GG_IP2LOC_HOST+'latlng='+Global.region.latitude+','+Global.region.longitude //-43.500935,%20172.395744'
+      return this._get(url)
+    },
     chooseMapFromNetwork(){
       this._get(Global.IP2LOC_HOST).then((result)=>{
         let inchina = result.country_code.toUpperCase() == 'CN'

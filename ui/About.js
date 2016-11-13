@@ -102,11 +102,10 @@ export default class USBList extends React.Component {
               }
           />
           {this.renderIcon()}
-          {this.renderHomepage()}
           {this.renderPush()}
           {this.renderCopyright()}
       </View>
-      );
+      );  //{this.renderHomepage()}
     }
 }
 var styles = StyleSheet.create({

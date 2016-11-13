@@ -47,9 +47,11 @@ module.exports = {
     host_image_info: 'http://nzmessengers.co.nz/service/info/',
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
     //app_url_pre: 'share://nzmessengers.co.nz/info/',
-    http_url_pre: 'http://shareplus.co.nf/url.php?key=',
-    //http_url_pre: 'http://nzmessengers.co.nz/share/url.php?key=',
+    //http_url_pre: 'http://shareplus.co.nf/url.php?key=',
     IP2LOC_HOST: 'http://freegeoip.net/json',
+    BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
+    //BD_IP2LOC_HOST2: 'http://api.map.baidu.com/location/ip?ip=101.30.35.44',
+    GG_IP2LOC_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
     post:'post',
     none:'none',
     push_p2p:'p2p',
@@ -128,7 +130,7 @@ module.exports = {
       //service:'#000000',
     },
     getTagNameFromJson(msg) {
-      return 'listen_'+msg.country+'_'+msg.city+'_'+msg.type+'_'+msg.cat
+      return 'l_'+msg.country+'_'+msg.city+'_'+msg.type+'_'+msg.cat
     },
     getJsonFromTagName(name) {
         let names = name.split('_')
@@ -241,10 +243,11 @@ module.exports = {
     },
     //share://nzmessengers.co.nz/info/car:41.767338,123.422675:1469942725304
     getSnsUrl(key,sns){
-        //let first = 'intent://shareplus.co.nf/i/'+key
-        //let second = '#Intent;scheme=share;package=com.share;S.browser_fallback_url='+this.http_url_pre+key+';end'
-        return this.http_url_pre+encodeURIComponent(key)+'&sns='+sns
-        //return this.app_url_pre+key
+        //let http_url1='http://shareplus.co.nf/url.php?key='
+        let http_url1='http://nzmessengers.co.nz/service/url.php?key='
+        //return 'http://shareplus.co.nf/i/'+key//+'&sns='+sns
+        return http_url1+encodeURIComponent(key)+'&sns='+sns
+        //return 'http://shareplus.co.nf/i/'+encodeURIComponent(key)//+'&sns='+sns
     },
     trimTitle(title){
         let limit = 30

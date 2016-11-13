@@ -21,6 +21,7 @@ import Help from './Help'
 import Detail from './Detail'
 import Note from './Note'
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
+import KKLocation from 'react-native-baidumap/KKLocation';
 
 export default class Main extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Main extends Component {
       badge:'',
       refresh:false,
       mails:[],
-      region: null,
+      //region: null,
       gps:false,
       
     }; 
@@ -201,7 +202,7 @@ export default class Main extends Component {
   }
   checkMapSettings(){
       var _this = this;
-      Store.get('region').then((region_value) => {
+      if(!Global.region) Store.get('region').then((region_value) => {
         if(region_value !=null && region_value.latitude !=null){
           if(region_value.zoom == null){
               region_value['zoom'] = 16
@@ -210,125 +211,55 @@ export default class Main extends Component {
               region_value['latitudeDelta'] = 0.02
               region_value['longitudeDelta'] = 0.02
           }
-          if(!this.state.region){
-              //alert('fs faster than net ')
-              _this.setState({ region:region_value });
+          if(!Global.region){
+              Global.region=region_value
           }
+        }else{  //  first start
+          //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+          KKLocation.getCurrentPosition((position) => {
+            //console.log("location get current position: ", position);
+            Global.region={
+              latitude:  position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta:0.05,
+              longitudeDelta:0.05,
+              zoom:16,
+            }
+          }, (error) => { console.log("location get current position error: ", error) },
+          {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100});
         }
-      });
-      //Store.get('user').then((user_value) => {
-      //  _this.setState({ user:user_value });
-      //});
-      if(!this.state.region) Net.getLocation().then((gps)=>{
-         let inchina = gps.country_code.toUpperCase() == 'CN'
-         if(inchina)  Global.MAP = Global.BaiduMap;
-         else Global.MAP = Global.GoogleMap;
-         let loc={
-             latitude:gps.latitude,
-             longitude:gps.longitude,
-             latitudeDelta:0.05,
-             longitudeDelta:0.05,
-             zoom:16,
-         }
-         if(!this.state.region && gps.latitude) _this.setState({ region:loc });
-      });
-      if(Global.MAP == null)
-      Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
-        if(map_value != null){
+      })
+      if(Global.MAP == null){
+        Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
+          if(map_value != null){
             Global.MAP = map_value
-        }else{
-            Global.MAP = Global.GoogleMap
-        }
-      });
-      Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
-        if(map_type != null){
-            Global.MAP_TYPE = map_type
-        }else{
-            Global.MAP_TYPE = Global.MAP_TYPE_NORMAL
-        }
-      });
-      Store.get_string(Store.SETTINGS_MAP_TRAFFIC).then((map_traffic) => {
-        if(map_traffic != null){
-            Global.MAP_TRAFFIC = map_traffic
-        }else{
-            Global.MAP_TRAFFIC = Global.MAP_TRAFFIC_FALSE
-        }
-      });
-  }
-  //loadNotifyByLogin(){
-  //    if(Global.mainlogin.length>0) this.loadNotify(Global.getNotifyKey());
-  //}
-  isJsonString(str) {
-      try {
-        JSON.parse(str);
-      } catch (e) {
-        return false;
-      }
-      return true;
-  }
-  /*loadNotify(key) {
-    //alert('loadNotify('+key+') length:'+key.length)
-    var self = this;
-    Net.getNotify(key).then((rows)=> {
-      if( typeof rows === 'string' && !self.isJsonString(rows) ){
-        //alert('Main.loadNotify:'+rows)
-      }else{
-        //alert('Main.loadNotify:valid json')
-        if(rows==null) { return }
-        else{
-          var arr = self.Kv2Json(rows)
-          var unread = self.getUnread(arr)
-          var badgeText = ''+unread.length;
-          self.setState({
-            mails:arr,
-            badge:badgeText,
-            refresh:true,
-            //mainlogin:key,
-          });
-        }
-      }
-    })
-    .catch((e)=>{
-        alert('Network Problem!'+JSON.stringify(e))
-    });
-  }*/
-  //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-  //key='car:lat,lng:ctime#rtime'  value={t:'r1', l:'fb:email', c:'content'}
-  /*Kv2Json(kv){
-      var arr = []
-      if(kv == null) return arr;
-      var keys = Object.keys(kv)  //.reverse()
-      keys.map((key)=>{
-          //alert('key='+key+'\nvalue='+kv[key])      //key='car:lat,lng:ctime#rtime'  value='r1|fb:email|content'
-          var key_arr  = key.split(':')
-          var type_cat_arr = key_arr[0].split('_')
-          var type    = type_cat_arr[0]
-          var cat     = type_cat_arr[1]
-          var latlng  = key_arr[1]
-          var times   = key_arr[2]
-          var ctime   = times.split('#')[0]
-          var rtime   = times.split('#')[1]
-          if(kv[key].substring(0,1)==='{') {
-            var value_obj = JSON.parse(kv[key])
-            var rtype = value_obj.t.substring(0,1);    //r
-            var status = value_obj.t.substring(1)      //1
-            var user = value_obj.l
-            var content = value_obj.c
-            var obj = {type:type,cat:cat, rtype:rtype, latlng:latlng, ctime:ctime, rtime:rtime, status:status, user:user, content:content }
-            //alert(JSON.stringify(obj))
-            arr.push( obj )
+          }else{
+            Net.getBDLocation().then((gps)=>{
+              if(gps.status==0 && gps.address){
+                let cc = gps.address.split('|')[0].toLowerCase()
+                Global.MAP = Global.BaiduMap;
+              }else{
+                Global.MAP = Global.GoogleMap;
+              }
+            });
           }
-      })
-      arr.sort(function(a,b){
-          return parseInt(b.rtime)-parseInt(a.rtime)
-      })
-      return arr;
+        });
+        Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
+          if(map_type != null){
+            Global.MAP_TYPE = map_type
+          }else{
+            Global.MAP_TYPE = Global.MAP_TYPE_NORMAL
+          }
+        });
+        Store.get_string(Store.SETTINGS_MAP_TRAFFIC).then((map_traffic) => {
+          if(map_traffic != null){
+            Global.MAP_TRAFFIC = map_traffic
+          }else{
+            Global.MAP_TRAFFIC = Global.MAP_TRAFFIC_FALSE
+          }
+        });
+      }
   }
-  getUnread(arr){
-      return arr.filter((json)=>{
-          return (json.status==='1')
-      })
-  }*/
   goBack(){
     this.props.navigator.pop();
   }
@@ -338,7 +269,7 @@ export default class Main extends Component {
     } else if(this.state.page ===Store.userTab){
       return <MyList     navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={this.state.region} gps={this.state.gps} />
+      return <Maps navigator={this.props.navigator} region={Global.region} gps={this.state.gps} />
     } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
     }
@@ -364,11 +295,6 @@ export default class Main extends Component {
   }
   render() {
     //if(this.state.isLoading) return <Loading />
-    //<Drawer type={"overlay"} tapToClose={true} ref={(ref) => this.drawer = ref} openDrawerOffset={0.3} acceptPan={this.state.drawerPanEnabled}
-    //    content={<ControlPanel list={this.types} filters={this.state.filters} onClose={(value) => this.changeFilter(value)} />}
-    //>
-    //alert('main.render() mails='+ JSON.stringify(this.state.mails))
-    //if(Global.logins !== '' && !this.state.refresh) this.loadNotifyByLogin()
     return (
         <View style={{flex:1}}>
           {this.pages()}
