@@ -5,7 +5,7 @@ import {Alert, Image, ListView, Picker, Platform, ScrollView, StyleSheet, Text, 
 import Store from '../io/Store'
 import Global from '../io/Global'
 import Style from './Style'
-import Loading from './Loading'
+//import Loading from './Loading'
 //import PlaceForm from './PlaceForm'
 import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
@@ -52,14 +52,16 @@ export default class Settings extends React.Component{
         this.map_traffic_list = ['true','false'];
         this.map_type_list = [Global.MAP_TYPE_NORMAL,Global.MAP_TYPE_SATELLITE];
         this.place_list = [];
-        this.mapTitleIos = Platform.OS==='ios'?I18n.t('apple')+I18n.t('map'):I18n.t('gg')+I18n.t('map')
+        //this.mapTitleIos = Platform.OS==='ios'?I18n.t('apple')+I18n.t('map'):I18n.t('gg')+I18n.t('map')
+        if(!Global.MAP) Global.MAP=Global.BaiduMap
+        if(!Global.MAP_TYPE) Global.MAP_TYPE=Global.MAP_TYPE_NORMAL
+        if(!Global.MAP_TRAFFIC) Global.MAP_TRAFFIC='no'
         this.state = {
             //isLoading:true,
             form: {
                 map:        Global.MAP,
                 map_type:   Global.MAP_TYPE,
                 map_traffic:Global.MAP_TRAFFIC,
-                //mapTitle:       Global.MAP===Global.GoogleMap?this.mapTitleIos:I18n.t('baidu')+I18n.t('map'),
             }
             //editable: false,
             //timerEnabled: false,
