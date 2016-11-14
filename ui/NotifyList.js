@@ -221,7 +221,7 @@ export default class NotifyList extends Component {
         rowID={rowData.rtime}
         //sectionID={sectionID}
         autoClose={true}
-        //backgroundColor={rowData.backgroundColor}
+        backgroundColor={'white'}
         //close={!rowData.active}
         //onOpen={(sectionID, rowID) => this._handleSwipeout(sectionID, rowID) }
         //scroll={event => this._allowScroll(event)}
@@ -234,8 +234,7 @@ export default class NotifyList extends Component {
     var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
     var bold = rowData.status==='1'? {fontSize:16,fontWeight:'bold',color:'black'}: {fontSize:16}
     return (
-      <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc' 
-            onPress={()=>this._onPress(rowData)} >
+      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this._onPress(rowData)} >
           <View >
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
 	        <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
@@ -274,9 +273,8 @@ export default class NotifyList extends Component {
         let name = Global.trimTitle(data.title)
         let number = ''
         return (
-      <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
-            onPress={()=>this.openPush(data)} >
-          <View >
+      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(data)} >
+          <View>
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
                   <Icon
@@ -326,14 +324,14 @@ export default class NotifyList extends Component {
             //leftButton={}
             rightButton= {this.renderActionIcon()}
 	/>
-          <SGListView
+          <ListView
               enableEmptySections={true}
               ref={'listview'}
-              pageSize={10}
-              initialListSize={10}
-              stickyHeaderIndices={[]}
-              onEndReachedThreshold={1}
-              scrollRenderAheadDistance={1}
+              //pageSize={10}
+              //initialListSize={10}
+              //stickyHeaderIndices={[]}
+              //onEndReachedThreshold={1}
+              //scrollRenderAheadDistance={1}
               style={styles.listContainer}
               dataSource={ds}
               renderRow={this._renderSwipeoutRow.bind(this)}

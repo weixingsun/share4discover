@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, DeviceEventEmitter, Dimensions,Image,NativeModules,Picker,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
+import {Alert, DeviceEventEmitter, Dimensions,Image,NativeModules,Picker,Platform,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
@@ -30,6 +30,7 @@ export default class Detail extends Component {
             //image_modal_name:this.images[0],
             show_pic_modal:false,
             push_to:this.props.msg.uid,
+            push_to_os:this.props.msg.os,
             highlight_color:Style.CAT_COLORS[this.props.msg.cat],
         }
         this.key = Global.getKeyFromMsg(this.props.msg)
@@ -47,10 +48,11 @@ export default class Detail extends Component {
         }
         //I18n.locale = NativeModules.RNI18n.locale
     }
-    talkTo(user_name,user_push_id){
+    talkTo(user_name,user_push_id,user_push_os){
         this.setState({
             reply:'@'+user_name+': ',
             push_to:user_push_id,
+            push_to_os:user_push_os,
         })
     }
     getTalkIcon(){
@@ -67,7 +69,7 @@ export default class Detail extends Component {
                 this.state.reply,     //title
                 I18n.t('click_more'), //content
                 {t:Global.push_p2p,i:this.key,f:Push.uid,r:now},
-                this.props.msg.os,
+                this.state.push_to_os,
             )
         }
     }
@@ -78,13 +80,16 @@ export default class Detail extends Component {
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
 	var time = Math.round(+new Date()/1000) //+new Date();
+        let os=''
+        if(Platform.OS==='ios') os = (__DEV__)?'idev':'ios'
         let msgReplyValue={
             l:{
               type:Global.getMainLoginType(),
               name:Global.getMainLoginName()
             },
             c:this.state.reply,
-            f:Push.uid
+            f:Push.uid,
+            os:os,
         }
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         //let loginsObj = Global.getLogins(this.props.msg.owner)
@@ -254,6 +259,7 @@ export default class Detail extends Component {
               let sns_type = owner.type
 	      let sns_user = owner.name
 	      let from = replyObj.f
+	      let from_os = replyObj.os
 	      return (
 	        <View style={{marginLeft:20,flexDirection:'row',flex:1}} key={key}>
                     <Icon
@@ -264,17 +270,17 @@ export default class Detail extends Component {
                     />
                     <View style={{marginLeft:10,flex:1,flexDirection:'row'}}>
   	              <View style={{flex:1}}>
-                        <Text>{ sns_user }</Text>
-                        <View style={{flex:1}} />
-                        <Text>{ Global.getDateTimeFormat(time)+': '+reply }</Text>
+                        <View style={{justifyContent:'center'}}>
+                          <Text>{ sns_user }</Text>
+                        </View>
+                        <View style={{justifyContent:'center'}}>
+                          <Text>{ Global.getDateTimeFormat(time)+': '+reply }</Text>
+                        </View>
                       </View>
-                      <View >
-                        <Icon name={this.getTalkIcon()} size={40} color={this.state.highlight_color} onPress={()=>this.talkTo(sns_user,from)}/>
-                      </View>
+                      <Icon name={this.getTalkIcon()} size={40} color={this.state.highlight_color} onPress={()=>this.talkTo(sns_user,from,from_os)}/>
                     </View>
                 </View>
 	        )
-              //}
             }
           })
 	)

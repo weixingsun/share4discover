@@ -65,12 +65,15 @@ module.exports = {
       });
       return rv.replace(/\%20/g,'+');
     },
+    merge_into(obj,obj_to_merge){
+        for (var key in obj_to_merge) { obj[key] = obj_to_merge[key]; }
+    },
     //postOne(self.uid,'hello','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now})
     postOne(uid,title,data,kv,os){
         let method= 'POST' 
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/single_device";
-        let apikey = (os==null)?Global.and_ak:Global.ios_ak
-        let secret_key = (os==null)?Global.and_sk:Global.ios_sk
+        let apikey     = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_ak
+        let secret_key = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_sk
         let timestamp = Math.round(Date.now() / 1000);
         let channel_id = uid
         let msg_type = 1 //1:push, 0:msg
@@ -88,6 +91,7 @@ module.exports = {
               sound:'default',
             }
           }
+          for (var key in kv) { msg[key] = kv[key] }
           let deploy_status=(os==='idev')?1:2
           param={apikey:apikey,timestamp:timestamp,channel_id:channel_id,msg_type:1,msg:msg,deploy_status:deploy_status}
         }
@@ -122,8 +126,8 @@ module.exports = {
         //OneSignal.postNotification(title, data, tag);
         let method= 'POST'
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/tags";
-        let apikey = os==='ios'?Global.ios_ak:Global.and_ak
-        let secret_key = os==='ios'?Global.ios_sk:Global.and_sk
+        let apikey     = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_ak
+        let secret_key = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_sk
         let timestamp = Math.round(Date.now() / 1000);
         let msg_type = 1 //1:push, 0:msg
         //let deploy_status = (os==='idev')?1:2 //1:dev, 2:prod (target === ios)
