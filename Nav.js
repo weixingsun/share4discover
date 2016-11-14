@@ -19,30 +19,6 @@ import SharedPreferences from 'react-native-shared-preferences'
 //var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 var __navigator = null
 export default class Nav extends Component {
-    openPage(page,data){
-        __navigator.push({
-          component: page,
-          passProps: {
-              msg:data,
-          }
-        });
-    }
-    openShare(key){
-      let self=this
-      Net.getMsg(key).then((json)=> {
-        if(json!=null){
-            //alert(JSON.stringify(json))
-            self.openPage(Detail,json)
-        }else alert('The information does not exist.')
-      });
-    }
-    openPush(data){
-        if(data&&data.custom&&data.custom.i){  //data.custom.t={p2p,tag}
-            this.openShare(data.custom.i)
-        }else if (data&&data.custom&&data.custom.note){
-            this.openPage(Note,data)
-        }
-    }
     //p2p = {alertBody:'click to view more',title:'hello'}
     onPushReceived(data){
         //alert('onPushReceived:'+JSON.stringify(data))
@@ -76,16 +52,6 @@ export default class Nav extends Component {
         });
         Push.instance.pushEvent((msg)=>{
           this.onPushReceived(msg)
-        });
-        let self=this
-        Store.getShared(Store.PUSH_CLICKED, (value)=>{
-            if(value!=null){
-                //alert("push_clicked type="+(typeof value)+" : "+value);  
-                let json = JSON.parse(value)
-                //alert('push_clicked:'+json.custom.i)
-                self.openPush(json) 
-                Store.deleteShared(Store.PUSH_CLICKED);
-            }
         });
     }
     componentWillUnmount() {

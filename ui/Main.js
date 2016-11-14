@@ -26,7 +26,6 @@ import KKLocation from 'react-native-baidumap/KKLocation';
 export default class Main extends Component {
   constructor(props) {
     super(props);
-    this.types = ['car','taxi','estate']
     this.state = {
       page:this.props.page!=null?this.props.page: Store.msgTab,
       badge:'',
@@ -34,9 +33,8 @@ export default class Main extends Component {
       mails:[],
       //region: null,
       gps:false,
-      
     }; 
-    this.openShareInfo=this.openShareInfo.bind(this)
+    this.openShare=this.openShare.bind(this)
     this.openLogic=this.openLogic.bind(this)
     this.openPage=this.openPage.bind(this)
     this.watchID = (null: ?number);
@@ -62,11 +60,39 @@ export default class Main extends Component {
       //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){
-      var _this = this;
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
       this.checkSettingsChange();
+      let self=this
+      Store.getShared(Store.PUSH_CLICKED, (value)=>{
+          if(value!=null){
+              //alert("push_clicked type="+(typeof value)+" : "+value);
+              //self.setState({open:'push'})
+              let json = JSON.parse(value)
+              //alert('push_clicked:'+json.custom.i)
+              self.openPush(json)
+              Store.deleteShared(Store.PUSH_CLICKED);
+          }else{
+              //self.setState({open:'normal'})
+          }
+      });
+  }
+  openShare(key){
+      let self=this
+      Net.getMsg(key).then((json)=> {
+        if(json!=null){
+            //alert(JSON.stringify(json))
+            self.openPage(Detail,json)
+        }else alert('The information does not exist.')
+      });
+  }
+  openPush(data){
+      if(data&&data.custom&&data.custom.i){  //data.custom.t={p2p,tag}
+          this.openShare(data.custom.i)
+      }else if (data&&data.custom&&data.custom.note){
+          this.openPage(Note,data)
+      }
   }
   openPage(page,data){
       this.props.navigator.push({
@@ -76,20 +102,9 @@ export default class Main extends Component {
           }
       });
   }
-  openShareInfo(key){
-      var self = this;
-      Net.getMsg(key).then((json)=> {
-        if(json!=null){
-          //alert(JSON.stringify(json))
-          self.openPage(Detail,json)
-        }else
-          alert('The information does not exist.')
-      });
-  }
   openNotification(str){
       if(Platform.OS === 'ios') 
           str = str.replace(/%25/g,'%').replace(/%23/g,'#') //replaceAll('%26','&')
-      //console.log('openNotification:'+str)
       let strJson = decodeURI(str)
       let note = JSON.parse(strJson)
       this.openPage(Note,note)
@@ -100,7 +115,7 @@ export default class Main extends Component {
           let key = url.split('/i/')[1]
           if(key.length>0){
               if(key.indexOf('#')>-1) key=key.split('#')[0]
-              this.openShareInfo(key)
+              this.openShare(key)
           }
       }else if(url.indexOf('/c/')>-1){
           let str = url.split('/c/')[1]
@@ -137,7 +152,7 @@ export default class Main extends Component {
             }else if (data.tag_notification) {
               self.sendShareReadURL(data.tag_notification)
             }else if (data.p2p_notification && data.p2p_notification.key) {
-              //self.openShareInfo(data.p2p_notification.key.split('#')[0])
+              //self.openShare(data.p2p_notification.key.split('#')[0])
               self.sendShareReadReplyURL(data.p2p_notification)
             }*/
   }
