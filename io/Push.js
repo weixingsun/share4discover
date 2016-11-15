@@ -73,7 +73,7 @@ module.exports = {
         let method= 'POST' 
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/single_device";
         let apikey     = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_ak
-        let secret_key = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_sk
+        let secret_key = (os==='ios'||os==='idev')?Global.ios_sk:Global.and_sk
         let timestamp = Math.round(Date.now() / 1000);
         let channel_id = uid
         let msg_type = 1 //1:push, 0:msg
@@ -127,7 +127,7 @@ module.exports = {
         let method= 'POST'
         let url  = "http://api.tuisong.baidu.com/rest/3.0/push/tags";
         let apikey     = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_ak
-        let secret_key = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_sk
+        let secret_key = (os==='ios'||os==='idev')?Global.ios_sk:Global.and_sk
         let timestamp = Math.round(Date.now() / 1000);
         let msg_type = 1 //1:push, 0:msg
         //let deploy_status = (os==='idev')?1:2 //1:dev, 2:prod (target === ios)
