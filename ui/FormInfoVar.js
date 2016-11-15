@@ -538,13 +538,13 @@ export default class FormInfoVar extends Component {
       this.props.navigator.pop();
     }
     renderAddrField(name,title,validator,img=null){
-        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
+        let imgView = img==null?null:<View style={{marginLeft:8,width:20,alignItems:'center'}}><Icon name={img} size={18} /></View>
         return (
             <GiftedForm.PlaceSearchWidget
                 key={name+'_addr'}
                 name={name}
                 title={title}
-                placeholder={'Enter '+title}
+                placeholder={I18n.t('enter')+title}
                 clearButtonMode='while-editing'
                 displayValue={name}
                 value={this.state.form[name]}
@@ -566,7 +566,7 @@ export default class FormInfoVar extends Component {
             />)
     }
     renderTimeField(name,title,validator,img=null){
-        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={25} /></View>
+        let imgView = img==null?null:<View style={{marginLeft:8,width:20,alignItems:'center'}}><Icon name={img} size={18} /></View>
         return (
             <GiftedForm.DatePickerIOSWidget
                 key={name}
@@ -612,14 +612,14 @@ export default class FormInfoVar extends Component {
         )
     }*/
     renderTextField(name,title,validator,img=null){
-        let imgView = img==null?null:<View style={{width:30,alignItems:'center'}}><Icon name={img} size={20} /></View>
+        let imgView = img==null?null:<View style={{marginLeft:8,width:20,alignItems:'center'}}><Icon name={img} size={18} /></View>
         return (
             <GiftedForm.TextInputWidget
                 key={name}
                 name={name}
                 title={title}
                 image={imgView}
-                placeholder={'Enter '+title}
+                placeholder={I18n.t('enter')+title}
                 clearButtonMode='while-editing'
                 displayValue={name}
                 value={this.state.form[name]}
@@ -658,8 +658,8 @@ export default class FormInfoVar extends Component {
     render(){
         let h = Style.DEVICE_HEIGHT-Style.NAVBAR_HEIGHT-40
         //let form_height = (this.state.form.pics && this.state.form.pics.length>0)? h-Style.THUMB_HEIGHT : h
-        if(this.props.msg!=null) title_nav = 'Edit this Share'
-        else title_nav = 'Create a Share'
+        if(this.props.msg!=null) title_nav = I18n.t('edit_share')
+        else title_nav = I18n.t('create_share')
         let fields = this.info_types[this.state.form.type]
         if(fields[this.state.form.cat]) fields=fields[this.state.form.cat]
         //console.log('form.render() type='+this.state.type+' cat='+this.state.cat+' fields = '+JSON.stringify(fields))
@@ -722,7 +722,7 @@ export default class FormInfoVar extends Component {
                             clearButtonMode='while-editing'
                             displayValue='address'
                             value={this.state.form.address}
-                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-location-arrow'} size={25} /></View>}
+                            image={<View style={{marginLeft:8,width:20,alignItems:'center'}}><Icon name={'fa-location-arrow'} size={18} /></View>}
                             validationResults={this.state.validationResults}
                             map={Global.MAP}
                             query={{
@@ -742,7 +742,7 @@ export default class FormInfoVar extends Component {
                             title={I18n.t('content')}
                             display={this.state.form.content}
                             //scrollEnabled={true}
-                            image={<View style={{width:30,alignItems:'center'}}><Icon name={'fa-file-text-o'} size={25} /></View>}
+                            image={<View style={{marginLeft:8,width:20,alignItems:'center'}}><Icon name={'fa-file-text-o'} size={18} /></View>}
                             value={this.state.form.content}
                             validationResults={this.state.validationResults}
                             //displayValue='content'

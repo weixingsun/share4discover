@@ -44,6 +44,9 @@ I18n.translations = {
     ble: 'Bluetooth LE',
     map: 'Map',
     //form
+    edit_share:'Edit Share',
+    create_share:'Create Share',
+    enter:'Enter ',
     submit:'Submit',
     ask: 'Ask',
     title: 'Title',
@@ -157,6 +160,9 @@ I18n.translations = {
     ble: 'Bluetooth LE',
     map: 'Carte',
     //form
+    edit_share:'Edit Share',
+    create_share:'Create Share',
+    enter:'Enter ',
     submit:'Submit',
     ask: 'Demander',
     title: 'Titre',
@@ -270,6 +276,9 @@ I18n.translations = {
     ble: '蓝牙',
     map: '地图',
     //form
+    edit_share:'修改分享',
+    create_share:'新建分享',
+    enter:'输入',
     submit:'提交',
     ask: '求',
     title: '标题',
