@@ -87,11 +87,12 @@ export default class SettingsList extends React.Component {
                       component: PushList,
                       passProps: {navigator:this.props.navigator,},
                   })}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-bell'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('push')+' '+I18n.t('settings')}</Text>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'fa-bell'} size={20}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('push')+' '+I18n.t('settings')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
                   </TouchableOpacity>
         )
         //}
@@ -138,12 +139,13 @@ export default class SettingsList extends React.Component {
                     component: Login,
                     passProps: {navigator:this.props.navigator,},
                 })}>
-                    <View style={{width:DEVICE_WIDTH/3}} />
-                    <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                        <Icon name={'fa-user'} size={30} color={login_color}/>
-                    </View>
-                    <Text>{I18n.t('login')+' '+I18n.t('settings')}</Text>
-                </TouchableOpacity>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'fa-user'} size={20} color={login_color}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('login')+' '+I18n.t('settings')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
+                  </TouchableOpacity>
             )
     }
     renderUpdate(){
@@ -185,28 +187,31 @@ export default class SettingsList extends React.Component {
               >
                   {this.renderUpdate()}
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.help()}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-question-circle'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('help')}</Text>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'fa-question-circle'} size={20}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('help')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.about()}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-info-circle'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('about')}</Text>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'fa-info-circle'} size={20}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('about')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
                   </TouchableOpacity>
                   <TouchableOpacity style={Style.left_card} onPress={()=> this.props.navigator.push({
                       component: MapSettings,
                       passProps: {navigator:this.props.navigator,},
                   })}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'fa-globe'} size={30}/>
-                      </View>
-                      <Text>{I18n.t('map')+' '+I18n.t('settings')}</Text>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'fa-globe'} size={20}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('map')+' '+I18n.t('settings')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
                   </TouchableOpacity>
                   {this.renderLogin()}
                   {this.renderPush()}

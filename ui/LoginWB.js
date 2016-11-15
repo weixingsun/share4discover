@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {Alert, Platform, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import {Alert, Platform, StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image, NativeModules } from 'react-native'
 import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
@@ -33,9 +33,9 @@ var Login = React.createClass({
     },
   renderLoginButton() {
     if(this.props.user != null){
-        return <Icon name={'fa-weibo'} size={30} color="#dd4b39" onPress={this._signOut} />
+        return <Icon name={'fa-weibo'} size={22} color="#dd4b39" onPress={this._signOut} />
     }else{
-        return <Icon name={'fa-weibo'} size={30} color="#dddddd" onPress={this._signIn} />
+        return <Icon name={'fa-weibo'} size={22} color="#dddddd" onPress={this._signIn} />
     }
   },
   renderLoginName() {
@@ -112,13 +112,14 @@ var Login = React.createClass({
   },
   render(){
     return (
-        <View style={{flexDirection:'row', alignItems: 'center',}}>
-          <View style={{width:Style.DEVICE_WIDTH/3}} />
-          <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-              {this.renderLoginButton()}
-          </View>
-          {this.renderLoginName()}
-        </View>
+        <TouchableOpacity style={Style.left_card} onPress={this.onPress}>
+            <View style={{width:10}} />
+            <View style={{width:30}}>{this.renderLoginButton()}</View>
+            <View style={{width:10}} />
+            <View style={{flex:1}}>{this.renderLoginName()}</View>
+            <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+            <View style={{width:10}} />
+        </TouchableOpacity>
     );
   }
 });

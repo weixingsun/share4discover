@@ -156,7 +156,7 @@ export default class PushList extends React.Component {
         rowID={rowData}
         //sectionID={sectionID}
         autoClose={true}
-        //backgroundColor={rowData.backgroundColor}
+        backgroundColor={'white'}
         //close={!rowData.active}
         //onOpen={(sectionID, rowID) => this._handleSwipeout(sectionID, rowID) }
         //scroll={event => this._allowScroll(event)}
@@ -174,8 +174,7 @@ export default class PushList extends React.Component {
         let locale = I18n.locale.substring(0,2)
         let name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         return (
-      <TouchableHighlight style={Style.notify_row} underlayColor='#c8c7cc'
-            onPress={()=>this.openPush(json)} >
+      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View >
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>

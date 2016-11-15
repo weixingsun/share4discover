@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {Alert, StyleSheet, Text, View, TouchableHighlight, Image, NativeModules } from 'react-native'
+import {Alert, StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Image, NativeModules } from 'react-native'
 import FBSDK,{LoginManager,AccessToken,ShareApi} from 'react-native-fbsdk'
 import I18n from 'react-native-i18n'
 import {Icon} from './Icon'
@@ -70,8 +70,9 @@ var Login = React.createClass({
   },
   renderLoginButton(){
     var color = this.state.user? this.state.blue : this.state.gray ;
+    //onPress={this.onPress}
     return  (
-        <Icon name={'fa-facebook-official'} size={35} color={color} onPress={this.onPress} />
+        <Icon name={'fa-facebook-official'} size={22} color={color} />
       );
   },
   renderLoginName() {
@@ -157,13 +158,14 @@ var Login = React.createClass({
   },
   render(){
     return (
-        <View style={{flexDirection:'row',alignItems: 'center',}}>
-          <View style={{width:Style.DEVICE_WIDTH/3}} />
-          <View style={{width:Style.DEVICE_WIDTH/8,alignItems:'center',}}>
-              {this.renderLoginButton()}
-          </View>
-          {this.renderLoginName()}
-        </View>
+        <TouchableOpacity style={Style.left_card} onPress={this.onPress}>
+            <View style={{width:10}} />
+            <View style={{width:30}}>{this.renderLoginButton()}</View>
+            <View style={{width:10}} />
+            <View style={{flex:1}}>{this.renderLoginName()}</View>
+            <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+            <View style={{width:10}} />
+        </TouchableOpacity>
     );
   }
 });

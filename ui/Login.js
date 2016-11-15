@@ -111,18 +111,15 @@ export default class SettingsList extends React.Component {
                       component: LoginSettings,
                       passProps: {navigator:this.props.navigator,},
                   })}>
-                      <View style={{width:DEVICE_WIDTH/3}} />
-                      <View style={{width:DEVICE_WIDTH/8,alignItems:'center',}}>
-                          <Icon name={'ion-ios-paper-plane-outline'} size={40}/>
-                      </View>
-                      <Text>{I18n.t('post')+' '+I18n.t('settings')}</Text>
+                      <View style={{width:10}} />
+                      <View style={{width:30}}><Icon name={'ion-ios-paper-plane-outline'} size={22}/></View>
+                      <View style={{width:10}} />
+                      <View style={{flex:1}}><Text>{I18n.t('post')+' '+I18n.t('settings')}</Text></View>
+                      <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
+                      <View style={{width:10}} />
                   </TouchableOpacity>
-                  <View style={Style.left_card}>
-                    <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
-                  </View>
-                  <View style={Style.left_card}>
-                    <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
-                  </View>
+                  <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
+                  <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
               </ScrollView>
           </View>
         );
