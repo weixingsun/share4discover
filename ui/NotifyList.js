@@ -23,9 +23,9 @@ import Style from "./Style"
 import Main from "./Main"
 import Detail from "./Detail"
 import FormInfo from './FormInfoVar'
-import RssReader from './RssReader';
-import YqlReader from './YqlReader';
-import SGListView from 'react-native-sglistview';
+//import RssReader from './RssReader';
+//import YqlReader from './YqlReader';
+//import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
 import SharedPreferences from 'react-native-shared-preferences'
 

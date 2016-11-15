@@ -39,6 +39,7 @@ module.exports = {
     GaodeMap: 'gaode',
     MAP_TYPE_NORMAL:   'standard',
     MAP_TYPE_SATELLITE:'satellite',
+    MAP_TRAFFIC_TRUE: 'yes',
     MAP_TRAFFIC_FALSE: 'no',
     HOST: 'http://nzmessengers.co.nz/service/node.php?path=',
     USER_HOST: 'http://nzmessengers.co.nz/service/user.php',

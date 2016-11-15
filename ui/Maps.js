@@ -35,7 +35,6 @@ export default class Maps extends Component {
         circles: [],
         region:this.props.region,
         gps: this.props.gps,
-        reload:false,
         showTypes:false,
         showCats:false,
         showPlaceSearch: false,
@@ -96,8 +95,7 @@ export default class Maps extends Component {
         this.permission();
         //this.checkUsbDevice();
         this.loadIcons(this.state.type,this.state.cat);
-	//AppState.addEventListener('change', this._handleAppStateChange);
-        //I18n.locale = NativeModules.RNI18n.locale
+        this.downloadMsg(this.state.type,this.state.cat)
     }
     componentDidMount() {
       /*navigator.geolocation.getCurrentPosition((position) => {
@@ -237,11 +235,10 @@ export default class Maps extends Component {
     downloadMsg(type,cat) {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
-      //alert('type:'+this.state.type+' ,range:'+range +' ,region:'+JSON.stringify(this.state.region))
       Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
         if(self.updateOnUI){
           let notnull = rows.filter((row)=>{return row!=null})
-          if(self.state.markers.length>0) self.setState({ markers:[] });
+          //if(self.state.markers.length>0) self.setState({ markers:[] });
           var markers = notnull.map((row)=>{
             //row ={ lat,lng,type,title,content,ctime, }
             //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
@@ -251,6 +248,7 @@ export default class Maps extends Component {
             row['longitude']=parseFloat(row.lng)
             return row;
           })
+          //console.log('downloadMsg() markers='+markers.length+' type='+type+' cat='+cat+' region='+JSON.stringify(this.state.region)+' range='+range)
           this.setState({ markers: markers });
         }
       })
@@ -418,11 +416,10 @@ export default class Maps extends Component {
         this.downloadMsg(this.state.type,cat)
     }
     onRegionChange(r) {
+      console.log('onRegionChange')
       this.setState({region: r});
       Store.save('region', r);
       this.downloadMsg(this.state.type,this.state.cat);
-      //alert(JSON.stringify(r))
-      //console.log('onRegionChange...................')
     }
     onMarkerClickBmap(e) {
 	var msg = {}
@@ -472,8 +469,6 @@ export default class Maps extends Component {
       }
     }
     render(){
-        //console.log('Maps.render() region='+JSON.stringify(this.state.region))
-	//alert('markers:'+JSON.stringify(this.state.markers))
         return (
           <View style={{flex:1}}>
             { this.renderNavBar() }
@@ -504,6 +499,7 @@ export default class Maps extends Component {
       if(Platform.OS === 'ios') map_style=Style.map_ios
       let map_traffic = Global.MAP_TRAFFIC==='no'?false:true
       //alert('map_traffic='+map_traffic)
+      //console.log('renderGmap() markers='+this.state.markers.length)
       return (
             <GMapView
               ref='gmap'
@@ -523,10 +519,10 @@ export default class Maps extends Component {
     }
     renderBmap(){
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
-      //alert(JSON.stringify(this.state.markers))
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
-      let map_traffic = Global.MAP_TRAFFIC=='false'?false:true
+      let map_traffic = Global.MAP_TRAFFIC==Global.MAP_TRAFFIC_TRUE?true:false
+      //console.log('renderBmap() markers='+this.state.markers.length+'\nregion='+JSON.stringify(this.state.region))
       return (
             <BMapView
                 style={map_style}
