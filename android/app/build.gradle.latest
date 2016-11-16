@@ -86,10 +86,10 @@ android {
     defaultConfig {
         //applicationId "open.share"
         applicationId "com.share"
-        minSdkVersion 18
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.7"
+        versionName "1.0.8"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"

@@ -144,6 +144,7 @@ module.exports = {
               sound:'default',
             }
           }
+          for (var key in kv) { msg[key] = kv[key] }
           let deploy_status=(os==='idev')?1:2
           param={apikey:apikey,timestamp:timestamp,tag:tag,type:1,msg_type:1,msg:msg,deploy_status:deploy_status}
         }

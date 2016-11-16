@@ -28,6 +28,7 @@ import FormInfo from './FormInfoVar'
 //import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
 import SharedPreferences from 'react-native-shared-preferences'
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ export default class NotifyList extends Component {
       this.all_notes=[]
       this.state={
           push_list:[],
+          type:Store.LOCAL_PUSH_LIST,
       }
       this.share_types = Object.keys(Global.TYPE_ICONS)
       this.updateOnUI=true
@@ -50,21 +52,20 @@ export default class NotifyList extends Component {
   componentDidMount(){
       this.event_notify = DeviceEventEmitter.addListener('refresh:PushList',(evt)=>setTimeout(()=>this.load(),400))
   }
-  load(){
+  load(type){
+      if(!type) type=this.state.type
       var self=this;
       if(Platform.OS==='android')
         //alert(JSON.parse('[,{"a":1}]'))
-        Store.getShared(Store.PUSH_RECEIVED, function(value){
+        Store.getShared(type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
-          if(value!=null){
+          if(self.updateOnUI && value!=null){
               let json = JSON.parse(value)
-              if(json.length>0 && self.updateOnUI){
-                  self.setState({
-                      push_list: json
-                  })
-                  //alert(JSON.stringify(json))
-              }
-          }
+              self.setState({
+                  type:type,
+                  push_list:json,
+              })
+          }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
           //SharedPreferences.clear();
         })
   }
@@ -97,7 +98,7 @@ export default class NotifyList extends Component {
   openPush(json){
       //alert('openPush: '+JSON.stringify(json))
       if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tag) {
-          if(!json.read)this.readPush(json.custom.r)
+          if(!json.read)this.readPush(json.custom.t,json.custom.r)
           this.getMsg(json.custom.i)
       }
       if(json.type==='rss'){
@@ -136,8 +137,8 @@ export default class NotifyList extends Component {
             alert('This share has been deleted.')
       });
   }
-  readPush(id){
-      Store.readPushShared({r:id})
+  readPush(type,id){
+      Store.readPushShared(type,{r:id})
       DeviceEventEmitter.emit('refresh:PushList',0);
   }
   _onPress(rowData) {
@@ -168,8 +169,8 @@ export default class NotifyList extends Component {
             }
         }
     }
-    deletePush(id){
-        Store.deletePushShared({r:id})
+    deletePush(type,id){
+        Store.deletePushShared(type,{r:id})
         this.push_list = this.state.push_list //.filter(function(item){ return item.id != id})
         this.removeArrayElement(this.push_list,{r:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
@@ -177,18 +178,19 @@ export default class NotifyList extends Component {
     }
     deleteAllPush(){
         //Store.deleteAllPush()
-        SharedPreferences.deleteItem("pushes_received");
+        SharedPreferences.deleteItem(this.state.type);
         this.setState({push_list: []})
     }
     deletePushAlert(data){
         let self=this
         let id=Platform.OS==='android'?data.custom.r:data.r
+        let type = data.custom.t
         Alert.alert(
             "Delete",
             "Do you want to delete this push message ? ",
             [
                 {text:"Cancel" },
-                {text:"OK", onPress:()=>self.deletePush(id) },
+                {text:"OK", onPress:()=>self.deletePush(type,id) },
             ]
         );
     }
@@ -300,10 +302,47 @@ export default class NotifyList extends Component {
   renderActionIcon(){
       return (
              <View style={{flexDirection:'row',}}>
-                 <Icon name={'ion-ios-trash-outline'} color={'#ffffff'} size={36} onPress={()=>this.deleteAllPushAlert()} />
+                 <Icon name={'ion-md-trash'} color={'#ffffff'} size={35} onPress={()=>this.deleteAllPushAlert()} />
+                 <View style={{width:30}} />
+                 {this.renderMore()}
                  <View style={{width:10}} />
              </View>
       )
+  }
+  renderMoreOption(value,name,icon){
+      return (
+          <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
+              <View style={{flexDirection:'row',height:40}}>
+                  <View style={{width:30,justifyContent:'center'}}>
+                      <Icon name={icon} color={'#ffffff'} size={26} />
+                  </View>
+                  <View style={{justifyContent:'center'}}>
+                      <Text> {name} </Text>
+                  </View>
+              </View>
+          </MenuOption>
+      )
+  }
+  renderMore(){
+      return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
+            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
+              <MenuTrigger>
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+              </MenuTrigger>
+              <MenuOptions>
+                {this.renderMoreOption(Store.LOCAL_PUSH_LIST, I18n.t('push_local'),'fa-map-marker')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption(Store.P2P_PUSH_LIST,   I18n.t('push_p2p'),  'fa-comment')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption(Store.TAG_PUSH_LIST,   I18n.t('push_tag'),'fa-bell')}
+              </MenuOptions>
+            </Menu>
+          </View>
+      )
+  }
+  chooseMore(option){
+      this.load(option)
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
@@ -319,11 +358,11 @@ export default class NotifyList extends Component {
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     let title = I18n.t('my')+' '+I18n.t('msgs')
     return (
-      <View>
-        <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
+        <MenuContext style={{ flex: 1 }} ref={"MenuContext"}>
+          <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
             //leftButton={}
             rightButton= {this.renderActionIcon()}
-	/>
+	  />
           <ListView
               enableEmptySections={true}
               ref={'listview'}
@@ -339,7 +378,7 @@ export default class NotifyList extends Component {
               //renderSectionHeader = {this._renderSectionHeader.bind(this)}
               automaticallyAdjustContentInsets={false}
           />
-      </View>
+        </MenuContext>
     );
   }
 }

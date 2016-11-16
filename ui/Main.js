@@ -217,19 +217,21 @@ export default class Main extends Component {
   }
   checkMapSettings(){
       var _this = this;
-      if(!Global.region) Store.get('region').then((region_value) => {
-        if(region_value !=null && region_value.latitude !=null){
-          if(region_value.zoom == null){
+      if(!Global.region)
+        /*Store.get('region').then((region_value) => {
+          if(region_value !=null && region_value.latitude !=null){
+            if(region_value.zoom == null){
               region_value['zoom'] = 16
-          }
-          if(region_value.latitudeDelta == null){
+            }
+            if(region_value.latitudeDelta == null){
               region_value['latitudeDelta'] = 0.02
               region_value['longitudeDelta'] = 0.02
-          }
-          if(!Global.region){
+            }
+            if(!Global.region){
               Global.region=region_value
-          }
-        }else{  //  first start
+            }
+          }else{  //  first start
+        */
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           KKLocation.getCurrentPosition((position) => {
             //console.log("location get current position: ", position);
@@ -242,8 +244,7 @@ export default class Main extends Component {
             }
           }, (error) => { console.log("location get current position error: ", error) },
           {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100});
-        }
-      })
+      //}})
       if(Global.MAP == null){
         Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
           if(map_value != null){

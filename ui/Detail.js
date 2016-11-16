@@ -92,6 +92,7 @@ export default class Detail extends Component {
             os:os,
         }
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
+        console.log(JSON.stringify(msgReplyValue))
         //let loginsObj = Global.getLogins(this.props.msg.owner)
         //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
         //var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}

@@ -416,10 +416,12 @@ export default class Maps extends Component {
         this.downloadMsg(this.state.type,cat)
     }
     onRegionChange(r) {
-      console.log('onRegionChange')
-      this.setState({region: r});
-      Store.save('region', r);
-      this.downloadMsg(this.state.type,this.state.cat);
+      //console.log('onRegionChange')
+      if(r.latitude!=0){
+        this.setState({region: r});
+        Store.save('region', r);
+        this.downloadMsg(this.state.type,this.state.cat);
+      }
     }
     onMarkerClickBmap(e) {
 	var msg = {}
@@ -498,7 +500,7 @@ export default class Maps extends Component {
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
       let map_traffic = Global.MAP_TRAFFIC==='no'?false:true
-      //alert('map_traffic='+map_traffic)
+      //alert('region='+JSON.stringify(this.state.region))
       //console.log('renderGmap() markers='+this.state.markers.length)
       return (
             <GMapView

@@ -104,6 +104,9 @@ I18n.translations = {
     country:'Country',
     name:'Name',
     push:'Push',
+    push_local:' Local Updates',
+    push_p2p:' My Messages',
+    push_tag:' Listening Updates',
     //tos
     tos_special:'Special Notes',
     tos_content:'Contents of Services',
@@ -220,6 +223,9 @@ I18n.translations = {
     country:'Country',
     name:'Name',
     push:'Push',
+    push_local:' Local Updates',
+    push_p2p:' My Messages',
+    push_tag:' Listening Updates',
     //tos
     tos_special:'Special Notes',
     tos_content:'Contents of Services',
@@ -336,6 +342,9 @@ I18n.translations = {
     country:'国家',
     name:'名字',
     push:'推送',
+    push_local:' 周边动态',
+    push_p2p:' 我的消息',
+    push_tag:' 关注动态',
     //tos
     tos_special:'特殊声明',
     tos_content:'服务内容',

@@ -55,6 +55,7 @@ module.exports = {
     GG_IP2LOC_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
     post:'post',
     none:'none',
+    push_local:'local',
     push_p2p:'p2p',
     push_tag:'tag',
     mainlogin: '',

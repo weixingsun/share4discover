@@ -80,7 +80,7 @@ module.exports = {
       flex:1,
   },
   CAT_COLORS:{
-      buy:  '#87b6a7',
+      buy:  '#599987',
       sell: '#ff847c',
       rent0:'#e84a5f',
       rent1:'#2a363b',

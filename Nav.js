@@ -22,13 +22,13 @@ export default class Nav extends Component {
     //p2p = {alertBody:'click to view more',title:'hello'}
     onPushReceived(data){
         //alert('onPushReceived:'+JSON.stringify(data))
-        console.log('RNBaiduPush:onPushOpened:',data)
+        console.log('Nav.BaiduPush:onPushOpened:',data)
         //Store.append(Store.P2P_PUSH_LIST,data)
         //DeviceEventEmitter.emit('refresh:PushList',0);
     }
     onMsgReceived(data){
         //alert('onMsgReceived:'+JSON.stringify(data))
-        console.log('RNBaiduPush:onMsgReceived:',data)
+        console.log('Nav.BaiduPush:onMsgReceived:',data)
         //Store.append(Store.P2P_PUSH_LIST,data)
         //DeviceEventEmitter.emit('refresh:PushList',0);
     }
