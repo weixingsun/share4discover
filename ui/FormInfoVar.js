@@ -670,7 +670,7 @@ export default class FormInfoVar extends Component {
                      <View style={{flexDirection:'row',}}>
                        <Icon 
                            name={"ion-ios-arrow-round-back"} 
-                           color={'#333333'} size={46} 
+                           color={Style.font_colors.enabled} size={46} 
                            onPress={() => this.back() } />
                      </View>
                    }

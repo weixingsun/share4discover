@@ -90,7 +90,7 @@ export default class SettingsList extends React.Component {
                       <View style={{width:10}} />
                       <View style={{width:30}}><Icon name={'fa-bell'} size={20}/></View>
                       <View style={{width:10}} />
-                      <View style={{flex:1}}><Text>{I18n.t('push')+' '+I18n.t('settings')}</Text></View>
+                      <View style={{flex:1}}><Text>{I18n.t('push')+' '+I18n.t('listener')}</Text></View>
                       <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
                       <View style={{width:10}} />
                   </TouchableOpacity>

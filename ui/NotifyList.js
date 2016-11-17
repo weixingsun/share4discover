@@ -28,7 +28,7 @@ import FormInfo from './FormInfoVar'
 //import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
 import SharedPreferences from 'react-native-shared-preferences'
-import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
 export default class NotifyList extends Component {
   constructor(props) {
@@ -300,10 +300,9 @@ export default class NotifyList extends Component {
         );
     }
   renderActionIcon(){
+      //<Icon name={'ion-md-trash'} color={'#ffffff'} size={35} onPress={()=>this.deleteAllPushAlert()} />
       return (
              <View style={{flexDirection:'row',}}>
-                 <Icon name={'ion-md-trash'} color={'#ffffff'} size={35} onPress={()=>this.deleteAllPushAlert()} />
-                 <View style={{width:30}} />
                  {this.renderMore()}
                  <View style={{width:10}} />
              </View>
@@ -331,18 +330,21 @@ export default class NotifyList extends Component {
                 <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
               </MenuTrigger>
               <MenuOptions>
-                {this.renderMoreOption(Store.LOCAL_PUSH_LIST, I18n.t('push_local'),'fa-map-marker')}
+                {this.renderMoreOption(Store.LOCAL_PUSH_LIST, I18n.t('push_local'),'fa-street-view')}
                     <View style={Style.separator} />
                 {this.renderMoreOption(Store.P2P_PUSH_LIST,   I18n.t('push_p2p'),  'fa-comment')}
                     <View style={Style.separator} />
                 {this.renderMoreOption(Store.TAG_PUSH_LIST,   I18n.t('push_tag'),'fa-bell')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption('delete_all',   I18n.t('delete_all'),'fa-trash')}
               </MenuOptions>
             </Menu>
           </View>
       )
   }
   chooseMore(option){
-      this.load(option)
+      if(option==='delete_all') this.deleteAllPushAlert()
+      else this.load(option)
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
@@ -352,11 +354,16 @@ export default class NotifyList extends Component {
           return this._renderShareRowView(data)
       }
   }
+  getTitleName(type){
+      if(type===Store.LOCAL_PUSH_LIST) return I18n.t('push_local')
+      else if(type===Store.P2P_PUSH_LIST) return I18n.t('push_p2p')
+      else if(type===Store.TAG_PUSH_LIST) return I18n.t('push_tag')
+  }
   render() {
     this.all_notes = this.props.mails.concat(this.state.push_list)
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
-    let title = I18n.t('my')+' '+I18n.t('msgs')
+    let title = this.getTitleName(this.state.type)
     return (
         <MenuContext style={{ flex: 1 }} ref={"MenuContext"}>
           <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 

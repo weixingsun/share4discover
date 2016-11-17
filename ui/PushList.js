@@ -11,6 +11,7 @@ import NavigationBar from 'react-native-navbar'
 import Swipeout from 'react-native-swipeout';
 import FormPush from './FormPush';
 import I18n from 'react-native-i18n';
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
 export default class PushList extends React.Component {
     constructor(props) {
@@ -198,24 +199,51 @@ export default class PushList extends React.Component {
       </TouchableHighlight>
         );
     }
-    render(){
-      let title1=I18n.t('push')+' '+I18n.t('list')
+    renderMoreOption(value,name,icon){
       return (
-      <View>
+          <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
+              <View style={{flexDirection:'row',height:40}}>
+                  <View style={{width:30,justifyContent:'center'}}>
+                      <Icon name={icon} color={'#ffffff'} size={26} />
+                  </View>
+                  <View style={{justifyContent:'center'}}>
+                      <Text> {name} </Text>
+                  </View>
+              </View>
+          </MenuOption>
+      )
+    }
+    renderMore(){
+      return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
+            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
+              <MenuTrigger>
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+              </MenuTrigger>
+              <MenuOptions>
+                {this.renderMoreOption('new_push',  I18n.t('create')+' '+I18n.t('push'),  'fa-pencil-square')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption('delete_all',I18n.t('delete_all'),'fa-trash')}
+              </MenuOptions>
+            </Menu>
+          </View>
+      )
+    }
+    chooseMore(option){
+      if(option==='delete_all') this.deleteAllTagsAlert()
+      else if(option==='new_push') this.addPush()
+    }
+    render(){
+      let title1=I18n.t('push')+' '+I18n.t('listener')
+      return (
+        <MenuContext style={{ flex: 1 }} ref={"menu_push"}>
           <NavigationBar style={Style.navbar} title={{title:title1,tintColor:Style.font_colors.enabled}} 
               leftButton={
                  <View style={{flexDirection:'row',}}>
                     <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
                  </View>
               }
-              rightButton={
-                 <View style={{flexDirection:'row',}}>
-                    <Icon name={'ion-ios-trash-outline'} color={Style.font_colors.enabled} size={36} onPress={()=>this.deleteAllTagsAlert()} />
-                    <View style={{width:30}} />
-                    <Icon name={'ion-ios-add'} color={Style.font_colors.enabled} size={45} onPress={()=>this.addPush()} />
-                    <View style={{width:10}} />
-                 </View>
-              }
+              rightButton={ this.renderMore() }
           />
           <ListView
               enableEmptySections={true}      //annoying warning
@@ -227,7 +255,7 @@ export default class PushList extends React.Component {
               automaticallyAdjustContentInsets={false}
               initialListSize={9}
           />
-      </View>
+        </MenuContext>
       );
     }
 }

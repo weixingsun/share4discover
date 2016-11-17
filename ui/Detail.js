@@ -16,6 +16,7 @@ import Net    from '../io/Net'
 import Style     from './Style';
 import DetailImg from './DetailImg';
 import FormInfo  from "./FormInfoVar"
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 var {height, width} = Dimensions.get('window');
 
 export default class Detail extends Component {
@@ -174,29 +175,47 @@ export default class Detail extends Component {
         if(this.isMyMsg){
           return (
             <View style={{flexDirection:'row',}}>
-              <Icon
-                name={'ion-ios-create-outline'}
-                color={Style.font_colors.enabled}
-                size={40}
-                onPress={this.onEdit.bind(this) } />
-	      <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-trash-outline'}
-                color={Style.font_colors.enabled}
-                size={40}
-                onPress={this.onDelete.bind(this) } />
+              {this.renderMore()}
               <View style={{width:10}} />
             </View>
           )
-/*
-              <View style={{width:40}} />
-              <Icon
-                name={'ion-ios-checkmark-circle-outline'}
-                color={'green'}
-                size={40}
-                onPress={this.onClose.bind(this) } />
-*/
         }
+    }
+    renderMoreOption(value,name,icon){
+      return (
+          <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
+              <View style={{flexDirection:'row',height:40}}>
+                  <View style={{width:30,justifyContent:'center'}}>
+                      <Icon name={icon} color={'#ffffff'} size={26} />
+                  </View>
+                  <View style={{justifyContent:'center'}}>
+                      <Text> {name} </Text>
+                  </View>
+              </View>
+          </MenuOption>
+      )
+    }
+    renderMore(){
+      return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
+            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
+              <MenuTrigger>
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+              </MenuTrigger>
+              <MenuOptions>
+                {this.renderMoreOption('edit',  I18n.t('edit_share'),  'fa-pencil-square')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption('delete',I18n.t('delete_share'),'fa-trash')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption('reply', I18n.t('reply'), 'fa-comment')}
+              </MenuOptions>
+            </Menu>
+          </View>
+      )
+    }
+    chooseMore(option){
+      if(option==='delete') this.onDelete()
+      else if(option==='edit') this.onEdit()
     }
     showSlides(){
         if(this.images.length>0) {
@@ -396,7 +415,7 @@ export default class Detail extends Component {
     render(){
         //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
-            <View style={{flex:1}}>
+            <MenuContext style={{ flex: 1 }} ref={"menu_detail"}>
                 <NavigationBar style={{
                       flex:1,
                       paddingLeft:12,
@@ -431,7 +450,7 @@ export default class Detail extends Component {
                       {this.renderReplyInput()}
                     </KeyboardAwareScrollView>
 		</View>
-            </View>
+            </MenuContext>
         );
     }
 }
