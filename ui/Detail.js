@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, DeviceEventEmitter, Dimensions,Image,NativeModules,Picker,Platform,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
+import {Alert, DeviceEventEmitter, Dimensions,Image,Linking,NativeModules,Picker,Platform,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
@@ -249,12 +249,33 @@ export default class Detail extends Component {
                 )
             }) }
             </View>
-            <View style={{flex:1}}>
-              <Icon name={'ion-ios-call'} size={50} color={'green'} />
-            </View>
+            <View style={{flex:1}}/>
+            {this.renderPhoneIcon()}
+            <View style={{width:20}}/>
           </View>
         </View>
         );
+    }
+    renderPhoneIcon(){
+        if(this.props.msg.phone){
+          let tel = 'tel:'+this.props.msg.phone
+          return (
+            <View style={{height:80,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity style={{width:60,height:60}} onPress={() => this.callPhone(tel)}>
+              <Icon name={'ion-ios-call'} size={50} color={this.state.highlight_color} />
+            </TouchableOpacity>
+            </View>
+          )
+        }
+    }
+    callPhone(url){
+        Linking.canOpenURL(url).then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          } else { 
+            alert('Don\'t know how to open URI: ' + url);
+          }
+        });
     }
     renderReplyItems(){
         //id:#rtime  key='car:lat,lng:ctime#time'  value='{l:Global.mainlogin,c:this.state.reply}'
