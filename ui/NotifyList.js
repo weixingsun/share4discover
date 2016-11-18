@@ -27,7 +27,6 @@ import FormInfo from './FormInfoVar'
 //import YqlReader from './YqlReader';
 //import SGListView from 'react-native-sglistview';
 import Button from 'apsl-react-native-button'
-import SharedPreferences from 'react-native-shared-preferences'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
 export default class NotifyList extends Component {
@@ -37,7 +36,7 @@ export default class NotifyList extends Component {
       this.all_notes=[]
       this.state={
           push_list:[],
-          type:Store.LOCAL_PUSH_LIST,
+          type:Store.LOCAL,
       }
       this.share_types = Object.keys(Global.TYPE_ICONS)
       this.updateOnUI=true
@@ -55,18 +54,19 @@ export default class NotifyList extends Component {
   load(type){
       if(!type) type=this.state.type
       var self=this;
-      if(Platform.OS==='android')
+      //if(Platform.OS==='android')
         //alert(JSON.parse('[,{"a":1}]'))
-        Store.getShared(type, function(value){
+        Store.getShared(Store.PUSH_LIST+":"+type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
+          //alert('value='+value)
           if(self.updateOnUI && value!=null){
+              //alert('value='+value)
               let json = JSON.parse(value)
               self.setState({
                   type:type,
                   push_list:json,
               })
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
-          //SharedPreferences.clear();
         })
   }
   sort(arr){
@@ -101,27 +101,6 @@ export default class NotifyList extends Component {
           if(!json.read)this.readPush(json.custom.t,json.custom.r)
           this.getMsg(json.custom.i)
       }
-      if(json.type==='rss'){
-          this.props.navigator.push({
-              component: RssReader,
-              passProps: {navigator:this.props.navigator,url:json.url},
-          });
-      }else if(json.type==='yql'){
-          this.props.navigator.push({
-              component: YqlReader,
-              passProps: {navigator:this.props.navigator,json:json},
-          });
-      }else if(json.type==='web'){
-          this.props.navigator.push({
-              component: WebReader,
-              passProps: {navigator:this.props.navigator,url:json.url},
-          });
-      }else if(json.type==='share'){
-          this.props.navigator.push({
-              component: ShareReader,
-              passProps: {navigator:this.props.navigator,url:json.url},
-          });
-      }
   }
   getMsg(key){
       var self = this;
@@ -138,7 +117,7 @@ export default class NotifyList extends Component {
       });
   }
   readPush(type,id){
-      Store.readPushShared(type,{r:id})
+      Store.readPushShared(Store.PUSH_LIST+":"+type,{r:id})
       DeviceEventEmitter.emit('refresh:PushList',0);
   }
   _onPress(rowData) {
@@ -170,15 +149,14 @@ export default class NotifyList extends Component {
         }
     }
     deletePush(type,id){
-        Store.deletePushShared(type,{r:id})
+        Store.deletePushShared(Store.PUSH_LIST+":"+type,{r:id})
         this.push_list = this.state.push_list //.filter(function(item){ return item.id != id})
         this.removeArrayElement(this.push_list,{r:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
         this.setState({push_list: this.push_list});
     }
     deleteAllPush(){
-        //Store.deleteAllPush()
-        SharedPreferences.deleteItem(this.state.type);
+        Store.deleteShared(Store.PUSH_LIST+":"+this.state.type)
         this.setState({push_list: []})
     }
     deletePushAlert(data){
@@ -323,18 +301,19 @@ export default class NotifyList extends Component {
       )
   }
   renderMore(){
+      //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
       return (
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
               <MenuTrigger>
-                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={40} style={{padding:10}} />
               </MenuTrigger>
               <MenuOptions>
-                {this.renderMoreOption(Store.LOCAL_PUSH_LIST, I18n.t('push_local'),'fa-street-view')}
+                {this.renderMoreOption(Store.LOCAL, I18n.t('push_local'),'fa-street-view')}
                     <View style={Style.separator} />
-                {this.renderMoreOption(Store.P2P_PUSH_LIST,   I18n.t('push_p2p'),  'fa-comment')}
+                {this.renderMoreOption(Store.P2P,   I18n.t('push_p2p'),  'fa-comment')}
                     <View style={Style.separator} />
-                {this.renderMoreOption(Store.TAG_PUSH_LIST,   I18n.t('push_tag'),'fa-bell')}
+                {this.renderMoreOption(Store.TAG,   I18n.t('push_tag'),'fa-bell')}
                     <View style={Style.separator} />
                 {this.renderMoreOption('delete_all',   I18n.t('delete_all'),'fa-trash')}
               </MenuOptions>
@@ -355,15 +334,16 @@ export default class NotifyList extends Component {
       }
   }
   getTitleName(type){
-      if(type===Store.LOCAL_PUSH_LIST) return I18n.t('push_local')
-      else if(type===Store.P2P_PUSH_LIST) return I18n.t('push_p2p')
-      else if(type===Store.TAG_PUSH_LIST) return I18n.t('push_tag')
+      if(type===Store.LOCAL) return I18n.t('push_local')
+      else if(type===Store.P2P) return I18n.t('push_p2p')
+      else if(type===Store.TAG) return I18n.t('push_tag')
   }
   render() {
     this.all_notes = this.props.mails.concat(this.state.push_list)
     let ds=this.ds.cloneWithRows(this.all_notes)
     //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     let title = this.getTitleName(this.state.type)
+    //alert('title:'+title+' type='+this.state.type+' ')
     return (
         <MenuContext style={{ flex: 1 }} ref={"MenuContext"}>
           <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 

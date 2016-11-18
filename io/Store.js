@@ -3,13 +3,16 @@ import {
   Platform,
 } from 'react-native';
 import SharedPreferences from 'react-native-shared-preferences'
-//import UserDefaults from 'react-native-user-defaults'
+import UserDefaults from 'react-native-user-defaults'
 
 var deviceStorage = {
         API_LIST:  "api_list",
         FEED_LIST: "feed_list",
         PUSH_CLICKED: "push_clicked",
-        //PUSH_RECEIVED: "pushes_received",
+        LOCAL: "local",
+        P2P: "p2p",
+        TAG: "tag",
+        PUSH_LIST: "push_list",
         LOCAL_PUSH_LIST: "push_list:local",
         P2P_PUSH_LIST: "push_list:p2p",
         TAG_PUSH_LIST: "push_list:tag",
@@ -30,24 +33,29 @@ var deviceStorage = {
 
         getShared(key,cbk){
           if(Platform.OS==='android') SharedPreferences.getItem(key, (value)=>cbk(value))
-          else if(Platform.OS==='ios') this.get(key).then((value=>cbk(value)))
-          //else if(Platform.OS==='ios') UserDefaults.get(key).then(value=>cbk(value))
+          //else if(Platform.OS==='ios') this.get(key).then((value=>cbk(value)))
+          else if(Platform.OS==='ios'){
+              console.log('Store.get()')
+              UserDefaults.get(key)
+              .then((value)=>cbk(value))
+              .catch((err)=>{/*alert('error: '+err)*/})
+          }
         },
         setShared(key,value){
           if(Platform.OS==='android') SharedPreferences.setItem(key, value)
-          //else if(Platform.OS==='ios') UserDefaults.set(key, value)
+          else if(Platform.OS==='ios') UserDefaults.set(key, value).then(()=>{}).catch((err)=>{})
         },
         deleteShared(key){
           if(Platform.OS==='android') SharedPreferences.deleteItem(key)
-          //else if(Platform.OS==='ios') UserDefaults.remove(key)
+          else if(Platform.OS==='ios') UserDefaults.remove(key).then(()=>{}).catch((err)=>{})
         },
         clearShared(){
           if(Platform.OS==='android') SharedPreferences.clear()
-          //else if(Platform.OS==='ios') UserDefaults.empty()
+          else if(Platform.OS==='ios') UserDefaults.empty().then(()=>{}).catch((err)=>{})
         },
         readPushShared(type,kv) {
             let self = this
-            let fskey = type==='p2p'?this.P2P_PUSH_LIST:this.TAG_PUSH_LIST
+            let fskey = this.PUSH_LIST+":"+type
             this.getShared(fskey,function(str){
                 let array = JSON.parse(str)
                 self.addArrayElementShared(array,kv,{read:1})
@@ -70,7 +78,7 @@ var deviceStorage = {
         },
         deletePushShared(type,kv) {
             let self = this
-            let fskey = type==='p2p'?this.P2P_PUSH_LIST:this.TAG_PUSH_LIST
+            let fskey = this.PUSH_LIST+":"+type
             this.getShared(fskey,function(str){
                 let array = JSON.parse(str)
                 self.deleteArrayElementShared(array,kv)

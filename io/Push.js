@@ -87,11 +87,12 @@ module.exports = {
         if(os==='ios'||os==='idev'){
           msg = {
             aps:{
+              "content-available": 1,
               alert:title,
               sound:'default',
-            }
+            },
+            custom_content:kv,
           }
-          for (var key in kv) { msg[key] = kv[key] }
           let deploy_status=(os==='idev')?1:2
           param={apikey:apikey,timestamp:timestamp,channel_id:channel_id,msg_type:1,msg:msg,deploy_status:deploy_status}
         }
@@ -140,11 +141,12 @@ module.exports = {
         if(os==='ios'||os==='idev'){
           msg = {
             aps:{
+              "content-available" : 1,
               alert:title,
               sound:'default',
-            }
+            },
+            custom_content:kv,
           }
-          for (var key in kv) { msg[key] = kv[key] }
           let deploy_status=(os==='idev')?1:2
           param={apikey:apikey,timestamp:timestamp,tag:tag,type:1,msg_type:1,msg:msg,deploy_status:deploy_status}
         }

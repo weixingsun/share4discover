@@ -56,6 +56,7 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.ExtUrl()
+      //Store.deleteShared(Store.PUSH_CLICKED);
       //checkPermission()
       //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
@@ -66,7 +67,8 @@ export default class Main extends Component {
       this.checkSettingsChange();
       let self=this
       Store.getShared(Store.PUSH_CLICKED, (value)=>{
-          if(value!=null){
+          console.log('Main.willMount() getShare()')
+          if(value!=null || value!=""){
               //alert("push_clicked type="+(typeof value)+" : "+value);
               //self.setState({open:'push'})
               let json = JSON.parse(value)

@@ -17,9 +17,9 @@
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 //#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 #import "RCTLinkingManager.h"
-//#import "UserNotifications.h"
-//#import "RCTPushNotificationManager.h"
+#import <UserNotifications/UserNotifications.h>
 #import "OpenShare-Swift.h"
+
 BMKMapManager* mapManager;
 
 @implementation AppDelegate
@@ -29,18 +29,25 @@ BMKMapManager* mapManager;
     /** 注册用户通知 */
 - (void)registerUserNotification {
   // 注册通知(推送) 申请App需要接受来自服务商提供推送消息  iOS8 下需要使用新的 API
-  if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+  if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge|UNAuthorizationOptionSound|UNAuthorizationOptionAlert)
+                          completionHandler:^(BOOL granted,NSError *_Nullable error){
+                            if(!error) NSLog(@"request authorization succeeded!");
+                          }];
+  }/*else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
     UIUserNotificationType myTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:myTypes categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
   }else {
     UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound;
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:myTypes];
-  }
+  }*/
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  //NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  NSURL *jsCodeLocation = [NSURL URLWithString:@"http://10.32.57.7:8081/index.ios.bundle?platform=ios&dev=true"];
   // register APNS for push
   [self registerUserNotification];
   [BaiDuPush registerChannel:launchOptions apiKey:APPKEY pushMode:BPushModeDevelopment];
@@ -150,7 +157,7 @@ BMKMapManager* mapManager;
                      restorationHandler:restorationHandler];
 }
 //百度云推送添加
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UNNotificationSettings *)notificationSettings
 {
   [application registerForRemoteNotifications];
   //[TencentXG didRegisterUserNotificationSettings:notificationSettings];
@@ -179,14 +186,16 @@ BMKMapManager* mapManager;
   if (application.applicationState == UIApplicationStateActive) {
     NSDictionary* data = [userInfo objectForKey:@"aps"];
     NSString* msg = [data objectForKey:@"alert"];
-    [BaiDuPush receivePushMessages:msg];
+    //[BaiDuPush receivePushMessages:msg];
+    [BaiDuPush pushNotificationMessages:msg];
   }
   //杀死状态下，直接跳转到跳转页面。
   if (application.applicationState == UIApplicationStateInactive) {
-    NSDictionary* data = [userInfo objectForKey:@"aps"];
-    NSString* msg = [data objectForKey:@"alert"];
-    [BaiDuPush pushNotificationMessages:msg];
+    //NSDictionary* data = [userInfo objectForKey:@"aps"];
+    //NSString* msg = [data objectForKey:@"alert"];
+    //[BaiDuPush pushNotificationMessages:msg];
   }
+  [BaiDuPush saveNotificationMessages:userInfo];
 }
 
 //-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
