@@ -251,14 +251,14 @@ export default class FormFeed extends React.Component{
         })
     }
     render() {
-        let title1 = this.props.feed==null?I18n.t('create')+' '+I18n.t('listener'):I18n.t('edit')+' '+I18n.t('listener')+' '+this.state.form.name
+        let title1 = this.props.push==null?I18n.t('create')+' '+I18n.t('listener'):I18n.t('edit')+' '+I18n.t('listener')
         return(
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: title1,tintColor:Style.font_colors.enabled}}
              leftButton={
-                <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
-                </View>
+                <TouchableOpacity style={{width:50,height:50}} onPress={() => this.props.navigator.pop()}>
+                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                </TouchableOpacity>
              }
              //<Icon name={"ion-ios-search-outline"} color={'#333333'} size={40} onPress={this.getAllTags}  />
              //rightButton={}

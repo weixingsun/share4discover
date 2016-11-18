@@ -1,6 +1,6 @@
 //'use strict'; //ERROR: Attempted to assign to readonlly property
 import React, { Component } from 'react';
-import {ActivityIndicator, Alert, DeviceEventEmitter,Picker, PixelRatio, Platform, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import {ActivityIndicator, Alert, DeviceEventEmitter,Picker, PixelRatio, Platform, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import NavigationBar from 'react-native-navbar';
@@ -472,23 +472,17 @@ export default class FormInfoVar extends Component {
         if(size===0) size=''
         if(size===1&&this.state.form.pics[0]==='') size=''
         return (
-            <View style={{flexDirection:'row',}}>
-                <Icon 
-                    name={'ion-ios-attach'} 
-                    size={40} 
-                    color={Style.font_colors.enabled} 
-                    badge={{text:size, color:'red'}} 
-                    onPress={
-                      ()=>this.props.navigator.push({
+            <TouchableOpacity style={{width:50,height:50}} onPress={
+                    ()=>this.props.navigator.push({
                         component: Attachments,
-                        passProps: { 
-                          pics:this.state.form.pics, 
-                          ctime:this.ctime, 
-                          navigator:this.props.navigator 
+                        passProps: {
+                          pics:this.state.form.pics,
+                          ctime:this.ctime,
+                          navigator:this.props.navigator
                         } })
-                    } />
-                <View style={{width:10}} />
-            </View>
+            }>
+                <Icon name={'ion-ios-attach'} size={40} color={Style.font_colors.enabled} badge={{text:size, color:'red'}} />
+            </TouchableOpacity>
         )
     }
     handleValueChange(values) {
@@ -667,12 +661,11 @@ export default class FormInfoVar extends Component {
             <View style={{backgroundColor: '#eeeeee'}}>
                 <NavigationBar style={Style.navbar} title={{title:title_nav, tintColor:Style.font_colors.enabled}}
                    leftButton={
-                     <View style={{flexDirection:'row',}}>
+                     <TouchableOpacity style={{width:50,height:50}} onPress={() => this.back()}>
                        <Icon 
                            name={"ion-ios-arrow-round-back"} 
-                           color={Style.font_colors.enabled} size={46} 
-                           onPress={() => this.back() } />
-                     </View>
+                           color={Style.font_colors.enabled} size={46} />
+                     </TouchableOpacity>
                    }
                    rightButton={ this.showActionIcons() }
                 />

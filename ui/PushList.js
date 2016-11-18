@@ -219,7 +219,7 @@ export default class PushList extends React.Component {
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
               <MenuTrigger>
-                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36}  style={{paddingLeft:15,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
                 {this.renderMoreOption('new_push',  I18n.t('create')+' '+I18n.t('push'),  'fa-pencil-square')}
@@ -240,9 +240,9 @@ export default class PushList extends React.Component {
         <MenuContext style={{ flex: 1 }} ref={"menu_push"}>
           <NavigationBar style={Style.navbar} title={{title:title1,tintColor:Style.font_colors.enabled}} 
               leftButton={
-                 <View style={{flexDirection:'row',}}>
-                    <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
-                 </View>
+                 <TouchableOpacity style={{width:50,height:50}} onPress={() => this.props.navigator.pop()}>
+                    <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                 </TouchableOpacity>
               }
               rightButton={ this.renderMore() }
           />

@@ -40,7 +40,6 @@
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",
     "react-native-swiper": "^1.5.2",
     "react-native-tabs": "^1.0.9",
-    "react-native-usbserial": "git+https://github.com/weixingsun/react-native-usbserial.git",
     "react-native-user-defaults": "^0.1.5",
     "react-native-vector-icons": "^3.0.0",
     "react-native-wechat": "^1.7.0",

@@ -136,14 +136,9 @@ export default class Attachment extends Component {
     showActionIcons(){
         if(this.state.uploading===null)
         return (
-            <View style={{flexDirection:'row',}}>
-              <Icon
-                name={'ion-ios-add'}
-                color={'blue'}
-                size={50}
-                onPress={this.openImagePicker.bind(this) } />
-              <View style={{width:10}} />
-            </View>
+            <TouchableOpacity style={{width:50,height:50}} onPress={ this.openImagePicker.bind(this) } >
+              <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled}/>
+            </TouchableOpacity>
         )
     }
     showImages(list){
@@ -236,9 +231,9 @@ export default class Attachment extends Component {
             <View style={{flex:1}}>
                 <NavigationBar style={Style.navbar} title={{title: '',}}
                    leftButton={
-                     <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={'#333333'} size={40} onPress={() => this.back() } />
-                     </View>
+                     <TouchableOpacity style={{width:50,height:50}} onPress={ ()=>this.back() } >
+                       <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                     </TouchableOpacity>
                    }
                    rightButton={ this.showActionIcons() }
                 />

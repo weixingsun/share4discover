@@ -171,19 +171,9 @@ export default class Detail extends Component {
     getSNSIcon(type){
         return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
     }
-    showActionIcons(){
-        if(this.isMyMsg){
-          return (
-            <View style={{flexDirection:'row',}}>
-              {this.renderMore()}
-              <View style={{width:10}} />
-            </View>
-          )
-        }
-    }
     renderMoreOption(value,name,icon){
       return (
-          <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
+          <MenuOption value={value} style={{backgroundColor:this.state.highlight_color}}>
               <View style={{flexDirection:'row',height:40}}>
                   <View style={{width:30,justifyContent:'center'}}>
                       <Icon name={icon} color={'#ffffff'} size={26} />
@@ -195,12 +185,12 @@ export default class Detail extends Component {
           </MenuOption>
       )
     }
-    renderMore(){
-      return (
-          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
-            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
+    showActionIcons(){
+      if(this.isMyMsg) return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:this.state.highlight_color }}>
+            <Menu onSelect={(value) => this.chooseMore(value) }>
               <MenuTrigger>
-                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} />
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={36} style={{paddingLeft:15,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
                 {this.renderMoreOption('edit',  I18n.t('edit_share'),  'fa-pencil-square')}
@@ -236,7 +226,9 @@ export default class Detail extends Component {
 	var owners = this.props.msg.owner.split(',')
         owners.push('tel:'+this.props.msg.phone)
         return (
-          <View style={Style.detail_card} >
+        <View style={Style.detail_card} >
+          <View style={{flex:1,flexDirection:'row'}}>
+            <View style={{width:200}}>
             {owners.map( (owner) => {
 		var sns_type = owner.split(':')[0]
 		var sns_user = owner.split(':')[1]
@@ -246,7 +238,7 @@ export default class Detail extends Component {
                     <View style={{flexDirection:'row',marginLeft:10}} key={owner} >
                         <View style={{width:30,alignItems:'center'}}>
                           <Icon
-                            style={{marginLeft:10,marginRight:6}}
+                            //style={{marginLeft:10,marginRight:6}}
                             size={24}
                             color={this.state.highlight_color}
                             name={Global.SNS_ICONS[sns_type]}
@@ -256,7 +248,12 @@ export default class Detail extends Component {
                     </View>
                 )
             }) }
+            </View>
+            <View style={{flex:1}}>
+              <Icon name={'ion-ios-call'} size={50} color={'green'} />
+            </View>
           </View>
+        </View>
         );
     }
     renderReplyItems(){
@@ -429,9 +426,9 @@ export default class Detail extends Component {
                       backgroundColor:this.state.highlight_color,
                    }} title={{title: '',}}
                    leftButton={
-                     <View style={{flexDirection:'row',}}>
-                       <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
-                     </View>
+                      <TouchableOpacity style={{width:50,height:50}} onPress={() => this.props.navigator.pop()}>
+                        <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                      </TouchableOpacity>
                    }
                    rightButton={ this.showActionIcons() }
                 />

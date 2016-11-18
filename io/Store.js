@@ -35,15 +35,18 @@ var deviceStorage = {
           if(Platform.OS==='android') SharedPreferences.getItem(key, (value)=>cbk(value))
           //else if(Platform.OS==='ios') this.get(key).then((value=>cbk(value)))
           else if(Platform.OS==='ios'){
-              console.log('Store.get()')
+              //console.log('Store.get()')
               UserDefaults.get(key)
               .then((value)=>cbk(value))
-              .catch((err)=>{/*alert('error: '+err)*/})
+              .catch((err)=>{cbk(null)})
           }
         },
         setShared(key,value){
           if(Platform.OS==='android') SharedPreferences.setItem(key, value)
-          else if(Platform.OS==='ios') UserDefaults.set(key, value).then(()=>{}).catch((err)=>{})
+          else if(Platform.OS==='ios') 
+            UserDefaults.set(key, value)
+            .then((data)=>{console.log('Store.set() data='+data)})
+            .catch((err)=>{console.log('Store.set() err='+err)})
         },
         deleteShared(key){
           if(Platform.OS==='android') SharedPreferences.deleteItem(key)
@@ -55,8 +58,10 @@ var deviceStorage = {
         },
         readPushShared(type,kv) {
             let self = this
-            let fskey = this.PUSH_LIST+":"+type
+            let fskey = type
+            //console.log('readPushShared() type='+type+' kv='+JSON.stringify(kv))
             this.getShared(fskey,function(str){
+                //console.log('readPushShared() fskey='+fskey+' str='+str)
                 let array = JSON.parse(str)
                 self.addArrayElementShared(array,kv,{read:1})
                 self.setShared(fskey,JSON.stringify(array));
@@ -64,8 +69,8 @@ var deviceStorage = {
             })
         },
         addArrayElementShared(arr, kv, obj) {
+            let k=Object.keys(kv)[0]
             if(Platform.OS==='android'){
-                let k=Object.keys(kv)[0]
                 for(var i = arr.length; i--;) {
                     if(arr[i].custom[k] === kv[k]) {
                         //alert('key='+k+'\nvalue='+kv[k]+'\n in custom:'+JSON.stringify(arr[i].custom[k]))
@@ -74,7 +79,19 @@ var deviceStorage = {
                     }
                 }
                 //alert('arr='+JSON.stringify(arr))
-            }else{}
+            }else if(Platform.OS==='ios'){
+                for(var i = arr.length; i--;) {
+                    let json=arr[i]
+                    if(typeof arr[i]==='string') json=JSON.parse(arr[i])
+                    if(json[k] === kv[k]) {
+                        //alert('key='+k+'\nvalue='+kv[k]+'\n in custom:'+JSON.stringify(arr[i].custom[k]))
+                        let k1=Object.keys(obj)[0]
+                        json[k1]=obj[k1]
+                        arr[i]=json
+                    }
+                }
+                alert('arr='+JSON.stringify(arr))
+            }
         },
         deletePushShared(type,kv) {
             let self = this

@@ -116,7 +116,7 @@ module.exports = {
       gg:'fa-google-plus-square',
       wx:'fa-weixin',
       wb:'fa-weibo',
-      tel:'ion-ios-call-outline',
+      tel:'fa-phone-square',
     },
     FEED_ICONS:{
       rss:'fa-rss',

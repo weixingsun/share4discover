@@ -33,7 +33,7 @@ BMKMapManager* mapManager;
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge|UNAuthorizationOptionSound|UNAuthorizationOptionAlert)
                           completionHandler:^(BOOL granted,NSError *_Nullable error){
-                            if(!error) NSLog(@"request authorization succeeded!");
+                            if(!error) NSLog(@"request push authorization succeeded!");
                           }];
   }/*else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
     UIUserNotificationType myTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
@@ -46,8 +46,8 @@ BMKMapManager* mapManager;
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  //NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-  NSURL *jsCodeLocation = [NSURL URLWithString:@"http://10.32.57.7:8081/index.ios.bundle?platform=ios&dev=true"];
+  NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  //NSURL *jsCodeLocation = [NSURL URLWithString:@"http://10.32.57.7:8081/index.ios.bundle?platform=ios&dev=true"];
   // register APNS for push
   [self registerUserNotification];
   [BaiDuPush registerChannel:launchOptions apiKey:APPKEY pushMode:BPushModeDevelopment];

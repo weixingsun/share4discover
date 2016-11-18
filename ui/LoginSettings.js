@@ -114,9 +114,9 @@ export default class LoginSettings extends React.Component{
         <View style={{flex:1}}>
           <NavigationBar style={Style.navbar} title={{title: titleName,tintColor:Style.font_colors.enabled}}
              leftButton={
-                <View style={{flexDirection:'row',}}>
-                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} onPress={() => this.props.navigator.pop() } />
-                </View>
+                <TouchableOpacity style={{width:50,height:50}} onPress={() => this.props.navigator.pop()}>
+                  <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                </TouchableOpacity>
              }
           />
           <View style={styles.container}>

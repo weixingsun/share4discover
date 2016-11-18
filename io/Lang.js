@@ -45,6 +45,7 @@ I18n.translations = {
     map: 'Map',
     listener: 'Listener',
     create: 'Create',
+    edit:'Edit',
     delete_all: 'Delete All',
     //form
     edit_share:'Edit Share',
@@ -168,6 +169,7 @@ I18n.translations = {
     map: 'Carte',
     listener: 'Listener',
     create: 'Create',
+    edit:'Edit',
     delete_all: 'Delete All',
     //form
     edit_share:'Edit Share',
@@ -291,6 +293,7 @@ I18n.translations = {
     map: '地图',
     listener: '关注',
     create: '新建',
+    edit:'修改',
     delete_all: '全部删除',
     //form
     edit_share:'修改分享',

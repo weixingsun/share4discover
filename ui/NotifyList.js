@@ -54,20 +54,19 @@ export default class NotifyList extends Component {
   load(type){
       if(!type) type=this.state.type
       var self=this;
-      //if(Platform.OS==='android')
-        //alert(JSON.parse('[,{"a":1}]'))
-        Store.getShared(Store.PUSH_LIST+":"+type, function(value){
+      //alert(JSON.parse('[,{"a":1}]'))
+      Store.getShared(Store.PUSH_LIST+":"+type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           //alert('value='+value)
           if(self.updateOnUI && value!=null){
-              //alert('value='+value)
+              console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               let json = JSON.parse(value)
               self.setState({
                   type:type,
                   push_list:json,
               })
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
-        })
+      })
   }
   sort(arr){
       let total ={}
@@ -97,9 +96,17 @@ export default class NotifyList extends Component {
   }
   openPush(json){
       //alert('openPush: '+JSON.stringify(json))
-      if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tag) {
-          if(!json.read)this.readPush(json.custom.t,json.custom.r)
-          this.getMsg(json.custom.i)
+      if(Platform.OS==='ios'){
+          //alert('json='+JSON.stringify(json))
+          if(json.t===Global.push_p2p||json.t===Global.push_tag){
+              if(!json.read)this.readPush(json.t,json.r)
+              this.getMsg(json.i)
+          }
+      }else{
+          if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tag) {
+              if(!json.read)this.readPush(json.custom.t,json.custom.r)
+              this.getMsg(json.custom.i)
+          }
       }
   }
   getMsg(key){
@@ -143,17 +150,19 @@ export default class NotifyList extends Component {
         let k=Object.keys(kv)[0]
         for(var i = arr.length; i--;) {
             //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-            if(arr[i][k] === kv[k] || arr[i].custom[k]===kv[k]) {
+            if(arr[i][k] === kv[k]) {
+                arr.splice(i, 1);
+            }else if(arr[i].custom[k]===kv[k]){
                 arr.splice(i, 1);
             }
         }
     }
     deletePush(type,id){
         Store.deletePushShared(Store.PUSH_LIST+":"+type,{r:id})
-        this.push_list = this.state.push_list //.filter(function(item){ return item.id != id})
-        this.removeArrayElement(this.push_list,{r:id})
+        let list = this.state.push_list //.filter(function(item){ return item.id != id})
+        this.removeArrayElement(list,{r:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
-        this.setState({push_list: this.push_list});
+        this.setState({push_list:list});
     }
     deleteAllPush(){
         Store.deleteShared(Store.PUSH_LIST+":"+this.state.type)
@@ -161,8 +170,9 @@ export default class NotifyList extends Component {
     }
     deletePushAlert(data){
         let self=this
-        let id=Platform.OS==='android'?data.custom.r:data.r
-        let type = data.custom.t
+        let json = typeof data==='object'?data:JSON.parse(data)
+        let id=Platform.OS==='android'?json.custom.r:json.r
+        let type=Platform.OS==='android'?json.custom.t:json.t
         Alert.alert(
             "Delete",
             "Do you want to delete this push message ? ",
@@ -239,21 +249,28 @@ export default class NotifyList extends Component {
     );
   }
     _renderPushRowView(data) {
-        if(!data.title||!data.custom||!data.custom.i) return
         let bold = {fontSize:16,fontWeight:'bold',color:'black'}
         let normal={fontSize:16}
-        let text_style = bold, key=data.i
-        if(Platform.OS==='android'){
-            text_style= data.custom.read?normal:bold
-            //let push_type = data.custom.t
-            key = data.custom.i
-            //alert('data='+JSON.stringify(data)+'\ncustom='+JSON.stringify(data.custom))
+        let title='',text_style=bold,key='',json=data
+        if(Platform.OS==='ios'){
+            //alert('_renderPushRowView()'+JSON.stringify(data))
+            if(typeof data==='string') json = JSON.parse(data)
+            if(json.i&&json.aps.alert){
+              text_style= json.read?normal:bold
+              key = json.i
+              title = Global.trimTitle(json.aps.alert)
+            }else return
+        }else{
+            if(json.title&&json.custom&&json.custom.i){
+              title = Global.trimTitle(json.title)
+              text_style= json.custom.read?normal:bold
+              key = json.custom.i
+            }else return
         }
         let type = key.split('_')[0]
-        let name = Global.trimTitle(data.title)
         let number = ''
         return (
-      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(data)} >
+      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View>
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
@@ -266,7 +283,7 @@ export default class NotifyList extends Component {
                   />
                 </View>
                 <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                    <Text style={ text_style }>{name}</Text>
+                    <Text style={ text_style }>{title}</Text>
                 </View>
                 <View style={{marginRight:10,justifyContent:'center'}}>
                     <Text>{number}</Text>
@@ -306,7 +323,7 @@ export default class NotifyList extends Component {
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
               <MenuTrigger>
-                <Icon name={'ion-ios-more'} color={'#ffffff'} size={40} style={{padding:10}} />
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={40} style={{paddingLeft:15,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
                 {this.renderMoreOption(Store.LOCAL, I18n.t('push_local'),'fa-street-view')}
