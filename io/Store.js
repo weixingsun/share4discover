@@ -90,7 +90,7 @@ var deviceStorage = {
                         arr[i]=json
                     }
                 }
-                alert('arr='+JSON.stringify(arr))
+                //alert('arr='+JSON.stringify(arr))
             }
         },
         deletePushShared(type,kv) {

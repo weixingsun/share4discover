@@ -208,7 +208,7 @@ export default class PushList extends React.Component {
                       <Icon name={icon} color={'#ffffff'} size={26} />
                   </View>
                   <View style={{justifyContent:'center'}}>
-                      <Text> {name} </Text>
+                      <Text style={{color:Style.font_colors.enabled}}> {name} </Text>
                   </View>
               </View>
           </MenuOption>

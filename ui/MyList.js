@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react'
 import NavigationBar from 'react-native-navbar';
-import {DeviceEventEmitter,ListView, NetInfo, Text, View, TouchableHighlight, Image, StyleSheet } from 'react-native';
+import {DeviceEventEmitter,ListView, NetInfo, Text, View, TouchableHighlight, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Net from "../io/Net"
 import Global from "../io/Global"
 import {Icon} from './Icon'
@@ -78,15 +78,19 @@ export default class MyList extends Component {
     }
   }
   renderAddIcon(){
-      if(Global.mainlogin==='') 
+      if(Global.mainlogin==='') {
           return (
               <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} 
                     onPress={() => alert('Please login to publish your share') }/>
           )
-      else return (
-               <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} 
-                     onPress={() => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}/>
+      }else{
+          return (
+            <TouchableOpacity style={{width:50,height:50}} onPress={()=>
+                this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}>
+               <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} />
+            </TouchableOpacity>
            )
+      }
   }
   render() {
     let title = I18n.t('my')+' '+I18n.t('share')
