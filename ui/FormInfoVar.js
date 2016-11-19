@@ -299,8 +299,10 @@ export default class FormInfoVar extends Component {
                   self.fixFormData(values);
                   Net.setMsg(values).then((ret)=> {
                     let alertmsg = ''
-                    console.log('Net.setMsg() ret='+JSON.stringify(ret))
-                    if(ret==null){ alert("Network problem")
+                    //console.log('Net.setMsg() ret='+JSON.stringify(ret))
+                    if(ret==null){
+                        alert("Edit but no Response, please confirm your update is made correctly")
+                        self.exitUpdatePages()
                     }else{
                       let newkey = Global.getKeyFromMsg(ret)
                       if(ret.phone == values.phone){
@@ -323,10 +325,7 @@ export default class FormInfoVar extends Component {
                               Net.putHash(my_value);
                           }
                           alert(alertmsg);
-                          DeviceEventEmitter.emit('refresh:Maps',0);
-                          DeviceEventEmitter.emit('refresh:MyList',0);
-                          self.props.navigator.pop();
-                          self.back()
+                          self.exitUpdatePages()
                       }else{
                           alert('Error:'+ret)
                       }
@@ -335,6 +334,12 @@ export default class FormInfoVar extends Component {
               }},
             ]
         )
+    }
+    exitUpdatePages(){
+        DeviceEventEmitter.emit('refresh:Maps',0);
+        DeviceEventEmitter.emit('refresh:MyList',0);
+        this.props.navigator.pop();
+        this.back()
     }
     pushToTags(msg){
         //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now}

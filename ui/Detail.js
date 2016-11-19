@@ -31,6 +31,7 @@ export default class Detail extends Component {
             //image_modal_name:this.images[0],
             show_pic_modal:false,
             push_to:this.props.msg.uid,
+            push_to_len:0,
             push_to_os:this.props.msg.os,
             highlight_color:Style.CAT_COLORS[this.props.msg.cat],
         }
@@ -54,6 +55,7 @@ export default class Detail extends Component {
             reply:'@'+user_name+': ',
             push_to:user_push_id,
             push_to_os:user_push_os,
+            push_to_len:user_name.length+2,
         })
     }
     getTalkIcon(){
@@ -365,18 +367,28 @@ export default class Detail extends Component {
                         <Button style={{marginRight:20,width:50,height:26,backgroundColor:this.state.highlight_color,borderColor:this.state.highlight_color}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
                     </View>
                         <TextInput
+                            //ref={(input) => this.myReply = input}
                             style={{marginLeft:20,height:this.state.reply_height}}
                             multiline={true}
                             value={this.state.reply}
                             onChange={(event) => {
                                 if(event.nativeEvent.text.length<1) push_to=this.props.msg.uid
                                 else push_to=this.state.push_to
-                                this.setState({
-                                    reply: event.nativeEvent.text,
-                                    reply_height: event.nativeEvent.contentSize.height,
-                                    push_to:push_to,
-                                });
-                                if(event.nativeEvent.text.length<1) push_to=this.props.msg.uid
+                                if(event.nativeEvent.text.length<this.state.push_to_len) {
+                                    //alert('text.len='+event.nativeEvent.text.length+' push_to_len='+this.state.push_to_len)
+                                    //this.myReply.setNativeProps({text: ''})
+                                    this.setState({
+                                      reply: '',
+                                      reply_height: event.nativeEvent.contentSize.height,
+                                      push_to:push_to,
+                                    });
+                                }else{
+                                    this.setState({
+                                      reply: event.nativeEvent.text,
+                                      reply_height: event.nativeEvent.contentSize.height,
+                                      push_to:push_to,
+                                    });
+                                }
                             }}
                         />
                     </View>
