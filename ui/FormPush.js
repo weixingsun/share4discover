@@ -13,7 +13,6 @@ import NavigationBar from 'react-native-navbar'
 import {Icon} from './Icon'
 import { GiftedForm, GiftedFormManager } from 'react-native-gifted-form'
 import I18n from 'react-native-i18n';
-import CityCode from '../data/china_city_code.json'
 
 var styles = StyleSheet.create({
     container: {
@@ -76,12 +75,22 @@ export default class FormFeed extends React.Component{
         GiftedFormManager.reset(this.formName);
         if(this.props.push){
             let form1=this.props.push
-            form1['city']=this.getCityNameFromId(form1.city_id)
+            form1['city']=Global.getCityNameFromId(form1.city_id)
             this.setState({
                 form:form1
             });
-        }else{
-            this.getLocation()
+        }else{  //new push tag
+            //this.getLocation()
+            let self=this
+            Net.getLocation((gps)=>{
+                self.setState({
+                    form:{ ...self.state.form,
+                      city:gps.city,
+                      city_id:gps.city_id,
+                      country:gps.country,
+                    }
+                })
+            })
         }
     }
     componentDidMount(){
@@ -113,59 +122,13 @@ export default class FormFeed extends React.Component{
         DeviceEventEmitter.emit('refresh:PushList',values);
         this.props.navigator.pop()
     }
-    getLocation(form){
-        let self=this
-        Net.getBDLocation().then((gps)=>{
-            //alert(JSON.stringify(gps))
-            if(gps.status==0 && gps.content.address_detail.city_code){
-              self.setState({ 
-                 form:{ ...self.state.form, 
-                     city:gps.content.address_detail.city, 
-                     city_id:gps.content.address_detail.city_code, 
-                     country:gps.address.split('|')[0].toLowerCase(),
-                 } 
-              })
-            }else{
-              Net.getGGLocation().then((gps)=>{
-                let arr = gps.results[0].address_components
-                var city1='',city2='',province1='',country=''
-                arr.map((c)=>{
-                  if(c.types[0]==='locality'){
-                    city1=c.short_name.replace(' ','-').toLowerCase()
-                    city2=c.long_name
-                  }
-                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
-                  if(c.types[0]==='country') country=c.short_name.toLowerCase()
-                })
-                //alert('city1='+city1+' city2='+city2+' country='+country)
-                if(city1 && city2 && country){
-                  self.setState({
-                    form:{ ...self.state.form,
-                      city:city2,
-                      city_id:city1,
-                      country:country,
-                    }
-                  })
-                }
-              })
-            }
-        })
-    }
-    getCityNameFromId(id){
-        if(/^\d+$/.test(id)){
-            return ChinaCity[id]
-        }else{
-            //alert('id='+id+' bj code=131,name='+ChinaCity[131])
-            return id.replace('-',' ').firstUpperCase()
-        }
-    }
     renderField(name,editable){
       if(name==='type')
         return this.renderTypeField()
       else if(name==='cat')
         return this.renderCatField()
-      else
-        return this.renderTextField(name,editable)
+      else if(name==='city')
+        return this.renderTextField(name,editable,'fa-location-arrow')
     }
     renderTypeField(){
         return (
@@ -175,7 +138,7 @@ export default class FormFeed extends React.Component{
                 key='type'
                 display={I18n.t(this.state.form.type)}
                 value={this.state.form.type}
-                image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.form.type]} size={30} /></View>}
+                image={<View style={{width:30,alignItems:'center'}}><Icon name={Global.TYPE_ICONS[this.state.form.type]} size={20} /></View>}
             >
                 <GiftedForm.SeparatorWidget />
                 <GiftedForm.SelectWidget name='type' title='Category' multiple={false} onSelect={()=>this.props.navigator.pop()}>
@@ -230,7 +193,7 @@ export default class FormFeed extends React.Component{
                     )} />
         })
     }
-    renderTextField(name,editable){
+    renderTextField(name,editable,icon){
         return (
             <GiftedForm.TextInputWidget
                 key={name}
@@ -240,6 +203,7 @@ export default class FormFeed extends React.Component{
                 editable={editable}
                 clearButtonMode='while-editing'
                 value={this.state.form[name]}
+                image={<View style={{width:30,alignItems:'center'}}><Icon name={icon} size={20} /></View>}
                 //displayValue='title'
                 //validationResults={this.state.validationResults}
             />)

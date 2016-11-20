@@ -103,8 +103,10 @@ export default class NotifyList extends Component {
               this.getMsg(json.i)
           }
       }else{
-          if(json.custom.t===Global.push_p2p || json.custom.t===Global.push_tag) {
-              if(!json.read)this.readPush(json.custom.t,json.custom.r)
+          if(json.custom_content){ //local=msg
+              if(json.custom_content.i) this.getMsg(json.custom_content.i)
+          }else if(json.custom) { // p2p+tag=push Global.push_p2p Global.push_tag
+              if(!json.read&&json.custom.t&&json.custom.r) this.readPush(json.custom.t,json.custom.r)
               this.getMsg(json.custom.i)
           }
       }
@@ -150,11 +152,10 @@ export default class NotifyList extends Component {
         let k=Object.keys(kv)[0]
         for(var i = arr.length; i--;) {
             //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-            if(arr[i][k] === kv[k]) {
-                arr.splice(i, 1);
-            }else if(arr[i].custom[k]===kv[k]){
-                arr.splice(i, 1);
-            }
+            var item = arr[i][k]
+            if(arr[i].custom) item=arr[i].custom[k]
+            else if(arr[i].custom_content) item=arr[i].custom_content[k]
+            if(item === kv[k]) arr.splice(i, 1);
         }
     }
     deletePush(type,id){
@@ -171,8 +172,16 @@ export default class NotifyList extends Component {
     deletePushAlert(data){
         let self=this
         let json = typeof data==='object'?data:JSON.parse(data)
-        let id=Platform.OS==='android'?json.custom.r:json.r
-        let type=Platform.OS==='android'?json.custom.t:json.t
+        let id=json.r
+        if(Platform.OS==='android'){
+            if(json.custom&&json.custom.r) id=json.custom.r
+            else if(json.custom_content&&json.custom_content.r) id=json.custom_content.r
+        }
+        let type=json.t
+        if(Platform.OS==='android'){
+           if(json.custom_content&&json.custom_content.t) type=json.custom_content.t
+            else if(json.custom_content&&json.custom_content.t) id=json.custom_content.t
+        }
         Alert.alert(
             "Delete",
             "Do you want to delete this push message ? ",
@@ -250,7 +259,7 @@ export default class NotifyList extends Component {
     _renderPushRowView(data) {
         let bold = {fontSize:16,fontWeight:'bold',color:'#666666'}
         let normal={fontSize:16}
-        let title='',text_style=bold,key='',json=data
+        let title='',text_style=bold,name='',time='',key='',json=data
         if(Platform.OS==='ios'){
             //alert('_renderPushRowView()'+JSON.stringify(data))
             if(typeof data==='string') json = JSON.parse(data)
@@ -258,18 +267,26 @@ export default class NotifyList extends Component {
               text_style= json.read?normal:bold
               key = json.i
               title = Global.trimTitle(json.aps.alert)
+              time = Global.getDateTimeFormat(json.r)
+              name = json.n
             }else return
-        }else{
-            if(json.title&&json.custom&&json.custom.i){
+        }else if(Platform.OS==='android'){
+            if(json.title&&json.custom&&json.custom.i){ //p2p
               title = Global.trimTitle(json.title)
               text_style= json.custom.read?normal:bold
               key = json.custom.i
+              time = Global.getDateTimeFormat(json.custom.r)
+              name = json.custom.n
+            }else if(json.title&&json.custom_content&&json.custom_content.i){ //local
+              title = Global.trimTitle(json.title)
+              text_style= normal
+              key = json.custom_content.i
+              time = Global.getDateTimeFormat(json.custom_content.r)
+              name = json.custom_content.n
             }else return
         }
         let type = key.split('_')[0]
         let cat = key.split('_')[1].split(':')[0]
-        let time = json.custom?Global.getDateTimeFormat(json.custom.r):Global.getDateTimeFormat(json.r)
-        let name = json.custom?json.custom.n:json.n
         return (
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View>
@@ -366,9 +383,9 @@ export default class NotifyList extends Component {
       else if(type===Store.TAG) return I18n.t('push_tag')
   }
   render() {
-    this.all_notes = this.props.mails.concat(this.state.push_list)
+    //this.all_notes = this.props.mails.concat(this.state.push_list)
+    this.all_notes = this.state.push_list
     let ds=this.ds.cloneWithRows(this.all_notes)
-    //if(this.props.mails!=='') ds = this.ds.cloneWithRows(this.props.mails)
     let title = this.getTitleName(this.state.type)
     //alert('title:'+title+' type='+this.state.type+' ')
     return (

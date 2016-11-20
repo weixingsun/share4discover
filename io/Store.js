@@ -108,10 +108,10 @@ var deviceStorage = {
             let k=Object.keys(kv)[0]
             for(var i = arr.length; i--;) {
                 //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-                if(arr[i][k] === kv[k] || arr[i].custom[k] === kv[k]) {
-                    //alert('removing item:'+JSON.stringify(kv))
-                    arr.splice(i, 1);
-                }
+                var item = arr[i][k]
+                if(arr[i].custom) item=arr[i].custom[k]
+                else if(arr[i].custom_content) item=arr[i].custom_content[k]
+                if(item === kv[k]) arr.splice(i, 1);
             }
         },
 	get: function(key) {

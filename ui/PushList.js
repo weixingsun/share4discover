@@ -136,6 +136,11 @@ export default class PushList extends React.Component {
     _renderSwipeoutRow(rowData){
       let json = Global.getJsonFromTagName(rowData)
       let rightButton = [{
+          text:'Delete',
+          backgroundColor:'#ff0000',
+          onPress:()=>this.deleteTagAlert(rowData),
+        },]
+      if(json.type) rightButton = [{
           text:'Modify',
           backgroundColor:'#ff6f00',
           onPress:()=>this.EditPush(json),
@@ -174,7 +179,12 @@ export default class PushList extends React.Component {
         let bold = {fontSize:16,} //fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
         let locale = I18n.locale.substring(0,2)
-        let name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
+        let name = ''
+        if(json.type){
+            name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
+        }else{
+            name = I18n.t('push_local')
+        }
         return (
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View >

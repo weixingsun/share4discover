@@ -124,26 +124,10 @@ export default class FormInfoVar extends Component {
     }
     getMyLocation(){
         let self=this
-        Net.getBDLocation().then((gps)=>{
-            //alert(JSON.stringify(gps))
-            if(gps.status==0 && gps.content.address_detail.city_code){
-                self.city=gps.content.address_detail.city
-                self.city_id=gps.content.address_detail.city_code
-                self.country=gps.address.split('|')[0].toLowerCase()
-            }else{
-              Net.getGGLocation().then((gps)=>{
-                let arr = gps.results[0].address_components
-                //var city1='',city2='',province1='',country=''
-                arr.map((c)=>{
-                  if(c.types[0]==='locality'){
-                    self.city_id=c.short_name.replace(' ','-').toLowerCase()
-                    self.city=c.long_name
-                  }
-                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
-                  if(c.types[0]==='country') self.country=c.short_name.toLowerCase()
-                })
-              })
-            }
+        Net.getLocation((gps)=>{
+            self.city=gps.city
+            self.city_id=gps.city_id
+            self.country=gps.country
         })
     }
     updatePics(pics){
@@ -342,17 +326,19 @@ export default class FormInfoVar extends Component {
     }
     pushToTags(msg){
         //{'listen:car_sell','listen:car_rent0'},'AND','tags_title','click to view more',{t:'r',i:'car_sell:lat,lng:ctime',f:Push.uid,r:now}
+        let name = Global.getMainLoginName()
+        let key  = Global.getKeyFromMsg(msg)
         Push.postTags(
-            Global.getTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
+            Global.getTagNameFromJson(msg),  //'l_'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
             msg.title,
             I18n.t('click_more'),
-            {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},
+            {t:Global.push_tag,i:key,f:Push.uid,n:name,r:msg.ctime},
             msg.os
         )
         Push.postTagMsg(
-            Global.getLocalTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
+            Global.getLocalTagNameFromJson(msg),  //'l_'+msg.country+'_'+msg.city_id
             msg.title,
-            {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},
+            {t:Global.push_local,i:key,f:Push.uid,n:name,r:msg.ctime},
             msg.os
         )
     }

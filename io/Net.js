@@ -118,9 +118,9 @@ var Net = {
       var url = this.USER_HOST;
       return this._post(url, json);
     },
-    getLocation(){
-      return this._get(Global.IP2LOC_HOST)
-    },
+    //getLocation(){
+    //  return this._get(Global.IP2LOC_HOST)
+    //},
     getBDLocation(){
       let url=Global.BD_IP2LOC_HOST+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
       return this._get(url)
@@ -141,6 +141,42 @@ var Net = {
         //let inchina = result.country_code.toUpperCase() == 'CN'
         alert(JSON.stringify(result))
       })
+    },
+    getLocation(func){
+        let self=this
+        this.getBDLocation().then((gps)=>{
+            //alert(JSON.stringify(gps))
+            if(gps.status==0 && gps.content.address_detail.city_code){
+              let loc = {
+                  city:gps.content.address_detail.city,
+                  city_id:gps.content.address_detail.city_code,
+                  country:gps.address.split('|')[0].toLowerCase(),
+              }
+              func(loc)
+            }else{
+              Net.getGGLocation().then((gps)=>{
+                let arr = gps.results[0].address_components
+                var city1='',city2='',province1='',country=''
+                arr.map((c)=>{
+                  if(c.types[0]==='locality'){
+                    city1=c.short_name.replace(' ','-').toLowerCase()
+                    city2=c.long_name
+                  }
+                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
+                  if(c.types[0]==='country') country=c.short_name.toLowerCase()
+                })
+                //alert('city1='+city1+' city2='+city2+' country='+country)
+                if(city1 && city2 && country){
+                    let loc = {
+                      city:city2,
+                      city_id:city1,
+                      country:country,
+                    }
+                    func(loc)
+                }
+              })
+            }
+        })
     },
 };
 

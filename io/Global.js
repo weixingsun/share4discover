@@ -2,6 +2,7 @@ import moment from 'moment';
 import Lang from './Lang';
 import ReactNativeI18n from 'react-native-i18n'
 //const deviceLocale = ReactNativeI18n.locale
+import ChinaCity from '../data/china_city_code.json'
 
 function loadLang(lang){
   switch(lang) {
@@ -124,6 +125,14 @@ module.exports = {
       web:'fa-internet-explorer',
       share:'fa-bell',
     },
+    getCityNameFromId(id){
+        if(/^\d+$/.test(id)){
+            return ChinaCity[id]
+        }else{
+            //alert('id='+id+' bj code=131,name='+ChinaCity[131])
+            return id.replace('-',' ').firstUpperCase()
+        }
+    },
     getTagNameFromJson(msg) {
       return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.type+'_'+msg.cat
     },
@@ -132,12 +141,16 @@ module.exports = {
     },
     getJsonFromTagName(name) {
         let names = name.split('_')
-        return {
+        if(names.length>2) return {
             country:names[1],
             city_id:names[2],
             type:names[3],
             cat:names[4],
-        }
+          }
+        else return {
+            country:names[1],
+            city_id:names[2],
+          }
     },
     getLoginStr(){
         //alert(JSON.stringify(this.logins))

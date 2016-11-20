@@ -7,6 +7,7 @@ import Tabs from 'react-native-tabs'
 import {Icon} from './Icon'
 import Store from "../io/Store"
 import Net from "../io/Net"
+import Push from "../io/Push"
 import Global from "../io/Global"
 import Style from "./Style"
 import Loading from "./Loading"
@@ -30,7 +31,7 @@ export default class Main extends Component {
       page:this.props.page!=null?this.props.page: Store.msgTab,
       badge:'',
       refresh:false,
-      mails:[],
+      //mails:[],
       //region: null,
       gps:false,
     }; 
@@ -217,23 +218,16 @@ export default class Main extends Component {
           }
       })
   }
+  checkPushSettings(gps){
+      let tag = Global.getLocalTagNameFromJson(gps)  //{country,city,city_id}
+      Push.instance.setTag(tag,(state)=>{
+          if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
+          else alert("Initialization push settings failed. status="+state);
+      });
+  }
   checkMapSettings(){
-      var _this = this;
+      var self = this;
       if(!Global.region)
-        /*Store.get('region').then((region_value) => {
-          if(region_value !=null && region_value.latitude !=null){
-            if(region_value.zoom == null){
-              region_value['zoom'] = 16
-            }
-            if(region_value.latitudeDelta == null){
-              region_value['latitudeDelta'] = 0.02
-              region_value['longitudeDelta'] = 0.02
-            }
-            if(!Global.region){
-              Global.region=region_value
-            }
-          }else{  //  first start
-        */
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           KKLocation.getCurrentPosition((position) => {
             //console.log("location get current position: ", position);
@@ -244,24 +238,25 @@ export default class Main extends Component {
               longitudeDelta:0.05,
               zoom:16,
             }
+            Net.getLocation((gps)=>{
+              self.checkPushSettings(gps)
+              if(gps.country=='cn') Global.MAP = Global.BaiduMap;
+              else Global.MAP = Global.GoogleMap;
+            })
           }, (error) => { console.log("location get current position error: ", error) },
           {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100});
-      //}})
       if(Global.MAP == null){
         Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
           if(map_value != null){
             Global.MAP = map_value
           }else{
-            Net.getBDLocation().then((gps)=>{
-              if(gps.status==0 && gps.address){
-                let cc = gps.address.split('|')[0].toLowerCase()
-                Global.MAP = Global.BaiduMap;
-              }else{
-                Global.MAP = Global.GoogleMap;
-              }
-            });
+            Net.getLocation((gps)=>{
+              self.checkPushSettings(gps)
+              if(gps.country=='cn') Global.MAP = Global.BaiduMap;
+              else Global.MAP = Global.GoogleMap;
+            })
           }
-        });
+        })
         Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
           if(map_type != null){
             Global.MAP_TYPE = map_type
@@ -283,7 +278,7 @@ export default class Main extends Component {
   }
   pages(){
     if(this.state.page ===Store.msgTab){
-      return <NotifyList navigator={this.props.navigator} mails={this.state.mails} />
+      return <NotifyList navigator={this.props.navigator} />
     } else if(this.state.page ===Store.userTab){
       return <MyList     navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
@@ -295,11 +290,10 @@ export default class Main extends Component {
   checkSettingsChange(){
       this.checkLogin('user_fb')
       this.checkLogin('user_wb')
-      //this.checkLogin('user_gg')
-      //this.checkLogin('user_wx')
+      //this.checkPushSettings(gps)
       this.checkMapSettings()
       this.checkFirstTime()
-      if(Global.mainlogin.length===0) this.setState({mails:[]})
+      //if(Global.mainlogin.length===0) this.setState({mails:[]})
   }
   gotoPage(name){
       this.checkSettingsChange()
