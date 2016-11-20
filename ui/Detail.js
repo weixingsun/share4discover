@@ -67,11 +67,12 @@ export default class Detail extends Component {
     p2p(now){
         //if(this.props.msg.s1uid) OneSignal.postNotification(title, data, this.props.msg.s1uid);
         if(this.props.msg.uid) {
+            let name = Global.getMainLoginName()
             Push.postOne(
                 this.state.push_to,
                 this.state.reply,     //title
                 I18n.t('click_more'), //content
-                {t:Global.push_p2p,i:this.key,f:Push.uid,r:now},
+                {t:Global.push_p2p,i:this.key,f:Push.uid,n:name,r:now},
                 this.state.push_to_os,
             )
         }

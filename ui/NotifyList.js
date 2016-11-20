@@ -158,7 +158,7 @@ export default class NotifyList extends Component {
         }
     }
     deletePush(type,id){
-        Store.deletePushShared(Store.PUSH_LIST+":"+type,{r:id})
+        Store.deletePushShared(type,{r:id})
         let list = this.state.push_list //.filter(function(item){ return item.id != id})
         this.removeArrayElement(list,{r:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
@@ -231,8 +231,7 @@ export default class NotifyList extends Component {
                   <Icon 
 		    style={{marginLeft:15,marginRight:6}}
 		    size={40}
-		    //color={this.props.msg.ask=='false'?'blue':'gray'}
-		    color={'gray'}
+		    color={Style.CAT_COLORS[rowData.cat]}
 		    name={Global.TYPE_ICONS[rowData.type]}
 		  />
 	        </View>
@@ -249,7 +248,7 @@ export default class NotifyList extends Component {
     );
   }
     _renderPushRowView(data) {
-        let bold = {fontSize:16,fontWeight:'bold',color:'black'}
+        let bold = {fontSize:16,fontWeight:'bold',color:'#666666'}
         let normal={fontSize:16}
         let title='',text_style=bold,key='',json=data
         if(Platform.OS==='ios'){
@@ -268,25 +267,36 @@ export default class NotifyList extends Component {
             }else return
         }
         let type = key.split('_')[0]
-        let number = ''
+        let cat = key.split('_')[1].split(':')[0]
+        let time = json.custom?Global.getDateTimeFormat(json.custom.r):Global.getDateTimeFormat(json.r)
+        let name = json.custom?json.custom.n:json.n
         return (
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View>
-              <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
-                <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
+              <View style={{flexDirection: 'row', justifyContent:'center', height:58}}>
+                <View style={{marginLeft:15,justifyContent:'center',width:50}}>
                   <Icon
-                    style={{marginLeft:15,marginRight:6}}
+                    //style={{marginLeft:15,marginRight:6}}
                     size={40}
-                    //color={this.props.msg.ask=='false'?'blue':'gray'}
-                    color={'gray'}
+		    color={Style.CAT_COLORS[cat]}
                     name={Global.TYPE_ICONS[type]}
                   />
                 </View>
-                <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                    <Text style={ text_style }>{title}</Text>
-                </View>
-                <View style={{marginRight:10,justifyContent:'center'}}>
-                    <Text>{number}</Text>
+                <View style={{flex:1}}>
+                    <View style={{flexDirection:'row',justifyContent:'center',height:16,marginTop:6 }}>
+                        <View style={{marginLeft:10}}>
+                          <Text>{name}</Text>
+                        </View>
+                        <View style={{flex:1}}/>
+                        <View style={{marginRight:10}}>
+                          <Text>{time}</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'center' }}>
+                        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
+                          <Text style={ text_style }>{title}</Text>
+                        </View>
+                    </View>
                 </View>
               </View>
               <View style={Style.separator} />

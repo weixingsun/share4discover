@@ -97,6 +97,7 @@ var deviceStorage = {
             let self = this
             let fskey = this.PUSH_LIST+":"+type
             this.getShared(fskey,function(str){
+                //alert('deletePushShared() fskey='+fskey+'\nvalue='+str)
                 let array = JSON.parse(str)
                 self.deleteArrayElementShared(array,kv)
                 self.setShared(fskey,JSON.stringify(array));

@@ -19,7 +19,6 @@ import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import I18n from 'react-native-i18n';
-import moment from 'moment'
 import Attachments from './Attachments';
  
 export default class FormInfoVar extends Component {

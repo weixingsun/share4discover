@@ -81,7 +81,7 @@ module.exports = {
   },
   CAT_COLORS:{
       buy:  '#599987',
-      sell: '#ff847c',
+      sell: '#3a84cc',
       rent0:'#e84a5f',
       rent1:'#2a363b',
       //service:'#000000',

@@ -44,6 +44,7 @@
     "react-native-vector-icons": "^3.0.0",
     "react-native-wechat": "^1.7.0",
     "react-native-weibo": "https://github.com/weixingsun/react-native-weibo.git",
+    "react-native-xmpush": "^0.1.1",
     "xml2js": "^0.4.17",
     "xml2js-xpath": "^0.7.0"
   }

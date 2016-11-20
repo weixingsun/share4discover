@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -70,6 +69,7 @@
 		CE2590FA63724672859F8343 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3D58B19BAB436882294FA2 /* libRNImagePicker.a */; };
 		E8BA60B2C02B4EF8BC633A33 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A50FABCC624F5FA5DD85B7 /* libRNSVG.a */; };
 		F916FBDAE137417C9BA1A250 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A6FCF2F66E8417C8ABEFA9D /* libKCKeepAwake.a */; };
+		5E9D1C479458452AB2DD9458 /* libRCTMIPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3037302BDD411A8A7C18D6 /* libRCTMIPushModule.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -383,6 +383,8 @@
 		E06EA3AB22D045CA9B68E8C1 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		E0F7BBFB406C4BE18BC3541D /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
+		8A0F3BE1C4FC498D8DAE71DC /* RCTMIPushModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTMIPushModule.xcodeproj"; path = "../node_modules/react-native-xmpush/ios/RCTMIPushModule/RCTMIPushModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		FB3037302BDD411A8A7C18D6 /* libRCTMIPushModule.a */ = {isa = PBXFileReference; name = "libRCTMIPushModule.a"; path = "libRCTMIPushModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +436,7 @@
 				E8BA60B2C02B4EF8BC633A33 /* libRNSVG.a in Frameworks */,
 				A12C1FD1E895454BA07B527B /* libRNSound.a in Frameworks */,
 				0B7799DD5DF84E1493EC8991 /* libRNDeviceInfo.a in Frameworks */,
+				5E9D1C479458452AB2DD9458 /* libRCTMIPushModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,6 +699,7 @@
 				583479CD5437462B9AA84EDD /* RNSVG.xcodeproj */,
 				E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */,
 				3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */,
+				8A0F3BE1C4FC498D8DAE71DC /* RCTMIPushModule.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -811,7 +815,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8NZCFB3GNR;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 810;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1283,6 +1287,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-xmpush/ios/RCTMIPushModule/RCTMIPushModule",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1292,6 +1297,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
 					"../node_modules/react-native-bdpush/ios/normalversion",
+					"\"$(SRCROOT)/OpenShare\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1341,6 +1347,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-xmpush/ios/RCTMIPushModule/RCTMIPushModule",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1350,6 +1357,7 @@
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/Share\"",
 					"../node_modules/react-native-bdpush/ios/normalversion",
+					"\"$(SRCROOT)/OpenShare\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = open.shareplus;
@@ -1429,6 +1437,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-xmpush/ios/RCTMIPushModule/RCTMIPushModule",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1497,6 +1506,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-xmpush/ios/RCTMIPushModule/RCTMIPushModule",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
