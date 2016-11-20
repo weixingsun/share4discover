@@ -123,5 +123,7 @@
         android:name="XG_V2_ACCESS_KEY"
         android:value="A3TG58G18CAT" />
      -->
+     <meta-data android:name="MIPUSH_APPID" android:value=":1111"/>
+     <meta-data android:name="MIPUSH_APPKEY" android:value=":2222"/>
      </application>
 </manifest>

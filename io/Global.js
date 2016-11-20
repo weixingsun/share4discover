@@ -127,6 +127,9 @@ module.exports = {
     getTagNameFromJson(msg) {
       return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.type+'_'+msg.cat
     },
+    getLocalTagNameFromJson(msg) {
+      return 'l_'+msg.country+'_'+msg.city_id
+    },
     getJsonFromTagName(name) {
         let names = name.split('_')
         return {

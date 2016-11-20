@@ -4,7 +4,8 @@ import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dime
 import Remote from './PushBaiduRemote';
 //import OneSignal from 'react-native-onesignal';
 import BaiduPush from 'react-native-bdpush'
-import querystring from 'query-string';
+//import MIPush from 'react-native-xmpush'
+import querystring from 'query-string'
 import Global from './Global'
 const md5 = require('./md5');
 
@@ -171,6 +172,53 @@ module.exports = {
           }
         ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
         //.catch(err => alert(JSON.stringify(err)))    
+    },
+    postTagMsg(tag,title,kv,os){
+        let method= 'POST'
+        let url  = "http://api.tuisong.baidu.com/rest/3.0/push/tags";
+        let apikey     = (os==='ios'||os==='idev')?Global.ios_ak:Global.and_ak
+        let secret_key = (os==='ios'||os==='idev')?Global.ios_sk:Global.and_sk
+        let timestamp = Math.round(Date.now() / 1000);
+        let msg_type = 0 //1:push, 0:msg
+        //let deploy_status = (os==='idev')?1:2 //1:dev, 2:prod (target === ios)
+        let msg = {
+            title: title,
+            custom_content: kv,
+        }
+        let paramStr="",bodyStr="",param={apikey:apikey,timestamp:timestamp,tag:tag,type:1,msg_type:0,msg:msg}
+        if(os==='ios'||os==='idev'){
+          msg = {
+            aps:{
+              "content-available" : 1,
+              alert:title,
+              sound:'default',
+            },
+            custom_content:kv,
+          }
+          let deploy_status=(os==='idev')?1:2
+          param={apikey:apikey,timestamp:timestamp,tag:tag,type:1,msg_type:0,msg:msg,deploy_status:deploy_status}
+        }
+        let keys = Object.keys(param).sort();
+        keys.forEach(function (key) {
+            let temp = ''
+            if( typeof param[key] === 'object' ) temp = key + "=" + JSON.stringify(param[key]);
+            else temp = key + "=" + param[key];
+            paramStr+=temp
+            bodyStr+=temp+'&'
+        })
+        //bodyStr = bodyStr.slice(0, bodyStr.length - 1);
+        let rawkey = method + url + paramStr + secret_key
+        let basekey = this.fullEncodeURIComponent( rawkey )
+        let sign = md5(basekey)
+        bodyStr+="sign="+sign
+        fetch(
+          url, {
+            method: 'POST',
+            headers: this.bd_header,
+            body: bodyStr //querystring.stringify(param)
+          }
+        ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
+        //.catch(err => alert(JSON.stringify(err)))
     },
     setTag(tag){
         this.instance.setTag(tag)

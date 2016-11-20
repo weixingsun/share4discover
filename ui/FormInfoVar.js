@@ -349,6 +349,12 @@ export default class FormInfoVar extends Component {
             {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},
             msg.os
         )
+        Push.postTagMsg(
+            Global.getLocalTagNameFromJson(msg),  //'listen:'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
+            msg.title,
+            {t:Global.push_tag,i:Global.getKeyFromMsg(msg),f:Push.uid,r:msg.ctime},
+            msg.os
+        )
     }
     postSNS(json){
         let ret = ''

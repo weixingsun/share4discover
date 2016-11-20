@@ -24,7 +24,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import in.sriraman.sharedpreferences.RNSharedPreferencesReactPackage;
 import com.example.baidupush.PushPackage;
-import com.ichong.zzy.mipush.MIPushPackage;
+//import com.ichong.zzy.mipush.MIPushPackage;
 //import com.kh.tencentxg.TencentXGPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.zmxv.RNSound.RNSoundPackage;
@@ -74,7 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
       //String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new MIPushPackage(),
+        //new MIPushPackage(),
         new RNSharedPreferencesReactPackage(),
         new PushPackage(),
         //new TencentXGPackage(),
