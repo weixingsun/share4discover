@@ -317,7 +317,7 @@ export default class NotifyList extends Component {
                           <Text>{time}</Text>
                         </View>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent:'center' }}>
+                    <View style={{flexDirection:'row', justifyContent:'center',marginTop:6 }}>
                         <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
                           <Text style={ text_style }>{title}</Text>
                         </View>
