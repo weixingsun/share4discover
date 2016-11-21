@@ -457,15 +457,21 @@ export default class Maps extends Component {
       let con2 = Platform.OS === 'ios' && Global.MAP===Global.GoogleMap && this.state.gps
       if(con1 || con2){
         return (
-          <View style={{flexDirection:'row'}}>
-             <View style={{flex:1}}/>
+          <View style={{opacity:1,flexDirection:'row-reverse'}}>
              <TouchableOpacity 
-                style={{backgroundColor:'white',width:40,height:40,alignItems:'center',justifyContent:'center',opacity:0.5}}
+                style={{
+                  //position:'absolute',
+                  //top:70,right:10,
+                  marginRight:10,marginTop:5,
+                  backgroundColor:'white',
+                  width:40,height:40,
+                  alignItems:'center',justifyContent:'center',
+                  opacity:0.5}
+                }
                 onPress={this.moveToMe.bind(this)}
              >
-               <Icon name={"ion-ios-locate-outline"} style={Style.gpsIcon} size={24} />
+               <Icon name={"ion-ios-locate-outline"} size={24} />
              </TouchableOpacity>
-             <View style={{width:10}}/>
           </View>
         )
       }

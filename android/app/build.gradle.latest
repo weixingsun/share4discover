@@ -143,6 +143,7 @@ android {
 }
 
 dependencies {
+    //compile project(':react-native-xmpush')
     compile project(':react-native-shared-preferences')
     compile project(':react-native-bdpush')
     //compile project(':react-native-tencent-xg')
