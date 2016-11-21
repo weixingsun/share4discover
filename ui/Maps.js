@@ -352,7 +352,7 @@ export default class Maps extends Component {
     }
     renderTypesModal(){
         return (
-          <TouchableHighlight style={{ width:280, height:Style.DEVICE_HEIGHT/3, justifyContent: 'center' }} >
+          <TouchableHighlight style={{ width:280, height:320, justifyContent: 'center' }} >
             <ListView
                 dataSource={ this.state.typeDataSource }
                 renderRow={ this.renderTypeRow.bind(this) }
@@ -385,7 +385,7 @@ export default class Maps extends Component {
     }
     renderCatsModal(){
         return (
-          <TouchableHighlight style={{ width:220, height:Style.DEVICE_HEIGHT/3, justifyContent: 'center' }} >
+          <TouchableHighlight style={{ width:220, height:300, justifyContent: 'center' }} >
             <ListView
                 dataSource={ this.state.catDataSource }
                 renderRow={ this.renderCatRow.bind(this) }

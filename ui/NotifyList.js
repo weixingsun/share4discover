@@ -60,11 +60,19 @@ export default class NotifyList extends Component {
           //alert('value='+value)
           if(self.updateOnUI && value!=null){
               console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
-              let json = JSON.parse(value)
-              self.setState({
+              try{
+                let json = JSON.parse(value)
+                self.setState({
                   type:type,
                   push_list:json,
-              })
+                })
+              }catch(e){
+                alert('invalid data, please delete all msg')
+                self.setState({
+                  type:type,
+                  push_list:[],
+                })
+              }
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
       })
   }

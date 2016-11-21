@@ -184,6 +184,7 @@ export default class PushList extends React.Component {
             name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         }else{
             name = I18n.t('push_local')
+            return
         }
         return (
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >

@@ -269,7 +269,7 @@ export default class FormInfoVar extends Component {
     onSubmit(values) {
         var self = this;
         let latlng = {latitude:values.lat, longitude:values.lng}
-        if(this.checkTooFarAway(latlng)<0) return
+        //if(this.checkTooFarAway(latlng)<0) return
         self.deleteEmptyFields(values)
         self.fixFormData(values);
         //alert('form:'+JSON.stringify(values));
@@ -284,7 +284,7 @@ export default class FormInfoVar extends Component {
                     let alertmsg = ''
                     //console.log('Net.setMsg() ret='+JSON.stringify(ret))
                     if(ret==null){
-                        alert("Edit but no Response, please confirm your update is made correctly")
+                        //alert("Edit but no Response, please confirm your update is made correctly")
                         self.exitUpdatePages()
                     }else{
                       let newkey = Global.getKeyFromMsg(ret)
