@@ -297,6 +297,7 @@ export default class Main extends Component {
   }
   gotoPage(name){
       this.checkSettingsChange()
+      if(name===Store.mapTab && !Global.region) return
       this.setState({ page: name });
   }
   getSelectedColor(id){

@@ -455,14 +455,15 @@ export default class Maps extends Component {
     renderFocusIcon(){
       let con1 = Global.MAP===Global.BaiduMap && this.state.gps
       let con2 = Platform.OS === 'ios' && Global.MAP===Global.GoogleMap && this.state.gps
+      let marginTop= Platform.OS === 'ios'?80:70
       if(con1 || con2){
+        //<View style={{opacity:1,flexDirection:'row-reverse'}}>
         return (
-          <View style={{opacity:1,flexDirection:'row-reverse'}}>
              <TouchableOpacity 
                 style={{
-                  //position:'absolute',
-                  //top:70,right:10,
-                  marginRight:10,marginTop:5,
+                  position:'absolute',
+                  top:marginTop,right:10,
+                  //marginRight:10,marginTop:5,
                   backgroundColor:'white',
                   width:40,height:40,
                   alignItems:'center',justifyContent:'center',
@@ -472,7 +473,6 @@ export default class Maps extends Component {
              >
                <Icon name={"ion-ios-locate-outline"} size={24} />
              </TouchableOpacity>
-          </View>
         )
       }
     }
