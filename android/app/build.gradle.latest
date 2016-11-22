@@ -144,9 +144,11 @@ android {
 
 dependencies {
     //compile project(':react-native-xmpush')
+    //compile project(':react-native-tencent-xg')
+    //compile (project(':react-native-onesignal'))  
+    //compile (project(':react-native-code-push'))     
     compile project(':react-native-shared-preferences')
     compile project(':react-native-bdpush')
-    //compile project(':react-native-tencent-xg')
     compile project(':react-native-device-info')
     compile "com.facebook.react:react-native:+"
     compile (project(':react-native-sound'))   
@@ -155,11 +157,9 @@ dependencies {
     compile (project(':react-native-keep-awake')) 
     //compile (project(':react-native-ble-manager'))
     //compile (project(':react-native-usbserial'))  
-    //compile (project(':react-native-onesignal'))  
     compile (project(':react-native-android-permissions'))
     compile (project(':react-native-i18n'))          
     compile (project(':react-native-image-picker'))  
-    //compile (project(':react-native-code-push'))     
     compile (project(':react-native-weibo'))         
     compile (project(':react-native-wechat'))        
     compile (project(':react-native-fbsdk'))         
@@ -167,12 +167,12 @@ dependencies {
     compile (project(':react-native-maps'))          
     compile (project(':react-native-baidumap'))      
     compile fileTree(dir: "libs", include: ["*.jar"])
-    //compile "com.android.support:appcompat-v7:23.2.1"   
-    //compile 'com.android.support:support-v4:23.2.1'
     compile ('com.google.android.gms:play-services-base:9.8.0')
     compile ('com.google.android.gms:play-services-maps:9.8.0')
     compile ("com.google.android.gms:play-services-location:9.8.0")
     compile ('com.google.android.gms:play-services-auth:9.8.0')
+    //compile "com.android.support:appcompat-v7:23.2.1"   
+    //compile 'com.android.support:support-v4:23.2.1'
     //compile 'com.google.android.gms:play-services-gcm:+'
     //compile 'com.google.android.gms:play-services-analytics:+'
     //compile 'com.android.support:multidex:1.0.0'
