@@ -64,7 +64,7 @@ export default class MyList extends Component {
             onPress={()=>this._onPress(rowData)} >
           <View>
               <View style={{flexDirection: 'row',height:58}}>
-                <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
+                <View style={{marginLeft:15,marginRight:6,justifyContent:'center',width:50,alignItems:'center'}}>
                   <Icon name={Global.TYPE_ICONS[rowData.type]} size={40} color={Style.CAT_COLORS[rowData.cat]} />
                 </View>
                 <View style={{justifyContent: 'center',height:56}}>

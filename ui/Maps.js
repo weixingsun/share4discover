@@ -30,7 +30,7 @@ export default class Maps extends Component {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         catDataSource: this.ds.cloneWithRows(Object.keys(Style.CAT_COLORS)),
         type:'car',
-        cat:'buy',
+        cat:'sell',
         ccid:0,
         circles: [],
         region:this.props.region,

@@ -238,16 +238,16 @@ export default class Detail extends Component {
 		var sns_name = owner.split(':')[2]
 	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)  <View style={{width:30,alignItems:'center'}}>
                 return (
-                    <View style={{flexDirection:'row',marginLeft:10}} key={owner} >
-                        <View style={{width:30,alignItems:'center'}}>
+                    <View style={{flexDirection:'row'}} key={owner} >
+                        <View style={{marginLeft:6,alignItems:'center'}}>
                           <Icon
                             //style={{marginLeft:10,marginRight:6}}
-                            size={24}
+                            size={16}
                             color={this.state.highlight_color}
                             name={Global.SNS_ICONS[sns_type]}
                           />
                         </View>
-                        <Text style={{marginLeft:20}}>{sns_name==null?sns_user:sns_name}</Text>
+                        <Text style={{marginLeft:8}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
             }) }
@@ -302,10 +302,10 @@ export default class Detail extends Component {
 	      let from = replyObj.f
 	      let from_os = replyObj.os
 	      return (
-	        <View style={{marginLeft:20,flexDirection:'row',flex:1}} key={key}>
+	        <View style={{marginLeft:6,flexDirection:'row',flex:1}} key={key}>
                     <Icon
-                        style={{marginLeft:6}}
-                        size={20}
+                        style={{margin:2}}
+                        size={16}
                         color={this.state.highlight_color}
                         name={Global.SNS_ICONS[sns_type]}
                     />
@@ -330,7 +330,7 @@ export default class Detail extends Component {
         if(this.isLogin)
             return (
                 <View style={Style.detail_card} >
-                    <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('replies')} :  </Text>
+                    <Text style={{marginLeft:6,marginBottom:8,fontWeight:'bold'}}>{I18n.t('replies')} :  </Text>
                     {this.renderReplyItems()}
                 </View>
             )
@@ -363,13 +363,13 @@ export default class Detail extends Component {
             return (
                 <View style={Style.detail_card} >
                     <View style={{flexDirection:'row'}}>
-                        <Text style={{marginLeft:21,fontWeight:'bold'}}>{I18n.t('my_reply')}:  </Text>
+                        <Text style={{marginLeft:8,fontWeight:'bold'}}>{I18n.t('my_reply')}:  </Text>
                         <View style={{flex:1}} />
-                        <Button style={{marginRight:20,width:50,height:26,backgroundColor:this.state.highlight_color,borderColor:this.state.highlight_color}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
+                        <Button style={{marginRight:6,width:50,height:30,backgroundColor:this.state.highlight_color,borderColor:this.state.highlight_color}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
                     </View>
                         <TextInput
                             //ref={(input) => this.myReply = input}
-                            style={{marginLeft:20,height:this.state.reply_height}}
+                            style={{marginLeft:4,height:this.state.reply_height}}
                             multiline={true}
                             value={this.state.reply}
                             onChange={(event) => {
@@ -407,10 +407,10 @@ export default class Detail extends Component {
         return (
             <View style={Style.detail_card} >
                 {misc.map((key)=>{
-                    return <Text style={{marginLeft:21}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.props.msg[key]}</Text>
+                    return <Text style={{marginLeft:8}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.props.msg[key]}</Text>
                 })}
-                <Text style={{marginLeft:21}}><Text style={{fontWeight:'bold'}}>{I18n.t('content')}:</Text></Text>
-                <Text style={{marginLeft:21}}>{this.props.msg.content}</Text>
+                <Text style={{marginLeft:8}}><Text style={{fontWeight:'bold'}}>{I18n.t('content')}:</Text></Text>
+                <Text style={{marginLeft:8}}>{this.props.msg.content}</Text>
             </View>
         )
     }
@@ -424,14 +424,14 @@ export default class Detail extends Component {
         if(this.props.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.props.msg.time}</Text>
         return (
             <View style={Style.detail_card} >
-                <View style={{flexDirection:'row',marginLeft:20}} >
+                <View style={{flexDirection:'row'}} >
                     <Icon
-                        style={{marginLeft:15,marginRight:15}}
+                        style={{marginLeft:6,marginRight:10,justifyContent:'center'}}
                         size={44}
                         color={this.state.highlight_color}
                         name={typeIcon}
                     />
-                    <View style={{flex:1,marginLeft:20}}>
+                    <View style={{flex:1,marginLeft:10}}>
                         <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
                         <Text>{I18n.t('cat')} : {this.props.msg.cat?I18n.t(this.props.msg.cat):''}</Text>
                         <Text>{I18n.t('ctime')} : {_ctime}</Text>

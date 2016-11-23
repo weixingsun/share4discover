@@ -175,7 +175,7 @@ export default class PushList extends React.Component {
     _renderRow(json) {
         //let json = JSON.parse(data)
         //if(!json.name) return
-        let number = ''
+        let city = Global.getCityNameFromId(json.city_id)
         let bold = {fontSize:16,} //fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
         let locale = I18n.locale.substring(0,2)
@@ -192,18 +192,18 @@ export default class PushList extends React.Component {
               <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
                   <Icon
-                    style={{marginLeft:15,marginRight:6}}
+                    style={{marginLeft:6,marginRight:6}}
                     size={30}
                     //color={this.props.msg.ask=='false'?'blue':'gray'}
                     color={'gray'}
                     name={Global.TYPE_ICONS[json.type]}
                   />
                 </View>
-                <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
+                <View style={{marginLeft:5,flex:1,justifyContent:'center'}}>
                     <Text style={ bold }>{name}</Text>
                 </View>
-                <View style={{marginRight:10,justifyContent:'center'}}>
-                    <Text>{number}</Text>
+                <View style={{marginRight:20,justifyContent:'center'}}>
+                    <Text>{city}</Text>
                 </View>
               </View>
               <View style={Style.separator} />
