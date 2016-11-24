@@ -175,12 +175,14 @@ export default class PushList extends React.Component {
     _renderRow(json) {
         //let json = JSON.parse(data)
         //if(!json.name) return
-        let city = Global.getCityNameFromId(json.city_id)
+        //alert(JSON.stringify(json))
         let bold = {fontSize:16,} //fontWeight:'bold',color:'black'}
         //let source = json.source?json.source:json.type
         let locale = I18n.locale.substring(0,2)
-        let name = ''
-        if(json.type){
+        let name = '',district=''
+        if(json.type&&json.cat){
+            //alert(JSON.stringify(json))
+            district = Global.getCityNameFromId(json.district_id)
             name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         }else{
             name = I18n.t('push_local')
@@ -203,7 +205,7 @@ export default class PushList extends React.Component {
                     <Text style={ bold }>{name}</Text>
                 </View>
                 <View style={{marginRight:20,justifyContent:'center'}}>
-                    <Text>{city}</Text>
+                    <Text>{district}</Text>
                 </View>
               </View>
               <View style={Style.separator} />

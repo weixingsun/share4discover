@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import {AppRegistry, DeviceEventEmitter, Navigator, StyleSheet, Text, View, Dimensions, Platform, } from 'react-native'
-//import * as XG from 'react-native-tencent-xg';
-import Remote from './PushBaiduRemote';
 //import OneSignal from 'react-native-onesignal';
 import BaiduPush from 'react-native-bdpush'
 //import MIPush from 'react-native-xmpush'
@@ -88,7 +86,7 @@ module.exports = {
         if(os==='ios'||os==='idev'){
           msg = {
             aps:{
-              "content-available": 1,
+              "content-available": '1',
               alert:title,
               sound:'default',
             },
@@ -121,7 +119,6 @@ module.exports = {
     },
     postAll(title,data){
         //OneSignal.postNotification(title, data, uid);
-        Remote.broadcast(title, data);
     },
     //postTag({'listen_cn_beijing_car_sell'},'tags_title','click to view more',{t:'tag',i:'car_sell:lat,lng:ctime',f:Push.xguid,r:now})
     postTags(tag,title,data,kv,os){
@@ -142,7 +139,7 @@ module.exports = {
         if(os==='ios'||os==='idev'){
           msg = {
             aps:{
-              "content-available" : 1,
+              "content-available": '1',
               alert:title,
               sound:'default',
             },
@@ -189,7 +186,7 @@ module.exports = {
         if(os==='ios'||os==='idev'){
           msg = {
             aps:{
-              "content-available" : 1,
+              "content-available": '1',
               alert:title,
               sound:'default',
             },

@@ -67,10 +67,15 @@ export default class NotifyList extends Component {
                   push_list:json,
                 })
               }catch(e){
-                alert('invalid data, please delete all msg')
+                let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
+                let v3 = v2.substr(1,v2.length-2)
+                let str_arr = v3.split(',')
+                
+                //alert('invalid data, please delete all msg: key='+Store.PUSH_LIST+":"+type+'\nvalue='+v3) //value
+                //let json = JSON.parse(v2)
                 self.setState({
                   type:type,
-                  push_list:[],
+                  push_list:str_arr,
                 })
               }
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
@@ -107,14 +112,16 @@ export default class NotifyList extends Component {
       if(Platform.OS==='ios'){
           //alert('json='+JSON.stringify(json))
           if(json.t===Global.push_p2p||json.t===Global.push_tag){
-              if(!json.read)this.readPush(json.t,json.r)
+              if(!json.read)this.readPush(json.t,json.i)
+              this.getMsg(json.i)
+          }else if(json.t===Global.push_local){
               this.getMsg(json.i)
           }
       }else{
           if(json.custom_content){ //local=msg
               if(json.custom_content.i) this.getMsg(json.custom_content.i)
           }else if(json.custom) { // p2p+tag=push Global.push_p2p Global.push_tag
-              if(!json.read&&json.custom.t&&json.custom.r) this.readPush(json.custom.t,json.custom.r)
+              if(!json.read&&json.custom.t&&json.custom.r) this.readPush(json.custom.t,json.custom.i)
               this.getMsg(json.custom.i)
           }
       }
@@ -134,7 +141,7 @@ export default class NotifyList extends Component {
       });
   }
   readPush(type,id){
-      Store.readPushShared(Store.PUSH_LIST+":"+type,{r:id})
+      Store.readPushShared(Store.PUSH_LIST+":"+type,{i:id})
       DeviceEventEmitter.emit('refresh:PushList',0);
   }
   _onPress(rowData) {
@@ -167,9 +174,9 @@ export default class NotifyList extends Component {
         }
     }
     deletePush(type,id){
-        Store.deletePushShared(type,{r:id})
+        Store.deletePushShared(type,{i:id})
         let list = this.state.push_list //.filter(function(item){ return item.id != id})
-        this.removeArrayElement(list,{r:id})
+        this.removeArrayElement(list,{i:id})
         //alert(this.push_list.length+' '+JSON.stringify(this.push_list))
         this.setState({push_list:list});
     }
@@ -180,15 +187,15 @@ export default class NotifyList extends Component {
     deletePushAlert(data){
         let self=this
         let json = typeof data==='object'?data:JSON.parse(data)
-        let id=json.r
+        let id=json.i
         if(Platform.OS==='android'){
-            if(json.custom&&json.custom.r) id=json.custom.r
-            else if(json.custom_content&&json.custom_content.r) id=json.custom_content.r
+            if(json.custom&&json.custom.i) id=json.custom.i
+            else if(json.custom_content&&json.custom_content.i) id=json.custom_content.i
         }
         let type=json.t
         if(Platform.OS==='android'){
-           if(json.custom_content&&json.custom_content.t) type=json.custom_content.t
-            else if(json.custom_content&&json.custom_content.t) id=json.custom_content.t
+           if(json.custom_content&&json.custom_content.i) type=json.custom_content.i
+            else if(json.custom_content&&json.custom_content.i) id=json.custom_content.i
         }
         Alert.alert(
             "Delete",
@@ -225,7 +232,7 @@ export default class NotifyList extends Component {
       <Swipeout
         //left={rowData.left}
         right={rightButton}
-        rowID={rowData.rtime}
+        //rowID={rowData.rtime}
         //sectionID={sectionID}
         autoClose={true}
         backgroundColor={'white'}
@@ -233,49 +240,22 @@ export default class NotifyList extends Component {
         //onOpen={(sectionID, rowID) => this._handleSwipeout(sectionID, rowID) }
         //scroll={event => this._allowScroll(event)}
       >
-          {this._renderRowView(rowData)}
+          {this._renderPushRowView(rowData)}
       </Swipeout>
     )
-  }
-  _renderShareRowView(rowData) {
-    var time = Global.getDateTimeFormat(parseInt(rowData.rtime))
-    var bold = rowData.status==='1'? {fontSize:16,fontWeight:'bold',color:'black'}: {fontSize:16}
-    return (
-      <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this._onPress(rowData)} >
-          <View >
-              <View style={{flexDirection: 'row', justifyContent:'center', height:58 }}>
-	        <View style={{marginLeft:15,marginRight:6,justifyContent:'center'}}>
-                  <Icon 
-		    style={{marginLeft:15,marginRight:6}}
-		    size={40}
-		    color={Style.CAT_COLORS[rowData.cat]}
-		    name={Global.TYPE_ICONS[rowData.type]}
-		  />
-	        </View>
-	        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                    <Text style={ bold }>{rowData.content}</Text>
-		</View>
-		<View style={{marginRight:10,justifyContent:'center'}}>
-                    <Text>{time}</Text>
-		</View>
-              </View>
-              <View style={Style.separator} />
-          </View>
-      </TouchableHighlight>
-    );
   }
     _renderPushRowView(data) {
         let bold = {fontSize:16,fontWeight:'bold',color:'#666666'}
         let normal={fontSize:16}
         let title='',text_style=bold,name='',time='',key='',json=data
         if(Platform.OS==='ios'){
-            //alert('_renderPushRowView()'+JSON.stringify(data))
             if(typeof data==='string') json = JSON.parse(data)
             if(json.i&&json.aps.alert){
               text_style= json.read?normal:bold
+              if(json.t===Global.push_local) text_style=normal
               key = json.i
               title = Global.trimTitle(json.aps.alert)
-              time = Global.getDateTimeFormat(json.r)
+              time = Global.getDateTimeFormat(Global.getTimeInKey(key))
               name = json.n
             }else return
         }else if(Platform.OS==='android'){
@@ -283,16 +263,21 @@ export default class NotifyList extends Component {
               title = Global.trimTitle(json.title)
               text_style= json.custom.read?normal:bold
               key = json.custom.i
-              time = Global.getDateTimeFormat(json.custom.r)
+              time = Global.getDateTimeFormat(Global.getTimeInKey(key))
               name = json.custom.n
             }else if(json.title&&json.custom_content&&json.custom_content.i){ //local
               title = Global.trimTitle(json.title)
               text_style= normal
               key = json.custom_content.i
-              time = Global.getDateTimeFormat(json.custom_content.r)
+              time = Global.getDateTimeFormat(Global.getTimeInKey(key))
               name = json.custom_content.n
             }else return
         }
+        let ll   = key.split(':')[1]
+        let lat  = ll.split(',')[0], lng = ll.split(',')[1]
+        
+        let dist = Global.distanceName( lat, lng, Global.region.latitude, Global.region.longitude )
+        //alert('_renderPushRowView()\nkey='+key+'\nll='+ll+'\ndist='+dist)
         let type = key.split('_')[0]
         let cat = key.split('_')[1].split(':')[0]
         return (
@@ -320,6 +305,9 @@ export default class NotifyList extends Component {
                     <View style={{flexDirection:'row', justifyContent:'center',marginTop:6 }}>
                         <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
                           <Text style={ text_style }>{title}</Text>
+                        </View>
+                        <View style={{marginRight:10}}>
+                          <Text>{dist}</Text>
                         </View>
                     </View>
                 </View>
@@ -379,11 +367,11 @@ export default class NotifyList extends Component {
   }
   _renderRowView(data){
       //let feed_types = ['rss','yql','web','share']
-      if(this.share_types.indexOf(data.type)<0){
+      //if(this.share_types.indexOf(data.type)<0){
           return this._renderPushRowView(data)
-      }else{
-          return this._renderShareRowView(data)
-      }
+      //}else{
+      //    return this._renderShareRowView(data)
+      //}
   }
   getTitleName(type){
       if(type===Store.LOCAL) return I18n.t('push_local')

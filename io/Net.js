@@ -1,4 +1,5 @@
 import Global from './Global'
+import I18n from 'react-native-i18n'
 /*
 #https
 wget https://dl.eff.org/certbot-auto
@@ -148,6 +149,7 @@ var Net = {
             //alert(JSON.stringify(gps))
             if(gps.status==0 && gps.content.address_detail.city_code){
               let loc = {
+                  district:gps.content.address_detail.district,
                   city:gps.content.address_detail.city,
                   city_id:gps.content.address_detail.city_code,
                   country:gps.address.split('|')[0].toLowerCase(),
@@ -156,18 +158,26 @@ var Net = {
             }else{
               Net.getGGLocation().then((gps)=>{
                 let arr = gps.results[0].address_components
-                var city1='',city2='',province1='',country=''
+                var city1='',city2='',district1='',district2,province1='',country=''
+                //alert(JSON.stringify(arr))
                 arr.map((c)=>{
                   if(c.types[0]==='locality'){
                     city1=c.short_name.replace(' ','-').toLowerCase()
                     city2=c.long_name
+                  }else if(c.types.indexOf('sublocality')>0){
+                    district1=c.short_name.replace(' ','-').toLowerCase()
+                    district2=c.short_name
+                  }else if(c.types[0]==='country'){
+                    country=c.short_name.toLowerCase()
                   }
-                  //if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
-                  if(c.types[0]==='country') country=c.short_name.toLowerCase()
+                  //else if(c.types[0]==='administrative_area_level_1') province1=c.short_name.toLowerCase()
                 })
+                if(district1=='') district1='all',district2=I18n.t('all') //for small towns
                 //alert('city1='+city1+' city2='+city2+' country='+country)
                 if(city1 && city2 && country){
                     let loc = {
+                      district:district2,
+                      district_id:district1,
                       city:city2,
                       city_id:city1,
                       country:country,

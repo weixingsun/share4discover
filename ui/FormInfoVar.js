@@ -329,16 +329,16 @@ export default class FormInfoVar extends Component {
         let name = Global.getMainLoginName()
         let key  = Global.getKeyFromMsg(msg)
         Push.postTags(
-            Global.getTagNameFromJson(msg),  //'l_'+msg.country+'_'+msg.city_id+':'+msg.type+'_'+msg.cat
+            Global.getTagNameFromJson(msg),  //'l_'+msg.country+'_'+msg.city_id+'_'+msg.district+'_'+msg.type+'_'+msg.cat
             msg.title,
             I18n.t('click_more'),
-            {t:Global.push_tag,i:key,f:Push.uid,n:name,r:msg.ctime},
+            {t:Global.push_tag,i:key,f:Push.uid,n:name},
             msg.os
         )
         Push.postTagMsg(
             Global.getLocalTagNameFromJson(msg),  //'l_'+msg.country+'_'+msg.city_id
             msg.title,
-            {t:Global.push_local,i:key,f:Push.uid,n:name,r:msg.ctime},
+            {t:Global.push_local,i:key,f:Push.uid,n:name},
             msg.os
         )
     }

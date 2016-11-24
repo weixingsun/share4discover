@@ -125,6 +125,10 @@ module.exports = {
       web:'fa-internet-explorer',
       share:'fa-bell',
     },
+    getTimeInKey(key){
+      if(key) return key.split(':')[2]
+      else    return ""
+    },
     getCityNameFromId(id){
         if(/^\d+$/.test(id)){
             return ChinaCity[id]
@@ -134,22 +138,27 @@ module.exports = {
         }
     },
     getTagNameFromJson(msg) {
-      return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.type+'_'+msg.cat
+      return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.district_id+'_'+msg.type+'_'+msg.cat
     },
     getLocalTagNameFromJson(msg) {
       return 'l_'+msg.country+'_'+msg.city_id
     },
+    getDistrictTagNameFromJson(msg) {
+      return 'l_'+msg.country+'_'+msg.city_id+'_'+msg.district_id
+    },
     getJsonFromTagName(name) {
         let names = name.split('_')
-        if(names.length>2) return {
+        if(names.length>3) return {
             country:names[1],
             city_id:names[2],
-            type:names[3],
-            cat:names[4],
+            district_id:names[3],
+            type:names[4],
+            cat:names[5],
           }
         else return {
             country:names[1],
             city_id:names[2],
+            district_id:names[3],
           }
     },
     getLoginStr(){
@@ -280,5 +289,21 @@ module.exports = {
             if(str.substr(0, i).replace(r, "[]").length>=n) return str.substr(0, i) ;
         }
         return str;
+    },
+    distanceDelta(latDelta,lngDelta){
+       return Math.floor(111111 * Math.min(latDelta,lngDelta)/2); //range circle in bbox
+    },
+    distance(lat1, lon1, lat2, lon2) {
+      var R = 6371;
+      var a = 0.5 - Math.cos((lat2 - lat1) * Math.PI / 180)/2 +
+         Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+         (1 - Math.cos((lon2 - lon1) * Math.PI / 180))/2;
+      var m = R * 2 * Math.asin(Math.sqrt(a))*1000;
+      return Math.floor(m);
+    },
+    distanceName(lat1, lon1, lat2, lon2){
+      let dist = this.distance(lat1, lon1, lat2, lon2)
+      if(dist>1000) return (dist/1000).toFixed(1)+'km'
+      else return dist+'m'
     },
 };

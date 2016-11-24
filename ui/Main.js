@@ -243,6 +243,7 @@ export default class Main extends Component {
               if(gps.country=='cn') Global.MAP = Global.BaiduMap;
               else Global.MAP = Global.GoogleMap;
             })
+            DeviceEventEmitter.emit('refresh:PushList',0);
           }, (error) => { console.log("location get current position error: ", error) },
           {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100});
       if(Global.MAP == null){

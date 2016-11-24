@@ -58,14 +58,14 @@ export default class FormFeed extends React.Component{
             type:true,
             cat:true,
             city:false,
-            //country:false
+            district:false
         }
         this.state = {
             form: {
                 type:'car',
                 cat:'rent0',
+                district:'',
                 city:'',
-                city_id:'',
                 country:'cn',
             }
         };
@@ -76,6 +76,7 @@ export default class FormFeed extends React.Component{
         if(this.props.push){
             let form1=this.props.push
             form1['city']=Global.getCityNameFromId(form1.city_id)
+            form1['district']=Global.getCityNameFromId(form1.district_id)
             this.setState({
                 form:form1
             });
@@ -85,6 +86,8 @@ export default class FormFeed extends React.Component{
             Net.getLocation((gps)=>{
                 self.setState({
                     form:{ ...self.state.form,
+                      district:gps.district,
+                      district_id:gps.district_id,
                       city:gps.city,
                       city_id:gps.city_id,
                       country:gps.country,
@@ -128,6 +131,8 @@ export default class FormFeed extends React.Component{
       else if(name==='cat')
         return this.renderCatField()
       else if(name==='city')
+        return this.renderTextField(name,editable,'fa-location-arrow')
+      else if(name==='district')
         return this.renderTextField(name,editable,'fa-location-arrow')
     }
     renderTypeField(){
@@ -237,6 +242,7 @@ export default class FormFeed extends React.Component{
                     defaults={this.state.form}
                     >
                         {this.renderFieldsBySource(this.push_fields)}
+                        <GiftedForm.HiddenWidget name='district_id' value={this.state.form.district_id} />
                         <GiftedForm.HiddenWidget name='city_id' value={this.state.form.city_id} />
                         <GiftedForm.HiddenWidget name='country' value={this.state.form.country} />
                         <GiftedForm.SubmitWidget
@@ -258,6 +264,7 @@ export default class FormFeed extends React.Component{
           </View>
         </View>
         )
+        //<GiftedForm.HiddenWidget name='city_id' value={this.state.form.city_id} />
     }
 };
 //<GiftedForm.OptionWidget title='WEB' value='web' />
