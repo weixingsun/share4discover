@@ -150,6 +150,7 @@ var Net = {
             if(gps.status==0 && gps.content.address_detail.city_code){
               let loc = {
                   district:gps.content.address_detail.district,
+                  district_id:gps.content.address_detail.district,
                   city:gps.content.address_detail.city,
                   city_id:gps.content.address_detail.city_code,
                   country:gps.address.split('|')[0].toLowerCase(),
