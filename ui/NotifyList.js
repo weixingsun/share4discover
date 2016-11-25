@@ -57,29 +57,42 @@ export default class NotifyList extends Component {
       //alert(JSON.parse('[,{"a":1}]'))
       Store.getShared(Store.PUSH_LIST+":"+type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
-          //alert('value='+value)
           if(self.updateOnUI && value!=null){
-              console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
+              //console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               try{
                 let json = JSON.parse(value)
+                if(json && json.length>1)
+                json.sort(function(a,b){
+                    return self.getDist(a) - self.getDist(b)
+                })
                 self.setState({
                   type:type,
                   push_list:json,
                 })
               }catch(e){
-                let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
-                let v3 = v2.substr(1,v2.length-2)
-                let str_arr = v3.split(',')
+                //let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
+                //let v3 = v2.substr(1,v2.length-2)
+                //let str_arr = v3.split(',')
                 
-                //alert('invalid data, please delete all msg: key='+Store.PUSH_LIST+":"+type+'\nvalue='+v3) //value
+                //alert('invalid data, please delete all msg '+value) //value
                 //let json = JSON.parse(v2)
                 self.setState({
                   type:type,
-                  push_list:str_arr,
+                  push_list:[],
                 })
               }
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
       })
+  }
+  getDist(data){
+      let json = data
+      if(typeof data==='string') json = JSON.parse(data)
+      let key = json.i
+      if(json.custom) key=json.custom.i
+      else if(json.custom_content) key=json.custom_content.i
+      let ll   = key.split(':')[1]
+      let lat  = ll.split(',')[0], lng = ll.split(',')[1]
+      return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
   }
   sort(arr){
       let total ={}
@@ -275,7 +288,6 @@ export default class NotifyList extends Component {
         }
         let ll   = key.split(':')[1]
         let lat  = ll.split(',')[0], lng = ll.split(',')[1]
-        
         let dist = Global.distanceName( lat, lng, Global.region.latitude, Global.region.longitude )
         //alert('_renderPushRowView()\nkey='+key+'\nll='+ll+'\ndist='+dist)
         let type = key.split('_')[0]
