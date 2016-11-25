@@ -90,8 +90,8 @@ export default class PushList extends React.Component {
             let total = ''
             this.state.tag_list.map((key)=>{
                 let names = key.split('_')
-                if(names.length>4){
-                    let name = I18n.t(names[3]) +' '+ I18n.t(names[4])
+                if(names.length>5){
+                    let name = I18n.t(names[4]) +' '+ I18n.t(names[5])
                     total+= ' --> '+name+'\n'
                 }
             })
@@ -182,7 +182,7 @@ export default class PushList extends React.Component {
         let name = '',district=''
         if(json.type&&json.cat){
             //alert(JSON.stringify(json))
-            district = Global.getCityNameFromId(json.district_id)
+            district = Global.getDistrictNameFromId(json.district_id)
             name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         }else{
             name = I18n.t('push_local')

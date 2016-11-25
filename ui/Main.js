@@ -220,6 +220,7 @@ export default class Main extends Component {
   }
   checkPushSettings(gps){
       let tag = Global.getLocalTagNameFromJson(gps)  //{country,city,city_id}
+      console.log('gps='+JSON.stringify(gps)+'\ntag='+tag)
       Push.instance.setTag(tag,(state)=>{
           if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
           else alert("Initialization push settings failed. status="+state);
@@ -285,7 +286,6 @@ export default class Main extends Component {
   checkSettingsChange(){
       this.checkLogin('user_fb')
       this.checkLogin('user_wb')
-      //this.checkPushSettings(gps)
       this.checkMapSettings()
       this.checkFirstTime()
       //if(Global.mainlogin.length===0) this.setState({mails:[]})
