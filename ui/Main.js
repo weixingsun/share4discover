@@ -220,7 +220,7 @@ export default class Main extends Component {
   }
   checkPushSettings(gps){
       let tag = Global.getLocalTagNameFromJson(gps)  //{country,city,city_id}
-      console.log('gps='+JSON.stringify(gps)+'\ntag='+tag)
+      //console.log('gps='+JSON.stringify(gps)+'\ntag='+tag)
       Push.instance.setTag(tag,(state)=>{
           if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
           else alert("Initialization push settings failed. status="+state);
@@ -231,7 +231,7 @@ export default class Main extends Component {
       if(!Global.region)
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           KKLocation.getCurrentPosition((position) => {
-            console.log("location get current position: ", position);
+            //console.log("location get current position: ", position);
             Global.region={
               latitude:  position.coords.latitude,
               longitude: position.coords.longitude,

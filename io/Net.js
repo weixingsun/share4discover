@@ -130,6 +130,7 @@ var Net = {
     },
     getGGLocation(){
       let url=Global.GG_IP2LOC_HOST+'latlng='+Global.region.latitude+','+Global.region.longitude //-43.500935,%20172.395744'
+      //let url=Global.GG_IP2LOC_HOST+'latlng=-43.658666,172.225800' //-43.500935,%20172.395744'
       return this._get(url)
     },
     chooseMapFromNetwork(){

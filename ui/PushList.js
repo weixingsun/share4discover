@@ -182,7 +182,8 @@ export default class PushList extends React.Component {
         let name = '',district=''
         if(json.type&&json.cat){
             //alert(JSON.stringify(json))
-            district = Global.getDistrictNameFromId(json.district_id)
+            if(json.district_id==='all')district = Global.getCityNameFromId(json.city_id)
+            else district = Global.getDistrictNameFromId(json.district_id)
             name = locale==='zh'?I18n.t(json.cat)+I18n.t(json.type):I18n.t(json.type)+' '+I18n.t(json.cat)
         }else{
             name = I18n.t('push_local')
