@@ -114,6 +114,8 @@ I18n.translations = {
     push_local:'Local Updates',
     push_p2p:'My Messages',
     push_tag:'Listening Updates',
+    order_dist_asc:'Order by Distance',
+    order_time_asc:'Order by Time',
     //tos
     tos_special:'Special Notes',
     tos_content:'Contents of Services',
@@ -240,6 +242,8 @@ I18n.translations = {
     push_local:'Local Updates',
     push_p2p:'My Messages',
     push_tag:'Listening Updates',
+    order_dist_asc:'Order by Distance',
+    order_time_asc:'Order by Time',
     //tos
     tos_special:'Special Notes',
     tos_content:'Contents of Services',
@@ -366,6 +370,8 @@ I18n.translations = {
     push_local:'周边动态',
     push_p2p:'我的消息',
     push_tag:'关注动态',
+    order_dist_asc:'按距离排序',
+    order_time_asc:'按时间排序',
     //tos
     tos_special:'特殊声明',
     tos_content:'服务内容',

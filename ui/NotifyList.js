@@ -34,7 +34,10 @@ export default class NotifyList extends Component {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.all_notes=[]
+      this.order_dist_asc='order_dist_asc'
+      this.order_time_asc='order_time_asc'
       this.state={
+          order:this.order_dist_asc,
           push_list:[],
           type:Store.LOCAL,
       }
@@ -61,14 +64,7 @@ export default class NotifyList extends Component {
               //console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               try{
                 let json = JSON.parse(value)
-                if(json && json.length>1)
-                json.sort(function(a,b){
-                    return self.getDist(a) - self.getDist(b)
-                })
-                self.setState({
-                  type:type,
-                  push_list:json,
-                })
+                self.reorder(self.order_dist_asc,json)
               }catch(e){
                 //let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
                 //let v3 = v2.substr(1,v2.length-2)
@@ -84,15 +80,37 @@ export default class NotifyList extends Component {
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
       })
   }
-  getDist(data){
+  getKey(data){  //car_buy:lat,lng:ctime
       let json = data
       if(typeof data==='string') json = JSON.parse(data)
       let key = json.i
       if(json.custom) key=json.custom.i
       else if(json.custom_content) key=json.custom_content.i
+      return key
+  }
+  getTime(data){
+      let key = this.getKey(data)
+      let ctime   = key.split(':')[2]
+      return parseFloat(ctime)
+  }
+  getDist(data){
+      let key = this.getKey(data)
       let ll   = key.split(':')[1]
       let lat  = ll.split(',')[0], lng = ll.split(',')[1]
       return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
+  }
+  reorder(order,arr){
+      if(json && json.length<1) return
+      let json = arr?arr:this.state.push_list
+      let self=this
+      json.sort(function(a,b){
+          if(order===self.order_dist_asc)      return self.getDist(a) - self.getDist(b)
+          else if(order===self.order_time_asc) return self.getTime(a) - self.getTime(b)
+      })
+      this.setState({
+          order:order,
+          push_list:json,
+      })
   }
   sort(arr){
       let total ={}
@@ -338,6 +356,40 @@ export default class NotifyList extends Component {
              </View>
       )
   }
+  renderOrderIcon(){
+      return (
+             <View style={{flexDirection:'row',}}>
+                 <View style={{width:10}} />
+                 <Icon name={this.getOrderIcon(this.state.order)} color={'#ffffff'} size={10} />
+                 {this.renderOrderMore()}
+             </View>
+      )
+  }
+  getOrderIcon(order){
+      if(order===this.order_dist_asc) return 'fa-location-arrow'
+      else if(order===this.order_time_asc) return 'fa-clock-o'
+  }
+  renderOrderMore(){
+      //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
+      //alert('icon='+this.state.order)
+      return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
+            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseOrderMore(value) }>
+              <MenuTrigger>
+                <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
+              </MenuTrigger>
+              <MenuOptions>
+                {this.renderMoreOption(this.order_dist_asc, I18n.t(this.order_dist_asc),'fa-sort-amount-asc')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption(this.order_time_asc, I18n.t(this.order_time_asc),'fa-sort-numeric-asc')}
+              </MenuOptions>
+            </Menu>
+          </View>
+      )
+  }
+  chooseOrderMore(option){
+      this.reorder(option)
+  }
   renderMoreOption(value,name,icon){
       return (
           <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
@@ -399,7 +451,7 @@ export default class NotifyList extends Component {
     return (
         <MenuContext style={{ flex: 1 }} ref={"MenuContext"}>
           <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
-            //leftButton={}
+            leftButton={this.renderOrderIcon()}
             rightButton= {this.renderActionIcon()}
 	  />
           <ListView
