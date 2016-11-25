@@ -379,9 +379,9 @@ export default class NotifyList extends Component {
                 <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
-                {this.renderMoreOption(this.order_dist_asc, I18n.t(this.order_dist_asc),'fa-sort-amount-asc')}
+                {this.renderMoreOption(this.order_dist_asc, I18n.t(this.order_dist_asc),this.getOrderIcon(this.order_dist_asc))}
                     <View style={Style.separator} />
-                {this.renderMoreOption(this.order_time_asc, I18n.t(this.order_time_asc),'fa-sort-numeric-asc')}
+                {this.renderMoreOption(this.order_time_asc, I18n.t(this.order_time_asc),this.getOrderIcon(this.order_time_asc))}
               </MenuOptions>
             </Menu>
           </View>
@@ -395,7 +395,7 @@ export default class NotifyList extends Component {
           <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
               <View style={{flexDirection:'row',height:40}}>
                   <View style={{width:30,justifyContent:'center'}}>
-                      <Icon name={icon} color={'#ffffff'} size={26} />
+                      <Icon name={icon} color={'#ffffff'} size={16} />
                   </View>
                   <View style={{justifyContent:'center'}}>
                       <Text style={{color:Style.font_colors.enabled}}> {name} </Text>
