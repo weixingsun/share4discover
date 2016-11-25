@@ -76,7 +76,7 @@ export default class FormFeed extends React.Component{
         if(this.props.push){
             let form1=this.props.push
             form1['city']=Global.getCityNameFromId(form1.city_id)
-            form1['district']=Global.getCityNameFromId(form1.district_id)
+            form1['district']=Global.getDistrictNameFromId(form1.district_id)
             this.setState({
                 form:form1
             });

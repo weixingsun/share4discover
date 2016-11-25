@@ -13,8 +13,9 @@ cat android/app/build.gradle |sed -e "s/\"[[:digit:]].[[:digit:]].[[:digit:]]\"/
 cp android/app/build.gradle.latest android/app/build.gradle
 ##################################################################
 
-cd android && ./gradlew clean && ./gradlew assembleRelease
-sleep 5
+#&& ./gradlew clean
+cd android && ./gradlew assembleRelease
+#sleep 5
 cd ..
 date=`date +%Y%m%d`
 cp  android/app/build/outputs/apk/app-release.apk codepush/Share_$date.apk

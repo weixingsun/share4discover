@@ -123,7 +123,7 @@ var Net = {
     //  return this._get(Global.IP2LOC_HOST)
     //},
     getBDLocation(){
-      let url=Global.BD_IP2LOC_HOST+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
+      let url=Global.BD_IP2LOC_HOST+'location='+Global.region.latitude+','+Global.region.longitude+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
       return this._get(url)
     },
     getGGLocation(){
@@ -147,13 +147,19 @@ var Net = {
         let self=this
         this.getBDLocation().then((gps)=>{
             //alert(JSON.stringify(gps))
-            if(gps.status==0 && gps.content.address_detail.city_code){
+            if(gps.status==0 &&gps.result && gps.result.addressComponent && gps.result.addressComponent.country_code==0){
+              console.log('Net.getLocation.getBDLocation() '+JSON.stringify(gps))
               let loc = {
-                  district:gps.content.address_detail.district,
-                  district_id:gps.content.address_detail.district,
-                  city:gps.content.address_detail.city,
-                  city_id:gps.content.address_detail.city_code,
-                  country:gps.address.split('|')[0].toLowerCase(),
+                  //district:gps.content.address_detail.district,
+                  //district_id:gps.content.address_detail.district,
+                  //city:gps.content.address_detail.city,
+                  //city_id:gps.content.address_detail.city_code,
+                  //country:gps.address.split('|')[0].toLowerCase(),
+                  district:   gps.result.addressComponent.district,
+                  district_id:gps.result.addressComponent.adcode,
+                  city:       gps.result.addressComponent.city,
+                  city_id:    gps.result.cityCode,
+                  country:    'cn',
               }
               func(loc)
             }else{

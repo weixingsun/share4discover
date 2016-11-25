@@ -358,7 +358,7 @@ I18n.translations = {
     condition:'条件',
     sound:'声音',
     source:'来源',
-    district:'Qu',
+    district:'区县',
     city:'城市',
     country:'国家',
     name:'名字',

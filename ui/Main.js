@@ -230,7 +230,7 @@ export default class Main extends Component {
       if(!Global.region)
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           KKLocation.getCurrentPosition((position) => {
-            //console.log("location get current position: ", position);
+            console.log("location get current position: ", position);
             Global.region={
               latitude:  position.coords.latitude,
               longitude: position.coords.longitude,
@@ -250,13 +250,7 @@ export default class Main extends Component {
         Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
           if(map_value != null){
             Global.MAP = map_value
-          }else{
-            Net.getLocation((gps)=>{
-              self.checkPushSettings(gps)
-              if(gps.country=='cn') Global.MAP = Global.BaiduMap;
-              else Global.MAP = Global.GoogleMap;
-            })
-          }
+          }else Global.MAP = Global.BaiduMap;
         })
         Store.get_string(Store.SETTINGS_MAP_TYPE).then((map_type) => {
           if(map_type != null){

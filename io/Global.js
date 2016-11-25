@@ -1,8 +1,9 @@
 import moment from 'moment';
 import Lang from './Lang';
-import ReactNativeI18n from 'react-native-i18n'
-//const deviceLocale = ReactNativeI18n.locale
-import ChinaCity from '../data/china_city_code.json'
+import I18n from 'react-native-i18n'
+//const deviceLocale = I18n.locale
+import ChinaCity from '../data/china_city.json'
+import ChinaDistrict from '../data/china_district.json'
 
 function loadLang(lang){
   switch(lang) {
@@ -50,9 +51,10 @@ module.exports = {
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
     //app_url_pre: 'share://nzmessengers.co.nz/info/',
     //http_url_pre: 'http://shareplus.co.nf/url.php?key=',
-    IP2LOC_HOST: 'http://freegeoip.net/json',
-    BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
+    //IP2LOC_HOST: 'http://freegeoip.net/json',
+    //BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
     //BD_IP2LOC_HOST2: 'http://api.map.baidu.com/location/ip?ip=101.30.35.44',
+    BD_IP2LOC_HOST: 'http://api.map.baidu.com/geocoder/v2/?output=json&', //location=39.983424,116.322987
     GG_IP2LOC_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
     post:'post',
     none:'none',
@@ -132,6 +134,14 @@ module.exports = {
     getCityNameFromId(id){
         if(/^\d+$/.test(id)){
             return ChinaCity[id]
+        }else{
+            //alert('id='+id+' bj code=131,name='+ChinaCity[131])
+            return id.replace('-',' ').firstUpperCase()
+        }
+    },
+    getDistrictNameFromId(id){
+        if(/^\d+$/.test(id)){
+            return ChinaDistrict[id]
         }else{
             //alert('id='+id+' bj code=131,name='+ChinaCity[131])
             return id.replace('-',' ').firstUpperCase()
@@ -228,7 +238,7 @@ module.exports = {
         let now = Math.round(+new Date()/1000) //+new Date();   //date.getTimezoneOffset() / 60
 	//let datetimeStr = new Date(datetimeInt).toISOString().replace(/T/, ' ').replace(/\..+/, '')
         //moment.locale(lang);
-        loadLang(ReactNativeI18n.locale.replace('_', '-').toLowerCase())
+        loadLang(I18n.locale.replace('_', '-').toLowerCase())
         let momentDate = moment(datetimeInt*1000) //.format("YYYY-MM-DD hh:MM:ss");
         if(now-datetimeInt<86400){        //1 day
             return momentDate.fromNow()
@@ -243,7 +253,7 @@ module.exports = {
         //let date=moment(str).valueOf()
         let dateInt = Date.parse(str);
         //loadLang(lang)
-        loadLang(ReactNativeI18n.locale.replace('_', '-').toLowerCase())
+        loadLang(I18n.locale.replace('_', '-').toLowerCase())
         let momentDate = moment(dateInt)
         let now = +new Date();
         if(now-dateInt<86400000){        //1 day

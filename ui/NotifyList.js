@@ -299,7 +299,7 @@ export default class NotifyList extends Component {
                         </View>
                         <View style={{flex:1}}/>
                         <View style={{marginRight:10}}>
-                          <Text>{time}</Text>
+                          <Text style={{fontSize:11}}>{time}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'center',marginTop:6 }}>
@@ -307,7 +307,7 @@ export default class NotifyList extends Component {
                           <Text style={ text_style }>{title}</Text>
                         </View>
                         <View style={{marginRight:10}}>
-                          <Text>{dist}</Text>
+                          <Text style={{fontSize:11}}>{dist}</Text>
                         </View>
                     </View>
                 </View>
