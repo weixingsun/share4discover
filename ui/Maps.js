@@ -29,7 +29,7 @@ export default class Maps extends Component {
       this.state = {
         typeDataSource: this.ds.cloneWithRows(Object.keys(Global.TYPE_ICONS)),
         catDataSource: this.ds.cloneWithRows(Object.keys(Style.CAT_COLORS)),
-        type:'car',
+        type:'all',
         cat:'sell',
         ccid:0,
         circles: [],
@@ -269,9 +269,9 @@ export default class Maps extends Component {
     }
     renderNavBar() {
         let iconType = Global.TYPE_ICONS[this.state.type]
-        let color = Style.CAT_COLORS[this.state.cat]
+        let typeView = <Icon name={iconType} color={Style.font_colors.enabled} size={30} onPress={ModalTypeFunc} />
         let ModalTypeFunc = ()=>this.setState({showTypes:!this.state.showTypes})
-        let ModalCatFunc  = ()=>this.setState({showCats:!this.state.showCats})
+        let color = Style.CAT_COLORS[this.state.cat]
         return (
           <NavigationBar style={{
               flex:1,
@@ -290,20 +290,11 @@ export default class Maps extends Component {
                 <Button
                     style={{height:38,width:50,borderColor:Style.font_colors.enabled}}
                     onPress={ModalTypeFunc}>
-                      <Icon name={iconType} color={Style.font_colors.enabled} size={36} onPress={ModalTypeFunc} />
+                    {typeView}
                 </Button>
                 <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalTypeFunc} />
                 <View style={{width:40}} />
-                <View style={{marginBottom:2}} >
-                    <View style={{height:6}} />
-                    <Button 
-                        style={{height:30,borderColor:Style.font_colors.enabled}} 
-                        textStyle={{fontSize: 13,color:Style.font_colors.enabled}} 
-                        onPress={ModalCatFunc}>
-                          {' '+I18n.t(this.state.cat)+' '}
-                    </Button>
-                </View>
-                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalCatFunc} />
+                {this.renderCatIcon()}
                 <Modal
                     visible={this.state.showTypes||this.state.showCats}
                     onPress={() => {
@@ -324,6 +315,25 @@ export default class Maps extends Component {
             }  //<View style={{width:10}} />
           />
         );
+    }
+    renderCatIcon(){
+        let ModalCatFunc  = ()=>this.setState({showCats:!this.state.showCats})
+        let color = Style.CAT_COLORS[this.state.cat]
+        if(this.state.type!=='all')
+        return (
+            <View>
+                <View style={{marginBottom:2}} >
+                    <View style={{height:6}} />
+                    <Button
+                        style={{height:30,borderColor:Style.font_colors.enabled}}
+                        textStyle={{fontSize: 13,color:Style.font_colors.enabled}}
+                        onPress={ModalCatFunc}>
+                          {' '+I18n.t(this.state.cat)+' '}
+                    </Button>
+                </View>
+                <Icon name={'ion-ios-arrow-down'} color={color} size={16} onPress={ModalCatFunc} />
+            </View>
+        )
     }
     renderGpsIcon(){
       let c = Style.font_colors.disabled

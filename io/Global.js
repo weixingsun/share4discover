@@ -93,6 +93,7 @@ module.exports = {
             {value:'rent1',icon:'ion-ios-log-out'},
             {value:'service',icon:'ion-ios-planet'}],
     TYPE_ICONS: {
+      all:   'ion-ios-cube',
       house: 'ion-ios-home',
       car:   'ion-ios-car',
       tool:  'ion-ios-construct',

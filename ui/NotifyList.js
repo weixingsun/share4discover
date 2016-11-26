@@ -105,7 +105,7 @@ export default class NotifyList extends Component {
       let self=this
       json.sort(function(a,b){
           if(order===self.order_dist_asc)      return self.getDist(a) - self.getDist(b)
-          else if(order===self.order_time_asc) return self.getTime(a) - self.getTime(b)
+          else if(order===self.order_time_asc) return self.getTime(b) - self.getTime(a)
       })
       this.setState({
           order:order,
