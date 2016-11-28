@@ -162,6 +162,7 @@ export default class Maps extends Component {
     }
     }*/
     renderPlaceMarkersGmap(){
+        //alert(JSON.stringify(this.state.markers))
         return this.state.markers.map( (marker) => {
             var self=this
             var color=Style.CAT_COLORS[marker.cat]
@@ -175,12 +176,13 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} />
+                  <Icon name={Global.TYPE_ICONS[marker.type]} color={color} size={40} />
               </GMapView.Marker>
             )
         });
     }
-    /*renderPlaceMarkersBmap(){
+    renderPlaceMarkersBmap(){
+        //alert('markers: '+this.state.markers.length)
         return this.state.markers.map( (marker) => {
             var self=this
             var color='blue'
@@ -192,11 +194,11 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} />
               </BMapView.Marker>
             )
         });
-    }*/
+    }
     back(){
       this.turnOffGps()
       this.props.navigator.pop();
@@ -541,6 +543,7 @@ export default class Maps extends Component {
       if(Platform.OS === 'ios') map_style=Style.map_ios
       let map_traffic = Global.MAP_TRAFFIC==Global.MAP_TRAFFIC_TRUE?true:false
       //console.log('renderBmap() markers='+this.state.markers.length+'\nregion='+JSON.stringify(this.state.region))
+      // {this.renderPlaceMarkersBmap()}
       return (
             <BMapView
                 style={map_style}
@@ -557,7 +560,8 @@ export default class Maps extends Component {
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
                 mapType={Global.MAP_TYPE} //{standard,satellite}
                 trafficEnabled={map_traffic}
-            />
+            >
+            </BMapView>
 
       );
     }

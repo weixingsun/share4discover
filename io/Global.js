@@ -51,11 +51,11 @@ module.exports = {
     host_image_help: 'http://nzmessengers.co.nz/service/help/',
     //app_url_pre: 'share://nzmessengers.co.nz/info/',
     //http_url_pre: 'http://shareplus.co.nf/url.php?key=',
-    //IP2LOC_HOST: 'http://freegeoip.net/json',
-    //BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
+    FREE_IP2LOC_HOST: 'http://freegeoip.net/json',
+    BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
     //BD_IP2LOC_HOST2: 'http://api.map.baidu.com/location/ip?ip=101.30.35.44',
-    BD_IP2LOC_HOST: 'http://api.map.baidu.com/geocoder/v2/?output=json&', //location=39.983424,116.322987
-    GG_IP2LOC_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
+    BD_GEOCODE_HOST: 'http://api.map.baidu.com/geocoder/v2/?output=json&', //location=39.983424,116.322987
+    GG_GEOCODE_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
     post:'post',
     none:'none',
     push_local:'local',

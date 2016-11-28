@@ -123,13 +123,13 @@ var Net = {
     //  return this._get(Global.IP2LOC_HOST)
     //},
     getBDLocation(){
-      let url=Global.BD_IP2LOC_HOST+'location='+Global.region.latitude+','+Global.region.longitude+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
+      let url=Global.BD_GEOCODE_HOST+'location='+Global.region.latitude+','+Global.region.longitude+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
       //let url=Global.BD_IP2LOC_HOST+'location=38.867475,121.529632&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
       //console.log('url='+url)
       return this._get(url)
     },
     getGGLocation(){
-      let url=Global.GG_IP2LOC_HOST+'latlng='+Global.region.latitude+','+Global.region.longitude //-43.500935,%20172.395744'
+      let url=Global.GG_GEOCODE_HOST+'latlng='+Global.region.latitude+','+Global.region.longitude //-43.500935,%20172.395744'
       //let url=Global.GG_IP2LOC_HOST+'latlng=-43.658666,172.225800' //-43.500935,%20172.395744'
       return this._get(url)
     },
@@ -140,10 +140,21 @@ var Net = {
         else Global.MAP = Global.GoogleMap;
       })
     },
-    getLatlngFromNetwork(){
-      this._get(Global.IP2LOC_HOST).then((result)=>{
+    getLocationFromNetwork(func){
+		let self=this
+	  let url = Global.BD_IP2LOC_HOST+'&ak='+Global.and_ak+'&mcode='+Global.rel_and_mcode
+      this._get(url).then((result)=>{
         //let inchina = result.country_code.toUpperCase() == 'CN'
-        alert(JSON.stringify(result))
+        //alert('Net.getLocationFromNetwork()'+JSON.stringify(result))
+		//console.log('Net.getLocation.getBDLocation() '+JSON.stringify(gps))
+		if(result.status==0) {func(result)}
+		else{
+			let url2 = Global.FREE_IP2LOC_HOST
+			self._get(url).then((result)=>{
+				//alert('Net.getLocationFromFreeHost()'+JSON.stringify(result))
+				if(result.status==0) {func(result)}
+			})
+		}
       })
     },
     getLocation(func){
