@@ -53,8 +53,10 @@ export default class Maps extends Component {
         let color=Style.CAT_COLORS[cat]
         //alert('type='+type+' name='+name+' cat='+cat+' color='+color)
         var self = this;
-        getImageSource(name, 40, color).then((source) => {
-            self.PlaceIcon= source
+		//if(Global.TYPE_IMAGES[type]=='')
+        getImageSource(name, 34, color).then((source) => {
+            //Global.TYPE_IMAGES[type] = source
+			self.PlaceIcon=source
         });
     }
     singlePermission(name){
@@ -162,6 +164,7 @@ export default class Maps extends Component {
     }
     }*/
     renderPlaceMarkersGmap(){
+        //alert(JSON.stringify(this.state.markers))
         return this.state.markers.map( (marker) => {
             var self=this
             var color=Style.CAT_COLORS[marker.cat]
@@ -175,28 +178,30 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} />
+                  <Icon name={Global.TYPE_ICONS[marker.type]} color={color} size={40} />
               </GMapView.Marker>
             )
         });
     }
-    /*renderPlaceMarkersBmap(){
+    renderPlaceMarkersBmap(){
+        //alert('markers: '+this.state.markers.length)
         return this.state.markers.map( (marker) => {
             var self=this
             var color='blue'
             let key = Global.getKeyFromMsg(marker)
             return (
               <BMapView.Marker
+                  identifier={marker.ctime}
                   key={marker.ctime}
                   coordinate={{latitude:parseFloat(marker.lat), longitude:parseFloat(marker.lng)}}
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
+                  <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} />
               </BMapView.Marker>
             )
         });
-    }*/
+    }
     back(){
       this.turnOffGps()
       this.props.navigator.pop();
@@ -234,15 +239,14 @@ export default class Maps extends Component {
     }
     downloadMsg(type,cat) {
       var self = this;
+      //if(self.state.markers.length>0) 
+	  self.setState({ markers:[] });
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
         if(self.updateOnUI){
           let notnull = rows.filter((row)=>{return row!=null})
-          //if(self.state.markers.length>0) self.setState({ markers:[] });
           var markers = notnull.map((row)=>{
             //row ={ lat,lng,type,title,content,ctime, }
-            //row['view'] = <Icon name={Global.TYPE_ICONS[this.state.type]} color={color} size={40} badge={{text:'R',color:'gray'}} />
-            //row['view']   = <Icon name={'ion-ios-navigate-outline'} color={'#222222'} size={40} />
             row['image']=self.PlaceIcon
             row['latitude']=parseFloat(row.lat)
             row['longitude']=parseFloat(row.lng)
@@ -515,7 +519,7 @@ export default class Maps extends Component {
     renderGmap(){
       let map_style = Style.map_android
       if(Platform.OS === 'ios') map_style=Style.map_ios
-      let map_traffic = Global.MAP_TRAFFIC==='no'?false:true
+      let map_traffic = Global.MAP_TRAFFIC===Global.MAP_TRAFFIC_FALSE?false:true
       //alert('region='+JSON.stringify(this.state.region))
       //console.log('renderGmap() markers='+this.state.markers.length)
       return (
@@ -537,10 +541,9 @@ export default class Maps extends Component {
     }
     renderBmap(){
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
-      let map_style = Style.map_android
-      if(Platform.OS === 'ios') map_style=Style.map_ios
+      let map_style = Platform.OS==='ios'?Style.map_ios:Style.map_android
       let map_traffic = Global.MAP_TRAFFIC==Global.MAP_TRAFFIC_TRUE?true:false
-      //console.log('renderBmap() markers='+this.state.markers.length+'\nregion='+JSON.stringify(this.state.region))
+      // {this.renderPlaceMarkersBmap()}
       return (
             <BMapView
                 style={map_style}

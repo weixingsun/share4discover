@@ -34,6 +34,7 @@ export default class Main extends Component {
       //mails:[],
       //region: null,
       gps:false,
+	  grantedPermissions:{},
     }; 
     this.openShare=this.openShare.bind(this)
     this.openLogic=this.openLogic.bind(this)
@@ -44,6 +45,17 @@ export default class Main extends Component {
   funk = () => {
       //auto binding function
   }
+  singlePermission(name){
+	requestPermission('android.permission.'+name).then((result) => {
+	  //alert('granted location permission')
+	  //console.log(name+" Granted!", result);
+	  let perm = this.state.grantedPermissions;
+	  perm[name] = true
+	  this.setState({grantedPermissions:perm})
+	}, (deny) => {
+	  //alert('Denied location permission in settings')
+	});
+  }
   componentWillUnmount() {
       if(Platform.OS === 'android') {
           BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
@@ -51,6 +63,7 @@ export default class Main extends Component {
       //clearInterval(this.timer)
       //this.event_notify.remove()
       Linking.removeEventListener('url', this.openLogic);
+	  
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -62,6 +75,7 @@ export default class Main extends Component {
       //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){
+	  this.singlePermission('ACCESS_FINE_LOCATION')
       if(Platform.OS === 'android'){
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
@@ -226,27 +240,46 @@ export default class Main extends Component {
           else alert("Initialization push settings failed. status="+state);
       });
   }
+  setupGlobalRegion(coords){
+      let self=this
+      Global.region={
+          latitude:  coords.latitude,
+          longitude: coords.longitude,
+          latitudeDelta:0.05,
+          longitudeDelta:0.05,
+          zoom:16,
+      }
+      Net.getLocation((gps)=>{
+          self.checkPushSettings(gps)
+          if(gps.country=='cn') Global.MAP = Global.BaiduMap;
+          else Global.MAP = Global.GoogleMap;
+      })
+            //DeviceEventEmitter.emit('refresh:PushList',0);
+  }
   checkMapSettings(){
       var self = this;
-      if(!Global.region)
-          //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+      if(!Global.region){
+        //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+	    Net.getLocationFromNetwork((position)=>{
+			//self.setupGlobalRegion(position.coords)
+			//alert(JSON.stringify(position))
+		})
+		if(this.state.grantedPermissions['ACCESS_FINE_LOCATION']){
           KKLocation.getCurrentPosition((position) => {
-            //console.log("location get current position: ", position);
-            Global.region={
-              latitude:  position.coords.latitude,
-              longitude: position.coords.longitude,
-              latitudeDelta:0.05,
-              longitudeDelta:0.05,
-              zoom:16,
-            }
-            Net.getLocation((gps)=>{
-              self.checkPushSettings(gps)
-              if(gps.country=='cn') Global.MAP = Global.BaiduMap;
-              else Global.MAP = Global.GoogleMap;
-            })
-            DeviceEventEmitter.emit('refresh:PushList',0);
-          }, (error) => { console.log("location get current position error: ", error) },
-          {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100});
+            self.setupGlobalRegion(position.coords)
+          }, (error) => {
+            //alert("failed to get current location: please enable location settings for better experience")
+            navigator.geolocation.getCurrentPosition((position) => {
+                //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+                self.setupGlobalRegion(position.coords)
+              },
+              (error) => console.log('google location failed: '+error.message),
+              {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
+            );
+          },{enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100}
+          );
+		}
+	  }
       if(Global.MAP == null){
         Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
           if(map_value != null){
@@ -292,8 +325,9 @@ export default class Main extends Component {
   }
   gotoPage(name){
       this.checkSettingsChange()
-      if(name===Store.mapTab && !Global.region) return
-      this.setState({ page: name });
+      if(name===Store.mapTab && !Global.region){
+          this.setState({ page: name });
+      }else this.setState({ page: name });
   }
   getSelectedColor(id){
     if(id === this.state.page){
