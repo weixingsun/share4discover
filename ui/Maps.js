@@ -543,6 +543,7 @@ export default class Maps extends Component {
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
       let map_style = Platform.OS==='ios'?Style.map_ios:Style.map_android
       let map_traffic = Global.MAP_TRAFFIC==Global.MAP_TRAFFIC_TRUE?true:false
+      //console.log('renderBmap() markers='+this.state.markers.length+'\nregion='+JSON.stringify(this.state.region))
       // {this.renderPlaceMarkersBmap()}
       return (
             <BMapView
@@ -560,7 +561,8 @@ export default class Maps extends Component {
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
                 mapType={Global.MAP_TYPE} //{standard,satellite}
                 trafficEnabled={map_traffic}
-            />
+            >
+            </BMapView>
 
       );
     }
