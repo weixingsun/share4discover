@@ -21,8 +21,9 @@ import MyList from './MyList'
 import Help from './Help'
 import Detail from './Detail'
 import Note from './Note'
-import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import KKLocation from 'react-native-baidumap/KKLocation';
+//import {requestPermission} from 'react-native-android-permissions';
+const Permissions = require('react-native-permissions');
 
 export default class Main extends Component {
   constructor(props) {
@@ -34,18 +35,18 @@ export default class Main extends Component {
       //mails:[],
       //region: null,
       gps:false,
-	  grantedPermissions:{},
     }; 
     this.openShare=this.openShare.bind(this)
     this.openLogic=this.openLogic.bind(this)
     this.openPage=this.openPage.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
+    //this.permissions={location:false}
   }
   funk = () => {
       //auto binding function
   }
-  singlePermission(name){
+  /*singlePermission(name){
 	requestPermission('android.permission.'+name).then((result) => {
 	  //alert('granted location permission')
 	  //console.log(name+" Granted!", result);
@@ -55,6 +56,69 @@ export default class Main extends Component {
 	}, (deny) => {
 	  //alert('Denied location permission in settings')
 	});
+  }*/
+  checkPermissions(){
+      Permissions.checkMultiplePermissions(Object.keys(Global.permissions))
+      .then(response => {
+          console.log('Main.checkPermissions()'+JSON.stringify(response))
+          //if(response.camera) this.permissions['camera']=response.camera
+          //if(response.photo)  this.permissions['photo']=response.photo
+          if(response.location==='authorized'){
+              Global.permissions['location']=response.location
+              this.useGps()
+          }else{
+              Permissions.requestPermission('location').then(resp=>{
+                if(resp==='authorized') this.useGps()
+              })
+          }
+      });
+  }
+  useGps(){
+      let self=this
+      KKLocation.getCurrentPosition((position) => {
+          console.log('main.setupGlobalRegion(bdgps) '+JSON.stringify(position))
+          self.setupGlobalRegion(position.coords)
+        }, (error) => {
+          //alert("failed to get current location: please enable location settings for better experience")
+          navigator.geolocation.getCurrentPosition((position) => {
+            //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+              console.log('main.setupGlobalRegion(gggps) '+JSON.stringify(position))
+              self.setupGlobalRegion(position.coords)
+            }, (error) => console.log('google location failed: '+error.message),
+            {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100}) //gg gps
+        },
+        {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100} //bd gps
+      );
+  }
+  useNetGps(){
+      if(!Global.region){
+          let self=this
+          Net.getLocationFromNetwork((position)=>{ //{lat,lng}
+              console.log('main.setupGlobalRegion(netgps) '+JSON.stringify(position))
+              self.setupGlobalRegion(position)
+          })
+      }
+  }
+  setupGlobalRegion(coords){
+      let self=this
+      if(coords.lat){
+        coords.latitude=coords.lat
+        coords.longitude=coords.lng
+      }
+      //console.log('main.setupGlobalRegion() '+JSON.stringify(coords))
+      Global.region={
+          latitude:  coords.latitude,
+          longitude: coords.longitude,
+          latitudeDelta:0.05,
+          longitudeDelta:0.05,
+          zoom:16,
+      }
+      Net.getLocation((gps)=>{
+          self.checkPushSettings(gps)
+          if(gps.country=='cn') Global.MAP = Global.BaiduMap;
+          else Global.MAP = Global.GoogleMap;
+      })
+            //DeviceEventEmitter.emit('refresh:PushList',0);
   }
   componentWillUnmount() {
       if(Platform.OS === 'android') {
@@ -63,7 +127,6 @@ export default class Main extends Component {
       //clearInterval(this.timer)
       //this.event_notify.remove()
       Linking.removeEventListener('url', this.openLogic);
-	  
   }
   componentDidMount() {
       //InteractionManager.runAfterInteractions(() => {
@@ -71,14 +134,15 @@ export default class Main extends Component {
       //});
       this.ExtUrl()
       //Store.deleteShared(Store.PUSH_CLICKED);
-      //checkPermission()
       //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){
-	  this.singlePermission('ACCESS_FINE_LOCATION')
-      if(Platform.OS === 'android'){
+      /*if(Platform.OS === 'android'){
+          this.singlePermission('ACCESS_FINE_LOCATION')
           BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
-      }
+      }*/
+      this.useNetGps()
+      this.checkPermissions()
       this.checkSettingsChange();
       let self=this
       Store.getShared(Store.PUSH_CLICKED, (value)=>{
@@ -235,51 +299,13 @@ export default class Main extends Component {
   checkPushSettings(gps){
       let tag = Global.getLocalTagNameFromJson(gps)  //{country,city,city_id}
       //console.log('gps='+JSON.stringify(gps)+'\ntag='+tag)
+      if(Push.instance)
       Push.instance.setTag(tag,(state)=>{
           if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
           else alert("Initialization push settings failed. status="+state);
       });
   }
-  setupGlobalRegion(coords){
-      let self=this
-      Global.region={
-          latitude:  coords.latitude,
-          longitude: coords.longitude,
-          latitudeDelta:0.05,
-          longitudeDelta:0.05,
-          zoom:16,
-      }
-      Net.getLocation((gps)=>{
-          self.checkPushSettings(gps)
-          if(gps.country=='cn') Global.MAP = Global.BaiduMap;
-          else Global.MAP = Global.GoogleMap;
-      })
-            //DeviceEventEmitter.emit('refresh:PushList',0);
-  }
   checkMapSettings(){
-      var self = this;
-      if(!Global.region){
-        //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
-	    Net.getLocationFromNetwork((position)=>{
-			//self.setupGlobalRegion(position.coords)
-			//alert(JSON.stringify(position))
-		})
-		if(this.state.grantedPermissions['ACCESS_FINE_LOCATION']){
-          KKLocation.getCurrentPosition((position) => {
-            self.setupGlobalRegion(position.coords)
-          }, (error) => {
-            //alert("failed to get current location: please enable location settings for better experience")
-            navigator.geolocation.getCurrentPosition((position) => {
-                //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
-                self.setupGlobalRegion(position.coords)
-              },
-              (error) => console.log('google location failed: '+error.message),
-              {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
-            );
-          },{enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100}
-          );
-		}
-	  }
       if(Global.MAP == null){
         Store.get_string(Store.SETTINGS_MAP).then((map_value) => {
           if(map_value != null){

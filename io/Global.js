@@ -26,6 +26,12 @@ function loadLang(lang){
   //require('moment/locale/zh-cn')
 }
 module.exports = {
+    permissions: {
+      location:false,
+      camera:false,
+      photo:false,
+      event:false,
+    },
     ios_ak:   'WAqWASmCo1GO6uA2AWkjs868PVDRaQOO',
     and_ak:   '6MbvSM9MLCPIOYK4I05Ox0FGoggM5d9L',
     ios_sk:   'X4WIxOH4ybCzNZ6xdSG69kQ5eGzkDs2S',
@@ -52,7 +58,8 @@ module.exports = {
     //app_url_pre: 'share://nzmessengers.co.nz/info/',
     //http_url_pre: 'http://shareplus.co.nf/url.php?key=',
     FREE_IP2LOC_HOST: 'http://freegeoip.net/json',
-    BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?',
+    BD_IP2LOC_HOST: 'http://api.map.baidu.com/location/ip?coor=bd09ll',
+    BD_IP2LOC_HOST_ADV: 'http://api.map.baidu.com/highacciploc/v1?qterm=pc&coord=bd09ll', //qcip=1.1.1.1
     //BD_IP2LOC_HOST2: 'http://api.map.baidu.com/location/ip?ip=101.30.35.44',
     BD_GEOCODE_HOST: 'http://api.map.baidu.com/geocoder/v2/?output=json&', //location=39.983424,116.322987
     GG_GEOCODE_HOST: 'http://maps.googleapis.com/maps/api/geocode/json?', //latlng=-43.500935,%20172.395744
@@ -328,5 +335,23 @@ module.exports = {
       let dist = this.distance(lat1, lon1, lat2, lon2)
       if(dist>1000) return (dist/1000).toFixed(1)+'km'
       else return dist+'m'
+    },
+    mercatorTolonlat(mercator){
+      var lonlat={x:0,y:0};
+      var x = mercator.x/20037508.34*180;
+      var y = mercator.y/20037508.34*180;
+      y= 180/Math.PI*(2*Math.atan(Math.exp(y*Math.PI/180))-Math.PI/2);
+      lonlat.x = x;
+      lonlat.y = y;
+      return lonlat;
+    },
+    lonlatTomercator(lonlat) {
+      var mercator={x:0,y:0};
+      var x = lonlat.x *20037508.34/180;
+      var y = Math.log(Math.tan((90+lonlat.y)*Math.PI/360))/(Math.PI/180);
+      y = y *20037508.34/180;
+      mercator.x = x;
+      mercator.y = y;
+      return mercator ;
     },
 };

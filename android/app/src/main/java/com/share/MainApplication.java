@@ -2,7 +2,7 @@ package com.share;
 
 import cn.reactnative.modules.weibo.WeiboPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.burnweb.rnpermissions.RNPermissionsPackage;
+//import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.yiyang.reactnativebaidumap.ReactMapPackage;
@@ -22,6 +22,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import in.sriraman.sharedpreferences.RNSharedPreferencesReactPackage;
 import com.example.baidupush.PushPackage;
 //import com.ichong.zzy.mipush.MIPushPackage;
@@ -74,6 +75,7 @@ public class MainApplication extends Application implements ReactApplication {
       //String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new ReactNativePermissionsPackage(),
         //new MIPushPackage(),
         new RNSharedPreferencesReactPackage(),
         new PushPackage(),
@@ -89,7 +91,7 @@ public class MainApplication extends Application implements ReactApplication {
         //new BleManagerPackage(),
         //new BeaconsAndroidPackage(),
         //new UsbReactPackage(),
-        new RNPermissionsPackage(),  //Android 6.0 permission
+        //new RNPermissionsPackage(),  //Android 6.0 permission
         new FBSDKPackage(mCallbackManager),  //mCallbackManager
         new WeChatPackage(),
         new WeiboPackage(),

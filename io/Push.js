@@ -28,35 +28,18 @@ module.exports = {
         this.instance = new BaiduPush((evt)=> {
           if(typeof evt === 'object'){
             this.uid=evt.channel_id
-            //alert('init() channel_id='+evt.channel_id)
-            //this.postOne(this.uid,'title0','desc0',{a:1,b:2})
-
-            //this.instance.setTag("tag1",(state)=>{
-            //    alert(" tag设置:"+JSON.stringify(state));
-            //});
-            //删除tag
-            // this.bdpush.delTag("hello",(state)=>{
-            //     console.log("tag删除成功"); //state==0
-            // });
-
             //停止推送
             // this.bdpush.unbindChannelWithCompleteHandler((state)=>{
             //     console.log("停止推送成功"); //state==0
             // });
-
             //重新开启推送
             // this.bdpush.bindChannelWithCompleteHandler((state)=>{
             //     console.log("重新开启推送成功"); //state==0
             // });
           }else{
-            alert('bdpush.init() evt='+ evt);
+            alert('bdpush.init() error='+ JSON.stringify(evt));
           }
         });
-    },
-    permission(){
-        XG.checkPermissions().then(permission => {
-            alert('permission '+JSON.stringify(permission))
-        })
     },
     fullEncodeURIComponent(str) {
       var rv = encodeURIComponent(str).replace(/[!'()*~]/g, function(c) {
@@ -217,6 +200,7 @@ module.exports = {
         ).then(res => console.log('body='+bodyStr+'\n\nparamStr='+paramStr+'\n\nreturn: '+JSON.stringify(res.text())))
         //.catch(err => alert(JSON.stringify(err)))
     },
+    //native methods
     setTag(tag){
         this.instance.setTag(tag)
     },

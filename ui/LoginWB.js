@@ -5,31 +5,14 @@ import {Icon} from './Icon'
 import Style from "./Style"
 import Store from "../io/Store"
 import * as WeiboAPI from 'react-native-weibo'
-//UsersAPI
 import I18n from 'react-native-i18n';
-import {checkPermission,requestPermission} from 'react-native-android-permissions';
 
 var Login = React.createClass({
     getInitialState(){
-        return {grantedPermissions:{} };
+        return {}
     },
     componentDidMount() {
         //this.permission();
-    },
-    singlePermission(name){
-        requestPermission('android.permission.'+name).then((result) => {
-          //console.log(name+" Granted!", result);
-          let perm = this.state.grantedPermissions;
-          perm[name] = true
-          this.setState({grantedPermissions:perm})
-        }, (result) => {
-          //alert('Please grant location permission in settings')
-        });
-    },
-    permission(){
-        if(Platform.OS === 'android' && Platform.Version > 22){
-            this.singlePermission('READ_PHONE_STATE')
-        }
     },
   renderLoginButton() {
     if(this.props.user != null){

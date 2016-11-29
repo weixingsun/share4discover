@@ -17,18 +17,19 @@ import ImagePicker from 'react-native-image-picker'
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import * as WeiboAPI from 'react-native-weibo';
-import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import I18n from 'react-native-i18n';
 import Attachments from './Attachments';
+//import {requestPermission} from 'react-native-android-permissions';
+const Permissions = require('react-native-permissions');
  
 export default class FormInfoVar extends Component {
     constructor(props) {
         super(props);
         this.ctime = Math.round(+new Date()/1000)
-        this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
+        //this.permissions=['ACCESS_FINE_LOCATION','CAMERA','WRITE_EXTERNAL_STORAGE']
         this.state={ 
             form:{},
-            grantedPermissions:{},
+            //grantedPermissions:{},
             pos:{latitude:'',longitude:''},
         };
         this.updatePics=this.updatePics.bind(this)
@@ -109,7 +110,7 @@ export default class FormInfoVar extends Component {
         this.permission();
         this.initAllValidators()
         this.processProps();
-        this.turnOnGps()
+        //this.turnOnGps()
         this.getMyLocation()
     }
     componentDidMount(){
@@ -210,7 +211,7 @@ export default class FormInfoVar extends Component {
             this.changePriceValidator()
         }
     }
-    singlePermission(name){
+    /*singlePermission(name){
         requestPermission('android.permission.'+name).then((result) => {
           let perm = this.state.grantedPermissions;
           perm[name] = true
@@ -218,13 +219,26 @@ export default class FormInfoVar extends Component {
         }, (result) => {
           //alert('Please grant location permission in settings')
         });
-    }
+    }*/
     permission(){
-        if(Platform.OS === 'android' && Platform.Version > 22){
+        /*if(Platform.OS === 'android' && Platform.Version > 22){
             this.permissions.map((perm)=>{
                 this.singlePermission(perm)
             })
-        }
+        }*/
+        Permissions.checkMultiplePermissions(Object.keys(Global.permissions))
+          .then(response => {
+            //if(response.camera) this.permissions['camera']=response.camera
+            //if(response.photo)  this.permissions['photo']=response.photo
+            if(response.location==='authorized'){
+              Global.permissions['location']=response.location
+              this.turnOnGps()
+            }else{
+              Permissions.requestPermission('location').then(resp=>{
+                if(resp==='authorized') this.turnOnGps()
+              })
+            }
+          });
     }
     initKeys(){
         this.mcode = Global.ios_mcode;

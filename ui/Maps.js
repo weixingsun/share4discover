@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {DeviceEventEmitter, Image, ListView, NativeModules, Picker, Platform, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {DeviceEventEmitter, Image, ListView, NativeModules, Picker, Platform, processColor, StyleSheet, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import NavigationBar from 'react-native-navbar'
 import GMapView from 'react-native-maps'
 import BMapView from 'react-native-baidumap'
@@ -20,7 +20,8 @@ import Modal from 'react-native-root-modal';
 import I18n from 'react-native-i18n';
 import Button from 'apsl-react-native-button'
 import {checkPermission,requestPermission} from 'react-native-android-permissions';
-
+import glyphMapIon from '../data/ion.json'
+import glyphMapFa from '../data/fa.json'
 export default class Maps extends Component {
     constructor(props) {
       super(props);
@@ -237,6 +238,25 @@ export default class Maps extends Component {
             lngIn=true
         return latIn && lngIn;
     }
+	getFontIcon(row){
+        let color = Style.CAT_COLORS[row.cat]
+	let font='Ionicons'
+	let name = Global.TYPE_ICONS[row.type]
+	if(name.substring(0,3) ==='ion'){
+		name = name.substring(4)
+		//font='Ionicons'
+	}else if(name.substring(0,2)==='fa'){
+		name = name.substring(3)
+		font='FontAwesome'
+	}
+	let glyph = '?' //glyphMapIon[name] || '?';
+        if(font==='Ionicons') glyph = glyphMapIon[name] || '?';
+        else if(font==='FontAwesome') glyph = glyphMapFa[name] || '?';
+        if (typeof glyph === 'number') {
+            glyph = String.fromCharCode(glyph);
+        }
+	return {font:font,glyph:glyph,size:34,color:processColor(color)}
+	}
     downloadMsg(type,cat) {
       var self = this;
       //if(self.state.markers.length>0) 
@@ -246,8 +266,8 @@ export default class Maps extends Component {
         if(self.updateOnUI){
           let notnull = rows.filter((row)=>{return row!=null})
           var markers = notnull.map((row)=>{
-            //row ={ lat,lng,type,title,content,ctime, }
-            row['image']=self.PlaceIcon
+            //row ={ lat,lng,type,title,content,ctime,,, }
+            row['image']=self.getFontIcon(row)
             row['latitude']=parseFloat(row.lat)
             row['longitude']=parseFloat(row.lng)
             return row;
@@ -543,7 +563,6 @@ export default class Maps extends Component {
       //if(this.state.region.zoom == null || this.state.region.latitudeDelta == null) this.region = {latitude:39.9042,longitude:116.4074,latitudeDelta:0.2,longitudeDelta:0.2,zoom:16}
       let map_style = Platform.OS==='ios'?Style.map_ios:Style.map_android
       let map_traffic = Global.MAP_TRAFFIC==Global.MAP_TRAFFIC_TRUE?true:false
-      //console.log('renderBmap() markers='+this.state.markers.length+'\nregion='+JSON.stringify(this.state.region))
       // {this.renderPlaceMarkersBmap()}
       return (
             <BMapView
@@ -561,8 +580,7 @@ export default class Maps extends Component {
                 onMarkerPress={this.onMarkerClickBmap.bind(this)}
                 mapType={Global.MAP_TYPE} //{standard,satellite}
                 trafficEnabled={map_traffic}
-            >
-            </BMapView>
+            />
 
       );
     }

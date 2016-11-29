@@ -1,6 +1,6 @@
 package com.share;
 
-import com.burnweb.rnpermissions.RNPermissionsPackage;
+//import com.burnweb.rnpermissions.RNPermissionsPackage;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
@@ -15,14 +15,14 @@ public class MainActivity extends ReactActivity { // implements ActivityEventLis
 
     @Override
     protected String getMainComponentName(){
-        return "SharePlus";
+        return "Xshare";
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        RNPermissionsPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // event callback
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+    //@Override
+    //public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    //    RNPermissionsPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // event callback
+    //    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    //}
 
     /*@Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
