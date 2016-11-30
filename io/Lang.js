@@ -39,6 +39,7 @@ I18n.translations = {
     call: 'Call',
     confirm_call: 'Want to call ?',
     confirm_reply: 'Want to reply ?',
+    confirm_delete: 'Want to delete ?',
     more_char: 'More chars please',
     unsupport: 'Unsupport',
     yes: 'Yes',
@@ -51,6 +52,7 @@ I18n.translations = {
     listener: 'Listener',
     create: 'Create',
     edit:'Edit',
+    delete: 'Delete',
     delete_all: 'Delete All',
     all: 'All',
     //form
@@ -172,6 +174,7 @@ I18n.translations = {
     call: 'Call',
     confirm_call: 'Want to call ?',
     confirm_reply: 'Want to reply ?',
+    confirm_delete: 'Want to delete ?',
     more_char: 'More chars please',
     unsupport: 'Unsupport',
     yes: 'Yes',
@@ -184,6 +187,7 @@ I18n.translations = {
     listener: 'Listener',
     create: 'Create',
     edit:'Edit',
+    delete: 'Delete',
     delete_all: 'Delete All',
     all: 'All',
     //form
@@ -305,6 +309,7 @@ I18n.translations = {
     call: '电话',
     confirm_call: '确定要拨打电话？',
     confirm_reply: '确定要回复 ?',
+    confirm_delete: '确定要删除 ?',
     more_char: '请多写点字',
     unsupport: '不支持',
     yes: '是',
@@ -318,6 +323,7 @@ I18n.translations = {
     create: '新建',
     edit:'修改',
     all: '全部',
+    delete: '删除',
     delete_all: '全部删除',
     //form
     edit_share:'修改分享',

@@ -23,8 +23,6 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
         this.images = []
-        this.isLogin = (Global.mainlogin.length>0)
-        this.isMyMsg = this.checkSns(Global.mainlogin)
         this.state={ 
             reply: '',
             reply_height: 35,
@@ -34,21 +32,37 @@ export default class Detail extends Component {
             push_to_len:0,
             push_to_os:this.props.msg.os,
             highlight_color:Style.CAT_COLORS[this.props.msg.cat],
+            msg:this.props.msg,
         }
-        this.key = Global.getKeyFromMsg(this.props.msg)
+        this.key = Global.getKeyFromMsg(this.state.msg)
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
+        this.isLogin = (Global.mainlogin.length>0)
+        this.isMyMsg = this.checkSns(Global.mainlogin)
     }
     componentWillMount(){
         let self = this;
-        if(typeof this.props.msg.pics ==='object'){
-            this.images = this.props.msg.pics
-            //alert(JSON.stringify(this.props.msg))
-        }else if(typeof this.props.msg.pics ==='string'){
-            if(this.props.msg.pics!=='') this.images = this.props.msg.pics.split(',')
-            //alert(JSON.stringify(this.props.msg))
+        if(typeof this.state.msg.pics ==='object'){
+            this.images = this.state.msg.pics
+            //alert(JSON.stringify(this.state.msg))
+        }else if(typeof this.state.msg.pics ==='string'){
+            if(this.state.msg.pics!=='') this.images = this.state.msg.pics.split(',')
+            //alert(JSON.stringify(this.state.msg))
         }
-        //I18n.locale = NativeModules.RNI18n.locale
+        DeviceEventEmitter.removeAllListeners('refresh:Detail')
+        DeviceEventEmitter.addListener('refresh:Detail',(evt)=>setTimeout(()=>this.load(),400));
+    }
+    componentWillUnmount(){
+        DeviceEventEmitter.removeAllListeners('refresh:Detail')
+    }
+    load(){
+        let self=this
+        Net.getMsg(this.key).then((json)=> {
+          if(json!=null){
+            //alert(JSON.stringify(json))
+            self.setState({ msg:json })
+         }else alert('Please reopen this share.')
+        });
     }
     talkTo(user_name,user_push_id,user_push_os){
         this.setState({
@@ -65,8 +79,8 @@ export default class Detail extends Component {
     }
     //#mainlogin = {'car:lat,lng:ctime#time' : 'r1|fb:email|content'}
     p2p(now){
-        //if(this.props.msg.s1uid) OneSignal.postNotification(title, data, this.props.msg.s1uid);
-        if(this.props.msg.uid) {
+        //if(this.state.msg.s1uid) OneSignal.postNotification(title, data, this.state.msg.s1uid);
+        if(this.state.msg.uid) {
             let name = Global.getMainLoginName()
             Push.postOne(
                 this.state.push_to,
@@ -82,7 +96,7 @@ export default class Detail extends Component {
             alert(I18n.t('more_char'))
             return;
         }
-        //var key = Global.getKeyFromMsg(this.props.msg)
+        //var key = Global.getKeyFromMsg(this.state.msg)
 	var time = Math.round(+new Date()/1000) //+new Date();
         let os=''
         if(Platform.OS==='ios') os = (__DEV__)?'idev':'ios'
@@ -97,7 +111,7 @@ export default class Detail extends Component {
         }
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         //console.log(JSON.stringify(msgReplyValue))
-        //let loginsObj = Global.getLogins(this.props.msg.owner)
+        //let loginsObj = Global.getLogins(this.state.msg.owner)
         //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
         //var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
         var _this = this;
@@ -112,40 +126,21 @@ export default class Detail extends Component {
                     //Net.putHash(notify_value)
                     _this.p2p(time)
                     //_this.props.navigator.pop();
-                }},
-            ]
-        );
-    }
-    onClose() {
-        //var key = Global.getKeyFromMsg(this.props.msg)
-	var time = Math.round(+new Date()/1000) //+new Date();
-        var value={key:this.key, field:'close', value:Global.mainlogin+'|'+time}
-        let loginsObj = Global.getLogins(this.props.msg.owner)
-	var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:'c1|'+Global.mainlogin+'|'}
-        var _this = this;
-        Alert.alert(
-            "Complete",
-            "Do you want to complete this request ? ",
-            [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
-                    Net.putHash(value)
-                    //Net.putHash(notify_value)
-                    _this.props.navigator.pop();
+                    DeviceEventEmitter.emit('refresh:Detail',0);
                 }},
             ]
         );
     }
     onDelete() {
 	var _this = this;
-        //var key = Global.getKeyFromMsg(this.props.msg)
+        //var key = Global.getKeyFromMsg(this.state.msg)
         let myjson = {key:'*'+Global.mainlogin,field:this.key}
         Alert.alert(
-            "Delete",
-            "Do you want to delete this information ? ",
+            I18n.t("delete"),
+            I18n.t("confirm_delete"),
             [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
+                {text:I18n.t("no"), },
+                {text:I18n.t("yes"), onPress:()=>{
                     Net.delMsg(_this.key)
                     Net.delHash(myjson);
                     DeviceEventEmitter.emit('refresh:MyList',0);
@@ -155,24 +150,23 @@ export default class Detail extends Component {
         );
     }
     onEdit(){
-        this.props.navigator.push({component: FormInfo, passProps: { msg:this.props.msg, navigator:this.props.navigator } })
+        this.props.navigator.push({component: FormInfo, passProps: { msg:this.state.msg, navigator:this.props.navigator } })
     }
     openZoom(){
         this.setState({show_pic_modal:true})
     }
     closeZoom(){
         this.setState({show_pic_modal:false})
-        
     }
     checkSns(mainlogin){
-        let owner = this.props.msg.owner
+        let owner = this.state.msg.owner
         if(owner.indexOf(mainlogin) > -1 && mainlogin.length>0)
           return true
         else
           return false
     }
     getSNSIcon(type){
-        return Global.SNS_ICONS[type]  //this.props.msg.owner.split(':')[0]
+        return Global.SNS_ICONS[type]  //this.state.msg.owner.split(':')[0]
     }
     renderMoreOption(value,name,icon){
       return (
@@ -215,7 +209,7 @@ export default class Detail extends Component {
             //alert(JSON.stringify(this.images))
             return (
                 <DetailImg 
-                    msg={this.props.msg}
+                    msg={this.state.msg}
                     style={{backgroundColor:'transparent',height:height/2}} 
                     openModal={this.openZoom} 
                     //onChange={(currName)=>{
@@ -226,8 +220,8 @@ export default class Detail extends Component {
         }
     }
     showOwners(){
-	var owners = this.props.msg.owner.split(',')
-        owners.push('tel:'+this.props.msg.phone)
+	var owners = this.state.msg.owner.split(',')
+        owners.push('tel:'+this.state.msg.phone)
         return (
         <View style={Style.detail_card} >
           <View style={{flex:1,flexDirection:'row'}}>
@@ -260,8 +254,8 @@ export default class Detail extends Component {
         );
     }
     renderPhoneIcon(){
-        if(this.props.msg.phone){
-          let tel = 'tel:'+this.props.msg.phone
+        if(this.state.msg.phone){
+          let tel = 'tel:'+this.state.msg.phone
           return (
             <View style={{height:80,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
             <TouchableOpacity style={{width:60,height:60}} onPress={() => this.callPhone(tel)}>
@@ -292,17 +286,17 @@ export default class Detail extends Component {
     }
     renderReplyItems(){
         //id:#rtime  key='car:lat,lng:ctime#time'  value='{l:Global.mainlogin,c:this.state.reply}'
-        var keys = Object.keys(this.props.msg)
+        var keys = Object.keys(this.state.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
 	}).sort()
 	return (
 	  replys.map((key)=>{
 	    //if(sns_type==null || sns_type==''){
-            if(this.props.msg[key].substring(0,1)!=='{'){
+            if(this.state.msg[key].substring(0,1)!=='{'){
               return <Text key={key} style={{flex:1,marginLeft:30}}>{ 'Invalid Characters' }</Text>
             }else{
-              let replyObj = JSON.parse(this.props.msg[key])
+              let replyObj = JSON.parse(this.state.msg[key])
               //alert(JSON.stringify(replyObj))
               let owner = replyObj.l
               let reply = replyObj.c
@@ -346,8 +340,8 @@ export default class Detail extends Component {
             )
     }
     renderModal(){
-      //let uri = Global.host_image_info+this.props.msg.ctime+'/'+this.state.image_modal_name;
-      let pre = Global.host_image_info+this.props.msg.ctime+'/'
+      //let uri = Global.host_image_info+this.state.msg.ctime+'/'+this.state.image_modal_name;
+      let pre = Global.host_image_info+this.state.msg.ctime+'/'
       let images = this.images.map((item)=>{
           return pre+item
       })
@@ -383,7 +377,7 @@ export default class Detail extends Component {
                             multiline={true}
                             value={this.state.reply}
                             onChange={(event) => {
-                                if(event.nativeEvent.text.length<1) push_to=this.props.msg.uid
+                                if(event.nativeEvent.text.length<1) push_to=this.state.msg.uid
                                 else push_to=this.state.push_to
                                 if(event.nativeEvent.text.length<this.state.push_to_len) {
                                     //alert('text.len='+event.nativeEvent.text.length+' push_to_len='+this.state.push_to_len)
@@ -409,7 +403,7 @@ export default class Detail extends Component {
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
         let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','uid','country','city','os','city_id']
-        var keys = Object.keys(this.props.msg)
+        var keys = Object.keys(this.state.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
         }).sort()
@@ -417,21 +411,21 @@ export default class Detail extends Component {
         return (
             <View style={Style.detail_card} >
                 {misc.map((key)=>{
-                    return <Text style={{marginLeft:8}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.props.msg[key]}</Text>
+                    return <Text style={{marginLeft:8}} key={key}><Text style={{fontWeight:'bold'}}>{I18n.t(key)}:  </Text>{this.state.msg[key]}</Text>
                 })}
                 <Text style={{marginLeft:8}}><Text style={{fontWeight:'bold'}}>{I18n.t('content')}:</Text></Text>
-                <Text style={{marginLeft:8}}>{this.props.msg.content}</Text>
+                <Text style={{marginLeft:8}}>{this.state.msg.content}</Text>
             </View>
         )
     }
     renderTitle(){
-        var _ctime = Global.getDateTimeFormat(parseInt(this.props.msg.ctime))
-        let typeIcon = Global.TYPE_ICONS[this.props.msg.type]
-        let asking = 'rent0,buy'.indexOf(this.props.msg.cat)>0
+        var _ctime = Global.getDateTimeFormat(parseInt(this.state.msg.ctime))
+        let typeIcon = Global.TYPE_ICONS[this.state.msg.type]
+        let asking = 'rent0,buy'.indexOf(this.state.msg.cat)>0
         let destView = null
-        if(this.props.msg.dest) destView=<Text>{I18n.t('dest')} : {this.props.msg.dest}</Text>
+        if(this.state.msg.dest) destView=<Text>{I18n.t('dest')} : {this.state.msg.dest}</Text>
         let destTimeView = null
-        if(this.props.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.props.msg.time}</Text>
+        if(this.state.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.state.msg.time}</Text>
         return (
             <View style={Style.detail_card} >
                 <View style={{flexDirection:'row'}} >
@@ -442,10 +436,10 @@ export default class Detail extends Component {
                         name={typeIcon}
                     />
                     <View style={{flex:1,marginLeft:10}}>
-                        <Text style={{fontWeight:'bold', fontSize:20,}}>{this.props.msg.title}</Text>
-                        <Text>{I18n.t('cat')} : {this.props.msg.cat?I18n.t(this.props.msg.cat):''}</Text>
+                        <Text style={{fontWeight:'bold', fontSize:20,}}>{this.state.msg.title}</Text>
+                        <Text>{I18n.t('cat')} : {this.state.msg.cat?I18n.t(this.state.msg.cat):''}</Text>
                         <Text>{I18n.t('ctime')} : {_ctime}</Text>
-                        <Text>{I18n.t('address')} : {this.props.msg.address}</Text>
+                        <Text>{I18n.t('address')} : {this.state.msg.address}</Text>
                         {destTimeView}
                         {destView}
                     </View>
@@ -454,7 +448,6 @@ export default class Detail extends Component {
        )
     }
     render(){
-        //((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getLine1Number();
         return (
             <MenuContext style={{ flex: 1 }} ref={"menu_detail"}>
                 <NavigationBar style={{

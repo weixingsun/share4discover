@@ -65,7 +65,7 @@ export default class MyList extends Component {
           <View>
               <View style={{flexDirection: 'row',height:58}}>
                 <View style={{marginLeft:15,marginRight:6,justifyContent:'center',width:50,alignItems:'center'}}>
-                  <Icon name={Global.TYPE_ICONS[rowData.type]} size={40} color={Style.CAT_COLORS[rowData.cat]} />
+                  <Icon name={Global.TYPE_ICONS[rowData.type]} size={30} color={Style.CAT_COLORS[rowData.cat]} />
                 </View>
                 <View style={{justifyContent: 'center',height:56}}>
                     <Text style={{fontSize:16,marginLeft:10}}>{rowData.title}</Text>
