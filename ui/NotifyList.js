@@ -65,6 +65,7 @@ export default class NotifyList extends Component {
               try{
                 let json = JSON.parse(value)
                 self.reorder(self.order_dist_asc,json)
+                self.setState({ type:type })
               }catch(e){
                 //let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
                 //let v3 = v2.substr(1,v2.length-2)

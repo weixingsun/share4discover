@@ -79,7 +79,7 @@ export default class Detail extends Component {
     }
     onReply() {
         if(this.state.reply.length<5) {
-            alert('Please reply with more characters.')
+            alert(I18n.t('more_char'))
             return;
         }
         //var key = Global.getKeyFromMsg(this.props.msg)
@@ -96,22 +96,22 @@ export default class Detail extends Component {
             os:os,
         }
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
-        console.log(JSON.stringify(msgReplyValue))
+        //console.log(JSON.stringify(msgReplyValue))
         //let loginsObj = Global.getLogins(this.props.msg.owner)
         //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
         //var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
         var _this = this;
         Alert.alert(
-            "Reply",
-            "Do you want to reply this information ? ",
+            I18n.t("reply"),
+            I18n.t("confirm_reply"),
             //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
             [
-                {text:"Cancel", },
-                {text:"OK", onPress:()=>{
+                {text:I18n.t("no"), },
+                {text:I18n.t('yes'), onPress:()=>{
                     Net.putHash(value)
                     //Net.putHash(notify_value)
                     _this.p2p(time)
-                    _this.props.navigator.pop();
+                    //_this.props.navigator.pop();
                 }},
             ]
         );
@@ -274,9 +274,19 @@ export default class Detail extends Component {
     callPhone(url){
         Linking.canOpenURL(url).then(supported => {
           if (supported) {
-            Linking.openURL(url);
+            Alert.alert(
+              I18n.t("call"),
+              I18n.t("confirm_call"),
+              //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
+              [
+                {text:I18n.t("no"), },
+                {text:I18n.t("yes"), onPress:()=>{
+                    Linking.openURL(url);
+                }},
+              ]
+            );
           } else { 
-            alert('Don\'t know how to open URI: ' + url);
+            alert(I18n.t('unsupport')+':' + url);
           }
         });
     }
