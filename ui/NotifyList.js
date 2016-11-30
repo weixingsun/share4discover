@@ -318,7 +318,7 @@ export default class NotifyList extends Component {
                 <View style={{marginLeft:15,justifyContent:'center',width:50}}>
                   <Icon
                     //style={{marginLeft:15,marginRight:6}}
-                    size={30}
+                    size={40}
 		    color={Style.CAT_COLORS[cat]}
                     name={Global.TYPE_ICONS[type]}
                   />

@@ -33,14 +33,13 @@ export default class Main extends Component {
       refresh:false,
       //mails:[],
       //region: null,
-      gps:false,
+      //gps:false,
     }; 
     this.openShare=this.openShare.bind(this)
     this.openLogic=this.openLogic.bind(this)
     this.openPage=this.openPage.bind(this)
     this.watchID = (null: ?number);
     this.onBackAndroid=this.onBackAndroid.bind(this)
-    //this.permissions={location:false}
   }
   funk = () => {
       //auto binding function
@@ -75,13 +74,13 @@ export default class Main extends Component {
   useGps(){
       let self=this
       KKLocation.getCurrentPosition((position) => {
-          console.log('main.setupGlobalRegion(bdgps) '+JSON.stringify(position))
+          //console.log('main.setupGlobalRegion(bdgps) '+JSON.stringify(position))
           self.setupGlobalRegion(position.coords)
         }, (error) => {
           //alert("failed to get current location: please enable location settings for better experience")
           navigator.geolocation.getCurrentPosition((position) => {
-            //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
-              console.log('main.setupGlobalRegion(gggps) '+JSON.stringify(position))
+              //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
+              //console.log('main.setupGlobalRegion(gggps) '+JSON.stringify(position))
               self.setupGlobalRegion(position.coords)
             }, (error) => console.log('google location failed: '+error.message),
             {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100}) //gg gps
@@ -93,8 +92,8 @@ export default class Main extends Component {
       if(!Global.region){
           let self=this
           Net.getLocationFromNetwork((position)=>{ //{lat,lng}
-              console.log('main.setupGlobalRegion(netgps) '+JSON.stringify(position))
-              self.setupGlobalRegion(position)
+              //console.log('main.setupGlobalRegion(netgps) '+JSON.stringify(position))
+              if(!Global.region) self.setupGlobalRegion(position)
           })
       }
   }
@@ -336,7 +335,7 @@ export default class Main extends Component {
     } else if(this.state.page ===Store.userTab){
       return <MyList     navigator={this.props.navigator} />
     } else if(this.state.page ===Store.mapTab){
-      return <Maps navigator={this.props.navigator} region={Global.region} gps={this.state.gps} />
+      return <Maps navigator={this.props.navigator} region={Global.region} />
     } else if(this.state.page ===Store.confTab){
       return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
     }
