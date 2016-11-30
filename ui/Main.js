@@ -22,7 +22,6 @@ import Help from './Help'
 import Detail from './Detail'
 import Note from './Note'
 import KKLocation from 'react-native-baidumap/KKLocation';
-//import {requestPermission} from 'react-native-android-permissions';
 const Permissions = require('react-native-permissions');
 
 export default class Main extends Component {

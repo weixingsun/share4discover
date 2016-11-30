@@ -1,4 +1,4 @@
-rootProject.name = 'SharePlus'
+rootProject.name = 'Xshare'
 
 include ':app'
 include ':react-native-permissions'

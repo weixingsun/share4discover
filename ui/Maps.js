@@ -19,7 +19,6 @@ import FormInfo from "./FormInfoVar"
 import Modal from 'react-native-root-modal';
 import I18n from 'react-native-i18n';
 import Button from 'apsl-react-native-button'
-import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import glyphMapIon from '../data/ion.json'
 import glyphMapFa from '../data/fa.json'
 export default class Maps extends Component {
@@ -40,80 +39,38 @@ export default class Maps extends Component {
         showCats:false,
         showPlaceSearch: false,
         markers:[],
-        grantedPermissions:{},
+        //grantedPermissions:{},
       };
-      this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION']
+      //this.permissions=['ACCESS_FINE_LOCATION'] //,'ACCESS_COARSE_LOCATION']
       this.watchID = (null: ?number);
       this.turnOffGps = this.turnOffGps.bind(this)
       this.turnOnGps = this.turnOnGps.bind(this)
       this.updateOnUI=true
     }
-    loadIcons(type,cat){
+    /*loadIcons(type,cat){
         if(Global.MAP===Global.GoogleMap) return
         let name=Global.TYPE_ICONS[type]
         let color=Style.CAT_COLORS[cat]
         //alert('type='+type+' name='+name+' cat='+cat+' color='+color)
         var self = this;
-		//if(Global.TYPE_IMAGES[type]=='')
+        //if(Global.TYPE_IMAGES[type]=='')
         getImageSource(name, 34, color).then((source) => {
             //Global.TYPE_IMAGES[type] = source
-			self.PlaceIcon=source
+            self.PlaceIcon=source
         });
-    }
-    singlePermission(name){
-        requestPermission('android.permission.'+name).then((result) => {
-          //alert('granted location permission')
-          //console.log(name+" Granted!", result);
-          let perm = this.state.grantedPermissions;
-          perm[name] = true
-          this.setState({grantedPermissions:perm})
-        }, (deny) => {
-          //alert('Denied location permission in settings')
-        });
-    }
-    permission(){ 
-        if(Platform.OS === 'android' && Platform.Version > 22){
-            this.permissions.map((perm)=>{
-                this.singlePermission(perm)
-            })
-            //this.singlePermission('ACCESS_FINE_LOCATION')
-            //this.singlePermission('ACCESS_COARSE_LOCATION')
-        }
-    }
-    //_handleAppStateChange(state){  //active -- inactive -- background
-    //}
-    /*checkUsbDevice(){
-      //UsbSerial.open(9600);
-      //UsbSerial.write('test');
-      //UsbSerial.close();
-      alert('checkUsbDevice')
-      serial.listen(9600, '\n', (e)=>{
-        alert('received:'+e.data)
-      });
     }*/
-    //sendDataToUsbSerialDevice(data){
-    //    UsbSerial.write(data);
-    //}
     componentWillMount(){
-        this.permission();
-        //this.checkUsbDevice();
-        this.loadIcons(this.state.type,this.state.cat);
+        //this.permission();
+        //this.loadIcons(this.state.type,this.state.cat);
         this.downloadMsg(this.state.type,this.state.cat)
     }
     componentDidMount() {
-      /*navigator.geolocation.getCurrentPosition((position) => {
-          this.setState({lastPosition: position.coords}); 
-        }, 
-        (error) => alert(error.message), 
-        {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000} 
-      );*/ 
       //this.turnOnGps();
       DeviceEventEmitter.removeAllListeners('refresh:Maps')
       this.event = DeviceEventEmitter.addListener('refresh:Maps',(evt)=>setTimeout(()=>this.downloadMsg(this.state.type,this.state.cat),400));
     }
     componentWillUnmount() { 
       this.turnOffGps();
-      //serial.close();
       DeviceEventEmitter.removeAllListeners('refresh:Maps')
       this.updateOnUI=false
     }
@@ -123,7 +80,6 @@ export default class Maps extends Component {
         this.watchID = navigator.geolocation.watchPosition((position) => {
             //{timestamp,{coords:{speed,heading,accuracy,longitude,latitude,altitude}}}
             self.pos=position.coords
-            //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
           },
           (error) => console.log(error.message),
           {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:50},
@@ -132,7 +88,6 @@ export default class Maps extends Component {
         this.watchID = KKLocation.watchPosition((position) => {
           //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
           self.pos=position.coords
-          //self.sendDataToUsbSerialDevice(JSON.stringify(self.pos));
         });
       }
       this.setState({gps:true});
@@ -155,15 +110,13 @@ export default class Maps extends Component {
       }
     }
     getRegion(lat,lng){
-        return {latitude:lat, longitude:lng, latitudeDelta:this.state.region.latitudeDelta,longitudeDelta:this.state.region.longitudeDelta }
+        return {
+          latitude:lat, 
+          longitude:lng, 
+          latitudeDelta:this.state.region.latitudeDelta,
+          longitudeDelta:this.state.region.longitudeDelta
+        }
     }
-    /*updateMyPos(position){
-        this.myPosMarker = {id: 0, latlng: position, color:'#0000ff' };
-        Store.save(Store.GPS_POS, position);
-        this.moveOrNot(position);
-        this.setState({lastPosition: position});
-    }
-    }*/
     renderPlaceMarkersGmap(){
         //alert(JSON.stringify(this.state.markers))
         return this.state.markers.map( (marker) => {
@@ -413,7 +366,7 @@ export default class Maps extends Component {
       )
     }
     _pressType(sid,rid,type){
-        this.loadIcons(type,this.state.cat)
+        //this.loadIcons(type,this.state.cat)
         this.setState({type:type,showTypes:false,markers:[]})
         this.downloadMsg(type,this.state.cat)
     }
@@ -445,7 +398,7 @@ export default class Maps extends Component {
       )
     }
     _pressCat(sid,rid,cat){
-        this.loadIcons(this.state.type,cat)
+        //this.loadIcons(this.state.type,cat)
         this.setState({cat:cat,showCats:false,markers:[]})
         this.downloadMsg(this.state.type,cat)
     }
@@ -520,10 +473,10 @@ export default class Maps extends Component {
         );
     }
     renderMap(){
-      if(Platform.OS==='android' && Platform.Version > 22){
+      /*if(Platform.OS==='android' && Platform.Version > 22){
         let perm_nbr = Object.keys(this.state.grantedPermissions).length
         if(perm_nbr < this.permissions.length) return null //<Loading />
-      }
+      }*/
       //alert('Global.MAP_TRAFFIC='+Global.MAP_TRAFFIC+'\nGlobal.MAP='+Global.MAP+'\nGlobal.MAP_TYPE='+Global.MAP_TYPE)
       switch(Global.MAP) {
           case Global.GoogleMap:

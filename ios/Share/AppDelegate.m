@@ -71,7 +71,7 @@ BMKMapManager* mapManager;
   //角标清0
   [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"SharePlus"
+                                                      moduleName:@"Xshare"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   rootView.appProperties = appProperties;

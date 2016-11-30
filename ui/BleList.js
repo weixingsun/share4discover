@@ -7,7 +7,6 @@ import BleChat from './BleChat'
 import NavigationBar from 'react-native-navbar'
 import BleManager from 'react-native-ble-manager';
 //import Beacons from 'react-native-beacon'
-import {checkPermission,requestPermission} from 'react-native-android-permissions';
 import Modal from 'react-native-root-modal'
 import Button from 'apsl-react-native-button'
 import KeepAwake from 'react-native-keep-awake';
