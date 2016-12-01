@@ -58,7 +58,7 @@ export default class Main extends Component {
   checkPermissions(){
       Permissions.checkMultiplePermissions(Object.keys(Global.permissions))
       .then(response => {
-          console.log('Main.checkPermissions()'+JSON.stringify(response))
+          //console.log('Main.checkPermissions()'+JSON.stringify(response))
           //if(response.camera) this.permissions['camera']=response.camera
           //if(response.photo)  this.permissions['photo']=response.photo
           if(response.location==='authorized'){

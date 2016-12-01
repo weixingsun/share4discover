@@ -37,7 +37,7 @@ export default class NotifyList extends Component {
       this.order_dist_asc='order_dist_asc'
       this.order_time_asc='order_time_asc'
       this.state={
-          order:this.order_dist_asc,
+          order:this.order_time_asc,
           push_list:[],
           type:Store.LOCAL,
       }
@@ -61,29 +61,36 @@ export default class NotifyList extends Component {
       Store.getShared(Store.PUSH_LIST+":"+type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           if(self.updateOnUI && value!=null){
-              console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
+              //console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               try{
-                let json = JSON.parse(value)
-                self.reorder(self.order_dist_asc,json)
-                self.setState({ type:type })
+                let arr = JSON.parse(value)
+                let json= arr.map((item)=>{
+                    if(typeof item ==='string') return JSON.parse(item)
+                    else return item
+                })
+                //console.log('Store.getShared() good time='+ (+new Date))
+                let new_arr = self.reorder(self.order_time_asc,json)
+                self.setState({ 
+                    type:type,
+                    order:self.order_time_asc,
+                    push_list:new_arr,
+                })
               }catch(e){
                 //let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
                 //let v3 = v2.substr(1,v2.length-2)
                 //let str_arr = v3.split(',')
                 
-                //alert('invalid data, please delete all msg '+value) //value
-                //let json = JSON.parse(v2)
-                self.setState({
+                //console.log('Store.getShared() bad time= '+ (+new Date)) //value
+                /*self.setState({
                   type:type,
                   push_list:[],
-                })
+                })*/
               }
           }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
       })
   }
   getKey(data){  //car_buy:lat,lng:ctime
-      let json = data
-      if(typeof data==='string') json = JSON.parse(data)
+      let json = typeof data==='string'?JSON.parse(data):data
       let key = json.i
       if(json.custom) key=json.custom.i
       else if(json.custom_content) key=json.custom_content.i
@@ -98,20 +105,24 @@ export default class NotifyList extends Component {
       let key = this.getKey(data)
       let ll   = key.split(':')[1]
       let lat  = ll.split(',')[0], lng = ll.split(',')[1]
+      //console.log('Global.region='+Global.region)
       return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
   }
   reorder(order,arr){
       if(json && json.length<1) return
       let json = arr?arr:this.state.push_list
       let self=this
-      json.sort(function(a,b){
+      //console.log('unsort_arr='+JSON.stringify(json))
+      return json.sort(function(a,b){
+          //console.log('inloop order='+order+' dist_order='+self.order_dist_asc+' time_order='+self.order_time_asc)
           if(order===self.order_dist_asc)      return self.getDist(a) - self.getDist(b)
           else if(order===self.order_time_asc) return self.getTime(b) - self.getTime(a)
       })
-      this.setState({
+      //console.log('reorder_arr='+JSON.stringify(json))
+      /*this.setState({
           order:order,
           push_list:json,
-      })
+      })*/
   }
   sort(arr){
       let total ={}
@@ -392,7 +403,12 @@ export default class NotifyList extends Component {
       )
   }
   chooseOrderMore(option){
-      this.reorder(option)
+      let arr = this.reorder(option)
+      this.setState({
+           type:this.state.type,
+           order:option,
+           push_list:arr,
+      })
   }
   renderMoreOption(value,name,icon){
       return (

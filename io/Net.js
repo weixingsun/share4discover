@@ -146,7 +146,7 @@ var Net = {
       this._get(url).then((result)=>{
         //let inchina = result.country_code.toUpperCase() == 'CN'
         //alert('Net.getLocationFromNetwork()'+JSON.stringify(result))
-	console.log('Net.getLocationFromNetwork(bd) '+JSON.stringify(result))
+	//console.log('Net.getLocationFromNetwork(bd) '+JSON.stringify(result))
 	//if(result.content && result.content.location) 
         if(result.status===0){
           let gps = {lat:result.content.point.y,lng:result.content.point.x}
@@ -155,7 +155,7 @@ var Net = {
           url = Global.FREE_IP2LOC_HOST
           self._get(url).then((result)=>{
             //alert('Net.getLocationFromFreeHost()'+JSON.stringify(result))
-	    console.log('Net.getLocationFromNetwork(free) '+JSON.stringify(result))
+	    //console.log('Net.getLocationFromNetwork(free) '+JSON.stringify(result))
             if(result.latitude) {func(result)}
           })
         }
@@ -166,7 +166,7 @@ var Net = {
         this.getBDLocation().then((gps)=>{
             //alert(JSON.stringify(gps))
             if(gps.status==0 &&gps.result && gps.result.addressComponent && gps.result.addressComponent.country_code==0){
-              console.log('Net.getLocation.getBDLocation() '+JSON.stringify(gps))
+              //console.log('Net.getLocation.getBDLocation() '+JSON.stringify(gps))
               let loc = {
                   //district:gps.content.address_detail.district,
                   //district_id:gps.content.address_detail.district,
