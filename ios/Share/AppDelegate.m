@@ -47,7 +47,7 @@ BMKMapManager* mapManager;
 {
   NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
   //NSURL *jsCodeLocation = [NSURL URLWithString:@"http://10.32.57.7:8081/index.ios.bundle?platform=ios&dev=true"];
-  //NSURL *jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.70:8081/index.ios.bundle?platform=ios&dev=true"];
+  //NSURL *jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.72:8081/index.ios.bundle?platform=ios&dev=true"];
   // register APNS for push
   [self registerUserNotification];
   [BaiDuPush registerChannel:launchOptions apiKey:APPKEY pushMode:BPushModeDevelopment];

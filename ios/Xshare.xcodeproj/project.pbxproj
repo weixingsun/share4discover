@@ -1337,7 +1337,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "../node_modules/react-native-bdpush/ios/baidupush/Push-Bridging-Header.h";
 				SWIFT_VERSION = 3.0.1;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7 armv7s i386";
 			};
 			name = Debug;
@@ -1396,7 +1396,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "../node_modules/react-native-bdpush/ios/baidupush/Push-Bridging-Header.h";
 				SWIFT_VERSION = 3.0.1;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7 armv7s i386";
 			};
 			name = Release;

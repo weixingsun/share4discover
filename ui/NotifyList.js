@@ -90,7 +90,7 @@ export default class NotifyList extends Component {
               }
           }else if(self.updateOnUI){
               //console.log('load() null value='+value.length)
-              //self.setState({ type:type, push_list:[] })
+              self.setState({ type:type, push_list:[] })
           }
       })
   }
