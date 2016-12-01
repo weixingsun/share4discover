@@ -67,7 +67,7 @@ export default class Maps extends Component {
     componentDidMount() {
       //this.turnOnGps();
       DeviceEventEmitter.removeAllListeners('refresh:Maps')
-      this.event = DeviceEventEmitter.addListener('refresh:Maps',(evt)=>setTimeout(()=>this.downloadMsg(this.state.type,this.state.cat),400));
+      this.event = DeviceEventEmitter.addListener('refresh:Maps',(evt)=>setTimeout(()=>this.downloadMsg(this.state.type,this.state.cat),500));
     }
     componentWillUnmount() { 
       this.turnOffGps();

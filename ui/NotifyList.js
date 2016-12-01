@@ -33,7 +33,6 @@ export default class NotifyList extends Component {
   constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.all_notes=[]
       this.order_dist_asc='order_dist_asc'
       this.order_time_asc='order_time_asc'
       this.state={
@@ -41,35 +40,39 @@ export default class NotifyList extends Component {
           push_list:[],
           type:Store.LOCAL,
       }
-      this.share_types = Object.keys(Global.TYPE_ICONS)
+      //this.share_types = Object.keys(Global.TYPE_ICONS)
       this.updateOnUI=true
   }
   componentWillMount(){
-      this.load()
+      //this.load()
   }
   componentWillUnmount(){
       this.updateOnUI=false
-      this.event_notify.remove()
+      DeviceEventEmitter.removeAllListeners('refresh:NotifyList')
   }
   componentDidMount(){
-      this.event_notify = DeviceEventEmitter.addListener('refresh:PushList',(evt)=>setTimeout(()=>this.load(),400))
+      DeviceEventEmitter.removeAllListeners('refresh:NotifyList')
+      DeviceEventEmitter.addListener('refresh:NotifyList',(evt)=>setTimeout(()=>this.load(),500))
+      //this.load()
+      DeviceEventEmitter.emit('refresh:NotifyList',0);
   }
   load(type){
       if(!type) type=this.state.type
       var self=this;
       //alert(JSON.parse('[,{"a":1}]'))
-      Store.getShared(Store.PUSH_LIST+":"+type, function(value){
+      let key = Store.PUSH_LIST+":"+type
+      Store.getShared(key, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           if(self.updateOnUI && value!=null){
-              //console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
+              //console.log('NotifyList.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               try{
                 let arr = JSON.parse(value)
                 let json= arr.map((item)=>{
                     if(typeof item ==='string') return JSON.parse(item)
                     else return item
                 })
-                //console.log('Store.getShared() good time='+ (+new Date))
-                let new_arr = self.reorder(self.order_time_asc,json)
+                let new_arr = self.reorder(self.state.order,json)
+                //console.log('load() value='+value.length)
                 self.setState({ 
                     type:type,
                     order:self.order_time_asc,
@@ -79,14 +82,16 @@ export default class NotifyList extends Component {
                 //let v2 = value.replace(/\\n/g,'').replace(/\\\"/g,"'")
                 //let v3 = v2.substr(1,v2.length-2)
                 //let str_arr = v3.split(',')
-                
-                //console.log('Store.getShared() bad time= '+ (+new Date)) //value
+                //console.log('load() exception value='+value.length)
                 /*self.setState({
                   type:type,
-                  push_list:[],
+                  //push_list:[],
                 })*/
               }
-          }else if(self.updateOnUI) self.setState({ type:type, push_list:[] })
+          }else if(self.updateOnUI){
+              //console.log('load() null value='+value.length)
+              //self.setState({ type:type, push_list:[] })
+          }
       })
   }
   getKey(data){  //car_buy:lat,lng:ctime
@@ -123,32 +128,6 @@ export default class NotifyList extends Component {
           order:order,
           push_list:json,
       })*/
-  }
-  sort(arr){
-      let total ={}
-      arr.map((item)=>{
-          let obj = JSON.parse(item)
-          if(total[obj.type]) total[obj.type].push(item)
-          else total[obj.type] = [item]
-      })
-      //alert(JSON.stringify(total))
-      var keys = Object.keys(total);
-      keys.sort();
-      let s_arr = []
-      keys.map((key)=>{
-          s_arr = s_arr.concat(total[key])
-      })
-      //alert(JSON.stringify(s_arr))
-      return s_arr;
-  }
-  sort_dict(dict){
-      var keys = Object.keys(dict);
-      keys.sort();
-      let s_dict = {}
-      for (var i=0; i<keys.length; i++) {
-          s_dict[keys[i]] = dict[ keys[i] ]
-      }
-      return s_dict;
   }
   openPush(json){
       //alert('openPush: '+JSON.stringify(json))
@@ -192,20 +171,6 @@ export default class NotifyList extends Component {
       if(!rowData.read)this.readMsg(rowData.id)
       this.getMsg(Global.getKeyFromReply(rowData))
   }
-  onDeleteReply(rowData){
-      let json = {key:'@'+rowData.user,field:Global.getKeyFromReply(rowData)+'#'+rowData.rtime}
-      Alert.alert(
-          "Delete",
-          "Do you want to delete this message ? ",
-          [
-              {text:"Cancel" },
-              {text:"OK", onPress:()=>{
-                  Net.delHash(json);
-                  DeviceEventEmitter.emit('refresh:Main.Notify',0);
-              }},
-          ]
-      );
-  }
     removeArrayElement(arr, kv) {
         let k=Object.keys(kv)[0]
         for(var i = arr.length; i--;) {
@@ -231,33 +196,33 @@ export default class NotifyList extends Component {
     deletePushAlert(data){
         let self=this
         let json = typeof data==='object'?data:JSON.parse(data)
-        let id=json.i
+        let id=json.i,type=json.t
         if(Platform.OS==='android'){
-            if(json.custom&&json.custom.i) id=json.custom.i
-            else if(json.custom_content&&json.custom_content.i) id=json.custom_content.i
+            if(json.custom&&json.custom.i){
+              id=json.custom.i
+              type=json.custom.t
+            }else if(json.custom_content&&json.custom_content.i){
+              id=json.custom_content.i
+              type=json.custom_content.t
+            }
         }
-        let type=json.t
-        if(Platform.OS==='android'){
-           if(json.custom_content&&json.custom_content.i) type=json.custom_content.i
-            else if(json.custom_content&&json.custom_content.i) id=json.custom_content.i
-        }
-        console.log('type='+type+' id='+id+' \ndata='+JSON.stringify(data))
+        //console.log('type='+type+' id='+id+' \ndata='+JSON.stringify(data))
         Alert.alert(
-            "Delete",
-            "Do you want to delete this push message ? ",
+            I18n.t("delete"),
+            I18n.t("confirm_delete"),
             [
-                {text:"Cancel" },
-                {text:"OK", onPress:()=>self.deletePush(type,id) },
+                {text:I18n.t("no") },
+                {text:I18n.t("yes"), onPress:()=>self.deletePush(type,id) },
             ]
         );
     }
     deleteAllPushAlert(){
         Alert.alert(
-            "Delete",
-            "Do you want to delete all these messages ? ",
+            I18n.t("delete"),
+            I18n.t("delete_all"),
             [
-                {text:"Cancel" },
-                {text:"OK", onPress:()=>this.deleteAllPush() },
+                {text:I18n.t("no") },
+                {text:I18n.t("yes"), onPress:()=>this.deleteAllPush() },
             ]
         );
     }
@@ -270,7 +235,7 @@ export default class NotifyList extends Component {
     */
     //if(this.share_types.indexOf(rowData.type)<0)
     let rightButton = [{
-          text:'Delete',
+          text:I18n.t("delete"),
           backgroundColor:'#ff0000',
           onPress:()=>this.deletePushAlert(rowData),
         }]
@@ -304,6 +269,7 @@ export default class NotifyList extends Component {
               time = Global.getDateTimeFormat(Global.getTimeInKey(key))
               name = json.n
             }else return
+            //console.log('_renderPushRowView() data='+JSON.stringify(json))
         }else if(Platform.OS==='android'){
             if(json.title&&json.custom&&json.custom.i){ //p2p
               title = Global.trimTitle(json.title)
@@ -322,9 +288,9 @@ export default class NotifyList extends Component {
         let ll   = key.split(':')[1]
         let lat  = ll.split(',')[0], lng = ll.split(',')[1]
         let dist = Global.distanceName( lat, lng, Global.region.latitude, Global.region.longitude )
-        //alert('_renderPushRowView()\nkey='+key+'\nll='+ll+'\ndist='+dist)
         let type = key.split('_')[0]
         let cat = key.split('_')[1].split(':')[0]
+        //alert('_renderPushRowView()\nkey='+key)
         return (
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View>
@@ -464,8 +430,7 @@ export default class NotifyList extends Component {
   }
   render() {
     //this.all_notes = this.props.mails.concat(this.state.push_list)
-    this.all_notes = this.state.push_list
-    let ds=this.ds.cloneWithRows(this.all_notes)
+    //let ds=this.ds.cloneWithRows(this.state.push_list)
     let title = this.getTitleName(this.state.type)
     //alert('title:'+title+' type='+this.state.type+' ')
     return (
@@ -483,7 +448,7 @@ export default class NotifyList extends Component {
               //onEndReachedThreshold={1}
               //scrollRenderAheadDistance={1}
               style={styles.listContainer}
-              dataSource={ds}
+              dataSource={this.ds.cloneWithRows(this.state.push_list)}
               renderRow={this._renderSwipeoutRow.bind(this)}
               //renderHeader={this._renderHeader.bind(this)}
               //renderSectionHeader = {this._renderSectionHeader.bind(this)}

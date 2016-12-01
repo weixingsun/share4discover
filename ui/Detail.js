@@ -50,7 +50,7 @@ export default class Detail extends Component {
             //alert(JSON.stringify(this.state.msg))
         }
         DeviceEventEmitter.removeAllListeners('refresh:Detail')
-        DeviceEventEmitter.addListener('refresh:Detail',(evt)=>setTimeout(()=>this.load(),400));
+        DeviceEventEmitter.addListener('refresh:Detail',(evt)=>setTimeout(()=>this.load(),500));
     }
     componentWillUnmount(){
         DeviceEventEmitter.removeAllListeners('refresh:Detail')

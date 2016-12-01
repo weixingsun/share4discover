@@ -116,7 +116,6 @@ export default class Main extends Component {
           if(gps.country=='cn') Global.MAP = Global.BaiduMap;
           else Global.MAP = Global.GoogleMap;
       })
-            //DeviceEventEmitter.emit('refresh:PushList',0);
   }
   componentWillUnmount() {
       if(Platform.OS === 'android') {
@@ -131,8 +130,6 @@ export default class Main extends Component {
       //    this.setState({isLoading: false});
       //});
       this.ExtUrl()
-      //Store.deleteShared(Store.PUSH_CLICKED);
-      //this.event_notify = DeviceEventEmitter.addListener('refresh:Main.Notify',(evt)=>setTimeout(()=>this.loadNotifyByLogin(),400));
   }
   componentWillMount(){
       /*if(Platform.OS === 'android'){
@@ -300,7 +297,7 @@ export default class Main extends Component {
       if(Push.instance)
       Push.instance.setTag(tag,(state)=>{
           if(state.status==0 || state.error_code=='0'){ /*alert("Tag "+tag+" added")*/ }
-          else alert("Initialization push settings failed. status="+state);
+          //else alert("Initialization push settings failed. status="+state);
       });
   }
   checkMapSettings(){

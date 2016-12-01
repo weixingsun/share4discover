@@ -85,23 +85,23 @@ export default class PushList extends React.Component {
         })
     }
     deleteAllTagsAlert(){
-        if(this.state.tag_list.length===0) alert('No Push Listener')
+        if(this.state.tag_list.length===0) alert(I18n.t('no_listener'))
         else{
-            let total = ''
+            /*let total = ''
             this.state.tag_list.map((key)=>{
                 let names = key.split('_')
                 if(names.length>5){
                     let name = I18n.t(names[4]) +' '+ I18n.t(names[5])
                     total+= ' --> '+name+'\n'
                 }
-            })
+            })*/
             let self=this
             Alert.alert(
-                "Delete",
-                "Do you want to delete following push listeners? \n"+total,
+                I18n.t("delete"),
+                I18n.t("delete_all"),
                 [
-                    {text:"Cancel" },
-                    {text:"OK", onPress:()=>{
+                    {text:I18n.t('no') },
+                    {text:I18n.t('yes'), onPress:()=>{
                         self.deleteAllTags()
                     }},
                 ]
@@ -118,11 +118,11 @@ export default class PushList extends React.Component {
     deleteTagAlert(data){
         let self=this
         Alert.alert(
-            "Delete",
-            "Do you want to delete this row ? ",
+            I18n.t("delete"),
+            I18n.t("delete")+I18n.t("listener"),
             [
-                {text:"Cancel" },
-                {text:"OK", onPress:()=>{
+                {text:I18n.t('no') },
+                {text:I18n.t('yes'), onPress:()=>{
                     self.delTag(data)
                 }},
             ]
@@ -136,16 +136,16 @@ export default class PushList extends React.Component {
     _renderSwipeoutRow(rowData){
       let json = Global.getJsonFromTagName(rowData)
       let rightButton = [{
-          text:'Delete',
+          text:I18n.t('delete'),
           backgroundColor:'#ff0000',
           onPress:()=>this.deleteTagAlert(rowData),
         },]
       if(json.type) rightButton = [{
-          text:'Modify',
+          text:I18n.t('edit'),
           backgroundColor:'#ff6f00',
           onPress:()=>this.EditPush(json),
         },{
-          text:'Delete',
+          text:I18n.t('delete'),
           backgroundColor:'#ff0000',
           onPress:()=>this.deleteTagAlert(rowData),
         },]
