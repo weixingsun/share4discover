@@ -35,7 +35,6 @@ var deviceStorage = {
           if(Platform.OS==='android') SharedPreferences.getItem(key, (value)=>cbk(value))
           //else if(Platform.OS==='ios') this.get(key).then((value=>cbk(value)))
           else if(Platform.OS==='ios'){
-              //console.log('Store.get()')
               UserDefaults.get(key)
               .then((value)=>cbk(value))
               .catch((err)=>{cbk(null)})
@@ -97,20 +96,20 @@ var deviceStorage = {
             let self = this
             let fskey = this.PUSH_LIST+":"+type
             this.getShared(fskey,function(str){
-                //alert('deletePushShared() fskey='+fskey+'\nvalue='+str)
                 let array = JSON.parse(str)
                 self.deleteArrayElementShared(array,kv)
+                //console.log('Store.deletePushShared() fskey='+fskey+'\nnew_value='+array.length)
                 self.setShared(fskey,JSON.stringify(array));
-                //alert('rm:'+id+'\nlist='+JSON.stringify(array))
             })
         },
         deleteArrayElementShared(arr,kv){
             let k=Object.keys(kv)[0]
             for(var i = arr.length; i--;) {
-                //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-                var item = arr[i][k]
-                if(arr[i].custom) item=arr[i].custom[k]
-                else if(arr[i].custom_content) item=arr[i].custom_content[k]
+                let obj = typeof arr[i]==='string'?JSON.parse(arr[i]):arr[i]
+                var item = obj[k]
+                if(obj.custom) item=obj.custom[k]
+                else if(obj.custom_content) item=obj.custom_content[k]
+                //console.log('key='+k+'\nvalue='+kv[k]+'=== item='+obj[k])
                 if(item === kv[k]) arr.splice(i, 1);
             }
         },

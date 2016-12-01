@@ -132,7 +132,7 @@ export default class Maps extends Component {
                   //image={ placeIcon }
                   onPress={ ()=> this.showMsgByKey(key) }
               >
-                  <Icon name={Global.TYPE_ICONS[marker.type]} color={color} size={40} />
+                  <Icon name={Global.TYPE_ICONS[marker.type]} color={color} size={30} />
               </GMapView.Marker>
             )
         });

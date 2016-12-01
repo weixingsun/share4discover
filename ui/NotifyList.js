@@ -61,7 +61,7 @@ export default class NotifyList extends Component {
       Store.getShared(Store.PUSH_LIST+":"+type, function(value){
           //{title:'title',desc:'click to view more',custom:'{\"k1\":\"v1\",\"k2\":\"v2\"}'}
           if(self.updateOnUI && value!=null){
-              //console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
+              console.log('Store.getShared() key='+Store.PUSH_LIST+":"+type+' json='+value)
               try{
                 let json = JSON.parse(value)
                 self.reorder(self.order_dist_asc,json)
@@ -199,9 +199,10 @@ export default class NotifyList extends Component {
         let k=Object.keys(kv)[0]
         for(var i = arr.length; i--;) {
             //alert('key='+k+'\nvalue='+kv[k]+'\n in array:'+(typeof arr[i])+' '+JSON.stringify(arr[i][k]))
-            var item = arr[i][k]
-            if(arr[i].custom) item=arr[i].custom[k]
-            else if(arr[i].custom_content) item=arr[i].custom_content[k]
+            let obj = typeof arr[i]==='string'?JSON.parse(arr[i]):arr[i]
+            var item = obj[k]
+            if(obj.custom) item=obj.custom[k]
+            else if(obj.custom_content) item=obj.custom_content[k]
             if(item === kv[k]) arr.splice(i, 1);
         }
     }
@@ -229,6 +230,7 @@ export default class NotifyList extends Component {
            if(json.custom_content&&json.custom_content.i) type=json.custom_content.i
             else if(json.custom_content&&json.custom_content.i) id=json.custom_content.i
         }
+        console.log('type='+type+' id='+id+' \ndata='+JSON.stringify(data))
         Alert.alert(
             "Delete",
             "Do you want to delete this push message ? ",
@@ -249,13 +251,14 @@ export default class NotifyList extends Component {
         );
     }
   _renderSwipeoutRow(rowData){
-    let rightButton = [{
+    /*let rightButton = [{
           text:'Delete',
           backgroundColor:'#ff6f00',
           onPress:()=>this.onDeleteReply(rowData),
         }]
-    if(this.share_types.indexOf(rowData.type)<0)
-        rightButton = [{
+    */
+    //if(this.share_types.indexOf(rowData.type)<0)
+    let rightButton = [{
           text:'Delete',
           backgroundColor:'#ff0000',
           onPress:()=>this.deletePushAlert(rowData),
@@ -353,7 +356,7 @@ export default class NotifyList extends Component {
       return (
              <View style={{flexDirection:'row',}}>
                  {this.renderMore()}
-                 <View style={{width:10}} />
+                 <View style={{width:1}} />
              </View>
       )
   }
