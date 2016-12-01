@@ -212,14 +212,14 @@ export default class Maps extends Component {
 	}
     downloadMsg(type,cat) {
       var self = this;
-      //if(self.state.markers.length>0) 
-	  self.setState({ markers:[] });
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
       Net.rangeMsg(type, cat, this.state.region, range).then((rows)=> {
         if(self.updateOnUI){
+	  if(self.state.markers.length>0) self.setState({ markers:[] });
           let notnull = rows.filter((row)=>{return row!=null})
           var markers = notnull.map((row)=>{
             //row ={ lat,lng,type,title,content,ctime,,, }
+            row['id']=Global.getKeyFromMsg(row)  //for ios
             row['image']=self.getFontIcon(row)
             row['latitude']=parseFloat(row.lat)
             row['longitude']=parseFloat(row.lng)
@@ -411,13 +411,13 @@ export default class Maps extends Component {
       }
     }
     onMarkerClickBmap(e) {
-	var msg = {}
+        let key = ''
 	if(Platform.OS === 'ios'){
-          msg = JSON.parse(decodeURIComponent(e.id))
+          key= e.id
 	}else if(Platform.OS === 'android'){
-          msg = e.nativeEvent.annotation
+          let msg = e.nativeEvent.annotation
+          key = Global.getKeyFromMsg(msg)
 	}
-        let key = Global.getKeyFromMsg(msg)
         this.showMsgByKey(key)
     }
     addCircle(circle){
