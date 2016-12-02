@@ -56,6 +56,7 @@ I18n.translations = {
     edit:'Edit',
     delete: 'Delete',
     delete_all: 'Delete All',
+    share_not_exist: 'Share not exist',
     all: 'All',
     //form
     edit_share:'Edit Share',
@@ -194,6 +195,7 @@ I18n.translations = {
     edit:'Edit',
     delete: 'Delete',
     delete_all: 'Delete All',
+    share_not_exist: 'Share not exist',
     all: 'All',
     //form
     edit_share:'Edit Share',
@@ -333,6 +335,7 @@ I18n.translations = {
     all: '全部',
     delete: '删除',
     delete_all: '全部删除',
+    share_not_exist: '此分享不存在',
     //form
     edit_share:'修改分享',
     create_share:'新建分享',

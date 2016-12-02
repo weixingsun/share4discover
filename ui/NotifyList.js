@@ -159,7 +159,7 @@ export default class NotifyList extends Component {
               }
           });
           else
-            alert('This share has been deleted.')
+            alert(I18n.t('share_not_exist'))
       });
   }
   readPush(type,id){
@@ -227,13 +227,6 @@ export default class NotifyList extends Component {
         );
     }
   _renderSwipeoutRow(rowData){
-    /*let rightButton = [{
-          text:'Delete',
-          backgroundColor:'#ff6f00',
-          onPress:()=>this.onDeleteReply(rowData),
-        }]
-    */
-    //if(this.share_types.indexOf(rowData.type)<0)
     let rightButton = [{
           text:I18n.t("delete"),
           backgroundColor:'#ff0000',
