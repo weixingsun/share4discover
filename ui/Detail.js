@@ -33,6 +33,7 @@ import Net    from '../io/Net'
 import Style     from './Style';
 import DetailImg from './DetailImg';
 import FormInfo  from "./FormInfoVar"
+import AutoExpandingTextInput  from "./AutoExpandingTextInput"
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 var {height, width} = Dimensions.get('window');
 
@@ -427,7 +428,11 @@ export default class Detail extends Component {
     renderMisc(){
         let self=this
         // pics {type,cat,title,ctime,address,lat,lng}  {owner,phone} {#...}
-        let array = ['pics','type','cat','title','ctime','owner','phone','content', 'address','lat','lng','dest','time','dest_lat','dest_lng','uid','country','city','os','city_id']
+        let array = [
+            'type','cat','title','ctime','phone','content', 'pics',
+            'address','lat','lng','dest','dest_lat','dest_lng',
+            'owner','uid','os','country','city','city_id',
+            'start','end']
         var keys = Object.keys(this.state.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
@@ -448,9 +453,10 @@ export default class Detail extends Component {
         let typeIcon = Global.TYPE_ICONS[this.state.msg.type]
         let asking = 'rent0,buy'.indexOf(this.state.msg.cat)>0
         let destView = null
-        if(this.state.msg.dest) destView=<Text>{I18n.t('dest')} : {this.state.msg.dest}</Text>
-        let destTimeView = null
-        if(this.state.msg.time) destTimeView=<Text>{I18n.t('time')} : {this.state.msg.time}</Text>
+        if(this.state.msg.dest) destView=<Text><Text style={{fontWeight:'bold'}}>{I18n.t('dest')}</Text> : {this.state.msg.dest}</Text>
+        let destStartView = null,destEndView = null
+        if(this.state.msg.start) destStartView=<Text><Text style={{fontWeight:'bold'}}>{I18n.t('start')}</Text> : {this.state.msg.start}</Text>
+        if(this.state.msg.end)   destEndView=<Text><Text style={{fontWeight:'bold'}}>{I18n.t('end')}</Text> : {this.state.msg.end}</Text>
         return (
             <View style={Style.detail_card} >
                 <View style={{flexDirection:'row'}} >
@@ -462,11 +468,12 @@ export default class Detail extends Component {
                     />
                     <View style={{flex:1,marginLeft:10}}>
                         <Text style={{fontWeight:'bold', fontSize:20,}}>{this.state.msg.title}</Text>
-                        <Text>{I18n.t('cat')} : {this.state.msg.cat?I18n.t(this.state.msg.cat):''}</Text>
-                        <Text>{I18n.t('ctime')} : {_ctime}</Text>
-                        <Text>{I18n.t('address')} : {this.state.msg.address}</Text>
-                        {destTimeView}
+                        <Text><Text style={{fontWeight:'bold'}}>{I18n.t('cat')}</Text> : {this.state.msg.cat?I18n.t(this.state.msg.cat):''}</Text>
+                        <Text><Text style={{fontWeight:'bold'}}>{I18n.t('ctime')}</Text> : {_ctime}</Text>
+                        <Text><Text style={{fontWeight:'bold'}}>{I18n.t('address')}</Text> : {this.state.msg.address}</Text>
                         {destView}
+                        {destStartView}
+                        {destEndView}
                     </View>
                 </View>
             </View>
@@ -513,56 +520,3 @@ export default class Detail extends Component {
         );
     }
 }
-
-class AutoExpandingTextInput extends React.Component {
-  constructor(props) { 
-    super(props); 
-    this.state = { 
-      text: this.props.value, 
-      height: 0, 
-    }
-    this.setText = this.setText.bind(this);
-  } 
-  setText(text){
-    this.setState({text:text});
-  }
-  componentWillReceiveProps(nextProps) {  
-    //alert('nextProps='+JSON.stringify(nextProps))
-    //if(nextProps.value && nextProps.value)
-    this.setText(nextProps.value)
-  }
-  render() { 
-    return ( 
-      <TextInput 
-        ref={textInput => (this._textInput = textInput)}
-        {...this.props}
-        multiline={true} 
-        onContentSizeChange={ (event) => { 
-          this.setState({
-            height: event.nativeEvent.contentSize.height
-          }); 
-        }} 
-        onChangeText={(text) => { 
-          this.setState({text});
-        }} 
-        style={[
-          styles.default, 
-          {height: Math.max(35, this.state.height)}
-        ]} 
-        value={this.state.text} 
-      /> 
-    ); 
-  } 
-}
-
-
-var styles = StyleSheet.create({ 
-  default: { 
-    height: 26, 
-    borderWidth: 0.5, 
-    borderColor: '#0f0f0f', 
-    flex: 1, 
-    fontSize: 13, 
-    padding: 4, 
-  },
-})
