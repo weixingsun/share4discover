@@ -1,6 +1,23 @@
 //'use strict'; //ERROR: Attempted to assign to readonly property
 import React, { Component } from 'react';
-import {Alert, DeviceEventEmitter, Dimensions,Image,Linking,NativeModules,Picker,Platform,StyleSheet,View,ScrollView,Text,TextInput,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback } from 'react-native';
+import {
+  Alert, 
+  DeviceEventEmitter, 
+  Dimensions,
+  Image,
+  Linking,
+  NativeModules,
+  Picker,
+  Platform,
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableHighlight,
+  TouchableWithoutFeedback 
+} from 'react-native';
 import {Icon,getImageSource} from './Icon'
 import NavigationBar from 'react-native-navbar';
 import Modal from 'react-native-root-modal'
@@ -24,16 +41,14 @@ export default class Detail extends Component {
         super(props);
         this.images = []
         this.state={ 
-            reply: '',
-            reply_height: 35,
-            //image_modal_name:this.images[0],
             show_pic_modal:false,
             push_to:this.props.msg.uid,
-            push_to_len:0,
-            push_to_os:this.props.msg.os,
             highlight_color:Style.CAT_COLORS[this.props.msg.cat],
             msg:this.props.msg,
+            reply:'',
         }
+        this.push_to_len=0
+        this.push_to_os=this.props.msg.os
         this.key = Global.getKeyFromMsg(this.state.msg)
         this.openZoom=this.openZoom.bind(this)
         this.closeZoom=this.closeZoom.bind(this)
@@ -65,12 +80,25 @@ export default class Detail extends Component {
         });
     }
     talkTo(user_name,user_push_id,user_push_os){
-        this.setState({
-            reply:'@'+user_name+': ',
-            push_to:user_push_id,
-            push_to_os:user_push_os,
-            push_to_len:user_name.length+2,
-        })
+        this.push_to    = user_push_id
+        this.push_to_os = user_push_os
+        this.push_to_len= user_name.length+2
+        this.setMyInput('@'+user_name+': ')
+    }
+    setMyInput(value){
+        //this._mymsg._textInput.blur()
+        this._mymsg._textInput.setNativeProps({text: value});
+        //this._mymsg.setText(value);
+        this.setState({reply:value})
+        this._mymsg._textInput.focus()
+        if(value<this.push_to_len){
+          //alert('reply:'+value)
+          this.push_to = this.state.msg.uid
+          this.push_to_len=0
+          this.setState({reply:''})
+        }else{
+          this.setState({ reply:value })
+        }
     }
     getTalkIcon(){
         return 'ion-ios-text-outline'
@@ -82,12 +110,13 @@ export default class Detail extends Component {
         //if(this.state.msg.s1uid) OneSignal.postNotification(title, data, this.state.msg.s1uid);
         if(this.state.msg.uid) {
             let name = Global.getMainLoginName()
+            //alert('push_to='+this.push_to+' os='+this.push_to_os)
             Push.postOne(
-                this.state.push_to,
+                this.push_to,
                 this.state.reply,     //title
                 I18n.t('click_more'), //content
                 {t:Global.push_p2p,i:this.key,f:Push.uid,n:name,r:now},
-                this.state.push_to_os,
+                this.push_to_os,
             )
         }
     }
@@ -112,7 +141,7 @@ export default class Detail extends Component {
         var value={key:this.key, field:'#'+time, value:JSON.stringify(msgReplyValue)}
         //console.log(JSON.stringify(msgReplyValue))
         //let loginsObj = Global.getLogins(this.state.msg.owner)
-        //let replyValue={t:'r1', l:Global.mainlogin,c:this.state.reply}
+        //let replyValue={t:'r1', l:Global.mainlogin,c:this.reply}
         //var notify_value={key:'@'+Global.getInfoMainLogin(loginsObj), field:this.key+'#'+time, value:JSON.stringify(replyValue)}
         var _this = this;
         Alert.alert(
@@ -173,7 +202,7 @@ export default class Detail extends Component {
           <MenuOption value={value} style={{backgroundColor:this.state.highlight_color}}>
               <View style={{flexDirection:'row',height:40}}>
                   <View style={{width:30,justifyContent:'center'}}>
-                      <Icon name={icon} color={'#ffffff'} size={26} />
+                      <Icon name={icon} color={'#ffffff'} size={16} />
                   </View>
                   <View style={{justifyContent:'center'}}>
                       <Text style={{color:Style.font_colors.enabled}}> {name} </Text>
@@ -241,7 +270,7 @@ export default class Detail extends Component {
                             name={Global.SNS_ICONS[sns_type]}
                           />
                         </View>
-                        <Text style={{marginLeft:8,size:14}}>{sns_name==null?sns_user:sns_name}</Text>
+                        <Text style={{marginLeft:8,fontSize:14}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
             }) }
@@ -271,7 +300,6 @@ export default class Detail extends Component {
             Alert.alert(
               I18n.t("call"),
               I18n.t("confirm_call"),
-              //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
               [
                 {text:I18n.t("no"), },
                 {text:I18n.t("yes"), onPress:()=>{
@@ -285,7 +313,6 @@ export default class Detail extends Component {
         });
     }
     renderReplyItems(){
-        //id:#rtime  key='car:lat,lng:ctime#time'  value='{l:Global.mainlogin,c:this.state.reply}'
         var keys = Object.keys(this.state.msg)
 	var replys = keys.filter((key) => {
 	    return (key.substring(0,1)==='#')
@@ -363,6 +390,7 @@ export default class Detail extends Component {
       )
     }
     renderReplyInput(){
+        let self=this
         if(this.isLogin)
             return (
                 <View style={Style.detail_card} >
@@ -371,32 +399,27 @@ export default class Detail extends Component {
                         <View style={{flex:1}} />
                         <Button style={{marginRight:6,width:50,height:30,backgroundColor:this.state.highlight_color,borderColor:this.state.highlight_color}} textStyle={{fontSize:12}} onPress={this.onReply.bind(this)}>{I18n.t('reply')}</Button>
                     </View>
-                        <TextInput
-                            //ref={(input) => this.myReply = input}
-                            style={{marginLeft:4,height:this.state.reply_height}}
-                            multiline={true}
-                            value={this.state.reply}
-                            onChange={(event) => {
-                                if(event.nativeEvent.text.length<1) push_to=this.state.msg.uid
-                                else push_to=this.state.push_to
-                                if(event.nativeEvent.text.length<this.state.push_to_len) {
-                                    //alert('text.len='+event.nativeEvent.text.length+' push_to_len='+this.state.push_to_len)
-                                    //this.myReply.setNativeProps({text: ''})
-                                    this.setState({
-                                      reply: '',
-                                      reply_height: event.nativeEvent.contentSize.height,
-                                      push_to:push_to,
-                                    });
-                                }else{
-                                    this.setState({
-                                      reply: event.nativeEvent.text,
-                                      reply_height: event.nativeEvent.contentSize.height,
-                                      push_to:push_to,
-                                    });
-                                }
-                            }}
+                    <View style={{marginLeft:10}}>
+                        <AutoExpandingTextInput 
+                          ref={textInput => (this._mymsg = textInput)}
+                          placeholder="" 
+                          enablesReturnKeyAutomatically={true} 
+                          returnKeyType="done" 
+                          value={this.state.reply} 
+                          onChange={(event) => {
+                              let txt = event.nativeEvent.text
+                              //alert('text.len='+txt.length+' push_to_len='+this.state.push_to_len)
+                              if(txt.length<this.push_to_len) {
+                                  this.push_to_len=0
+                                  this.push_to=this.state.msg.uid
+                                  this.setState({ reply:'' })
+                              }else{
+                                  this.setState({ reply:txt })
+                              }
+                          }}
                         />
                     </View>
+                </View>
             )
     }
     renderMisc(){
@@ -488,3 +511,56 @@ export default class Detail extends Component {
         );
     }
 }
+
+class AutoExpandingTextInput extends React.Component {
+  constructor(props) { 
+    super(props); 
+    this.state = { 
+      text: this.props.value, 
+      height: 0, 
+    }
+    this.setText = this.setText.bind(this);
+  } 
+  setText(text){
+    this.setState({text:text});
+  }
+  componentWillReceiveProps(nextProps) {  
+    //alert('nextProps='+JSON.stringify(nextProps))
+    //if(nextProps.value && nextProps.value)
+    this.setText(nextProps.value)
+  }
+  render() { 
+    return ( 
+      <TextInput 
+        ref={textInput => (this._textInput = textInput)}
+        {...this.props}
+        multiline={true} 
+        onContentSizeChange={ (event) => { 
+          this.setState({
+            height: event.nativeEvent.contentSize.height
+          }); 
+        }} 
+        onChangeText={(text) => { 
+          this.setState({text});
+        }} 
+        style={[
+          styles.default, 
+          {height: Math.max(35, this.state.height)}
+        ]} 
+        value={this.state.text} 
+      /> 
+    ); 
+  } 
+}
+
+
+var styles = StyleSheet.create({ 
+  default: { 
+    height: 26, 
+    borderWidth: 0.5, 
+    borderColor: '#0f0f0f', 
+    flex: 1, 
+    fontSize: 13, 
+    padding: 4, 
+  },
+})
