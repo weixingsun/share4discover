@@ -262,7 +262,7 @@ export default class Detail extends Component {
 	        //console.log('----------showOwners():type:'+sns_type+', user:'+sns_user)  <View style={{width:30,alignItems:'center'}}>
                 return (
                     <View style={{flexDirection:'row'}} key={owner} >
-                        <View style={{marginLeft:6,alignItems:'center'}}>
+                        <View style={{marginLeft:6,alignItems:'center',justifyContent:'center'}}>
                           <Icon
                             //style={{marginLeft:10,marginRight:6}}
                             size={20}
@@ -270,7 +270,9 @@ export default class Detail extends Component {
                             name={Global.SNS_ICONS[sns_type]}
                           />
                         </View>
-                        <Text style={{marginLeft:8,fontSize:14}}>{sns_name==null?sns_user:sns_name}</Text>
+                        <View style={{marginLeft:6,alignItems:'center',justifyContent:'center'}}>
+                          <Text style={{fontSize:14,}}>{sns_name==null?sns_user:sns_name}</Text>
+                        </View>
                     </View>
                 )
             }) }
