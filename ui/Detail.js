@@ -194,7 +194,7 @@ export default class Detail extends Component {
                     <View style={Style.separator} />
                 {this.renderMoreOption('delete',I18n.t('delete_share'),'fa-trash')}
                     <View style={Style.separator} />
-                {this.renderMoreOption('reply', I18n.t('reply'), 'fa-comment')}
+                {this.renderMoreOption('book', I18n.t('book'), 'fa-handshake-o')}
               </MenuOptions>
             </Menu>
           </View>
@@ -236,12 +236,12 @@ export default class Detail extends Component {
                         <View style={{marginLeft:6,alignItems:'center'}}>
                           <Icon
                             //style={{marginLeft:10,marginRight:6}}
-                            size={16}
+                            size={20}
                             color={this.state.highlight_color}
                             name={Global.SNS_ICONS[sns_type]}
                           />
                         </View>
-                        <Text style={{marginLeft:8}}>{sns_name==null?sns_user:sns_name}</Text>
+                        <Text style={{marginLeft:8,size:14}}>{sns_name==null?sns_user:sns_name}</Text>
                     </View>
                 )
             }) }
@@ -257,8 +257,8 @@ export default class Detail extends Component {
         if(this.state.msg.phone){
           let tel = 'tel:'+this.state.msg.phone
           return (
-            <View style={{height:80,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <TouchableOpacity style={{width:60,height:60}} onPress={() => this.callPhone(tel)}>
+            <View style={{height:60,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity style={{width:50,height:50}} onPress={() => this.callPhone(tel)}>
               <Icon name={'ion-ios-call'} size={50} color={this.state.highlight_color} />
             </TouchableOpacity>
             </View>

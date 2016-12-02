@@ -25,6 +25,7 @@
 		0350ABA11DD044AB00498D6C /* BaiDuPushBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0350AB9E1DD044AB00498D6C /* BaiDuPushBridge.m */; };
 		0377DCC81DD3D44000A3E93A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0377DCC71DD3D44000A3E93A /* SwiftyJSON.swift */; };
 		0398AC361DDAF0A900A7636E /* libRCTUserDefaults.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0398AC271DDAF04600A7636E /* libRCTUserDefaults.a */; };
+		03C4FBCE1DF0D42800133DFC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C4FBCD1DF0D42800133DFC /* EventKit.framework */; };
 		03CD51C91D7E97F500FC1209 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */; };
 		03CD51CA1D7E97F500FC1209 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */; };
 		03CD51CB1D7E97F500FC1209 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CD51C81D7E97F500FC1209 /* FBSDKShareKit.framework */; };
@@ -53,6 +54,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		33ABABB4C11E4D4EA2DC1D56 /* libRNCalendarEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFE5121FD0934EDC9BD5FC35 /* libRNCalendarEvents.a */; };
 		51F75C7781D5463E883A9747 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 567DD0EA77294195BD789AFE /* EvilIcons.ttf */; };
 		5880A692D42A48A899386020 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4B21AC51939441191C069D8 /* Foundation.ttf */; };
 		5D3F8F455C994E979F82CF80 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 743505B54D54401DB2D495F8 /* MaterialIcons.ttf */; };
@@ -207,6 +209,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = KCKeepAwake;
 		};
+		03C4FBC41DF0D3A700133DFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 657DD006AFF2462EAD63C017 /* RNCalendarEvents.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BEC43C6A1C723089001221C6;
+			remoteInfo = RNCalendarEvents;
+		};
 		03CD51A61D7E7E9E00FC1209 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A20452CB669445E3B9D5A9B4 /* RCTFBSDK.xcodeproj */;
@@ -328,8 +337,8 @@
 		0350AB9E1DD044AB00498D6C /* BaiDuPushBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiDuPushBridge.m; sourceTree = "<group>"; };
 		0350AB9F1DD044AB00498D6C /* Push-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Push-Bridging-Header.h"; sourceTree = "<group>"; };
 		0377DCC71DD3D44000A3E93A /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
-		0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = "../node_modules/react-native-onesignal/ios/Frameworks/OneSignal.framework"; sourceTree = "<group>"; };
 		0398AC111DDAF04500A7636E /* RCTUserDefaults.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTUserDefaults.xcodeproj; path = "../node_modules/react-native-user-defaults/RCTUserDefaults.xcodeproj"; sourceTree = "<group>"; };
+		03C4FBCD1DF0D42800133DFC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		03CD51C81D7E97F500FC1209 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
@@ -373,6 +382,7 @@
 		567DD0EA77294195BD789AFE /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		583479CD5437462B9AA84EDD /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		5DDC3EC57E7C4BE296BD8578 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
+		657DD006AFF2462EAD63C017 /* RNCalendarEvents.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCalendarEvents.xcodeproj; path = "../node_modules/react-native-calendar-events/RNCalendarEvents.xcodeproj"; sourceTree = "<group>"; };
 		6FC3E85C8F1F452B8CC60E24 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		71545F2758034974B8690B72 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		71C8ABAFB9A947B1A2805816 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -387,6 +397,7 @@
 		A7C09B83E06B4D54839E592F /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		AF54472551F448F38ACFC52A /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		BBDE8894EA4D462D91F6F47C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		BFE5121FD0934EDC9BD5FC35 /* libRNCalendarEvents.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCalendarEvents.a; sourceTree = "<group>"; };
 		C40F6DA08D9D475B8D56A9A7 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		CAB8E873DA534D02B349B791 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		DCED42D2335F404E8CC8B315 /* libRCTWeiboAPI.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTWeiboAPI.a; sourceTree = "<group>"; };
@@ -400,6 +411,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03C4FBCE1DF0D42800133DFC /* EventKit.framework in Frameworks */,
 				0398AC361DDAF0A900A7636E /* libRCTUserDefaults.a in Frameworks */,
 				03F77A741CFA5E6B001D0743 /* libstdc++.6.0.9.tbd in Frameworks */,
 				03F77A721CFA5E31001D0743 /* Security.framework in Frameworks */,
@@ -445,6 +457,7 @@
 				A12C1FD1E895454BA07B527B /* libRNSound.a in Frameworks */,
 				0B7799DD5DF84E1493EC8991 /* libRNDeviceInfo.a in Frameworks */,
 				65EBD403789C482988655B76 /* libReactNativePermissions.a in Frameworks */,
+				33ABABB4C11E4D4EA2DC1D56 /* libRNCalendarEvents.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +635,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		03C4FBA71DF0D3A700133DFC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03C4FBC51DF0D3A700133DFC /* libRNCalendarEvents.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		03CD519C1D7E7E9E00FC1209 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -716,6 +737,7 @@
 				E394AA37319B477E8B4B16FB /* RNSound.xcodeproj */,
 				3603F64CA603424DA6787C80 /* RNDeviceInfo.xcodeproj */,
 				71545F2758034974B8690B72 /* ReactNativePermissions.xcodeproj */,
+				657DD006AFF2462EAD63C017 /* RNCalendarEvents.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -739,7 +761,6 @@
 				03CD51C61D7E97F500FC1209 /* FBSDKCoreKit.framework */,
 				03CD51C71D7E97F500FC1209 /* FBSDKLoginKit.framework */,
 				03CD51C81D7E97F500FC1209 /* FBSDKShareKit.framework */,
-				0383F6811D4C1DC400FA3DE0 /* OneSignal.framework */,
 				03F77A771CFA5F51001D0743 /* mapapi.bundle */,
 				03F77A731CFA5E6B001D0743 /* libstdc++.6.0.9.tbd */,
 				03F77A711CFA5E31001D0743 /* Security.framework */,
@@ -779,6 +800,7 @@
 		A6BDB120AD2848938ACC4F0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				03C4FBCD1DF0D42800133DFC /* EventKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -930,6 +952,10 @@
 				{
 					ProductGroup = 035322C31DEDB2A5008B7631 /* Products */;
 					ProjectRef = 71545F2758034974B8690B72 /* ReactNativePermissions.xcodeproj */;
+				},
+				{
+					ProductGroup = 03C4FBA71DF0D3A700133DFC /* Products */;
+					ProjectRef = 657DD006AFF2462EAD63C017 /* RNCalendarEvents.xcodeproj */;
 				},
 				{
 					ProductGroup = 035725E21DAF88EB000DB40E /* Products */;
@@ -1095,6 +1121,13 @@
 			fileType = archive.ar;
 			path = libKCKeepAwake.a;
 			remoteRef = 03AAABC71D6EF57600A2957E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03C4FBC51DF0D3A700133DFC /* libRNCalendarEvents.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCalendarEvents.a;
+			remoteRef = 03C4FBC41DF0D3A700133DFC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		03CD51A71D7E7E9E00FC1209 /* libRCTFBSDK.a */ = {
@@ -1315,6 +1348,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1325,6 +1359,7 @@
 					"\"$(SRCROOT)/Share\"",
 					"../node_modules/react-native-bdpush/ios/normalversion",
 					"\"$(SRCROOT)/OpenShare\"",
+					"\"$(SRCROOT)/Xshare\"",
 					"\"$(SRCROOT)/Xshare\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1377,6 +1412,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = Share/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1387,6 +1423,7 @@
 					"\"$(SRCROOT)/Share\"",
 					"../node_modules/react-native-bdpush/ios/normalversion",
 					"\"$(SRCROOT)/OpenShare\"",
+					"\"$(SRCROOT)/Xshare\"",
 					"\"$(SRCROOT)/Xshare\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
@@ -1469,6 +1506,7 @@
 					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1538,6 +1576,7 @@
 					"$(SRCROOT)/../node_modules/react-native-tencent-xg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

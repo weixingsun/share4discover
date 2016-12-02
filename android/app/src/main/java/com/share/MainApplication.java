@@ -22,6 +22,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.calendarevents.CalendarEventsPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import in.sriraman.sharedpreferences.RNSharedPreferencesReactPackage;
 import com.example.baidupush.PushPackage;
@@ -75,7 +76,8 @@ public class MainApplication extends Application implements ReactApplication {
       //String productionKey = "eP-AeP1uJtwuy_QVdGZrpj3F2mA04yG-vGnJ-";
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new ReactNativePermissionsPackage(),
+        new CalendarEventsPackage(),
+        new ReactNativePermissionsPackage(),
         //new MIPushPackage(),
         new RNSharedPreferencesReactPackage(),
         new PushPackage(),
