@@ -59,16 +59,26 @@ export default class MyList extends Component {
     if(rowData!=null){
       //console.log(rowData)
       if(rowData==null) return
+      let address1 = rowData.address.split(',')[0]
+      let time1 = Global.getDateTimeFormat(rowData.ctime)
       return (
       <TouchableHighlight underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
           <View>
               <View style={{flexDirection: 'row',height:58}}>
-                <View style={{marginLeft:15,marginRight:6,justifyContent:'center',width:50,alignItems:'center'}}>
+                <View style={{justifyContent:'center',width:50,alignItems:'center'}}>
                   <Icon name={Global.TYPE_ICONS[rowData.type]} size={30} color={Style.CAT_COLORS[rowData.cat]} />
                 </View>
-                <View style={{justifyContent: 'center',height:56}}>
-                    <Text style={{fontSize:16,marginLeft:10}}>{rowData.title}</Text>
+                <View style={{flex:1,justifyContent:'center'}}>
+                  <View style={{flex:1,justifyContent:'flex-end'}}>
+                    <Text style={{fontSize:10,marginLeft:1}}>{address1}</Text>
+                  </View>
+                  <View style={{flex:2,justifyContent:'center'}}>
+                    <Text style={{fontSize:16,marginLeft:1}}>{rowData.title}</Text>
+                  </View>
+                </View>
+                <View style={{justifyContent:'center'}}>
+                  <Text style={{fontSize:10,marginRight:8}}>{time1}</Text>
                 </View>
               </View>
               <View style={Style.separator} />

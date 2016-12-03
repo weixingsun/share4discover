@@ -288,30 +288,29 @@ export default class NotifyList extends Component {
       <TouchableHighlight underlayColor='#c8c7cc' onPress={()=>this.openPush(json)} >
           <View>
               <View style={{flexDirection: 'row', justifyContent:'center', height:58}}>
-                <View style={{marginLeft:15,justifyContent:'center',width:50}}>
+                <View style={{justifyContent:'center',width:50}}>
                   <Icon
                     //style={{marginLeft:15,marginRight:6}}
-                    size={40}
-		    color={Style.CAT_COLORS[cat]}
+                    size={30}
+                    color={Style.CAT_COLORS[cat]}
                     name={Global.TYPE_ICONS[type]}
                   />
                 </View>
-                <View style={{flex:1}}>
-                    <View style={{flexDirection:'row',justifyContent:'center',height:16,marginTop:6 }}>
-                        <View style={{marginLeft:10}}>
-                          <Text>{name}</Text>
+                <View style={{flex:1,flexDirection:'row'}}>
+                    <View style={{flex:1}}>
+                        <View style={{flex:1,justifyContent:'flex-end'}}>
+                          <Text style={{fontSize:10}}>{name}</Text>
                         </View>
-                        <View style={{flex:1}}/>
-                        <View style={{marginRight:10}}>
-                          <Text style={{fontSize:11}}>{time}</Text>
+                        <View style={{flex:2,justifyContent:'center'}}>
+                          <Text style={text_style}>{title}</Text>
                         </View>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent:'center',marginTop:6 }}>
-                        <View style={{marginLeft:10,flex:1,justifyContent:'center'}}>
-                          <Text style={ text_style }>{title}</Text>
+                    <View style={{justifyContent:'center'}}>
+                        <View style={{flex:1,justifyContent:'flex-end'}}>
+                          <Text style={{fontSize:10,marginRight:8}}>{time}</Text>
                         </View>
-                        <View style={{marginRight:10}}>
-                          <Text style={{fontSize:11}}>{dist}</Text>
+                        <View style={{flex:2,justifyContent:'center',alignItems:'flex-end'}}>
+                          <Text style={{fontSize:10,marginRight:8}}>{dist}</Text>
                         </View>
                     </View>
                 </View>
