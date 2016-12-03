@@ -58,6 +58,8 @@ I18n.translations = {
     delete_all: 'Delete All',
     share_not_exist: 'Share not exist',
     all: 'All',
+    login_first:'Please login first',
+    delete_1by1:'Please delete one by one',
     //form
     edit_share:'Edit Share',
     create_share:'Create Share',
@@ -197,6 +199,8 @@ I18n.translations = {
     delete_all: 'Delete All',
     share_not_exist: 'Share not exist',
     all: 'All',
+    login_first:'Please login first',
+    delete_1by1:'Please delete one by one',
     //form
     edit_share:'Edit Share',
     create_share:'Create Share',
@@ -336,6 +340,8 @@ I18n.translations = {
     delete: '删除',
     delete_all: '全部删除',
     share_not_exist: '此分享不存在',
+    login_first:'请先登录',
+    delete_1by1:'还是单个删除吧',
     //form
     edit_share:'修改分享',
     create_share:'新建分享',

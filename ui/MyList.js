@@ -10,6 +10,7 @@ import Main from "./Main"
 import Detail from "./Detail"
 import FormInfo from "./FormInfoVar"
 import I18n from 'react-native-i18n';
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
 export default class MyList extends Component {
   constructor(props) {
@@ -87,39 +88,69 @@ export default class MyList extends Component {
       );
     }
   }
-  renderAddIcon(){
-      if(Global.mainlogin==='') {
-          return (
-              <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.disabled} 
-                    onPress={() => alert('Please login to publish your share') }/>
-          )
+  renderMoreOption(value,name,icon){
+      return (
+          <MenuOption value={value} style={{backgroundColor:Style.highlight_color}}>
+              <View style={{flexDirection:'row',height:40}}>
+                  <View style={{width:30,justifyContent:'center'}}>
+                      <Icon name={icon} color={'#ffffff'} size={16} />
+                  </View>
+                  <View style={{justifyContent:'center'}}>
+                      <Text style={{color:Style.font_colors.enabled}}> {name} </Text>
+                  </View>
+              </View>
+          </MenuOption>
+      )
+  }
+  renderMore(){
+      //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
+      return (
+          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
+            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
+              <MenuTrigger>
+                <Icon name={'ion-ios-more'} color={'#ffffff'} size={40} style={{paddingLeft:15,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
+              </MenuTrigger>
+              <MenuOptions>
+                {this.renderMoreOption('new_share', I18n.t('create')+' '+I18n.t('share'),  'fa-pencil-square')}
+                    <View style={Style.separator} />
+                {this.renderMoreOption('delete_all',I18n.t('delete_all'),'fa-trash')}
+              </MenuOptions>
+            </Menu>
+          </View>
+      )
+  }
+  chooseMore(value){
+      if(value==='new_share'){ // login_first
+        if(Global.mainlogin==='') {
+          alert(I18n.t('login_first'))
+        }else{
+          this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })
+        }
       }else{
-          return (
-            <TouchableOpacity style={{width:50,height:50}} onPress={()=>
-                this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator} })}>
-               <Icon name={'ion-ios-add'} size={50} color={Style.font_colors.enabled} />
-            </TouchableOpacity>
-           )
+        alert(I18n.t('delete_1by1'))
       }
+  }
+  renderActions(){
+      return (
+          <View style={{flexDirection:'row',}}>
+              {this.renderMore()}
+              <View style={{width:1}} />
+          </View>
+      )
   }
   render() {
     let title = I18n.t('my')+' '+I18n.t('share')
     return (
-      <View>
+      <MenuContext style={{ flex: 1 }} ref={"menu_my"}>
         <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
             //leftButton={}
-            rightButton={
-                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                    {this.renderAddIcon()}
-                    <View style={{width:10}} />
-                </View>
-            }
+            rightButton={this.renderMore()}
         />
         <ListView style={styles.listContainer}
             dataSource={this.ds.cloneWithRows(this.state.myMsgList)} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
-      </View>
+      </MenuContext>
     );
   }
 }

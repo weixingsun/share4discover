@@ -429,7 +429,7 @@ export default class NotifyList extends Component {
         <MenuContext style={{ flex: 1 }} ref={"MenuContext"}>
           <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
             leftButton={this.renderOrderIcon()}
-            rightButton= {this.renderActionIcon()}
+            rightButton= {this.renderMore()}
 	  />
           <ListView
               enableEmptySections={true}
