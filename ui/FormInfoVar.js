@@ -213,7 +213,7 @@ export default class FormInfoVar extends Component {
       }
     }
     processProps(){
-        let logins = Global.getLoginStr()
+        let loginStr = Global.getLoginStr()
         GiftedFormManager.reset(this.formName);
         if(!this.props.msg){
             var myDefaults = {
@@ -223,7 +223,7 @@ export default class FormInfoVar extends Component {
               phone: '',     ctime: this.ctime,
               lat:   '',     lng:   '',
               //time:  '',     dest:  '',
-              pics:  [],     owner: logins,
+              pics:  [],     owner: loginStr,
             };
             this.setState({form:myDefaults})
             this.genTypeValidators('car','rent0')
@@ -440,8 +440,8 @@ export default class FormInfoVar extends Component {
     changeReply(old_key,new_key){
         if(old_key != new_key){
             Net.delMsg(Global.getKeyFromMsg(this.props.msg))
-            let logins = Global.getLogins(this.props.msg.owner)
-            let mainlogin = Global.getInfoMainLogin(logins);
+            let loginObj = Global.getLogins(this.props.msg.owner)
+            let mainlogin = Global.getInfoMainLogin(loginObj);
             Net.getNotify(mainlogin).then((rows)=> {
               //alert('all notifies='+JSON.stringify(rows))
               if(rows && rows.length>0)

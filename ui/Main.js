@@ -260,21 +260,13 @@ export default class Main extends Component {
       Store.get(type).then((user)=>{  //{type,email}
           //if(user!=null)alert('type='+type+' json='+JSON.stringify(user))
           let last2 = type.split('_')[1]
-          if(user != null && Global.logins[user.type]==null) {
-              Global.logins[user.type]=user.email;
-              Global.mainlogin = Global.getMainLogin()
+          if(user != null) {
               Global.userObjects[last2]=user
-              //if(Global.mainlogin!=self.state.mainlogin){
-              //    self.setState({mainlogin:Global.mainlogin }) 
-              //}
-          }else if(user == null && Global.logins !== ''){
+              Global.mainlogin = Global.getMainLogin()
+          }else if(user == null){
               let look_type = type.substring(5)
-              delete Global.logins[look_type]
               Global.mainlogin = Global.getMainLogin()
               Global[type]=null
-              //if(Global.mainlogin!=self.state.mainlogin){
-              //    self.setState({ mainlogin:Global.mainlogin })
-              //}
           }
       });
       Store.get(Store.SETTINGS_LOGINS).then((login_settings)=>{    //{fb:none,wb:post}
@@ -335,7 +327,7 @@ export default class Main extends Component {
     } else if(this.state.page ===Store.mapTab){
       return <Maps navigator={this.props.navigator} region={Global.region} />
     } else if(this.state.page ===Store.confTab){
-      return <SettingsList navigator={this.props.navigator} logins={Global.logins}/>
+      return <SettingsList navigator={this.props.navigator}/>
     }
   }
   checkSettingsChange(){

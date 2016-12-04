@@ -70,7 +70,7 @@ module.exports = {
     push_tag:'tag',
     mainlogin: '',
     login_names:{},
-    logins: {},
+    //logins: {},
     SETTINGS_LOGINS: {},
     ALL_MSGS: '$allmsgs',
     SHOW_ADS: 'ShowAds',
@@ -192,12 +192,10 @@ module.exports = {
           }
     },
     getLoginStr(){
-        //alert(JSON.stringify(this.logins))
-        let arrKey = Object.keys(this.logins)
+        let arrKey = Object.keys(this.userObjects)
         let str = ''
         arrKey.map((k)=>{
-            str += ','+k+':'+this.logins[k]+':'+this.userObjects[k].name
-            //console.log('Global.getLoginStr()'+k+':'+this.logins[k]+':'+JSON.stringify(this.userObjects[k]))
+            str += ','+k+':'+this.userObjects[k].id+':'+this.userObjects[k].name
         })
         return str.substring(1);
     },
@@ -236,26 +234,24 @@ module.exports = {
     getMainLogin(){
         //fb > wx > gg > wb
         //{fb:email,wx:email,gg:email,wb:email}
-        if(Object.keys(this.logins).length===0){
+        //console.log('Global.getMainLogin() logins='+JSON.stringify(this.logins)+' userObjects='+JSON.stringify(this.userObjects))
+        if(Object.keys(this.userObjects).length===0){
             return '';
         }else{
-            if(this.logins.fb)  return 'fb:'+this.logins.fb
-            if(this.logins.wx)  return 'wx:'+this.logins.wx
-            if(this.logins.gg)  return 'gg:'+this.logins.gg
-            if(this.logins.wb)  return 'wb:'+this.logins.wb
+            if(this.userObjects.fb)  return 'fb:'+this.userObjects.fb.id
+            if(this.userObjects.wx)  return 'wx:'+this.userObjects.wx.id
+            if(this.userObjects.wb)  return 'wb:'+this.userObjects.wb.id
         }
     },
     getMainLoginType(){
-            if(this.logins.fb)  return 'fb'
-            if(this.logins.wx)  return 'wx'
-            if(this.logins.gg)  return 'gg'
-            if(this.logins.wb)  return 'wb'
+            if(this.userObjects.fb)  return 'fb'
+            if(this.userObjects.wx)  return 'wx'
+            if(this.userObjects.wb)  return 'wb'
     },
     getMainLoginName(){
-            if(this.logins.fb)  return this.userObjects.fb.name
-            if(this.logins.wx)  return this.userObjects.wx.name
-            if(this.logins.gg)  return this.userObjects.gg.name
-            if(this.logins.wb)  return this.userObjects.wb.name
+            if(this.userObjects.fb)  return this.userObjects.fb.name
+            if(this.userObjects.wx)  return this.userObjects.wx.name
+            if(this.userObjects.wb)  return this.userObjects.wb.name
     },
     getNotifyKey(){
         return '@'+this.mainlogin
@@ -302,10 +298,10 @@ module.exports = {
         return moment.locale()
     },
     getFeedApi(){
-        if(this.logins.fb){
+        if(this.userObjects.fb){
             return `https://graph.facebook.com/me/feed&access_token=${this.userObjects.fb.token}`
-        }else if(this.logins.gg) return '';
-        else if(this.logins.wb) return '';
+        }else if(this.userObjects.gg) return '';
+        else if(this.userObjects.wb) return '';
     },
     //share://nzmessengers.co.nz/info/car:41.767338,123.422675:1469942725304
     getSnsUrl(key,sns){

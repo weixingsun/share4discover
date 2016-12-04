@@ -37,56 +37,37 @@ export default class SettingsList extends React.Component {
     }
     componentDidMount(){
     }
-    /*login_gg(user){
-        this.setState({user_gg:user});
-        Global.userObjects['gg'] = user
-        Global.logins.gg = user.email
-        Global.mainlogin = Global.getMainLogin()
-        Net.loginUser(user)
-    }
-    logout_gg(user){
-        this.setState({user_gg:null});
-        delete Global.userObjects.gg
-        delete Global.logins.gg
-        Global.mainlogin = Global.getMainLogin()
-    }*/
     login_fb(user){
         this.setState({user_fb:user});
         Global.userObjects.fb = user
-        Global.logins.fb = user.email
         Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_fb(user){
         this.setState({user_fb:null});
         delete Global.userObjects.fb
-        delete Global.logins.fb
         Global.mainlogin = Global.getMainLogin()
     }
     login_wx(user){
         this.setState({user_wx:user});
         Global.userObjects.wx = user
-        Global.logins.wx = user.email
         Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_wx(user){
         this.setState({user_wx:null});
         delete Global.userObjects.wx
-        delete Global.logins.wx
         Global.mainlogin = Global.getMainLogin()
     }
     login_wb(user){
         this.setState({user_wb:user});
         Global.userObjects.wb = user
-        Global.logins.wb = user.email
         Global.mainlogin = Global.getMainLogin()
         Net.loginUser(user)
     }
     logout_wb(user){
         this.setState({user_wb:null});
         delete Global.userObjects.fb
-        delete Global.logins.wb
         Global.mainlogin = Global.getMainLogin()
     }
     render(){
