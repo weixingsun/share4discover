@@ -109,22 +109,6 @@ export default class ShareList extends Component {
           </MenuOption>
       )
   }
-  renderMore(){
-      return (
-          <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
-            <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
-              <MenuTrigger>
-                <Icon name={'ion-ios-more'} color={'#ffffff'} size={40} style={{paddingLeft:15,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
-              </MenuTrigger>
-              <MenuOptions>
-                {this.renderMoreOption('new_share', I18n.t('create')+' '+I18n.t('share'),  'fa-pencil-square')}
-                    <View style={Style.separator} />
-                {this.renderMoreOption('delete_all',I18n.t('delete_all'),'fa-trash')}
-              </MenuOptions>
-            </Menu>
-          </View>
-      )
-  }
   getOrderIcon(order){
       if(order==='order_dist_asc') return 'fa-location-arrow'
       else if(order==='order_time_asc') return 'fa-clock-o'
@@ -136,7 +120,7 @@ export default class ShareList extends Component {
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseOrderMore(value) }>
               <MenuTrigger>
-                <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
+                <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,paddingTop:10,paddingBottom:10,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
                 {this.renderMoreOption('order_dist_asc', I18n.t('order_dist_asc'),this.getOrderIcon('order_dist_asc'))}
@@ -172,7 +156,9 @@ export default class ShareList extends Component {
   renderOrderActions(){
       return (
           <View style={{flexDirection:'row',}}>
-              <Icon name={this.getOrderIcon(this.state.order)} color={'#ffffff'} size={10} />
+              <View style={{width:20,justifyContent:'center',alignItems:'flex-end'}}>
+                <Icon name={this.getOrderIcon(this.state.order)} color={'#ffffff'} size={10} />
+              </View>
               {this.renderOrderMore()}
               <View style={{width:1}} />
           </View>

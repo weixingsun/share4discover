@@ -73,7 +73,7 @@ export default class NotifyList extends Component {
                 //console.log('load() value='+value.length)
                 self.setState({ 
                     type:type,
-                    order:self.order_time_asc,
+                    //order:self.state.order,
                     push_list:new_arr,
                 })
               }catch(e){
@@ -329,24 +329,25 @@ export default class NotifyList extends Component {
   renderOrderIcon(){
       return (
              <View style={{flexDirection:'row',}}>
-                 <View style={{width:10}} />
-                 <Icon name={this.getOrderIcon(this.state.order)} color={'#ffffff'} size={10} />
+                 <View style={{width:20,justifyContent:'center',alignItems:'flex-end'}}>
+                   <Icon name={this.getOrderIcon(this.state.order)} color={'#ffffff'} size={10} />
+                 </View>
                  {this.renderOrderMore()}
              </View>
       )
   }
   getOrderIcon(order){
+      //alert('order='+order)
       if(order==='order_dist_asc') return 'fa-location-arrow'
       else if(order==='order_time_asc') return 'fa-clock-o'
   }
   renderOrderMore(){
       //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
-      //alert('icon='+this.state.order)
       return (
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseOrderMore(value) }>
               <MenuTrigger>
-                <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
+                <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,paddingTop:10,paddingBottom:10,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
                 {this.renderMoreOption('order_dist_asc', I18n.t('order_dist_asc'),this.getOrderIcon('order_dist_asc'))}
@@ -380,7 +381,6 @@ export default class NotifyList extends Component {
       )
   }
   renderMore(){
-      //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
       return (
           <View style={{ padding: 1, flexDirection: 'row', backgroundColor:Style.highlight_color }}>
             <Menu style={{backgroundColor:Style.highlight_color}} onSelect={(value) => this.chooseMore(value) }>
