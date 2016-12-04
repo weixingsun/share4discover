@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import {Dimensions, NativeModules, View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
+import {Dimensions, NativeModules, View, Text, Platform, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native'
 //import LoginGG from './LoginGG'
 import LoginFB from './LoginFB'
 import LoginWX from './LoginWX'
@@ -70,6 +70,14 @@ export default class SettingsList extends React.Component {
         delete Global.userObjects.fb
         Global.mainlogin = Global.getMainLogin()
     }
+    renderFB(){
+        if(Global.MAP === Global.GoogleMap)
+        return <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
+    }
+    renderWB(){
+        if(Platform.OS==='android')  //disabled until ios version published
+        return <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
+    }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
 	//alert('w:'+DEVICE_WIDTH)
@@ -99,16 +107,10 @@ export default class SettingsList extends React.Component {
                       <Icon name={'ion-ios-arrow-forward'} size={20} color={'#e5e5e5'}/>
                       <View style={{width:10}} />
                   </TouchableOpacity>
-                  <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
-                  <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
+                  {this.renderFB()}
+                  {this.renderWB()}
               </ScrollView>
           </View>
         );
     }
 }
-/*
-                  <View style={Style.left_card}>
-                    <LoginWX user={this.state.user_wx} login={this.login_wx} logout={this.logout_wx} />
-                    <LoginGG user={this.state.user_gg} login={this.login_gg} logout={this.logout_gg} />
-                  </View>
-*/
