@@ -103,7 +103,7 @@ export default class Main extends Component {
         coords.latitude=coords.lat
         coords.longitude=coords.lng
       }
-      //console.log('main.setupGlobalRegion() '+JSON.stringify(coords))
+      //alert('main.setupGlobalRegion() '+JSON.stringify(coords))
       Global.region={
           latitude:  coords.latitude,
           longitude: coords.longitude,
@@ -111,6 +111,7 @@ export default class Main extends Component {
           longitudeDelta:0.05,
           zoom:16,
       }
+      DeviceEventEmitter.emit('refresh:NotifyList',0);
       Net.getLocation((gps)=>{
           self.checkPushSettings(gps)
           if(gps.country=='cn') Global.MAP = Global.BaiduMap;

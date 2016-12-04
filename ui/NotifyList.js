@@ -42,7 +42,7 @@ export default class NotifyList extends Component {
       this.updateOnUI=true
   }
   componentWillMount(){
-      //this.load()
+      this.load()
   }
   componentWillUnmount(){
       this.updateOnUI=false
@@ -52,7 +52,7 @@ export default class NotifyList extends Component {
       DeviceEventEmitter.removeAllListeners('refresh:NotifyList')
       DeviceEventEmitter.addListener('refresh:NotifyList',(evt)=>setTimeout(()=>this.load(),500))
       //this.load()
-      DeviceEventEmitter.emit('refresh:NotifyList',0);
+      //DeviceEventEmitter.emit('refresh:NotifyList',0);
   }
   load(type){
       if(!type) type=this.state.type
@@ -70,10 +70,10 @@ export default class NotifyList extends Component {
                     else return item
                 })
                 let new_arr = self.reorder(self.state.order,json)
-                //console.log('load() value='+value.length)
+                //alert('load() arr=\n'+JSON.stringify(new_arr))
                 self.setState({ 
                     type:type,
-                    //order:self.state.order,
+                    order:self.state.order,
                     push_list:new_arr,
                 })
               }catch(e){
@@ -87,7 +87,7 @@ export default class NotifyList extends Component {
                 })*/
               }
           }else if(self.updateOnUI){
-              //console.log('load() null value='+value.length)
+              //alert('load() null value=')
               self.setState({ type:type, push_list:[] })
           }
       })
@@ -109,7 +109,8 @@ export default class NotifyList extends Component {
       let ll   = key.split(':')[1]
       let lat  = ll.split(',')[0], lng = ll.split(',')[1]
       //console.log('Global.region='+Global.region)
-      return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
+      if(Global.region) return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
+      else return 0
   }
   reorder(order,arr){
       //if(arr && arr.length<1) return arr
@@ -246,6 +247,8 @@ export default class NotifyList extends Component {
     )
   }
     _renderPushRowView(data) {
+        //if(data.i!=='car_rent0:-43.537628,172.599589:1480716878')
+        //  alert('_renderPushRowView:'+JSON.stringify(data))
         let bold = {fontSize:16,fontWeight:'bold',color:'#666666'}
         let normal={fontSize:16}
         let title='',text_style=bold,name='',time='',key='',json=data
@@ -277,7 +280,7 @@ export default class NotifyList extends Component {
         }
         let ll   = key.split(':')[1]
         let lat  = ll.split(',')[0], lng = ll.split(',')[1]
-        let dist = Global.distanceName( lat, lng, Global.region.latitude, Global.region.longitude )
+        let dist = Global.region?Global.distanceName(lat,lng, Global.region.latitude,Global.region.longitude):0
         let type = key.split('_')[0]
         let cat = key.split('_')[1].split(':')[0]
         //alert('_renderPushRowView()\nkey='+key)
