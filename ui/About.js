@@ -1,6 +1,6 @@
 'use strict';
 import React, {Component} from 'react'
-import {Image,ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity,NativeModules,Linking } from 'react-native'
+import {Alert,Image,ListView, View, Text, StyleSheet, ScrollView, TouchableOpacity,NativeModules,Linking } from 'react-native'
 import {Icon} from './Icon'
 import Style from './Style'
 import ToS from './ToS'
@@ -33,12 +33,12 @@ export default class USBList extends React.Component {
             passProps: {navigator:this.props.navigator,},
         })
     }
-    renderOnesignal(){
+    renderEmail(){
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
                   <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('s1id')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.s1uid }</Text>
+                  <Text style={{marginLeft:10,justifyContent: 'center'}}> sun.app.service@gmail.com </Text>
               </View>
             </View>
         )
@@ -47,21 +47,34 @@ export default class USBList extends React.Component {
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uid')}: </Text>
+                  <Text style={{width:80,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('uid')}: </Text>
                   <Text style={{marginLeft:10,justifyContent: 'center'}}>{ Push.uid }</Text>
               </View>
             </View>
         )
     }
-    renderHomepage(){
+    renderFeedback(){
         return (
             <View style={Style.detail_card} >
               <View style={{flexDirection:'row'}}>
-                  <Text style={{width:60,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('home')}: </Text>
-                  <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={()=>Linking.openURL('http://shareplus.co.nf')}>http://shareplus.co.nf</Text>
+                  <Text style={{width:80,justifyContent: 'center',alignItems:'center',fontSize:16,fontWeight:'bold',color:'black'}}> {I18n.t('feedback')}: </Text>
+                  <Text style={{marginLeft:10,justifyContent: 'center'}} onPress={this.openEmail}>sun.app.service@gmail.com</Text>
               </View>
             </View>
         )
+    }
+    openEmail(){
+        Alert.alert(
+            I18n.t("feedback"),
+            I18n.t("confirm_feedback"),
+            //"Do you want to reply this information ? \nnotify_value="+JSON.stringify(notify_value),
+            [
+                {text:I18n.t("no"), },
+                {text:I18n.t('yes'), onPress:()=>{
+                    Linking.openURL('mailto:sun.app.service@gmail.com')
+                }},
+            ]
+        );
     }
     renderIcon(){
         return (
@@ -103,6 +116,7 @@ export default class USBList extends React.Component {
           />
           {this.renderIcon()}
           {this.renderPush()}
+          {this.renderFeedback()}
           {this.renderCopyright()}
       </View>
       );  //{this.renderHomepage()}
