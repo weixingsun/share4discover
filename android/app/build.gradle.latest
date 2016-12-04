@@ -143,6 +143,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-calendar-events')
     compile project(':react-native-permissions')
     //compile (project(':react-native-android-permissions'))
     //compile (project(':react-native-ble-manager'))

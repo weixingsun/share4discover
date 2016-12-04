@@ -13,7 +13,7 @@ import Tool from "../io/Tool"
 import Global from "../io/Global"
 import Net from "../io/Net"
 import Style from "./Style"
-import Main from "./Main"
+import ShareList from "./ShareList"
 import Detail from "./Detail"
 import FormInfo from "./FormInfoVar"
 import Modal from 'react-native-root-modal';
@@ -191,7 +191,7 @@ export default class Maps extends Component {
             lngIn=true
         return latIn && lngIn;
     }
-	getFontIcon(row){
+    getFontIcon(row){
         let color = Style.CAT_COLORS[row.cat]
 	let font='Ionicons'
 	let name = Global.TYPE_ICONS[row.type]
@@ -209,7 +209,7 @@ export default class Maps extends Component {
             glyph = String.fromCharCode(glyph);
         }
 	return {font:font,glyph:glyph,size:34,color:processColor(color)}
-	}
+    }
     downloadMsg(type,cat) {
       var self = this;
       var range = this.distance(this.state.region.latitudeDelta,this.state.region.longitudeDelta)
@@ -319,14 +319,15 @@ export default class Maps extends Component {
       return (<Icon name={"ion-ios-compass-outline"} color={c} size={40} onPress={this.switchGps.bind(this)} />);
     }
     renderAddIcon(){
-      let func = () => alert('Please login to publish')
-      if(Global.mainlogin!=='')
-          func = () => this.props.navigator.push({component:FormInfo, passProps:{navigator:this.props.navigator}})
+      let func = () => this.props.navigator.push({
+          component:ShareList, 
+          passProps:{navigator:this.props.navigator,share_list:this.state.markers}
+      })
       return <Button
                  style={{height:38,width:50,justifyContent:'center',borderColor:Style.font_colors.enabled}}
                  onPress={func}>
                       <Icon
-                          name={'ion-ios-add'}
+                          name={'ion-ios-list'}
                           size={36}
                           style={{flexDirection:'row',justifyContent:'center'}}
                           color={Style.font_colors.enabled}

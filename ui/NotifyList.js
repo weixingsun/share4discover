@@ -296,10 +296,10 @@ export default class NotifyList extends Component {
                     name={Global.TYPE_ICONS[type]}
                   />
                 </View>
-                <View style={{flex:1,flexDirection:'row'}}>
+                <View style={{flex:1,flexDirection:'row',marginTop:10,marginBottom:10}}>
                     <View style={{flex:1}}>
                         <View style={{flex:1,justifyContent:'flex-end'}}>
-                          <Text style={{fontSize:10}}>{name}</Text>
+                          <Text style={{fontSize:12}}>{name}</Text>
                         </View>
                         <View style={{flex:2,justifyContent:'center'}}>
                           <Text style={text_style}>{title}</Text>

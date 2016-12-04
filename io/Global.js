@@ -211,6 +211,28 @@ module.exports = {
         })
         return obj;
     },
+    getInfoMainLoginName(ownersStr){
+        let arr = ownersStr.split(',')  //let name = userStr.split(':')[2]
+        let main = ''
+        arr.map((userStr)=>{
+            if(userStr.indexOf('fb:')) main = userStr
+            else if(userStr.indexOf('wx:')) main = userStr
+            else if(userStr.indexOf('wb:')) main = userStr
+            else if(userStr.indexOf('gg:')) main = userStr
+        })
+        let arr1 = main.split(':')
+        return arr1.length===3?arr1[2]:arr1[1]
+    },
+    getInfoMainLogin(logins){
+        if(Object.keys(logins).length===0){
+            return '';
+        }else{
+            if(logins.fb)  return 'fb:'+logins.fb
+            if(logins.wx)  return 'wx:'+logins.wx
+            if(logins.gg)  return 'gg:'+logins.gg
+            if(logins.wb)  return 'wb:'+logins.wb
+        }
+    },
     getMainLogin(){
         //fb > wx > gg > wb
         //{fb:email,wx:email,gg:email,wb:email}
@@ -221,16 +243,6 @@ module.exports = {
             if(this.logins.wx)  return 'wx:'+this.logins.wx
             if(this.logins.gg)  return 'gg:'+this.logins.gg
             if(this.logins.wb)  return 'wb:'+this.logins.wb
-        }
-    },
-    getInfoMainLogin(logins){
-        if(Object.keys(logins).length===0){
-            return '';
-        }else{
-            if(logins.fb)  return 'fb:'+logins.fb
-            if(logins.wx)  return 'wx:'+logins.wx
-            if(logins.gg)  return 'gg:'+logins.gg
-            if(logins.wb)  return 'wb:'+logins.wb
         }
     },
     getMainLoginType(){
@@ -265,6 +277,10 @@ module.exports = {
 	}else{
 	    return momentDate.format('YYYY-MM-DD')
 	}
+    },
+    getTimeFull(timeInt){
+        let time1 = moment(timeInt*1000)
+        return time1.format('YYYY-MM-DD HH:mm') //ss
     },
     str2date(str){
         return moment(str)

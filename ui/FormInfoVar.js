@@ -441,7 +441,7 @@ export default class FormInfoVar extends Component {
         if(old_key != new_key){
             Net.delMsg(Global.getKeyFromMsg(this.props.msg))
             let logins = Global.getLogins(this.props.msg.owner)
-            let mainlogin = Global.getMainLogin(logins);
+            let mainlogin = Global.getInfoMainLogin(logins);
             Net.getNotify(mainlogin).then((rows)=> {
               //alert('all notifies='+JSON.stringify(rows))
               if(rows && rows.length>0)

@@ -11,27 +11,27 @@ import FormInfo from "./FormInfoVar"
 import I18n from 'react-native-i18n';
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
-export default class MyList extends Component {
+export default class ShareList extends Component {
   constructor(props) {
       super(props);
       this.ds= new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
-          myMsgList:[],
+          share_list:this.props.share_list,
       };
       this.updateOnUI=true
   }
   componentWillMount() {
-      this.load()
+      //this.load()
   }
   componentDidMount() {
-      DeviceEventEmitter.removeAllListeners('refresh:MyList')
-      this.event = DeviceEventEmitter.addListener('refresh:MyList',(evt)=>setTimeout(()=>this.load(),500));
+      //DeviceEventEmitter.removeAllListeners('refresh:ShareList')
+      //this.event = DeviceEventEmitter.addListener('refresh:ShareList',(evt)=>setTimeout(()=>this.load(),500));
   }
   componentWillUnmount() {
       this.updateOnUI=false
-      DeviceEventEmitter.removeAllListeners('refresh:MyList')
+      //DeviceEventEmitter.removeAllListeners('refresh:ShareList')
   }
-  load(){
+  /*load(){
       let list = []
       let self = this
       if(Global.mainlogin.length>0) {
@@ -39,13 +39,13 @@ export default class MyList extends Component {
               //alert(JSON.stringify(rows))
               if(self.updateOnUI && rows){
                   let notnull = rows.filter((row)=>{return row!=null})
-                  self.setState({myMsgList:notnull})
+                  self.setState({share_list:notnull})
               }
           }).catch((e)=>{
               alert('Network Problem! '+JSON.stringify(e))
           });
       }
-  }
+  }*/
   _onPress(rowData) {
       this.props.navigator.push({
           component: Detail,
@@ -57,10 +57,11 @@ export default class MyList extends Component {
   }
   _renderRowView(rowData) {
     if(rowData!=null){
-      //console.log(rowData)
+      //alert(JSON.stringify(rowData))
       if(rowData==null) return
       let address1 = rowData.address.split(',')[0]
       let time1 = Global.getDateTimeFormat(rowData.ctime)
+      let name  = Global.getInfoMainLoginName(rowData.owner)
       return (
       <TouchableHighlight underlayColor='#c8c7cc' 
             onPress={()=>this._onPress(rowData)} >
@@ -71,7 +72,7 @@ export default class MyList extends Component {
                 </View>
                 <View style={{flex:1,justifyContent:'center',marginTop:10,marginBottom:10}}>
                   <View style={{flex:1,justifyContent:'flex-end'}}>
-                    <Text style={{fontSize:12,marginLeft:1}}>{address1}</Text>
+                    <Text style={{fontSize:12,marginLeft:1}}>{name}</Text>
                   </View>
                   <View style={{flex:2,justifyContent:'center'}}>
                     <Text style={{fontSize:16,marginLeft:1}}>{rowData.title}</Text>
@@ -138,15 +139,19 @@ export default class MyList extends Component {
       )
   }
   render() {
-    let title = I18n.t('my')+' '+I18n.t('share')
+    let title = '' //I18n.t('my')+' '+I18n.t('share')
     return (
       <MenuContext style={{ flex: 1 }} ref={"menu_my"}>
         <NavigationBar style={Style.navbar} title={{title:title,tintColor:Style.font_colors.enabled}} 
-            //leftButton={}
+            leftButton={
+                <TouchableOpacity style={{width:50,height:50}} onPress={() => this.props.navigator.pop()}>
+                    <Icon name={"ion-ios-arrow-round-back"} color={Style.font_colors.enabled} size={40} />
+                </TouchableOpacity>
+            }
             rightButton={this.renderMore()}
         />
         <ListView style={styles.listContainer}
-            dataSource={this.ds.cloneWithRows(this.state.myMsgList)} 
+            dataSource={this.ds.cloneWithRows(this.state.share_list)} 
             renderRow={this._renderRowView.bind(this)} 
             enableEmptySections={true} />
       </MenuContext>

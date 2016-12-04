@@ -432,7 +432,8 @@ export default class Detail extends Component {
             'type','cat','title','ctime','phone','content', 'pics',
             'address','lat','lng','dest','dest_lat','dest_lng',
             'owner','uid','os','country','city','city_id',
-            'start','end']
+            'start','end',
+            'image','id','latitude','longitude'] //from maps
         var keys = Object.keys(this.state.msg)
         var misc = keys.filter((key) => {
             return (key.substring(0,1)!=='#' && array.indexOf(key)<0)
@@ -449,7 +450,7 @@ export default class Detail extends Component {
         )
     }
     renderTitle(){
-        var _ctime = Global.getDateTimeFormat(parseInt(this.state.msg.ctime))
+        var _ctime = Global.getTimeFull(parseInt(this.state.msg.ctime))
         let typeIcon = Global.TYPE_ICONS[this.state.msg.type]
         let asking = 'rent0,buy'.indexOf(this.state.msg.cat)>0
         let destView = null
