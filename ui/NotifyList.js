@@ -33,10 +33,8 @@ export default class NotifyList extends Component {
   constructor(props) {
       super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.order_dist_asc='order_dist_asc'
-      this.order_time_asc='order_time_asc'
       this.state={
-          order:this.order_time_asc,
+          order:'order_time_asc',
           push_list:[],
           type:Store.LOCAL,
       }
@@ -114,14 +112,13 @@ export default class NotifyList extends Component {
       return Global.distance( lat, lng, Global.region.latitude, Global.region.longitude )
   }
   reorder(order,arr){
-      if(json && json.length<1) return
+      //if(arr && arr.length<1) return arr
       let json = arr?arr:this.state.push_list
       let self=this
       //console.log('unsort_arr='+JSON.stringify(json))
       return json.sort(function(a,b){
-          //console.log('inloop order='+order+' dist_order='+self.order_dist_asc+' time_order='+self.order_time_asc)
-          if(order===self.order_dist_asc)      return self.getDist(a) - self.getDist(b)
-          else if(order===self.order_time_asc) return self.getTime(b) - self.getTime(a)
+          if(order==='order_dist_asc')      return self.getDist(a) - self.getDist(b)
+          else if(order==='order_time_asc') return self.getTime(b) - self.getTime(a)
       })
       //console.log('reorder_arr='+JSON.stringify(json))
       /*this.setState({
@@ -339,8 +336,8 @@ export default class NotifyList extends Component {
       )
   }
   getOrderIcon(order){
-      if(order===this.order_dist_asc) return 'fa-location-arrow'
-      else if(order===this.order_time_asc) return 'fa-clock-o'
+      if(order==='order_dist_asc') return 'fa-location-arrow'
+      else if(order==='order_time_asc') return 'fa-clock-o'
   }
   renderOrderMore(){
       //<Button style={{height:41,width:50,borderColor:Style.highlight_color}}>
@@ -352,9 +349,9 @@ export default class NotifyList extends Component {
                 <Icon name={'fa-sort-amount-asc'} color={'#ffffff'} size={20} style={{paddingLeft:1,paddingRight:15,flexDirection:'row',justifyContent:'center'}} />
               </MenuTrigger>
               <MenuOptions>
-                {this.renderMoreOption(this.order_dist_asc, I18n.t(this.order_dist_asc),this.getOrderIcon(this.order_dist_asc))}
+                {this.renderMoreOption('order_dist_asc', I18n.t('order_dist_asc'),this.getOrderIcon('order_dist_asc'))}
                     <View style={Style.separator} />
-                {this.renderMoreOption(this.order_time_asc, I18n.t(this.order_time_asc),this.getOrderIcon(this.order_time_asc))}
+                {this.renderMoreOption('order_time_asc', I18n.t('order_time_asc'),this.getOrderIcon('order_time_asc'))}
               </MenuOptions>
             </Menu>
           </View>
