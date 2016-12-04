@@ -71,12 +71,12 @@ export default class SettingsList extends React.Component {
         Global.mainlogin = Global.getMainLogin()
     }
     renderFB(){
-        if(Global.MAP === Global.GoogleMap)
+        if(Global.MAP===Global.GoogleMap || Platform.OS==='ios')
         return <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
     }
     renderWB(){
         if(Platform.OS==='android')  //disabled until ios version published
-        return <LoginFB user={this.state.user_fb} login={this.login_fb} logout={this.logout_fb} />
+        return <LoginWB user={this.state.user_wb} login={this.login_wb} logout={this.logout_wb} />
     }
     render(){
         var DEVICE_WIDTH = Dimensions.get('window').width
