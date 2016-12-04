@@ -55,11 +55,16 @@ export default class MyList extends Component {
           }
       });
   }
+  shortAddress(addr){
+      return addr.substring(0,addr.lastIndexOf(','))
+  }
   _renderRowView(rowData) {
     if(rowData!=null){
       //console.log(rowData)
       if(rowData==null) return
-      let address1 = rowData.address.split(',')[0]
+      //let address1 = rowData.address.split(',').splice(-1,1).join()
+      let address1 = this.shortAddress(rowData.address)
+      if(address1.length>30) address1 = this.shortAddress(address1)
       let time1 = Global.getDateTimeFormat(rowData.ctime)
       return (
       <TouchableHighlight underlayColor='#c8c7cc' 
