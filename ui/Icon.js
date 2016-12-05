@@ -98,8 +98,9 @@ class Icon extends Component {
         let iconName = this.props.name
         let badgeName = this.props.name
         let style1 = this.props.style?this.props.style:{flexDirection:'row',justifyContent:'center',padding:1,margin:1}
+        //if(this.props.accessibilityLabel)
 	return (
-          <View style={style1}>
+          <View style={style1} accessibilityLabel={this.props.accessibilityLabel}>
             {this.renderSpinIcon(this.props.name)}
             {this.renderBadge(this.props.badge)}
           </View>

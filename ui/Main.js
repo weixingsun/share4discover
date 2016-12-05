@@ -356,10 +356,10 @@ export default class Main extends Component {
           {this.pages()}
           <Tabs selected={this.state.page} style={Style.bottomBar}
                 onSelect={(e)=> this.gotoPage(e.props.name)} >
-            <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} />
-            <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} />
-            <Icon size={40} color={this.getSelectedColor(Store.mapTab)} name={Store.mapTab}  />
-            <Icon size={40} color={this.getSelectedColor(Store.confTab)} name={Store.confTab} />
+            <Icon size={40} color={this.getSelectedColor(Store.msgTab)} name={Store.msgTab}  badge={{text:this.state.badge, color:'red'}} accessible={true} accessibilityLabel={'TabMsg'}/>
+            <Icon size={40} color={this.getSelectedColor(Store.userTab)} name={Store.userTab} accessible={true} accessibilityLabel={'TabUser'}/>
+            <Icon size={40} color={this.getSelectedColor(Store.mapTab)} name={Store.mapTab} accessible={true} accessibilityLabel={'TabMap'}/>
+            <Icon size={40} color={this.getSelectedColor(Store.confTab)} name={Store.confTab} accessible={true} accessibilityLabel={'TabCfg'}/>
           </Tabs>
         </View>
     );
